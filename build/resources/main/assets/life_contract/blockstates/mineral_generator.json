@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "mineral_type=iron": { "model": "minecraft:block/iron_block" },
+    "mineral_type=gold": { "model": "minecraft:block/gold_block" },
+    "mineral_type=diamond": { "model": "minecraft:block/diamond_block" },
+    "mineral_type=emerald": { "model": "minecraft:block/emerald_block" }
+  }
+}

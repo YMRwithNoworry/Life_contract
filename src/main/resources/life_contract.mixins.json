@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.alku.life_contract.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "life_contract.mixins.refmap.json",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
