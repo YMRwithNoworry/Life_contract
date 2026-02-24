@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "IDI",
+    " D "
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "airdrop:disposable_flare_gun",
+    "count": 1
+  }
+}

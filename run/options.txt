@@ -124,6 +124,7 @@ key_key.life_contract.dismount:key.keyboard.g
 key_key.life_contract.mount_behavior_cycle:key.keyboard.v
 key_key.life_contract.mount_special_ability:key.keyboard.h
 key_key.life_contract.healer_active_heal:key.keyboard.h
+key_key.life_contract.fool_steal_profession:key.keyboard.j
 soundCategory_master:0.06291390728476821
 soundCategory_music:1.0
 soundCategory_record:1.0

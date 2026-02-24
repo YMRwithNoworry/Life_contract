@@ -1,0 +1,5 @@
+{
+  "item.border_weaver.border_tool": "边界编织者之尺",
+  "creativetab.border_weaver_tab": "边界编织者",
+  "item.border_weaver.border_tool.tooltip": "右键4个方块划定边界。Shift+右键空气重置。"
+}

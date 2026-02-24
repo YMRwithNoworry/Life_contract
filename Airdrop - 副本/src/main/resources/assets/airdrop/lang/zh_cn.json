@@ -1,0 +1,7 @@
+{
+  "item.airdrop.flare_gun": "无限信号枪",
+  "item.airdrop.disposable_flare_gun": "一次性信号枪",
+  "item.airdrop.range_limiter": "空投范围限定器",
+  "itemGroup.airdrop": "空投模组",
+  "entity.airdrop.airdrop": "空投箱"
+}
