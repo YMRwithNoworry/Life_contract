@@ -135,6 +135,42 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        if (!event.isWasDeath()) return;
+        
+        Player original = event.getOriginal();
+        Player newPlayer = event.getEntity();
+        
+        CompoundTag originalData = original.getPersistentData();
+        CompoundTag newData = newPlayer.getPersistentData();
+        
+        if (originalData.contains("LifeContractProfession")) {
+            newData.putString("LifeContractProfession", originalData.getString("LifeContractProfession"));
+        }
+        if (originalData.contains(SoulContractItem.TAG_CONTRACT_MOD)) {
+            newData.putString(SoulContractItem.TAG_CONTRACT_MOD, originalData.getString(SoulContractItem.TAG_CONTRACT_MOD));
+        }
+        if (originalData.hasUUID(TeamOrganizerItem.TAG_LEADER_UUID)) {
+            newData.putUUID(TeamOrganizerItem.TAG_LEADER_UUID, originalData.getUUID(TeamOrganizerItem.TAG_LEADER_UUID));
+        }
+        if (originalData.contains(TeamOrganizerItem.TAG_LEADER_NAME)) {
+            newData.putString(TeamOrganizerItem.TAG_LEADER_NAME, originalData.getString(TeamOrganizerItem.TAG_LEADER_NAME));
+        }
+        if (originalData.contains(TeamOrganizerItem.TAG_TEAM_NUMBER)) {
+            newData.putInt(TeamOrganizerItem.TAG_TEAM_NUMBER, originalData.getInt(TeamOrganizerItem.TAG_TEAM_NUMBER));
+        }
+        if (originalData.contains("FacelessCurrentMimic")) {
+            newData.putString("FacelessCurrentMimic", originalData.getString("FacelessCurrentMimic"));
+        }
+        if (originalData.contains("GourmetDamageBonus")) {
+            newData.putFloat("GourmetDamageBonus", originalData.getFloat("GourmetDamageBonus"));
+        }
+        if (originalData.contains("GourmetHealthBonus")) {
+            newData.putFloat("GourmetHealthBonus", originalData.getFloat("GourmetHealthBonus"));
+        }
+    }
+
+    @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         syncData(event.getEntity());
         
