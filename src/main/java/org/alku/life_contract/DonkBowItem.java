@@ -7,6 +7,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,13 +27,30 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class DonkBowItem extends BowItem {
     private static final String TAG_DONK_BOW = "DonkBow";
     private static final String TAG_DONK_TRACKING = "DonkTrackingArrow";
     private static final float CRIT_CHANCE = 0.25f;
-    private static final double TRACKING_RANGE = 50.0;
-    private static final double TRACKING_STRENGTH = 1.2;
+    private static final double TRACKING_RANGE = 100.0;
+    private static final double TRACKING_STRENGTH = 0.6;
+    private static final double MAX_TURN_RATE = 0.8;
+
+    private static final Random RANDOM = new Random();
+    private static final int DEBUFF_DURATION = 30 * 20;
+    
+    private static final MobEffect[] DEBUFF_POOL = {
+        MobEffects.POISON,
+        MobEffects.WEAKNESS,
+        MobEffects.MOVEMENT_SLOWDOWN,
+        MobEffects.BLINDNESS,
+        MobEffects.WITHER,
+        MobEffects.LEVITATION,
+        MobEffects.UNLUCK,
+        MobEffects.DIG_SLOWDOWN,
+        MobEffects.HUNGER
+    };
 
     public DonkBowItem() {
         super(new Properties().stacksTo(1).rarity(Rarity.EPIC));
@@ -62,6 +82,8 @@ public class DonkBowItem extends BowItem {
 
             applyTrackingAndCrit(arrow, player, level);
 
+            DonkBowEvents.addTrackingArrow(arrow);
+
             level.addFreshEntity(arrow);
             
             playShootEffects(level, player);
@@ -75,7 +97,7 @@ public class DonkBowItem extends BowItem {
     private AbstractArrow createArrow(Level level, Player player, ItemStack bowStack, ItemStack arrowStack, float velocity, boolean hasInfinity, int powerLevel) {
         AbstractArrow arrow = new net.minecraft.world.entity.projectile.Arrow(level, player);
 
-        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity * 3.0F, 1.0F);
+        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, velocity * 3.0F, 0.0F);
 
         if (hasInfinity) {
             arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -138,28 +160,37 @@ public class DonkBowItem extends BowItem {
         }
 
         Vec3 arrowPos = arrow.position();
-        Vec3 targetPos = target.position().add(0, target.getBbHeight() / 2, 0);
+        Vec3 targetPos = predictTargetPosition(arrow, target);
         
-        Vec3 direction = targetPos.subtract(arrowPos).normalize();
+        double distanceToTarget = arrowPos.distanceTo(targetPos);
+        
+        if (distanceToTarget < 2.0) {
+            teleportArrowToTarget(arrow, target, targetPos);
+            return;
+        }
+        
+        Vec3 directionToTarget = targetPos.subtract(arrowPos).normalize();
         Vec3 currentMotion = arrow.getDeltaMovement();
         double currentSpeed = currentMotion.length();
         
-        Vec3 newMotion = direction.scale(currentSpeed);
+        double turnRate = calculateTurnRate(distanceToTarget);
         
-        double distanceToTarget = arrowPos.distanceTo(targetPos);
-        if (distanceToTarget < 5.0) {
-            newMotion = direction.scale(currentSpeed * 1.2);
+        Vec3 newDirection = currentMotion.normalize().lerp(directionToTarget, turnRate);
+        newDirection = newDirection.normalize();
+        
+        double speedMultiplier = 1.0;
+        if (distanceToTarget < 15.0) {
+            speedMultiplier = 1.0 + (15.0 - distanceToTarget) * 0.08;
         }
         
+        Vec3 newMotion = newDirection.scale(currentSpeed * speedMultiplier);
         arrow.setDeltaMovement(newMotion);
         
-        double dx = targetPos.x - arrowPos.x;
-        double dy = targetPos.y - arrowPos.y;
-        double dz = targetPos.z - arrowPos.z;
-        if (Math.sqrt(dx * dx + dy * dy + dz * dz) > 0) {
-            arrow.setYRot((float)(Math.toDegrees(Math.atan2(dz, dx)) - 90.0));
-            arrow.setXRot((float)(Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)))));
-        }
+        updateArrowRotation(arrow, targetPos);
+        
+        tag.putDouble("LastTargetX", target.getX());
+        tag.putDouble("LastTargetY", target.getY());
+        tag.putDouble("LastTargetZ", target.getZ());
 
         if (arrow.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(
@@ -167,6 +198,80 @@ public class DonkBowItem extends BowItem {
                 arrow.getX(), arrow.getY(), arrow.getZ(),
                 3, 0.05, 0.05, 0.05, 0.02
             );
+        }
+    }
+    
+    private static void teleportArrowToTarget(AbstractArrow arrow, LivingEntity target, Vec3 targetPos) {
+        Vec3 arrowPos = arrow.position();
+        Vec3 direction = targetPos.subtract(arrowPos);
+        
+        if (direction.lengthSqr() > 0) {
+            direction = direction.normalize();
+        }
+        
+        arrow.setPos(targetPos.x, targetPos.y, targetPos.z);
+        arrow.setDeltaMovement(direction.scale(2.0));
+        
+        if (arrow.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(
+                ParticleTypes.TOTEM_OF_UNDYING,
+                targetPos.x, targetPos.y, targetPos.z,
+                10, 0.2, 0.2, 0.2, 0.1
+            );
+        }
+    }
+    
+    private static Vec3 predictTargetPosition(AbstractArrow arrow, LivingEntity target) {
+        CompoundTag tag = arrow.getPersistentData();
+        
+        Vec3 targetPos = target.position().add(0, target.getBbHeight() / 2, 0);
+        
+        if (tag.contains("LastTargetX")) {
+            double lastX = tag.getDouble("LastTargetX");
+            double lastY = tag.getDouble("LastTargetY");
+            double lastZ = tag.getDouble("LastTargetZ");
+            
+            Vec3 targetVelocity = new Vec3(
+                target.getX() - lastX,
+                target.getY() - lastY,
+                target.getZ() - lastZ
+            );
+            
+            Vec3 arrowPos = arrow.position();
+            double distance = arrowPos.distanceTo(targetPos);
+            double flightTime = distance / arrow.getDeltaMovement().length();
+            
+            flightTime = Math.min(flightTime, 15);
+            
+            targetPos = targetPos.add(targetVelocity.scale(flightTime * 1.2));
+        }
+        
+        return targetPos;
+    }
+    
+    private static double calculateTurnRate(double distance) {
+        if (distance < 3.0) {
+            return 0.95;
+        } else if (distance < 8.0) {
+            return 0.7 + (8.0 - distance) * 0.03;
+        } else if (distance < 15.0) {
+            return 0.5 + (15.0 - distance) * 0.02;
+        } else if (distance < 30.0) {
+            return 0.35 + (30.0 - distance) * 0.01;
+        } else {
+            return TRACKING_STRENGTH;
+        }
+    }
+    
+    private static void updateArrowRotation(AbstractArrow arrow, Vec3 targetPos) {
+        Vec3 arrowPos = arrow.position();
+        double dx = targetPos.x - arrowPos.x;
+        double dy = targetPos.y - arrowPos.y;
+        double dz = targetPos.z - arrowPos.z;
+        
+        if (Math.sqrt(dx * dx + dy * dy + dz * dz) > 0) {
+            arrow.setYRot((float)(Math.toDegrees(Math.atan2(dz, dx)) - 90.0));
+            arrow.setXRot((float)(Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)))));
         }
     }
 
@@ -199,7 +304,7 @@ public class DonkBowItem extends BowItem {
             .filter(entity -> {
                 Vec3 toEntity = entity.position().subtract(arrowPos).normalize();
                 double dot = arrowMotion.dot(toEntity);
-                return dot > 0.3;
+                return dot > 0.0;
             })
             .min(Comparator.comparingDouble(entity -> entity.distanceToSqr(arrowPos)));
 
@@ -208,6 +313,35 @@ public class DonkBowItem extends BowItem {
                 .min(Comparator.comparingDouble(entity -> entity.distanceToSqr(arrowPos)))
                 .orElse(null)
         );
+    }
+
+    public static void applyRandomDebuff(LivingEntity target) {
+        MobEffect randomDebuff = DEBUFF_POOL[RANDOM.nextInt(DEBUFF_POOL.length)];
+        
+        int amplifier = RANDOM.nextInt(2);
+        
+        MobEffectInstance effect = new MobEffectInstance(randomDebuff, DEBUFF_DURATION, amplifier, false, true);
+        target.addEffect(effect);
+        
+        if (target instanceof Player player) {
+            String debuffName = getDebuffName(randomDebuff);
+            player.sendSystemMessage(Component.literal(
+                "§c[颗秒之弓] §f你被施加了 §e" + debuffName + " §f效果！"
+            ));
+        }
+    }
+
+    private static String getDebuffName(MobEffect effect) {
+        if (effect == MobEffects.POISON) return "中毒";
+        if (effect == MobEffects.WEAKNESS) return "虚弱";
+        if (effect == MobEffects.MOVEMENT_SLOWDOWN) return "缓慢";
+        if (effect == MobEffects.BLINDNESS) return "失明";
+        if (effect == MobEffects.WITHER) return "凋零";
+        if (effect == MobEffects.LEVITATION) return "飘浮";
+        if (effect == MobEffects.UNLUCK) return "霉运";
+        if (effect == MobEffects.DIG_SLOWDOWN) return "挖掘疲劳";
+        if (effect == MobEffects.HUNGER) return "饥饿";
+        return "未知效果";
     }
 
     private void playShootEffects(Level level, Player player) {
@@ -233,8 +367,10 @@ public class DonkBowItem extends BowItem {
         tooltip.add(Component.literal("§e✦ 无限 §7- 无需箭矢"));
         tooltip.add(Component.literal("§e✦ 力量 I §7- 增加箭矢伤害"));
         tooltip.add(Component.literal("§e✦ 瞬发 §7- 无需拉满即可发射满威力箭矢"));
-        tooltip.add(Component.literal("§e✦ 追踪 §7- 箭矢自动追踪并命中敌人"));
+        tooltip.add(Component.literal("§e✦ 必中追踪 §7- 箭矢自动追踪并命中敌人"));
+        tooltip.add(Component.literal("§e✦ 预判 §7- 自动预判目标移动轨迹"));
         tooltip.add(Component.literal("§e✦ 暴击 §7- 25%概率造成1.5倍伤害"));
+        tooltip.add(Component.literal("§c✦ 诅咒 §7- 命中目标随机施加30秒debuff"));
         tooltip.add(Component.literal(""));
         tooltip.add(Component.literal("§b★ 永久绑定 - 死亡不掉落"));
     }

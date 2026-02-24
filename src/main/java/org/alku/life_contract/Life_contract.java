@@ -36,6 +36,8 @@ import org.alku.life_contract.mineral_generator.MineralGeneratorBlock;
 import org.alku.life_contract.mineral_generator.MineralGeneratorMenu;
 import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
 import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.revive.ReviveTeammateMenu;
+import org.alku.life_contract.revive.ReviveTeammateScreen;
 
 @Mod(Life_contract.MODID)
 public class Life_contract {
@@ -88,6 +90,8 @@ public class Life_contract {
             () -> IForgeMenuType.create(MineralGeneratorMenu::new));
     public static final RegistryObject<MenuType<FollowerWandMenu>> FOLLOWER_WAND_MENU = MENU_TYPES.register("follower_wand",
             () -> IForgeMenuType.create(FollowerWandMenu::new));
+    public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
+            () -> IForgeMenuType.create(ReviveTeammateMenu::new));
 
     // 实体注册
     public static final RegistryObject<EntityType<TeamSentinel>> TEAM_SENTINEL = ENTITY_TYPES.register("team_sentinel",
@@ -159,6 +163,7 @@ public class Life_contract {
                 MenuScreens.register(TRADE_SHOP_MENU.get(), TradeShopScreen::new);
                 MenuScreens.register(MINERAL_GENERATOR_MENU.get(), MineralGeneratorScreen::new);
                 MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);
+                MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
                 
                 net.minecraft.client.renderer.item.ItemProperties.register(
                     DONK_BOW.get(),

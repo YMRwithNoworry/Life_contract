@@ -30,6 +30,7 @@ import org.alku.life_contract.profession.ProfessionConfig;
 import org.alku.life_contract.follower.FollowerHungerSystem;
 import org.alku.life_contract.death_venger.DeathVengerSystem;
 import org.alku.life_contract.healer.HealerSystem;
+import org.alku.life_contract.revive.ReviveTeammateSystem;
 
 import java.util.*;
 
@@ -124,6 +125,21 @@ public class ContractEvents {
             FollowerHungerSystem.syncHungerMultiplierToClient(serverPlayer);
             DeathVengerSystem.loadMarkedTarget(serverPlayer);
             initializeUndeadPlayerOnJoin(serverPlayer);
+            
+            syncAllPlayersDataToNewPlayer(serverPlayer);
+        }
+    }
+    
+    private static void syncAllPlayersDataToNewPlayer(ServerPlayer newPlayer) {
+        if (newPlayer.getServer() == null) return;
+        
+        for (ServerPlayer otherPlayer : newPlayer.getServer().getPlayerList().getPlayers()) {
+            if (otherPlayer != newPlayer) {
+                NetworkHandler.CHANNEL.send(
+                    PacketDistributor.PLAYER.with(() -> newPlayer),
+                    new PacketSyncContract(otherPlayer)
+                );
+            }
         }
     }
 
@@ -181,6 +197,7 @@ public class ContractEvents {
             FacelessDeceiverSystem.onPlayerRespawn(serverPlayer);
             ImpostorSystem.onPlayerRespawn(serverPlayer);
             HealerSystem.onPlayerRespawn(serverPlayer);
+            ReviveTeammateSystem.onPlayerRespawn(serverPlayer);
         }
     }
 
@@ -648,14 +665,14 @@ public class ContractEvents {
         
         boolean hasBow = false;
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            if (player.getInventory().getItem(i).getItem() == Life_contract.DONK_BOW.get()) {
+            if (player.getInventory().getItem(i).getItem() == Life_contract.SEALED_BOW.get()) {
                 hasBow = true;
                 break;
             }
         }
         
         if (!hasBow) {
-            ItemStack bow = new ItemStack(Life_contract.DONK_BOW.get());
+            ItemStack bow = new ItemStack(Life_contract.SEALED_BOW.get());
             if (!player.getInventory().add(bow)) {
                 player.drop(bow, false);
             }

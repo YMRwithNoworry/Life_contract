@@ -77,18 +77,18 @@ public class PacketSelectProfession {
     
     private static void giveDonkBow(ServerPlayer player) {
         if (!hasDonkBow(player)) {
-            ItemStack bowStack = new ItemStack(Life_contract.DONK_BOW.get());
+            ItemStack bowStack = new ItemStack(Life_contract.SEALED_BOW.get());
             if (!player.getInventory().add(bowStack)) {
                 player.drop(bowStack, false);
             }
             
-            ItemStack arrowStack = new ItemStack(net.minecraft.world.item.Items.ARROW, 64);
+            ItemStack arrowStack = new ItemStack(net.minecraft.world.item.Items.ARROW, 8);
             if (!player.getInventory().add(arrowStack)) {
                 player.drop(arrowStack, false);
             }
             
             player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                    "§d[donk] §f你获得了专属的 §e颗秒神弓 §f和 §e一组箭§f！"));
+                    "§d[donk] §f你获得了专属的 §e尘封的弓 §f和 §e8根箭§f！"));
         }
     }
     
@@ -105,7 +105,7 @@ public class PacketSelectProfession {
     public static boolean hasDonkBow(ServerPlayer player) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() == Life_contract.DONK_BOW.get()) {
+            if (stack.getItem() == Life_contract.SEALED_BOW.get()) {
                 return true;
             }
         }

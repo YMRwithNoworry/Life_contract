@@ -26,7 +26,7 @@ public class PlayerDamageReduction {
         }
         
         float originalDamage = event.getAmount();
-        float reducedDamage = originalDamage * 0.6f;
+        float reducedDamage = originalDamage * 0.4f;
         
         event.setAmount(reducedDamage);
     }

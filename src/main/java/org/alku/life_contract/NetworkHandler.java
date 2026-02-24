@@ -12,6 +12,9 @@ import net.minecraftforge.network.simple.SimpleChannel;
 
 import org.alku.life_contract.death_venger.PacketSyncMarkedTarget;
 import org.alku.life_contract.follower.FollowerWandMenu;
+import org.alku.life_contract.revive.PacketReviveTeammate;
+import org.alku.life_contract.revive.PacketSkipRevive;
+import org.alku.life_contract.revive.PacketSyncDeadTeammates;
 import org.alku.life_contract.follower.PacketOpenFollowerWand;
 import org.alku.life_contract.follower.PacketSyncFollower;
 import org.alku.life_contract.follower.PacketSyncFollowerHunger;
@@ -229,6 +232,24 @@ public class NetworkHandler {
                 PacketSyncProfessions::decode,
                 PacketSyncProfessions::handle
         );
+        CHANNEL.registerMessage(id++,
+                PacketReviveTeammate.class,
+                PacketReviveTeammate::encode,
+                PacketReviveTeammate::decode,
+                PacketReviveTeammate::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSkipRevive.class,
+                PacketSkipRevive::encode,
+                PacketSkipRevive::decode,
+                PacketSkipRevive::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncDeadTeammates.class,
+                PacketSyncDeadTeammates::encode,
+                PacketSyncDeadTeammates::decode,
+                PacketSyncDeadTeammates::handle
+        );
     }
 
     public static void sendRemoveTradePacket(int slot) {
@@ -398,5 +419,13 @@ public class NetworkHandler {
 
     public static void syncProfessions(ServerPlayer player) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketSyncProfessions(ProfessionConfig.getProfessions()));
+    }
+
+    public static void sendReviveTeammatePacket(java.util.UUID teammateUUID) {
+        CHANNEL.sendToServer(new PacketReviveTeammate(teammateUUID));
+    }
+
+    public static void sendSkipRevivePacket() {
+        CHANNEL.sendToServer(new PacketSkipRevive());
     }
 }
