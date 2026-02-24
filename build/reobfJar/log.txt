@@ -137,47 +137,40 @@ Processing entries
 Conflicting propagated mapping for org/alku/life_contract/AmbushOrbItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
 Conflicting propagated mapping for org/alku/life_contract/AmbushOrbItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
 Conflicting propagated mapping for org/alku/life_contract/AmbushOrbItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
-Conflicting propagated mapping for net/minecraft/world/entity/LivingEntity/lambda$addAdditionalSaveData$3(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/Tag;)V from net/minecraft/world/entity/player/Player/lambda$addAdditionalSaveData$3(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/Tag;)V: lambda$addAdditionalSaveData$3 -> m_219754_
-Conflicting propagated mapping for org/alku/life_contract/ProfessionScreen/isPauseScreen()Z from net/minecraft/client/gui/screens/Screen/isPauseScreen()Z: isPauseScreen -> m_7043_
-Conflicting propagated mapping for org/alku/life_contract/ProfessionScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/Screen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
-Conflicting propagated mapping for org/alku/life_contract/ProfessionScreen/init()V from net/minecraft/client/gui/screens/Screen/init()V: init -> m_7856_
-Conflicting propagated mapping for org/alku/life_contract/ProfessionScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/components/events/ContainerEventHandler/mouseClicked(DDI)Z: mouseClicked -> m_6375_
+Conflicting propagated mapping for org/alku/life_contract/profession/ProfessionScreen/isPauseScreen()Z from net/minecraft/client/gui/screens/Screen/isPauseScreen()Z: isPauseScreen -> m_7043_
+Conflicting propagated mapping for org/alku/life_contract/profession/ProfessionScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/Screen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
+Conflicting propagated mapping for org/alku/life_contract/profession/ProfessionScreen/init()V from net/minecraft/client/gui/screens/Screen/init()V: init -> m_7856_
+Conflicting propagated mapping for org/alku/life_contract/profession/ProfessionScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/components/events/ContainerEventHandler/mouseClicked(DDI)Z: mouseClicked -> m_6375_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/mouseClicked(DDI)Z: mouseClicked -> m_6375_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/removed()V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/removed()V: removed -> m_7861_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderTooltip -> m_280072_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/keyPressed(III)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/keyPressed(III)Z: keyPressed -> m_7933_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/init()V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/init()V: init -> m_7856_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/mouseClicked(DDI)Z: mouseClicked -> m_6375_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorScreen/charTyped(CI)Z from net/minecraft/client/gui/components/events/ContainerEventHandler/charTyped(CI)Z: charTyped -> m_5534_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity$MineralType/getSerializedName()Ljava/lang/String; from net/minecraft/util/StringRepresentable/getSerializedName()Ljava/lang/String;: getSerializedName -> m_7912_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity/load(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/level/block/entity/BlockEntity/load(Lnet/minecraft/nbt/CompoundTag;)V: load -> m_142466_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity/saveAdditional(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/level/block/entity/BlockEntity/saveAdditional(Lnet/minecraft/nbt/CompoundTag;)V: saveAdditional -> m_183515_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity/clearContent()V from net/minecraft/world/Clearable/clearContent()V: clearContent -> m_6211_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity/createMenu(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/inventory/AbstractContainerMenu; from net/minecraft/world/inventory/MenuConstructor/createMenu(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/inventory/AbstractContainerMenu;: createMenu -> m_7208_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlockEntity/getDisplayName()Lnet/minecraft/network/chat/Component; from net/minecraft/world/MenuProvider/getDisplayName()Lnet/minecraft/network/chat/Component;: getDisplayName -> m_5446_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/keyPressed(III)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/keyPressed(III)Z: keyPressed -> m_7933_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/init()V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/init()V: init -> m_7856_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/mouseClicked(DDI)Z: mouseClicked -> m_6375_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorScreen/charTyped(CI)Z from net/minecraft/client/gui/components/events/ContainerEventHandler/charTyped(CI)Z: charTyped -> m_5534_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity$MineralType/getSerializedName()Ljava/lang/String; from net/minecraft/util/StringRepresentable/getSerializedName()Ljava/lang/String;: getSerializedName -> m_7912_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity/load(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/level/block/entity/BlockEntity/load(Lnet/minecraft/nbt/CompoundTag;)V: load -> m_142466_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity/saveAdditional(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/level/block/entity/BlockEntity/saveAdditional(Lnet/minecraft/nbt/CompoundTag;)V: saveAdditional -> m_183515_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity/clearContent()V from net/minecraft/world/Clearable/clearContent()V: clearContent -> m_6211_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity/createMenu(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/inventory/AbstractContainerMenu; from net/minecraft/world/inventory/MenuConstructor/createMenu(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/inventory/AbstractContainerMenu;: createMenu -> m_7208_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity/getDisplayName()Lnet/minecraft/network/chat/Component; from net/minecraft/world/MenuProvider/getDisplayName()Lnet/minecraft/network/chat/Component;: getDisplayName -> m_5446_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component; from net/minecraft/world/item/Item/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component;: getName -> m_7626_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/useOn(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;: useOn -> m_6225_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
 Conflicting propagated mapping for org/alku/life_contract/CreatureEggItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
+Conflicting propagated mapping for net/minecraft/world/entity/LivingEntity/lambda$addAdditionalSaveData$3(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/Tag;)V from net/minecraft/world/entity/player/Player/lambda$addAdditionalSaveData$3(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/Tag;)V: lambda$addAdditionalSaveData$3 -> m_219754_
 Conflicting propagated mapping for net/minecraftforge/client/gui/overlay/ForgeGui/clearCache()V from net/minecraft/client/gui/Gui/clearCache()V: clearCache -> m_93091_
 Conflicting propagated mapping for net/minecraftforge/client/gui/overlay/ForgeGui/render(Lnet/minecraft/client/gui/GuiGraphics;F)V from net/minecraft/client/gui/Gui/render(Lnet/minecraft/client/gui/GuiGraphics;F)V: render -> m_280421_
 Conflicting propagated mapping for net/minecraftforge/client/gui/overlay/ForgeGui/renderPortalOverlay(Lnet/minecraft/client/gui/GuiGraphics;F)V from net/minecraft/client/gui/Gui/renderPortalOverlay(Lnet/minecraft/client/gui/GuiGraphics;F)V: renderPortalOverlay -> m_280379_
 Conflicting propagated mapping for net/minecraftforge/client/gui/overlay/ForgeGui/renderJumpMeter(Lnet/minecraft/world/entity/PlayerRideableJumping;Lnet/minecraft/client/gui/GuiGraphics;I)V from net/minecraft/client/gui/Gui/renderJumpMeter(Lnet/minecraft/world/entity/PlayerRideableJumping;Lnet/minecraft/client/gui/GuiGraphics;I)V: renderJumpMeter -> m_280069_
-Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/getDefaultInstance()Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/item/Item/getDefaultInstance()Lnet/minecraft/world/item/ItemStack;: getDefaultInstance -> m_7968_
-Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V from net/minecraft/world/item/BowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V: releaseUsing -> m_5551_
-Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
-Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
-Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/isInvulnerableTo(Lnet/minecraft/world/damagesource/DamageSource;)Z from net/minecraft/world/entity/Entity/isInvulnerableTo(Lnet/minecraft/world/damagesource/DamageSource;)Z: isInvulnerableTo -> m_6673_
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V from net/minecraft/world/entity/Entity/setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V: setDeltaMovement -> m_20256_
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Entity/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: readAdditionalSaveData -> m_7378_
@@ -187,30 +180,42 @@ Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/define
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Entity/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: addAdditionalSaveData -> m_7380_
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/getDeltaMovement()Lnet/minecraft/world/phys/Vec3; from net/minecraft/world/entity/Entity/getDeltaMovement()Lnet/minecraft/world/phys/Vec3;: getDeltaMovement -> m_20184_
 Conflicting propagated mapping for org/alku/life_contract/FireTrailEntity/isPushable()Z from net/minecraft/world/entity/Entity/isPushable()Z: isPushable -> m_6094_
-Conflicting propagated mapping for org/alku/life_contract/FollowerAttackGoal/canUse()Z from net/minecraft/world/entity/ai/goal/Goal/canUse()Z: canUse -> m_8036_
-Conflicting propagated mapping for org/alku/life_contract/FollowerAttackGoal/tick()V from net/minecraft/world/entity/ai/goal/Goal/tick()V: tick -> m_8037_
-Conflicting propagated mapping for org/alku/life_contract/FollowerAttackGoal/stop()V from net/minecraft/world/entity/ai/goal/target/TargetGoal/stop()V: stop -> m_8041_
-Conflicting propagated mapping for org/alku/life_contract/FollowerAttackGoal/start()V from net/minecraft/world/entity/ai/goal/target/TargetGoal/start()V: start -> m_8056_
-Conflicting propagated mapping for org/alku/life_contract/FollowerAttackGoal/canContinueToUse()Z from net/minecraft/world/entity/ai/goal/target/TargetGoal/canContinueToUse()Z: canContinueToUse -> m_8045_
-Conflicting propagated mapping for org/alku/life_contract/FollowOwnerGoal/canUse()Z from net/minecraft/world/entity/ai/goal/Goal/canUse()Z: canUse -> m_8036_
-Conflicting propagated mapping for org/alku/life_contract/FollowOwnerGoal/start()V from net/minecraft/world/entity/ai/goal/Goal/start()V: start -> m_8056_
-Conflicting propagated mapping for org/alku/life_contract/FollowOwnerGoal/tick()V from net/minecraft/world/entity/ai/goal/Goal/tick()V: tick -> m_8037_
-Conflicting propagated mapping for org/alku/life_contract/FollowOwnerGoal/stop()V from net/minecraft/world/entity/ai/goal/Goal/stop()V: stop -> m_8041_
-Conflicting propagated mapping for org/alku/life_contract/FollowOwnerGoal/canContinueToUse()Z from net/minecraft/world/entity/ai/goal/Goal/canContinueToUse()Z: canContinueToUse -> m_8045_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandItem/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component; from net/minecraft/world/item/Item/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component;: getName -> m_7626_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandMenu$OutputOnlySlot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/inventory/Slot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z: mayPlace -> m_5857_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
-Conflicting propagated mapping for org/alku/life_contract/FollowerWandScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
+Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/getDefaultInstance()Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/item/Item/getDefaultInstance()Lnet/minecraft/world/item/ItemStack;: getDefaultInstance -> m_7968_
+Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V from net/minecraft/world/item/BowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V: releaseUsing -> m_5551_
+Conflicting propagated mapping for org/alku/life_contract/DonkBowItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
+Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
+Conflicting propagated mapping for org/alku/life_contract/FacelessDeceiverMaskItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerAttackGoal/canUse()Z from net/minecraft/world/entity/ai/goal/Goal/canUse()Z: canUse -> m_8036_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerAttackGoal/tick()V from net/minecraft/world/entity/ai/goal/Goal/tick()V: tick -> m_8037_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerAttackGoal/stop()V from net/minecraft/world/entity/ai/goal/target/TargetGoal/stop()V: stop -> m_8041_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerAttackGoal/start()V from net/minecraft/world/entity/ai/goal/target/TargetGoal/start()V: start -> m_8056_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerAttackGoal/canContinueToUse()Z from net/minecraft/world/entity/ai/goal/target/TargetGoal/canContinueToUse()Z: canContinueToUse -> m_8045_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowOwnerGoal/canUse()Z from net/minecraft/world/entity/ai/goal/Goal/canUse()Z: canUse -> m_8036_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowOwnerGoal/start()V from net/minecraft/world/entity/ai/goal/Goal/start()V: start -> m_8056_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowOwnerGoal/tick()V from net/minecraft/world/entity/ai/goal/Goal/tick()V: tick -> m_8037_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowOwnerGoal/stop()V from net/minecraft/world/entity/ai/goal/Goal/stop()V: stop -> m_8041_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowOwnerGoal/canContinueToUse()Z from net/minecraft/world/entity/ai/goal/Goal/canContinueToUse()Z: canContinueToUse -> m_8045_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandItem/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component; from net/minecraft/world/item/Item/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component;: getName -> m_7626_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandMenu$OutputOnlySlot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/inventory/Slot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z: mayPlace -> m_5857_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
+Conflicting propagated mapping for org/alku/life_contract/follower/FollowerWandMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
 Conflicting propagated mapping for org/alku/life_contract/GamblerDiceItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
 Conflicting propagated mapping for org/alku/life_contract/GamblerDiceItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
 Conflicting propagated mapping for org/alku/life_contract/GamblerDiceItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
+Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Mob/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: readAdditionalSaveData -> m_7378_
+Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Mob/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: addAdditionalSaveData -> m_7380_
+Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/canBeLeashed(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/entity/Mob/canBeLeashed(Lnet/minecraft/world/entity/player/Player;)Z: canBeLeashed -> m_6573_
+Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/registerGoals()V from net/minecraft/world/entity/Mob/registerGoals()V: registerGoals -> m_8099_
+Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/isPushable()Z from net/minecraft/world/entity/LivingEntity/isPushable()Z: isPushable -> m_6094_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventoryScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventoryScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventoryMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
@@ -219,41 +224,41 @@ Conflicting propagated mapping for org/alku/life_contract/TeamInventoryMenu/quic
 Conflicting propagated mapping for org/alku/life_contract/ShopScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
 Conflicting propagated mapping for org/alku/life_contract/ShopScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
 Conflicting propagated mapping for org/alku/life_contract/ShopScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/mouseClicked(DDI)Z: mouseClicked -> m_6375_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/pushEntities()V from net/minecraft/world/entity/LivingEntity/pushEntities()V: pushEntities -> m_6138_
 Conflicting propagated mapping for org/alku/life_contract/ShopScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Mob/readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: readAdditionalSaveData -> m_7378_
 Conflicting propagated mapping for org/alku/life_contract/ShopMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
 Conflicting propagated mapping for org/alku/life_contract/ShopMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
 Conflicting propagated mapping for org/alku/life_contract/ShopMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/entity/Mob/mobInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: mobInteract -> m_6071_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/defineSynchedData()V from net/minecraft/world/entity/Mob/defineSynchedData()V: defineSynchedData -> m_8097_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/push(Lnet/minecraft/world/entity/Entity;)V from net/minecraft/world/entity/LivingEntity/push(Lnet/minecraft/world/entity/Entity;)V: push -> m_7334_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V from net/minecraft/world/entity/Mob/addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V: addAdditionalSaveData -> m_7380_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/keyPressed(III)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/keyPressed(III)Z: keyPressed -> m_7933_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V: render -> m_88315_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/init()V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/init()V: init -> m_7856_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V: renderLabels -> m_280003_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/mouseClicked(DDI)Z from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/mouseClicked(DDI)Z: mouseClicked -> m_6375_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z from net/minecraft/world/entity/LivingEntity/hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z: hurt -> m_6469_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V from net/minecraft/client/gui/screens/inventory/AbstractContainerScreen/renderBg(Lnet/minecraft/client/gui/GuiGraphics;FII)V: renderBg -> m_7286_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupScreen/charTyped(CI)Z from net/minecraft/client/gui/components/events/ContainerEventHandler/charTyped(CI)Z: charTyped -> m_5534_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
 Conflicting propagated mapping for org/alku/life_contract/TradeSetupMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/canBeCollidedWith()Z from net/minecraft/world/entity/Entity/canBeCollidedWith()Z: canBeCollidedWith -> m_5829_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/aiStep()V from net/minecraft/world/entity/Mob/aiStep()V: aiStep -> m_8107_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopMenu/removed(Lnet/minecraft/world/entity/player/Player;)V from net/minecraft/world/inventory/AbstractContainerMenu/removed(Lnet/minecraft/world/entity/player/Player;)V: removed -> m_6877_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
-Conflicting propagated mapping for org/alku/life_contract/TeamSentinel/isPushable()Z from net/minecraft/world/entity/LivingEntity/isPushable()Z: isPushable -> m_6094_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/getTicker(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lnet/minecraft/world/level/block/entity/BlockEntityTicker; from net/minecraft/world/level/block/EntityBlock/getTicker(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lnet/minecraft/world/level/block/entity/BlockEntityTicker;: getTicker -> m_142354_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/getStateForPlacement(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/level/block/state/BlockState; from net/minecraft/world/level/block/Block/getStateForPlacement(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/level/block/state/BlockState;: getStateForPlacement -> m_5573_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/newBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/entity/BlockEntity; from net/minecraft/world/level/block/EntityBlock/newBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/entity/BlockEntity;: newBlockEntity -> m_142194_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/getRenderShape(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/RenderShape; from net/minecraft/world/level/block/BaseEntityBlock/getRenderShape(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/RenderShape;: getRenderShape -> m_7514_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/createBlockStateDefinition(Lnet/minecraft/world/level/block/state/StateDefinition$Builder;)V from net/minecraft/world/level/block/Block/createBlockStateDefinition(Lnet/minecraft/world/level/block/state/StateDefinition$Builder;)V: createBlockStateDefinition -> m_7926_
-Conflicting propagated mapping for org/alku/life_contract/MineralGeneratorBlock/use(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/level/block/state/BlockBehaviour/use(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;: use -> m_6227_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/AbstractContainerMenu/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6875_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/inventory/AbstractContainerMenu/quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;: quickMoveStack -> m_7648_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlock/onRemove(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V from net/minecraft/world/level/block/state/BlockBehaviour/onRemove(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V: onRemove -> m_6810_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlock/createBlockStateDefinition(Lnet/minecraft/world/level/block/state/StateDefinition$Builder;)V from net/minecraft/world/level/block/Block/createBlockStateDefinition(Lnet/minecraft/world/level/block/state/StateDefinition$Builder;)V: createBlockStateDefinition -> m_7926_
+Conflicting propagated mapping for org/alku/life_contract/mineral_generator/MineralGeneratorBlock/newBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/entity/BlockEntity; from net/minecraft/world/level/block/EntityBlock/newBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/entity/BlockEntity;: newBlockEntity -> m_142194_
+Conflicting propagated mapping for net/minecraftforge/network/IContainerFactory/create(ILnet/minecraft/world/entity/player/Inventory;)Lnet/minecraft/world/inventory/AbstractContainerMenu; from net/minecraft/world/inventory/MenuType$MenuSupplier/create(ILnet/minecraft/world/entity/player/Inventory;)Lnet/minecraft/world/inventory/AbstractContainerMenu;: create -> m_39994_
+Conflicting propagated mapping for org/alku/life_contract/TeamOrganizerItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/TeamOrganizerItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
+Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/isEnchantable(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isEnchantable(Lnet/minecraft/world/item/ItemStack;)Z: isEnchantable -> m_8120_
+Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/getDefaultInstance()Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/item/Item/getDefaultInstance()Lnet/minecraft/world/item/ItemStack;: getDefaultInstance -> m_7968_
+Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V from net/minecraft/world/item/BowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V: releaseUsing -> m_5551_
+Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
+Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
+Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component; from net/minecraft/world/item/Item/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component;: getName -> m_7626_
+Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
+Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
+Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/getContainerSize()I from net/minecraft/world/Container/getContainerSize()I: getContainerSize -> m_6643_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/setItem(ILnet/minecraft/world/item/ItemStack;)V from net/minecraft/world/Container/setItem(ILnet/minecraft/world/item/ItemStack;)V: setItem -> m_6836_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/removeItem(II)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/Container/removeItem(II)Lnet/minecraft/world/item/ItemStack;: removeItem -> m_7407_
@@ -263,24 +268,8 @@ Conflicting propagated mapping for org/alku/life_contract/TeamInventory/isEmpty(
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/setChanged()V from net/minecraft/world/Container/setChanged()V: setChanged -> m_6596_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/removeItemNoUpdate(I)Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/Container/removeItemNoUpdate(I)Lnet/minecraft/world/item/ItemStack;: removeItemNoUpdate -> m_8016_
 Conflicting propagated mapping for org/alku/life_contract/TeamInventory/stillValid(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/Container/stillValid(Lnet/minecraft/world/entity/player/Player;)Z: stillValid -> m_6542_
-Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/isEnchantable(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isEnchantable(Lnet/minecraft/world/item/ItemStack;)Z: isEnchantable -> m_8120_
-Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/getDefaultInstance()Lnet/minecraft/world/item/ItemStack; from net/minecraft/world/item/Item/getDefaultInstance()Lnet/minecraft/world/item/ItemStack;: getDefaultInstance -> m_7968_
-Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V from net/minecraft/world/item/BowItem/releaseUsing(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;I)V: releaseUsing -> m_5551_
-Conflicting propagated mapping for org/alku/life_contract/SealedBowItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
 Conflicting propagated mapping for org/alku/life_contract/ShopMenu$ShopSlot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/inventory/Slot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z: mayPlace -> m_5857_
 Conflicting propagated mapping for org/alku/life_contract/ShopMenu$ShopSlot/mayPickup(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/Slot/mayPickup(Lnet/minecraft/world/entity/player/Player;)Z: mayPickup -> m_8010_
-Conflicting propagated mapping for org/alku/life_contract/SoulContractItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/SoulContractItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
-Conflicting propagated mapping for org/alku/life_contract/SoulContractItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
-Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component; from net/minecraft/world/item/Item/getName(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/network/chat/Component;: getName -> m_7626_
-Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder; from net/minecraft/world/item/Item/use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;: use -> m_7203_
-Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/isFoil(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/item/Item/isFoil(Lnet/minecraft/world/item/ItemStack;)Z: isFoil -> m_5812_
-Conflicting propagated mapping for org/alku/life_contract/TeamGolemWandItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
-Conflicting propagated mapping for org/alku/life_contract/TeamOrganizerItem/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V from net/minecraft/world/item/Item/appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V: appendHoverText -> m_7373_
-Conflicting propagated mapping for org/alku/life_contract/TeamOrganizerItem/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult; from net/minecraft/world/item/Item/interactLivingEntity(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;: interactLivingEntity -> m_6880_
-Conflicting propagated mapping for net/minecraftforge/network/IContainerFactory/create(ILnet/minecraft/world/entity/player/Inventory;)Lnet/minecraft/world/inventory/AbstractContainerMenu; from net/minecraft/world/inventory/MenuType$MenuSupplier/create(ILnet/minecraft/world/entity/player/Inventory;)Lnet/minecraft/world/inventory/AbstractContainerMenu;: create -> m_39994_
 Conflicting propagated mapping for org/alku/life_contract/TradeSavedData/save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag; from net/minecraft/world/level/saveddata/SavedData/save(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;: save -> m_7176_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopMenu$TradeSlot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z from net/minecraft/world/inventory/Slot/mayPlace(Lnet/minecraft/world/item/ItemStack;)Z: mayPlace -> m_5857_
 Conflicting propagated mapping for org/alku/life_contract/TradeShopMenu$TradeSlot/mayPickup(Lnet/minecraft/world/entity/player/Player;)Z from net/minecraft/world/inventory/Slot/mayPickup(Lnet/minecraft/world/entity/player/Player;)Z: mayPickup -> m_8010_
@@ -337,13 +326,6 @@ Writing Output: E:\￤ﾻﾣ￧ﾠﾁ\MC￦ﾨﾡ￧ﾻﾄ\Life_contract - ￥�
   org/alku/life_contract/
   org/alku/life_contract/AmbushOrbItem.class
   org/alku/life_contract/AngelHaloRenderer.class
-  org/alku/life_contract/BeastRiderBuffSystem.class
-  org/alku/life_contract/BeastRiderKeyHandler$1.class
-  org/alku/life_contract/BeastRiderKeyHandler.class
-  org/alku/life_contract/BeastRiderMountSystem$1.class
-  org/alku/life_contract/BeastRiderMountSystem$MountBehavior.class
-  org/alku/life_contract/BeastRiderMountSystem.class
-  org/alku/life_contract/BeastRiderMovementController.class
   org/alku/life_contract/BeastRiderRenderer.class
   org/alku/life_contract/ClientDataStorage$MineralGeneratorData.class
   org/alku/life_contract/ClientDataStorage$PlayerData.class
@@ -354,9 +336,6 @@ Writing Output: E:\￤ﾻﾣ￧ﾠﾁ\MC￦ﾨﾡ￧ﾻﾄ\Life_contract - ￥�
   org/alku/life_contract/ContractEvents.class
   org/alku/life_contract/ContractHUD.class
   org/alku/life_contract/CreatureEggItem.class
-  org/alku/life_contract/DeathVengerHUD.class
-  org/alku/life_contract/DeathVengerNameHider.class
-  org/alku/life_contract/DeathVengerSystem.class
   org/alku/life_contract/DonkBowItem.class
   org/alku/life_contract/EndlessMinerSystem$DropEntry.class
   org/alku/life_contract/EndlessMinerSystem.class
@@ -365,23 +344,13 @@ Writing Output: E:\￤ﾻﾣ￧ﾠﾁ\MC￦ﾨﾡ￧ﾻﾄ\Life_contract - ￥�
   org/alku/life_contract/FacelessDeceiverMaskItem.class
   org/alku/life_contract/FacelessDeceiverSystem.class
   org/alku/life_contract/FireTrailEntity.class
-  org/alku/life_contract/FollowOwnerGoal.class
-  org/alku/life_contract/FollowerAttackGoal.class
-  org/alku/life_contract/FollowerClientCache.class
-  org/alku/life_contract/FollowerEvents.class
   org/alku/life_contract/FollowerGlowRenderer.class
-  org/alku/life_contract/FollowerHungerSystem.class
   org/alku/life_contract/FollowerOutlineRenderer.class
-  org/alku/life_contract/FollowerWandItem.class
-  org/alku/life_contract/FollowerWandMenu$OutputOnlySlot.class
-  org/alku/life_contract/FollowerWandMenu.class
-  org/alku/life_contract/FollowerWandScreen.class
   org/alku/life_contract/FoodTypeRegistry$FoodType.class
   org/alku/life_contract/FoodTypeRegistry.class
+  org/alku/life_contract/FoolSystem.class
   org/alku/life_contract/GamblerDiceItem$1.class
   org/alku/life_contract/GamblerDiceItem.class
-  org/alku/life_contract/HealerHUD.class
-  org/alku/life_contract/HealerSystem.class
   org/alku/life_contract/ImpostorClientRenderer.class
   org/alku/life_contract/ImpostorSystem$DisguiseData.class
   org/alku/life_contract/ImpostorSystem.class
@@ -391,51 +360,22 @@ Writing Output: E:\￤ﾻﾣ￧ﾠﾁ\MC￦ﾨﾡ￧ﾻﾄ\Life_contract - ￥�
   org/alku/life_contract/Life_contract$ModEvents.class
   org/alku/life_contract/Life_contract$ServerEvents.class
   org/alku/life_contract/Life_contract.class
-  org/alku/life_contract/MineralGenerationConfig.class
-  org/alku/life_contract/MineralGeneratorBlock.class
-  org/alku/life_contract/MineralGeneratorBlockEntity$1.class
-  org/alku/life_contract/MineralGeneratorBlockEntity$MineralType.class
-  org/alku/life_contract/MineralGeneratorBlockEntity.class
-  org/alku/life_contract/MineralGeneratorDisplayRenderer.class
-  org/alku/life_contract/MineralGeneratorMenu.class
-  org/alku/life_contract/MineralGeneratorScreen.class
   org/alku/life_contract/ModPoolConfig$1.class
   org/alku/life_contract/ModPoolConfig.class
   org/alku/life_contract/NetworkHandler.class
   org/alku/life_contract/OreToExp.class
   org/alku/life_contract/PacketBuyTrade.class
-  org/alku/life_contract/PacketGetMineralGenerator.class
-  org/alku/life_contract/PacketHealerActiveHeal.class
-  org/alku/life_contract/PacketMountCommand.class
-  org/alku/life_contract/PacketMountMovement.class
-  org/alku/life_contract/PacketOpenFollowerWand.class
-  org/alku/life_contract/PacketOpenProfessionMenu.class
+  org/alku/life_contract/PacketFoolStealProfession.class
   org/alku/life_contract/PacketOpenShop.class
   org/alku/life_contract/PacketOpenTeamInventory.class
   org/alku/life_contract/PacketOpenTradeShop.class
   org/alku/life_contract/PacketPurchaseItem.class
-  org/alku/life_contract/PacketRemoveMineralGenerator.class
   org/alku/life_contract/PacketRemoveTrade.class
   org/alku/life_contract/PacketSaveTrade.class
-  org/alku/life_contract/PacketSelectProfession.class
-  org/alku/life_contract/PacketSetMineralGenerator.class
   org/alku/life_contract/PacketSyncContract.class
-  org/alku/life_contract/PacketSyncFollower.class
-  org/alku/life_contract/PacketSyncFollowerHunger.class
   org/alku/life_contract/PacketSyncForgetterState.class
-  org/alku/life_contract/PacketSyncHealerCooldown.class
   org/alku/life_contract/PacketSyncImpostorState$ClientDisguiseData.class
   org/alku/life_contract/PacketSyncImpostorState.class
-  org/alku/life_contract/PacketSyncMarkedTarget.class
-  org/alku/life_contract/PacketSyncMineralGenerationState.class
-  org/alku/life_contract/PacketSyncMineralGenerator.class
-  org/alku/life_contract/PacketSyncMount.class
-  org/alku/life_contract/PacketUnlockProfession.class
-  org/alku/life_contract/Profession.class
-  org/alku/life_contract/ProfessionConfig$1.class
-  org/alku/life_contract/ProfessionConfig$2.class
-  org/alku/life_contract/ProfessionConfig.class
-  org/alku/life_contract/ProfessionScreen.class
   org/alku/life_contract/SealedBowItem.class
   org/alku/life_contract/ShopConfig.class
   org/alku/life_contract/ShopItem.class
@@ -461,4 +401,64 @@ Writing Output: E:\￤ﾻﾣ￧ﾠﾁ\MC￦ﾨﾡ￧ﾻﾄ\Life_contract - ￥�
   org/alku/life_contract/TradeShopMenu$TradeSlot.class
   org/alku/life_contract/TradeShopMenu.class
   org/alku/life_contract/TradeShopScreen.class
+  org/alku/life_contract/death_venger/
+  org/alku/life_contract/death_venger/DeathVengerHUD.class
+  org/alku/life_contract/death_venger/DeathVengerNameHider.class
+  org/alku/life_contract/death_venger/DeathVengerSystem.class
+  org/alku/life_contract/death_venger/PacketSyncMarkedTarget.class
+  org/alku/life_contract/follower/
+  org/alku/life_contract/follower/FollowOwnerGoal.class
+  org/alku/life_contract/follower/FollowerAttackGoal.class
+  org/alku/life_contract/follower/FollowerClientCache.class
+  org/alku/life_contract/follower/FollowerEvents.class
+  org/alku/life_contract/follower/FollowerHungerSystem.class
+  org/alku/life_contract/follower/FollowerWandItem.class
+  org/alku/life_contract/follower/FollowerWandMenu$OutputOnlySlot.class
+  org/alku/life_contract/follower/FollowerWandMenu.class
+  org/alku/life_contract/follower/FollowerWandScreen.class
+  org/alku/life_contract/follower/PacketOpenFollowerWand.class
+  org/alku/life_contract/follower/PacketSyncFollower.class
+  org/alku/life_contract/follower/PacketSyncFollowerHunger.class
+  org/alku/life_contract/healer/
+  org/alku/life_contract/healer/HealerHUD.class
+  org/alku/life_contract/healer/HealerSystem.class
+  org/alku/life_contract/healer/PacketHealerActiveHeal.class
+  org/alku/life_contract/healer/PacketSyncHealerCooldown.class
+  org/alku/life_contract/mineral_generator/
+  org/alku/life_contract/mineral_generator/MineralGenerationConfig.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorBlock.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity$1.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity$MineralType.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorBlockEntity.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorDisplayRenderer.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorMenu.class
+  org/alku/life_contract/mineral_generator/MineralGeneratorScreen.class
+  org/alku/life_contract/mineral_generator/PacketGetMineralGenerator.class
+  org/alku/life_contract/mineral_generator/PacketRemoveMineralGenerator.class
+  org/alku/life_contract/mineral_generator/PacketSetMineralGenerator.class
+  org/alku/life_contract/mineral_generator/PacketSyncMineralGenerationState.class
+  org/alku/life_contract/mineral_generator/PacketSyncMineralGenerator.class
+  org/alku/life_contract/mount/
+  org/alku/life_contract/mount/BeastRiderBuffSystem.class
+  org/alku/life_contract/mount/BeastRiderKeyHandler$1.class
+  org/alku/life_contract/mount/BeastRiderKeyHandler.class
+  org/alku/life_contract/mount/BeastRiderMountSystem$1.class
+  org/alku/life_contract/mount/BeastRiderMountSystem$MountBehavior.class
+  org/alku/life_contract/mount/BeastRiderMountSystem.class
+  org/alku/life_contract/mount/BeastRiderMovementController.class
+  org/alku/life_contract/mount/PacketMountCommand.class
+  org/alku/life_contract/mount/PacketMountMovement.class
+  org/alku/life_contract/mount/PacketSyncMount.class
+  org/alku/life_contract/profession/
+  org/alku/life_contract/profession/ClientProfessionCache.class
+  org/alku/life_contract/profession/ClientUnlockedProfessions.class
+  org/alku/life_contract/profession/PacketOpenProfessionMenu.class
+  org/alku/life_contract/profession/PacketSelectProfession.class
+  org/alku/life_contract/profession/PacketSyncProfessions.class
+  org/alku/life_contract/profession/PacketSyncUnlockedProfessions.class
+  org/alku/life_contract/profession/PacketUnlockProfession.class
+  org/alku/life_contract/profession/Profession.class
+  org/alku/life_contract/profession/ProfessionBuilder.class
+  org/alku/life_contract/profession/ProfessionConfig.class
+  org/alku/life_contract/profession/ProfessionScreen.class
   pack.mcmeta
