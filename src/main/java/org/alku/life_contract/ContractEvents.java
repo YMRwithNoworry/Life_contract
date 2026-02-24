@@ -139,6 +139,7 @@ public class ContractEvents {
         syncData(event.getEntity());
         
         if (!event.getEntity().level().isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            loadPlayerProfessionToConfig(serverPlayer);
             restoreGamblerDiceOnRespawn(serverPlayer);
             restoreDonkBowOnRespawn(serverPlayer);
             FacelessDeceiverSystem.onPlayerRespawn(serverPlayer);
