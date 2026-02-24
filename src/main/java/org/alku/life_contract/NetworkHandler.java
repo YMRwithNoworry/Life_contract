@@ -10,6 +10,30 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import org.alku.life_contract.death_venger.PacketSyncMarkedTarget;
+import org.alku.life_contract.follower.FollowerWandMenu;
+import org.alku.life_contract.follower.PacketOpenFollowerWand;
+import org.alku.life_contract.follower.PacketSyncFollower;
+import org.alku.life_contract.follower.PacketSyncFollowerHunger;
+import org.alku.life_contract.healer.PacketHealerActiveHeal;
+import org.alku.life_contract.healer.PacketSyncHealerCooldown;
+import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
+import org.alku.life_contract.mineral_generator.MineralGeneratorMenu;
+import org.alku.life_contract.mineral_generator.PacketGetMineralGenerator;
+import org.alku.life_contract.mineral_generator.PacketRemoveMineralGenerator;
+import org.alku.life_contract.mineral_generator.PacketSetMineralGenerator;
+import org.alku.life_contract.mineral_generator.PacketSyncMineralGenerationState;
+import org.alku.life_contract.mineral_generator.PacketSyncMineralGenerator;
+import org.alku.life_contract.mount.PacketMountCommand;
+import org.alku.life_contract.mount.PacketMountMovement;
+import org.alku.life_contract.mount.PacketSyncMount;
+import org.alku.life_contract.profession.PacketOpenProfessionMenu;
+import org.alku.life_contract.profession.PacketSelectProfession;
+import org.alku.life_contract.profession.PacketSyncProfessions;
+import org.alku.life_contract.profession.PacketSyncUnlockedProfessions;
+import org.alku.life_contract.profession.PacketUnlockProfession;
+import org.alku.life_contract.profession.ProfessionConfig;
+
 import java.util.Set;
 
 public class NetworkHandler {
@@ -199,6 +223,12 @@ public class NetworkHandler {
                 PacketFoolStealProfession::decode,
                 PacketFoolStealProfession::handle
         );
+        CHANNEL.registerMessage(id++,
+                PacketSyncProfessions.class,
+                PacketSyncProfessions::encode,
+                PacketSyncProfessions::decode,
+                PacketSyncProfessions::handle
+        );
     }
 
     public static void sendRemoveTradePacket(int slot) {
@@ -340,6 +370,7 @@ public class NetworkHandler {
     }
 
     public static void openProfessionMenu(ServerPlayer player) {
+        syncProfessions(player);
         syncUnlockedProfessions(player);
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketOpenProfessionMenu());
     }
@@ -363,5 +394,9 @@ public class NetworkHandler {
     public static void syncUnlockedProfessions(ServerPlayer player) {
         Set<String> unlocked = ProfessionConfig.getPlayerUnlockedProfessions(player.getUUID());
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketSyncUnlockedProfessions(unlocked));
+    }
+
+    public static void syncProfessions(ServerPlayer player) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketSyncProfessions(ProfessionConfig.getProfessions()));
     }
 }

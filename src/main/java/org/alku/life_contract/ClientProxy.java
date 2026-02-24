@@ -5,6 +5,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import org.alku.life_contract.follower.FollowerClientCache;
+import org.alku.life_contract.mineral_generator.MineralGenerationConfig;
+import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
+import org.alku.life_contract.profession.ProfessionScreen;
+
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy {
 

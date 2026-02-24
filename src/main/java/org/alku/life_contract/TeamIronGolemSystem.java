@@ -16,6 +16,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.alku.life_contract.follower.FollowerEvents;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

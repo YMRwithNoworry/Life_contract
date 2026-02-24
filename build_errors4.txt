@@ -1,0 +1,1101 @@
+﻿To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+MixinGradle did not locate the diffplug APT plugin, skipping eclipse task configuration
+
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createMcpToSrg UP-TO-DATE
+
+> Task :compileJava
+.\gradlew : 注: SpongePowered MIXIN Annotation Processor Version=0.8.5 (MixinGradle Version=0.7.38)
+所在位置 行:1 字符: 1
++ .\gradlew compileJava 2>&1 | Out-File -FilePath "build_errors4.txt" - ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (注: SpongePowere...Version=0.7.38):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+注: Supported obfuscation types: ObfuscationServiceMCP supports [notch] ObfuscationServiceFG3 supports [searge]
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:115: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,boolean,float,boolean,float,float,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,in
+t,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float
+,int,boolean,float,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,float,int,
+float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, 0.0f, 0, 0, 0.0f, 0.0f, 0, 0, 1.0f, "", 0, 0,
+ false, 0, false, 0.0f, 0, false, 0.0f, 0, 0.0f, 0.0f, false, false, 0.0f, 0, false, false, 0, false, 0.0f, 0.0f, 0, 0.
+0f, false, 0, new ArrayList<String>(), false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0, false, 10
+0, 1, 5, false, false, 0.0f, 0.0f, false, 0.0f, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, false, 
+0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.
+0f, 600, false, 30.0f, 600, 10.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30
+.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:119: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,boolean,float,boolean,float,float,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,in
+t,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float
+,int,boolean,float,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,float,int,
+float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, 0, 0, 0.0f, 0.0f, 0, 0, 1
+.0f, "", 0, 0, false, 0, false, 0.0f, 0, false, 0.0f, 0, 0.0f, 0.0f, false, false, 0.0f, 0, false, false, 0, false, 0.0
+f, 0.0f, 0, 0.0f, false, 0, new ArrayList<String>(), false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f
+, 0, false, 100, 1, 5, false, false, 0.0f, 0.0f, false, 0.0f, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, 
+false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 4
+00, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10
+.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:124: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,boolean,float,boolean,float,float,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,in
+t,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float
+,int,boolean,float,int,float,boolean,float,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, 0.0f, 0, 0, 1.0f, "", 0, 0, false, 0, false, 0.0f, 0, false, 0.0f, 0, 0.0f, 0.0f, false, false, 0.0f, 
+0, false, false, 0, false, 0.0f, 0.0f, 0, 0.0f, false, 0, new ArrayList<String>(), false, 0, new ArrayList<String>(), f
+alse, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.0f, 0.0f, false, 0.0f, false, 0.0f, 0.0f, 0.0f, 0.
+0f, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.
+0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:131: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolea
+n,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,flo
+at,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, false, 0, false, 0.0f, 0, false, 0.0f, 0, 0.0f, 0.0f, false, false, 0.0f, 0, false, false, 0, false, 0.0f, 
+0.0f, 0, 0.0f, false, 0, new ArrayList<String>(), false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0
+, false, 100, 1, 5, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0,
+ false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600,
+ 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:140: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolea
+n,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,flo
+at,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, false, 0.0f,
+ 0, 0.0f, 0.0f, false, false, 0.0f, 0, false, false, 0, false, 0.0f, 0.0f, 0, 0.0f, false, 0, new ArrayList<String>(), 
+false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.0f, 0.0f, 0.0f
+, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f
+, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:153: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolea
+n,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,flo
+at,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, false, 0, false, 0.0f, 0.0f, 0, 0.0f, false, 0, new ArrayList
+<String>(), false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.0f
+, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, fa
+lse, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:166: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,ArrayL
+ist<String>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,f
+loat,float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolea
+n,float,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,flo
+at,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, isFaceless, switchInterval, false, 0.0f, 0.0f, 0, 0.0f, false
+, 0, new ArrayList<String>(), false, 0, new ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, 
+false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false,
+ 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f
+, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:182: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,List<S
+tring>,boolean,int,ArrayList<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,float,
+float,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,flo
+at,int,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,float,in
+t,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, isFaceless, switchInterval, canMountCreatures, mountSpeedBonu
+s, mountDamageBonus, mountControlRange, mountHealthBonus, hasGachaAbility, gachaInterval, gachaEntityPool, false, 0, ne
+w ArrayList<String>(), false, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
+, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0
+f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:199: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,List<S
+tring>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,float,float
+,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,in
+t,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,float,int,flo
+at), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, isFaceless, switchInterval, canMountCreatures, mountSpeedBonu
+s, mountDamageBonus, mountControlRange, mountHealthBonus, hasGachaAbility, gachaInterval, gachaEntityPool, hasDiceAbili
+ty, diceCooldown, diceSkillPool, false, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.0f, 0.0f, 0.0f, 
+0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, 
+false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:217: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,List<S
+tring>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,float,float
+,float,float,float,boolean,boolean,boolean,boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,in
+t,float,boolean,int,float,boolean,float,float,float,int,boolean,float,int,boolean,float,int,float,boolean,float,int,flo
+at), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, isFaceless, switchInterval, canMountCreatures, mountSpeedBonu
+s, mountDamageBonus, mountControlRange, mountHealthBonus, hasGachaAbility, gachaInterval, gachaEntityPool, hasDiceAbili
+ty, diceCooldown, diceSkillPool, hasLuckyCloverAbility, false, false, 0.0f, 0.0f, 0, false, 100, 1, 5, false, false, 0.
+0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, false, false, 0, 0, false, 0, 0, 0, 0, 0, false, 0, 0, false, 0.0f, 0, 0.0f, 
+false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f, 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:235: 错误: 对于Profession(String,String,
+String,boolean,String,String,float,int,int,float,float,int,int,float,String,int,int,boolean,int,boolean,float,int,boole
+an,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,boolean,float,float,int,float,boolean,int,List<S
+tring>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boolean,int,int,int,boolean,boolean,int,float,b
+oolean,float,float,int,float,boolean,float,boolean,float,float,float,float,float,float,boolean,boolean,boolean,boolean,
+int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,float,float
+,int,boolean,float,int,boolean,float,int,float,boolean,float,int,float), 找不到合适的构造器
+        this(id, name, description, requiresPassword, password, iconItem, bonusDamagePercent, slownessLevel, weaknessLe
+vel, bonusArmor, poisonChance, poisonDuration, poisonDamage, fireDamageMultiplier, resourceItem, resourceInterval, reso
+urceAmount, hasEnderPearlAbility, enderPearlCooldown, waterDamage, waterDamageAmount, waterDamageInterval, fireTrailEna
+bled, fireTrailDamage, fireTrailDuration, fireTrailRadius, fireDamageBonusPercent, fireImmunity, waterWeakness, waterWe
+aknessDamagePercent, waterWeaknessInterval, rainWeakness, isFaceless, switchInterval, canMountCreatures, mountSpeedBonu
+s, mountDamageBonus, mountControlRange, mountHealthBonus, hasGachaAbility, gachaInterval, gachaEntityPool, hasDiceAbili
+ty, diceCooldown, diceSkillPool, hasLuckyCloverAbility, hasDonkBowAbility, false, 0.0f, 0.0f, 0, false, 0, 0, 0, false,
+ false, 0, 0.0f, false, 0.0f, 0.0f, 100, 1.0f, false, 0.0f, false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, false, false, fa
+lse, false, 0, 0, false, 5, 50, 60, 10, 10, false, 0, 0, false, 0.0f, 0, 0.0f, false, 0, 0.0f, false, 5.0f, 2.0f, 8.0f,
+ 400, false, 30.0f, 600, false, 30.0f, 600, 10.0f, false, 30.0f, 600, 10.0f);
+        ^
+    构造器 Profession.Profession(String,String,String,boolean,String,String)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,boolean,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,float,float
+,int,boolean,boolean,boolean)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,boolean,int,float,b
+oolean,float,boolean,float,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int)不适用
+      (实际参数列表和形式参数列表长度不同)
+    构造器 Profession.Profession(String,String,String,boolean,String,String,float,int,int,float,float,int,int,float,String
+,int,int,boolean,int,boolean,float,int,boolean,float,int,float,float,boolean,boolean,float,int,boolean,boolean,int,bool
+ean,float,float,int,float,boolean,int,List<String>,boolean,int,List<String>,boolean,boolean,boolean,float,float,int,boo
+lean,int,int,int,boolean,boolean,int,float,boolean,float,boolean,float,float,float,float,float,boolean,boolean,boolean,
+boolean,int,int,boolean,int,int,int,int,int,boolean,int,int,boolean,float,int,float,boolean,int,float,boolean,float,flo
+at,float,int,boolean,float,int,boolean,float,int,float)不适用
+      (实际参数列表和形式参数列表长度不同)
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Config.java:39: 警告: [removal] ResourceLocation 中的 Re
+sourceLocation(String) 已过时, 且标记为待删除
+        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName)
+);
+                                                                                         ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Config.java:49: 警告: [removal] ResourceLocation 中的 Re
+sourceLocation(String) 已过时, 且标记为待删除
+        items = ITEM_STRINGS.get().stream().map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemNam
+e))).collect(Collectors.toSet());
+                                                                                           ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\ContractEvents.java:486: 警告: [removal] ResourceLocat
+ion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                    net.minecraft.resources.ResourceLocation itemLoc = new net.minecraft.resources.ResourceLocation(res
+ourceItem);
+                                                                       ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\CreatureEggItem.java:58: 警告: [removal] ResourceLocat
+ion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                net.minecraft.resources.ResourceLocation loc = new net.minecraft.resources.ResourceLocation(entityTypeK
+ey);
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\CreatureEggItem.java:89: 警告: [removal] ResourceLocat
+ion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                net.minecraft.resources.ResourceLocation loc = new net.minecraft.resources.ResourceLocation(entityTypeK
+ey);
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\CreatureEggItem.java:309: 警告: [removal] ResourceLoca
+tion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+            new net.minecraft.resources.ResourceLocation(entityTypeKey)
+            ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\ExtendedArmorRenderer.java:18: 警告: [removal] Resourc
+eLocation 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation ARMOR_ICONS = new ResourceLocation("textures/gui/icons.png");
+                                                        ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\FollowerWandScreen.java:11: 警告: [removal] ResourceLo
+cation 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\GamblerDiceItem.java:264: 警告: [removal] ResourceLoca
+tion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+            new net.minecraft.resources.ResourceLocation(entityId)
+            ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\HealerHUD.java:17: 警告: [removal] ResourceLocation 中的
+ ResourceLocation(String,String) 已过时, 且标记为待删除
+    private static final ResourceLocation HEART_TEXTURE = new ResourceLocation("minecraft", "textures/gui/icons.png");
+                                                          ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Life_contract.java:116: 警告: [removal] FMLJavaModLoad
+ingContext 中的 get() 已过时, 且标记为待删除
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+                                                        ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Life_contract.java:156: 警告: [removal] ResourceLocati
+on 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                    new ResourceLocation("pull"),
+                    ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Life_contract.java:165: 警告: [removal] ResourceLocati
+on 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                    new ResourceLocation("pulling"),
+                    ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Life_contract.java:170: 警告: [removal] ResourceLocati
+on 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                    new ResourceLocation("pull"),
+                    ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Life_contract.java:179: 警告: [removal] ResourceLocati
+on 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                    new ResourceLocation("pulling"),
+                    ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\MineralGeneratorScreen.java:13: 警告: [removal] Resour
+ceLocation 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\NetworkHandler.java:20: 警告: [removal] ResourceLocati
+on 中的 ResourceLocation(String,String) 已过时, 且标记为待删除
+            new ResourceLocation(Life_contract.MODID, "main"),
+            ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\ProfessionScreen.java:16: 警告: [removal] ResourceLoca
+tion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation("textures/gui/demo_background.png"
+);
+                                                                ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\ProfessionScreen.java:162: 警告: [removal] ResourceLoc
+ation 中的 ResourceLocation(String) 已过时, 且标记为待删除
+                net.minecraft.resources.ResourceLocation resourceLocation = new net.minecraft.resources.ResourceLocatio
+n(itemId);
+                                                                            ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\ShopScreen.java:11: 警告: [removal] ResourceLocation 中
+的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\TeamInventoryScreen.java:11: 警告: [removal] ResourceL
+ocation 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\TeamSmelter.java:86: 警告: [removal] ResourceLocation 
+中的 ResourceLocation(String) 已过时, 且标记为待删除
+        Item item = ForgeRegistries.ITEMS.getValue(new net.minecraft.resources.ResourceLocation(modId + ":" + name));
+                                                   ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\TradeSetupScreen.java:13: 警告: [removal] ResourceLoca
+tion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\TradeShopScreen.java:15: 警告: [removal] ResourceLocat
+ion 中的 ResourceLocation(String) 已过时, 且标记为待删除
+    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.
+png");
+                                                               ^
+注: 某些输入文件使用或覆盖了已过时的 API。
+注: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+11 个错误
+24 个警告
+
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+4 actionable tasks: 2 executed, 2 up-to-date
+
+BUILD FAILED in 15s

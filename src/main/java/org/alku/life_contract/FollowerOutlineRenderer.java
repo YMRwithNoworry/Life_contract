@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.alku.life_contract.follower.FollowerWandItem;
+
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class FollowerOutlineRenderer {
 

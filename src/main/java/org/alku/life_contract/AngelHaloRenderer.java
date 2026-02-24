@@ -9,6 +9,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
+
 import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)

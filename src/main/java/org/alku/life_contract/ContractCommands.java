@@ -18,6 +18,11 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.mineral_generator.MineralGenerationConfig;
+import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

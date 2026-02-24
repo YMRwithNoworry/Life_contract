@@ -32,6 +32,7 @@
   "key.life_contract.dismount": "下骑",
   "key.life_contract.mount_behavior_cycle": "切换坐骑行为",
   "key.life_contract.mount_special_ability": "坐骑特殊能力",
+  "key.life_contract.fool_steal_profession": "傻子掠夺职业",
   
   "gui.life_contract.profession.title": "职业选择",
   "gui.life_contract.profession.confirm": "确认选择",
@@ -133,6 +134,8 @@
   "profession.life_contract.faceless.desc": "神秘的变形者。每隔3分钟会自动随机变身为其他职业，获得该职业的全部能力。",
   "profession.life_contract.gambler": "赌徒",
   "profession.life_contract.gambler.desc": "命运的操纵者。使用骰子可以随机触发其他职业的技能，每次掷骰都是一场未知的冒险。",
+  "profession.life_contract.fool": "傻子",
+  "profession.life_contract.fool.desc": "看似愚蠢，实则狡诈。可以主动掠夺30格内某个玩家的职业，被掠夺的玩家失去职业，而傻子变成这个职业。",
   
   "entity.life_contract.team_sentinel": "队伍守卫",
   "entity.life_contract.fire_trail": "火焰轨迹",

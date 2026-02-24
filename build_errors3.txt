@@ -1,0 +1,44 @@
+﻿To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+MixinGradle did not locate the diffplug APT plugin, skipping eclipse task configuration
+
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createMcpToSrg UP-TO-DATE
+
+> Task :compileJava FAILED
+.\gradlew : E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:1: 错误: 非法字符: '\ufeff'
+所在位置 行:1 字符: 1
++ .\gradlew compileJava 2>&1 | Out-File -FilePath "build_errors3.txt" - ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (E:\代码\MC模组\Life... 非法字符: '\ufeff':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+?package org.alku.life_contract;
+^
+E:\代码\MC模组\Life_contract - 副本\src\main\java\org\alku\life_contract\Profession.java:1: 错误: 需要 class、interface、enum 或 rec
+ord
+?package org.alku.life_contract;
+         ^
+2 个错误
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 16s
+4 actionable tasks: 2 executed, 2 up-to-date

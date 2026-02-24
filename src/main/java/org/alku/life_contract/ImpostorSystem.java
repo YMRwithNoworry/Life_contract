@@ -12,6 +12,9 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -284,6 +287,7 @@ public class ImpostorSystem {
         
         if (isImpostor(victim) && isDisguised(victim)) {
             endDisguise(victim);
+            ProfessionConfig.setPlayerProfession(victim.getUUID(), victim.getPersistentData().getString("LifeContractProfession"));
         }
     }
     

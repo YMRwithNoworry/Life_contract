@@ -26,10 +26,13 @@
   "key.life_contract.dismount": "Dismount",
   "key.life_contract.mount_behavior_cycle": "Cycle Mount Behavior",
   "key.life_contract.mount_special_ability": "Mount Special Ability",
+  "key.life_contract.fool_steal_profession": "Fool Steal Profession",
   "profession.life_contract.beast_rider": "Beast Rider",
   "profession.life_contract.beast_rider.desc": "A master who forms special bonds with owned creatures. Can ride on the head of tamed creatures, controlling their movement and attacks. Cannot perform normal attacks while mounted.",
   "profession.life_contract.gambler": "Gambler",
   "profession.life_contract.gambler.desc": "A master of fate. Use the dice to randomly trigger skills from other professions. Every roll is an unknown adventure.",
+  "profession.life_contract.fool": "Fool",
+  "profession.life_contract.fool.desc": "Seemingly foolish, actually cunning. Can actively steal the profession of a player within 30 blocks. The stolen player loses their profession, and the Fool becomes that profession.",
   "profession.life_contract.faceless_deceiver": "Faceless Deceiver",
   "profession.life_contract.faceless_deceiver.desc": "A mysterious contractor. Can establish a soul contract with one creature, gaining all its attributes and special abilities, but will be eliminated when the contract creature dies.",
   

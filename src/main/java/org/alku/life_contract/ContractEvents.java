@@ -25,6 +25,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.follower.FollowerHungerSystem;
+import org.alku.life_contract.death_venger.DeathVengerSystem;
+import org.alku.life_contract.healer.HealerSystem;
+
 import java.util.*;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID)
@@ -108,6 +114,7 @@ public class ContractEvents {
         syncData(event.getEntity());
         
         if (!event.getEntity().level().isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            loadPlayerProfessionToConfig(serverPlayer);
             ensureGamblerHasDice(serverPlayer);
             ensureDonkHasBow(serverPlayer);
             ensureFacelessDeceiverHasMask(serverPlayer);
@@ -117,6 +124,13 @@ public class ContractEvents {
             FollowerHungerSystem.syncHungerMultiplierToClient(serverPlayer);
             DeathVengerSystem.loadMarkedTarget(serverPlayer);
             initializeUndeadPlayerOnJoin(serverPlayer);
+        }
+    }
+
+    private static void loadPlayerProfessionToConfig(ServerPlayer player) {
+        String professionId = player.getPersistentData().getString("LifeContractProfession");
+        if (professionId != null && !professionId.isEmpty()) {
+            ProfessionConfig.setPlayerProfession(player.getUUID(), professionId);
         }
     }
 

@@ -28,6 +28,15 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import org.alku.life_contract.follower.FollowerWandMenu;
+import org.alku.life_contract.follower.FollowerWandScreen;
+import org.alku.life_contract.follower.FollowerWandItem;
+import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
+import org.alku.life_contract.mineral_generator.MineralGeneratorBlock;
+import org.alku.life_contract.mineral_generator.MineralGeneratorMenu;
+import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
+import org.alku.life_contract.profession.ProfessionConfig;
+
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";

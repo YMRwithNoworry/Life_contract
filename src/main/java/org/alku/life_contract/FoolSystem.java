@@ -9,6 +9,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.network.PacketDistributor;
 
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

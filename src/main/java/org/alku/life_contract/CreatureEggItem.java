@@ -29,6 +29,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import org.alku.life_contract.follower.FollowerEvents;
+import org.alku.life_contract.mount.BeastRiderBuffSystem;
+import org.alku.life_contract.mount.BeastRiderMountSystem;
+
 import java.util.List;
 
 public class CreatureEggItem extends Item {

@@ -14,6 +14,8 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import org.alku.life_contract.follower.FollowerClientCache;
+
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class FollowerGlowRenderer {
 
