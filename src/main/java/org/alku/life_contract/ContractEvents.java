@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -366,12 +367,15 @@ public class ContractEvents {
 
     private static void applyProfessionEffects(ServerPlayer player) {
         String professionId = getEffectiveProfessionId(player);
+        
         if (professionId == null || professionId.isEmpty()) {
+            clearAllProfessionModifiers(player);
             return;
         }
         
         Profession profession = ProfessionConfig.getProfession(professionId);
         if (profession == null) {
+            clearAllProfessionModifiers(player);
             return;
         }
         
@@ -379,33 +383,38 @@ public class ContractEvents {
         applyPotionEffects(player, profession);
     }
 
-    private static void applyAttributeModifiers(ServerPlayer player, Profession profession) {
-        if (profession.getBonusArmor() > 0) {
-            applyModifier(player, Attributes.ARMOR, "profession_armor", profession.getBonusArmor(), AttributeModifier.Operation.ADDITION);
-        }
-        if (profession.getBonusHealth() > 0) {
-            applyModifier(player, Attributes.MAX_HEALTH, "profession_health", profession.getBonusHealth(), AttributeModifier.Operation.ADDITION);
-        }
-        if (profession.getBonusArmorToughness() > 0) {
-            applyModifier(player, Attributes.ARMOR_TOUGHNESS, "profession_toughness", profession.getBonusArmorToughness(), AttributeModifier.Operation.ADDITION);
-        }
-        if (profession.getMeleeDamageBonus() > 0) {
-            applyModifier(player, Attributes.ATTACK_DAMAGE, "profession_melee", profession.getMeleeDamageBonus(), AttributeModifier.Operation.ADDITION);
-        }
+    private static void clearAllProfessionModifiers(ServerPlayer player) {
+        removeModifier(player, Attributes.ARMOR, "profession_armor");
+        removeModifier(player, Attributes.MAX_HEALTH, "profession_health");
+        removeModifier(player, Attributes.ARMOR_TOUGHNESS, "profession_toughness");
+        removeModifier(player, Attributes.ATTACK_DAMAGE, "profession_melee");
     }
 
-    private static void applyModifier(ServerPlayer player, net.minecraft.world.entity.ai.attributes.Attribute attribute, String name, double value, AttributeModifier.Operation operation) {
+    private static void removeModifier(ServerPlayer player, net.minecraft.world.entity.ai.attributes.Attribute attribute, String name) {
         var instance = player.getAttribute(attribute);
         if (instance == null) return;
         
         UUID modifierUUID = UUID.nameUUIDFromBytes(name.getBytes());
-        AttributeModifier existing = instance.getModifier(modifierUUID);
-        if (existing != null) {
-            if (existing.getAmount() == value) return;
-            instance.removeModifier(modifierUUID);
-        }
+        instance.removeModifier(modifierUUID);
+    }
+
+    private static void applyAttributeModifiers(ServerPlayer player, Profession profession) {
+        applyModifierValue(player, Attributes.ARMOR, "profession_armor", profession.getBonusArmor());
+        applyModifierValue(player, Attributes.MAX_HEALTH, "profession_health", profession.getBonusHealth());
+        applyModifierValue(player, Attributes.ARMOR_TOUGHNESS, "profession_toughness", profession.getBonusArmorToughness());
+        applyModifierValue(player, Attributes.ATTACK_DAMAGE, "profession_melee", profession.getMeleeDamageBonus());
+    }
+
+    private static void applyModifierValue(ServerPlayer player, net.minecraft.world.entity.ai.attributes.Attribute attribute, String name, double value) {
+        var instance = player.getAttribute(attribute);
+        if (instance == null) return;
         
-        instance.addPermanentModifier(new AttributeModifier(modifierUUID, name, value, operation));
+        UUID modifierUUID = UUID.nameUUIDFromBytes(name.getBytes());
+        instance.removeModifier(modifierUUID);
+        
+        if (value > 0) {
+            instance.addPermanentModifier(new AttributeModifier(modifierUUID, name, value, AttributeModifier.Operation.ADDITION));
+        }
     }
 
     private static void applyPotionEffects(ServerPlayer player, Profession profession) {
@@ -719,7 +728,7 @@ public class ContractEvents {
         
         float storedBonus = player.getPersistentData().getFloat("GourmetDamageBonus");
         if (storedBonus > 0) {
-            applyModifier(player, Attributes.ATTACK_DAMAGE, "gourmet_bonus", storedBonus, AttributeModifier.Operation.ADDITION);
+            applyModifierValue(player, Attributes.ATTACK_DAMAGE, "gourmet_bonus", storedBonus);
         }
     }
 

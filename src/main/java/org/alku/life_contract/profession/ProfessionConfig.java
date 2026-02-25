@@ -173,7 +173,9 @@ public class ProfessionConfig {
             .isGhostSenator(json.has("isGhostSenator") && json.get("isGhostSenator").getAsBoolean())
             .ghostSenatorHealAmount(json.has("ghostSenatorHealAmount") ? json.get("ghostSenatorHealAmount").getAsFloat() : 7.0f)
             .ghostSenatorStrengthDuration(json.has("ghostSenatorStrengthDuration") ? json.get("ghostSenatorStrengthDuration").getAsInt() : 300)
-            .ghostSenatorDetectionRadius(json.has("ghostSenatorDetectionRadius") ? json.get("ghostSenatorDetectionRadius").getAsFloat() : 20.0f);
+            .ghostSenatorDetectionRadius(json.has("ghostSenatorDetectionRadius") ? json.get("ghostSenatorDetectionRadius").getAsFloat() : 20.0f)
+            .isEvilPoisoner(json.has("isEvilPoisoner") && json.get("isEvilPoisoner").getAsBoolean())
+            .poisonerStrengthDuration(json.has("poisonerStrengthDuration") ? json.get("poisonerStrengthDuration").getAsInt() : 200);
         
         return builder.build();
     }

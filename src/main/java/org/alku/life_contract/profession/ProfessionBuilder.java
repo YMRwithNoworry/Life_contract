@@ -141,6 +141,9 @@ public class ProfessionBuilder {
     private float ghostSenatorHealAmount = 7.0f;
     private int ghostSenatorStrengthDuration = 300;
     private float ghostSenatorDetectionRadius = 20.0f;
+    
+    private boolean isEvilPoisoner = false;
+    private int poisonerStrengthDuration = 200;
 
     public ProfessionBuilder() {}
 
@@ -277,6 +280,9 @@ public class ProfessionBuilder {
     public ProfessionBuilder ghostSenatorHealAmount(float ghostSenatorHealAmount) { this.ghostSenatorHealAmount = ghostSenatorHealAmount; return this; }
     public ProfessionBuilder ghostSenatorStrengthDuration(int ghostSenatorStrengthDuration) { this.ghostSenatorStrengthDuration = ghostSenatorStrengthDuration; return this; }
     public ProfessionBuilder ghostSenatorDetectionRadius(float ghostSenatorDetectionRadius) { this.ghostSenatorDetectionRadius = ghostSenatorDetectionRadius; return this; }
+    
+    public ProfessionBuilder isEvilPoisoner(boolean isEvilPoisoner) { this.isEvilPoisoner = isEvilPoisoner; return this; }
+    public ProfessionBuilder poisonerStrengthDuration(int poisonerStrengthDuration) { this.poisonerStrengthDuration = poisonerStrengthDuration; return this; }
 
     public Profession build() {
         return new Profession(this);
@@ -390,6 +396,8 @@ public class ProfessionBuilder {
         builder.ghostSenatorHealAmount(tag.contains("ghostSenatorHealAmount") ? tag.getFloat("ghostSenatorHealAmount") : 7.0f);
         builder.ghostSenatorStrengthDuration(tag.contains("ghostSenatorStrengthDuration") ? tag.getInt("ghostSenatorStrengthDuration") : 300);
         builder.ghostSenatorDetectionRadius(tag.contains("ghostSenatorDetectionRadius") ? tag.getFloat("ghostSenatorDetectionRadius") : 20.0f);
+        builder.isEvilPoisoner(tag.contains("isEvilPoisoner") && tag.getBoolean("isEvilPoisoner"));
+        builder.poisonerStrengthDuration(tag.contains("poisonerStrengthDuration") ? tag.getInt("poisonerStrengthDuration") : 200);
         return builder;
     }
 
@@ -501,6 +509,8 @@ public class ProfessionBuilder {
         builder.ghostSenatorHealAmount(buffer.readFloat());
         builder.ghostSenatorStrengthDuration(buffer.readInt());
         builder.ghostSenatorDetectionRadius(buffer.readFloat());
+        builder.isEvilPoisoner(buffer.readBoolean());
+        builder.poisonerStrengthDuration(buffer.readInt());
         return builder;
     }
 
@@ -630,4 +640,6 @@ public class ProfessionBuilder {
     float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
     int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
     float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
+    boolean isEvilPoisoner() { return isEvilPoisoner; }
+    int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
 }

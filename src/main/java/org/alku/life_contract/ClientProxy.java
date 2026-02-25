@@ -9,6 +9,10 @@ import org.alku.life_contract.follower.FollowerClientCache;
 import org.alku.life_contract.mineral_generator.MineralGenerationConfig;
 import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
 import org.alku.life_contract.profession.ProfessionScreen;
+import org.alku.life_contract.revive.ClientReviveData;
+import org.alku.life_contract.revive.ReviveTeammateMenu;
+import org.alku.life_contract.revive.ReviveTeammateScreen;
+import org.alku.life_contract.revive.ReviveTeammateSystem;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy {
@@ -135,6 +139,19 @@ public class ClientProxy {
                 data.putInt("FollowerCountClient", followerCount);
                 data.putFloat("FollowerHungerMultiplierClient", hungerMultiplier);
             }
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void openReviveScreen(java.util.List<ReviveTeammateSystem.DeadTeammateInfo> deadTeammates) {
+        ClientReviveData.setDeadTeammates(deadTeammates);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            mc.player.closeContainer();
+            ReviveTeammateMenu menu = new ReviveTeammateMenu(0, mc.player.getInventory(), deadTeammates);
+            ReviveTeammateScreen screen = new ReviveTeammateScreen(menu, mc.player.getInventory(), 
+                net.minecraft.network.chat.Component.literal("选择复活的队友"));
+            mc.setScreen(screen);
         }
     }
 }

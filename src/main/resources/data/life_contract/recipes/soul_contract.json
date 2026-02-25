@@ -1,28 +1,28 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "IDC",
-    "RLG",
-    "III"
+    "DIC",
+    "ILI",
+    "RGI"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_block"
-    },
     "D": {
-      "item": "minecraft:diamond_block"
+      "item": "minecraft:diamond"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
     },
     "C": {
-      "item": "minecraft:coal_block"
+      "item": "minecraft:coal"
     },
     "R": {
-      "item": "minecraft:redstone_block"
+      "item": "minecraft:redstone"
     },
     "L": {
-      "item": "minecraft:lapis_block"
+      "item": "minecraft:lapis_lazuli"
     },
     "G": {
-      "item": "minecraft:gold_block"
+      "item": "minecraft:gold_ingot"
     }
   },
   "result": {

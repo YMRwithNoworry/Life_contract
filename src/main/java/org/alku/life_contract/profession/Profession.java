@@ -115,6 +115,8 @@ public class Profession {
     private final float ghostSenatorHealAmount;
     private final int ghostSenatorStrengthDuration;
     private final float ghostSenatorDetectionRadius;
+    private final boolean isEvilPoisoner;
+    private final int poisonerStrengthDuration;
 
     Profession(ProfessionBuilder builder) {
         this.id = builder.getId();
@@ -223,6 +225,8 @@ public class Profession {
         this.ghostSenatorHealAmount = builder.getGhostSenatorHealAmount();
         this.ghostSenatorStrengthDuration = builder.getGhostSenatorStrengthDuration();
         this.ghostSenatorDetectionRadius = builder.getGhostSenatorDetectionRadius();
+        this.isEvilPoisoner = builder.isEvilPoisoner();
+        this.poisonerStrengthDuration = builder.getPoisonerStrengthDuration();
     }
 
     public static ProfessionBuilder builder() {
@@ -335,6 +339,8 @@ public class Profession {
     public float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
     public int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
     public float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
+    public boolean isEvilPoisoner() { return isEvilPoisoner; }
+    public int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
 
     public boolean hasBonusDamage() { return bonusDamagePercent > 0; }
     public boolean hasSlowness() { return slownessLevel > 0; }
@@ -454,6 +460,8 @@ public class Profession {
         tag.putFloat("ghostSenatorHealAmount", ghostSenatorHealAmount);
         tag.putInt("ghostSenatorStrengthDuration", ghostSenatorStrengthDuration);
         tag.putFloat("ghostSenatorDetectionRadius", ghostSenatorDetectionRadius);
+        tag.putBoolean("isEvilPoisoner", isEvilPoisoner);
+        tag.putInt("poisonerStrengthDuration", poisonerStrengthDuration);
         return tag;
     }
 
@@ -582,6 +590,8 @@ public class Profession {
         buffer.writeFloat(ghostSenatorHealAmount);
         buffer.writeInt(ghostSenatorStrengthDuration);
         buffer.writeFloat(ghostSenatorDetectionRadius);
+        buffer.writeBoolean(isEvilPoisoner);
+        buffer.writeInt(poisonerStrengthDuration);
     }
 
     public static Profession readFromBuffer(FriendlyByteBuf buffer) {
