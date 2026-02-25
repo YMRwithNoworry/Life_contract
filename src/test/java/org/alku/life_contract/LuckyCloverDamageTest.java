@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Random;
 import java.util.HashSet;
 import java.util.Set;
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionBuilder;
 
 public class LuckyCloverDamageTest {
 
@@ -97,42 +99,24 @@ public class LuckyCloverDamageTest {
     @Test
     @DisplayName("测试Profession类hasLuckyCloverAbility方法")
     void testProfessionLuckyCloverAbility() {
-        Profession luckyClover = new Profession(
-            "lucky_clover", "幸运四叶草", "测试描述",
-            false, "", "minecraft:lily_of_the_valley",
-            0.0f, 0, 0, 0.0f,
-            0.0f, 0, 0, 1.0f,
-            "", 0, 0,
-            false, 0,
-            false, 0.0f, 0,
-            false, 0.0f, 0, 0.0f, 0.0f,
-            false, false, 0.0f, 0, false,
-            false, 0,
-            false, 0.0f, 0.0f, 32, 0.0f,
-            false, 0, new java.util.ArrayList<>(),
-            false, 0, new java.util.ArrayList<>(),
-            true
-        );
+        Profession luckyClover = Profession.builder()
+            .id("lucky_clover")
+            .name("幸运四叶草")
+            .description("测试描述")
+            .iconItem("minecraft:lily_of_the_valley")
+            .hasLuckyCloverAbility(true)
+            .build();
         
         assertTrue(luckyClover.hasLuckyCloverAbility(), 
             "幸运四叶草职业应该有 hasLuckyCloverAbility = true");
         
-        Profession normalProfession = new Profession(
-            "test", "测试职业", "测试描述",
-            false, "", "minecraft:paper",
-            0.0f, 0, 0, 0.0f,
-            0.0f, 0, 0, 1.0f,
-            "", 0, 0,
-            false, 0,
-            false, 0.0f, 0,
-            false, 0.0f, 0, 0.0f, 0.0f,
-            false, false, 0.0f, 0, false,
-            false, 0,
-            false, 0.0f, 0.0f, 32, 0.0f,
-            false, 0, new java.util.ArrayList<>(),
-            false, 0, new java.util.ArrayList<>(),
-            false
-        );
+        Profession normalProfession = Profession.builder()
+            .id("test")
+            .name("测试职业")
+            .description("测试描述")
+            .iconItem("minecraft:paper")
+            .hasLuckyCloverAbility(false)
+            .build();
         
         assertFalse(normalProfession.hasLuckyCloverAbility(), 
             "普通职业应该有 hasLuckyCloverAbility = false");

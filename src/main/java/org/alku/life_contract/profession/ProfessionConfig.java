@@ -130,6 +130,7 @@ public class ProfessionConfig {
             .hasHalo(json.has("hasHalo") && json.get("hasHalo").getAsBoolean())
             .haloDetectionRange(json.has("haloDetectionRange") ? json.get("haloDetectionRange").getAsFloat() : 32.0f)
             .leatherArmorOnly(json.has("leatherArmorOnly") && json.get("leatherArmorOnly").getAsBoolean())
+            .ironArmorOnly(json.has("ironArmorOnly") && json.get("ironArmorOnly").getAsBoolean())
             .bonusHealth(json.has("bonusHealth") ? json.get("bonusHealth").getAsFloat() : 0.0f)
             .bonusArmorToughness(json.has("bonusArmorToughness") ? json.get("bonusArmorToughness").getAsFloat() : 0.0f)
             .meleeDamageBonus(json.has("meleeDamageBonus") ? json.get("meleeDamageBonus").getAsFloat() : 0.0f)
@@ -168,7 +169,11 @@ public class ProfessionConfig {
             .isHighPriest(json.has("isHighPriest") && json.get("isHighPriest").getAsBoolean())
             .highPriestSacrificeRange(json.has("highPriestSacrificeRange") ? json.get("highPriestSacrificeRange").getAsFloat() : 30.0f)
             .highPriestCooldown(json.has("highPriestCooldown") ? json.get("highPriestCooldown").getAsInt() : 600)
-            .highPriestReviveHealth(json.has("highPriestReviveHealth") ? json.get("highPriestReviveHealth").getAsFloat() : 10.0f);
+            .highPriestReviveHealth(json.has("highPriestReviveHealth") ? json.get("highPriestReviveHealth").getAsFloat() : 10.0f)
+            .isGhostSenator(json.has("isGhostSenator") && json.get("isGhostSenator").getAsBoolean())
+            .ghostSenatorHealAmount(json.has("ghostSenatorHealAmount") ? json.get("ghostSenatorHealAmount").getAsFloat() : 7.0f)
+            .ghostSenatorStrengthDuration(json.has("ghostSenatorStrengthDuration") ? json.get("ghostSenatorStrengthDuration").getAsInt() : 300)
+            .ghostSenatorDetectionRadius(json.has("ghostSenatorDetectionRadius") ? json.get("ghostSenatorDetectionRadius").getAsFloat() : 20.0f);
         
         return builder.build();
     }

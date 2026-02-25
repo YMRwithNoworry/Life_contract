@@ -14,6 +14,14 @@ out/
 
 compile_error.txt
 compile_output.txt
+build_errors.txt
+build_errors2.txt
+build_errors3.txt
+build_errors4.txt
 
 .DS_Store
 Thumbs.db
+
+gradle/wrapper/gradle-wrapper.jar
+gradlew
+gradlew.bat

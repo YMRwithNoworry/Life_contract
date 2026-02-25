@@ -1,7 +1,5 @@
 package org.alku.life_contract;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +11,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.TickEvent;
@@ -29,21 +26,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import org.alku.life_contract.follower.FollowerWandMenu;
-import org.alku.life_contract.follower.FollowerWandScreen;
 import org.alku.life_contract.follower.FollowerWandItem;
 import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
 import org.alku.life_contract.mineral_generator.MineralGeneratorBlock;
 import org.alku.life_contract.mineral_generator.MineralGeneratorMenu;
-import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
 import org.alku.life_contract.profession.ProfessionConfig;
 import org.alku.life_contract.revive.ReviveTeammateMenu;
-import org.alku.life_contract.revive.ReviveTeammateScreen;
 
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";
 
-    // 注册器
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
@@ -51,7 +44,6 @@ public class Life_contract {
     public static final DeferredRegister<net.minecraft.world.level.block.Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
     public static final DeferredRegister<net.minecraft.world.level.block.entity.BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MODID);
 
-    // 物品注册
     public static final RegistryObject<Item> SOUL_CONTRACT = ITEMS.register("soul_contract", SoulContractItem::new);
     public static final RegistryObject<Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
     public static final RegistryObject<Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
@@ -64,20 +56,16 @@ public class Life_contract {
     public static final RegistryObject<Item> AMBUSH_ORB = ITEMS.register("ambush_orb", AmbushOrbItem::new);
     public static final RegistryObject<Item> TEAM_GOLEM_WAND = ITEMS.register("team_golem_wand", TeamGolemWandItem::new);
 
-    // 方块注册
     public static final RegistryObject<net.minecraft.world.level.block.Block> MINERAL_GENERATOR_BLOCK = BLOCKS.register("mineral_generator",
             () -> new MineralGeneratorBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
                     .strength(-1.0F, 3600000.0F)));
 
-    // 方块物品注册
     public static final RegistryObject<Item> MINERAL_GENERATOR_ITEM = ITEMS.register("mineral_generator",
             () -> new net.minecraft.world.item.BlockItem(MINERAL_GENERATOR_BLOCK.get(), new Item.Properties()));
 
-    // 方块实体注册
     public static final RegistryObject<net.minecraft.world.level.block.entity.BlockEntityType<MineralGeneratorBlockEntity>> MINERAL_GENERATOR_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("mineral_generator",
             () -> net.minecraft.world.level.block.entity.BlockEntityType.Builder.of(MineralGeneratorBlockEntity::new, MINERAL_GENERATOR_BLOCK.get()).build(null));
 
-    // 菜单注册
     public static final RegistryObject<MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU = MENU_TYPES.register("team_inventory",
             () -> IForgeMenuType.create(TeamInventoryMenu::new));
     public static final RegistryObject<MenuType<ShopMenu>> SHOP_MENU = MENU_TYPES.register("shop",
@@ -93,7 +81,6 @@ public class Life_contract {
     public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
             () -> IForgeMenuType.create(ReviveTeammateMenu::new));
 
-    // 实体注册
     public static final RegistryObject<EntityType<TeamSentinel>> TEAM_SENTINEL = ENTITY_TYPES.register("team_sentinel",
             () -> EntityType.Builder.of(TeamSentinel::new, MobCategory.MISC)
                     .sized(0.6F, 1.8F)
@@ -107,7 +94,6 @@ public class Life_contract {
                     .updateInterval(1)
                     .build("fire_trail"));
 
-    // 创造模式物品栏
     public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_TABS.register("life_contract_tab", () -> CreativeModeTab.builder()
             .icon(() -> SOUL_CONTRACT.get().getDefaultInstance())
             .title(Component.translatable("itemGroup.life_contract"))
@@ -135,10 +121,8 @@ public class Life_contract {
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
 
-        // 注册网络包通道
         NetworkHandler.register();
 
-        // 注册到 Forge 总线
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -154,45 +138,179 @@ public class Life_contract {
     @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModEvents {
         @SubscribeEvent
-        @OnlyIn(Dist.CLIENT)
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
-                MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
-                MenuScreens.register(SHOP_MENU.get(), ShopScreen::new);
-                MenuScreens.register(TRADE_SETUP_MENU.get(), TradeSetupScreen::new);
-                MenuScreens.register(TRADE_SHOP_MENU.get(), TradeShopScreen::new);
-                MenuScreens.register(MINERAL_GENERATOR_MENU.get(), MineralGeneratorScreen::new);
-                MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);
-                MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
-                
-                net.minecraft.client.renderer.item.ItemProperties.register(
-                    DONK_BOW.get(),
-                    new ResourceLocation("pull"),
-                    (stack, level, entity, seed) -> {
-                        if (entity == null) return 0.0F;
-                        ItemStack useItem = entity.getUseItem();
-                        return useItem.getItem() == DONK_BOW.get() ? (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F : 0.0F;
-                    }
-                );
-                net.minecraft.client.renderer.item.ItemProperties.register(
-                    DONK_BOW.get(),
-                    new ResourceLocation("pulling"),
-                    (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem().getItem() == DONK_BOW.get() ? 1.0F : 0.0F
-                );
-                net.minecraft.client.renderer.item.ItemProperties.register(
-                    SEALED_BOW.get(),
-                    new ResourceLocation("pull"),
-                    (stack, level, entity, seed) -> {
-                        if (entity == null) return 0.0F;
-                        ItemStack useItem = entity.getUseItem();
-                        return useItem.getItem() == SEALED_BOW.get() ? (float)(stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F : 0.0F;
-                    }
-                );
-                net.minecraft.client.renderer.item.ItemProperties.register(
-                    SEALED_BOW.get(),
-                    new ResourceLocation("pulling"),
-                    (stack, level, entity, seed) -> entity != null && entity.isUsingItem() && entity.getUseItem().getItem() == SEALED_BOW.get() ? 1.0F : 0.0F
-                );
+                try {
+                    Class<?> screensClass = Class.forName("net.minecraft.client.gui.screens.MenuScreens");
+                    Class<?> screenClass = Class.forName("net.minecraft.client.gui.screens.Screen");
+                    
+                    Class<?> teamInvScreenClass = Class.forName("org.alku.life_contract.TeamInventoryScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, TEAM_INVENTORY_MENU.get(), 
+                            teamInvScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> shopScreenClass = Class.forName("org.alku.life_contract.ShopScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, SHOP_MENU.get(), 
+                            shopScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> tradeSetupScreenClass = Class.forName("org.alku.life_contract.TradeSetupScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, TRADE_SETUP_MENU.get(), 
+                            tradeSetupScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> tradeShopScreenClass = Class.forName("org.alku.life_contract.TradeShopScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, TRADE_SHOP_MENU.get(), 
+                            tradeShopScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> mineralGenScreenClass = Class.forName("org.alku.life_contract.mineral_generator.MineralGeneratorScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, MINERAL_GENERATOR_MENU.get(), 
+                            mineralGenScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> followerWandScreenClass = Class.forName("org.alku.life_contract.follower.FollowerWandScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, FOLLOWER_WAND_MENU.get(), 
+                            followerWandScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> reviveScreenClass = Class.forName("org.alku.life_contract.revive.ReviveTeammateScreen");
+                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
+                        .invoke(null, REVIVE_TEAMMATE_MENU.get(), 
+                            reviveScreenClass.getConstructor(MenuType.class, 
+                                Class.forName("net.minecraft.world.entity.player.Inventory"),
+                                Class.forName("net.minecraft.network.chat.Component")));
+                    
+                    Class<?> itemPropertiesClass = Class.forName("net.minecraft.client.renderer.item.ItemProperties");
+                    Class<?> itemPropertyFunctionClass = Class.forName("net.minecraft.client.renderer.item.ItemProperties$PropertyFunction");
+                    
+                    Object pullProperty = java.lang.reflect.Proxy.newProxyInstance(
+                        itemPropertyFunctionClass.getClassLoader(),
+                        new Class<?>[] { itemPropertyFunctionClass },
+                        (proxy, method, args) -> {
+                            if (method.getName().equals("call") || method.getName().equals("apply")) {
+                                Object stack = args[0];
+                                Object level = args[1];
+                                Object entity = args[2];
+                                Integer seed = args.length > 3 ? (Integer) args[3] : null;
+                                
+                                if (entity == null) return 0.0F;
+                                
+                                java.lang.reflect.Method getUseItem = entity.getClass().getMethod("getUseItem");
+                                Object useItem = getUseItem.invoke(entity);
+                                java.lang.reflect.Method getItem = useItem.getClass().getMethod("getItem");
+                                Object item = getItem.invoke(useItem);
+                                
+                                if (item == DONK_BOW.get()) {
+                                    java.lang.reflect.Method getUseDuration = stack.getClass().getMethod("getUseDuration");
+                                    int useDuration = (int) getUseDuration.invoke(stack);
+                                    java.lang.reflect.Method getUseItemRemainingTicks = entity.getClass().getMethod("getUseItemRemainingTicks");
+                                    int remainingTicks = (int) getUseItemRemainingTicks.invoke(entity);
+                                    return (float)(useDuration - remainingTicks) / 20.0F;
+                                }
+                                return 0.0F;
+                            }
+                            return null;
+                        }
+                    );
+                    
+                    itemPropertiesClass.getMethod("register", Item.class, ResourceLocation.class, itemPropertyFunctionClass)
+                        .invoke(null, DONK_BOW.get(), new ResourceLocation("pull"), pullProperty);
+                    
+                    Object pullingProperty = java.lang.reflect.Proxy.newProxyInstance(
+                        itemPropertyFunctionClass.getClassLoader(),
+                        new Class<?>[] { itemPropertyFunctionClass },
+                        (proxy, method, args) -> {
+                            if (method.getName().equals("call") || method.getName().equals("apply")) {
+                                Object entity = args[2];
+                                if (entity != null) {
+                                    java.lang.reflect.Method isUsingItem = entity.getClass().getMethod("isUsingItem");
+                                    boolean using = (boolean) isUsingItem.invoke(entity);
+                                    java.lang.reflect.Method getUseItem = entity.getClass().getMethod("getUseItem");
+                                    Object useItem = getUseItem.invoke(entity);
+                                    java.lang.reflect.Method getItem = useItem.getClass().getMethod("getItem");
+                                    Object item = getItem.invoke(useItem);
+                                    return using && item == DONK_BOW.get() ? 1.0F : 0.0F;
+                                }
+                                return 0.0F;
+                            }
+                            return null;
+                        }
+                    );
+                    
+                    itemPropertiesClass.getMethod("register", Item.class, ResourceLocation.class, itemPropertyFunctionClass)
+                        .invoke(null, DONK_BOW.get(), new ResourceLocation("pulling"), pullingProperty);
+                    
+                    Object sealedPullProperty = java.lang.reflect.Proxy.newProxyInstance(
+                        itemPropertyFunctionClass.getClassLoader(),
+                        new Class<?>[] { itemPropertyFunctionClass },
+                        (proxy, method, args) -> {
+                            if (method.getName().equals("call") || method.getName().equals("apply")) {
+                                Object stack = args[0];
+                                Object entity = args[2];
+                                
+                                if (entity == null) return 0.0F;
+                                
+                                java.lang.reflect.Method getUseItem = entity.getClass().getMethod("getUseItem");
+                                Object useItem = getUseItem.invoke(entity);
+                                java.lang.reflect.Method getItem = useItem.getClass().getMethod("getItem");
+                                Object item = getItem.invoke(useItem);
+                                
+                                if (item == SEALED_BOW.get()) {
+                                    java.lang.reflect.Method getUseDuration = stack.getClass().getMethod("getUseDuration");
+                                    int useDuration = (int) getUseDuration.invoke(stack);
+                                    java.lang.reflect.Method getUseItemRemainingTicks = entity.getClass().getMethod("getUseItemRemainingTicks");
+                                    int remainingTicks = (int) getUseItemRemainingTicks.invoke(entity);
+                                    return (float)(useDuration - remainingTicks) / 20.0F;
+                                }
+                                return 0.0F;
+                            }
+                            return null;
+                        }
+                    );
+                    
+                    itemPropertiesClass.getMethod("register", Item.class, ResourceLocation.class, itemPropertyFunctionClass)
+                        .invoke(null, SEALED_BOW.get(), new ResourceLocation("pull"), sealedPullProperty);
+                    
+                    Object sealedPullingProperty = java.lang.reflect.Proxy.newProxyInstance(
+                        itemPropertyFunctionClass.getClassLoader(),
+                        new Class<?>[] { itemPropertyFunctionClass },
+                        (proxy, method, args) -> {
+                            if (method.getName().equals("call") || method.getName().equals("apply")) {
+                                Object entity = args[2];
+                                if (entity != null) {
+                                    java.lang.reflect.Method isUsingItem = entity.getClass().getMethod("isUsingItem");
+                                    boolean using = (boolean) isUsingItem.invoke(entity);
+                                    java.lang.reflect.Method getUseItem = entity.getClass().getMethod("getUseItem");
+                                    Object useItem = getUseItem.invoke(entity);
+                                    java.lang.reflect.Method getItem = useItem.getClass().getMethod("getItem");
+                                    Object item = getItem.invoke(useItem);
+                                    return using && item == SEALED_BOW.get() ? 1.0F : 0.0F;
+                                }
+                                return 0.0F;
+                            }
+                            return null;
+                        }
+                    );
+                    
+                    itemPropertiesClass.getMethod("register", Item.class, ResourceLocation.class, itemPropertyFunctionClass)
+                        .invoke(null, SEALED_BOW.get(), new ResourceLocation("pulling"), sealedPullingProperty);
+                    
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         }
     }
@@ -200,35 +318,52 @@ public class Life_contract {
     @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientEvents {
         @SubscribeEvent
-        @OnlyIn(Dist.CLIENT)
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             if (event.phase != TickEvent.Phase.END)
                 return;
 
-            Minecraft mc = Minecraft.getInstance();
-            Player player = mc.player;
-            if (player == null)
-                return;
-
-            while (KeyBindings.OPEN_TEAM_INVENTORY.consumeClick()) {
-                if (!player.level().isClientSide)
+            try {
+                Class<?> mcClass = Class.forName("net.minecraft.client.Minecraft");
+                Object mc = mcClass.getMethod("getInstance").invoke(null);
+                Object player = mcClass.getMethod("player").invoke(mc);
+                if (player == null)
                     return;
-                NetworkHandler.sendOpenTeamInventoryPacket();
-            }
 
-            while (KeyBindings.HEALER_ACTIVE_HEAL.consumeClick()) {
-                if (!player.level().isClientSide)
-                    return;
-                NetworkHandler.sendHealerActiveHealPacket();
-            }
+                Class<?> keyBindingsClass = Class.forName("org.alku.life_contract.KeyBindings");
+                Object openTeamInv = keyBindingsClass.getField("OPEN_TEAM_INVENTORY").get(null);
+                java.lang.reflect.Method consumeClick = openTeamInv.getClass().getMethod("consumeClick");
+                
+                while ((boolean) consumeClick.invoke(openTeamInv)) {
+                    Object level = player.getClass().getMethod("level").invoke(player);
+                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
+                    if (!isClientSide)
+                        return;
+                    NetworkHandler.sendOpenTeamInventoryPacket();
+                }
 
-            while (KeyBindings.FOOL_STEAL_PROFESSION.consumeClick()) {
-                if (!player.level().isClientSide)
-                    return;
-                FoolSystem.sendStealPacket(null);
-            }
+                Object healerActiveHeal = keyBindingsClass.getField("HEALER_ACTIVE_HEAL").get(null);
+                while ((boolean) consumeClick.invoke(healerActiveHeal)) {
+                    Object level = player.getClass().getMethod("level").invoke(player);
+                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
+                    if (!isClientSide)
+                        return;
+                    NetworkHandler.sendHealerActiveHealPacket();
+                }
 
-            ClientDataStorage.tickHealerCooldown();
+                Object foolStealProfession = keyBindingsClass.getField("FOOL_STEAL_PROFESSION").get(null);
+                while ((boolean) consumeClick.invoke(foolStealProfession)) {
+                    Object level = player.getClass().getMethod("level").invoke(player);
+                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
+                    if (!isClientSide)
+                        return;
+                    FoolSystem.sendStealPacket(null);
+                }
+
+                Class<?> clientDataStorageClass = Class.forName("org.alku.life_contract.ClientDataStorage");
+                clientDataStorageClass.getMethod("tickHealerCooldown").invoke(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

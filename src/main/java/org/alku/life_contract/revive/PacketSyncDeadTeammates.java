@@ -1,6 +1,5 @@
 package org.alku.life_contract.revive;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -55,14 +54,32 @@ public class PacketSyncDeadTeammates {
         ctx.get().enqueueWork(() -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 ClientReviveData.setDeadTeammates(msg.deadTeammates);
-                Minecraft mc = Minecraft.getInstance();
-                if (mc.player != null) {
-                    mc.player.closeContainer();
-                    mc.setScreen(new ReviveTeammateScreen(
-                        new ReviveTeammateMenu(0, mc.player.getInventory(), msg.deadTeammates),
-                        mc.player.getInventory(),
-                        net.minecraft.network.chat.Component.literal("选择复活的队友")
-                    ));
+                try {
+                    Class<?> mcClass = Class.forName("net.minecraft.client.Minecraft");
+                    Object mcInstance = mcClass.getMethod("getInstance").invoke(null);
+                    Object player = mcClass.getMethod("getPlayer").invoke(mcInstance);
+                    if (player != null) {
+                        player.getClass().getMethod("closeContainer").invoke(player);
+                        
+                        Class<?> screenClass = Class.forName("org.alku.life_contract.revive.ReviveTeammateScreen");
+                        Class<?> menuClass = Class.forName("org.alku.life_contract.revive.ReviveTeammateMenu");
+                        Class<?> invClass = Class.forName("net.minecraft.world.entity.player.Inventory");
+                        Class<?> componentClass = Class.forName("net.minecraft.network.chat.Component");
+                        
+                        Object menu = menuClass.getConstructor(int.class, invClass, List.class)
+                            .newInstance(0, player.getClass().getMethod("getInventory").invoke(player), msg.deadTeammates);
+                        
+                        Object component = componentClass.getMethod("literal", String.class)
+                            .invoke(null, "选择复活的队友");
+                        
+                        Object screen = screenClass.getConstructor(menuClass, invClass, componentClass)
+                            .newInstance(menu, player.getClass().getMethod("getInventory").invoke(player), component);
+                        
+                        mcClass.getMethod("setScreen", Class.forName("net.minecraft.client.gui.screens.Screen"))
+                            .invoke(mcInstance, screen);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
         });

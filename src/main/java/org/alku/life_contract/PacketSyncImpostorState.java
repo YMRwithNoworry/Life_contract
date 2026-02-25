@@ -1,9 +1,8 @@
 package org.alku.life_contract;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
@@ -75,12 +74,13 @@ public class PacketSyncImpostorState {
     public static void handle(PacketSyncImpostorState msg, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
-            handleClientSide(msg);
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                handleClientSide(msg);
+            });
         });
         context.setPacketHandled(true);
     }
     
-    @OnlyIn(Dist.CLIENT)
     private static void handleClientSide(PacketSyncImpostorState msg) {
         if (msg.isDisguised) {
             CLIENT_DISGUISE_MAP.put(msg.playerUUID, new ClientDisguiseData(msg.disguiseName, msg.disguiseTeamLeader));

@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -20,10 +22,13 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 
 import org.alku.life_contract.profession.Profession;
 import org.alku.life_contract.profession.ProfessionConfig;
@@ -38,6 +43,9 @@ import java.util.*;
 public class ContractEvents {
 
     private static final Random RANDOM = new Random();
+    private static final Map<UUID, String> LAST_ATTACKER_MOD = new HashMap<>();
+    private static final Map<UUID, Long> LAST_ATTACK_TIME = new HashMap<>();
+    private static final long ATTACK_EXPIRE_TICKS = 100;
 
     @SubscribeEvent
     public static void onPlayerNameFormat(PlayerEvent.NameFormat event) {
@@ -724,5 +732,207 @@ public class ContractEvents {
     }
 
     private static void initializeUndeadPlayerOnJoin(ServerPlayer player) {
+    }
+
+    @SubscribeEvent
+    public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        
+        String professionId = getEffectiveProfessionId(player);
+        if (professionId == null || professionId.isEmpty()) return;
+        
+        Profession profession = ProfessionConfig.getProfession(professionId);
+        if (profession == null) return;
+        
+        EquipmentSlot slot = event.getSlot();
+        if (slot.getType() != EquipmentSlot.Type.ARMOR) return;
+        
+        ItemStack newItem = event.getTo();
+        if (newItem.isEmpty() || !(newItem.getItem() instanceof ArmorItem armorItem)) return;
+        
+        if (profession.isLeatherArmorOnly()) {
+            if (!isLeatherArmor(armorItem)) {
+                player.drop(newItem.copy(), false);
+                newItem.setCount(0);
+                player.sendSystemMessage(Component.literal("§c[职业限制] 你只能穿戴皮革盔甲！"));
+            }
+        } else if (profession.isIronArmorOnly()) {
+            if (!isIronArmor(armorItem)) {
+                player.drop(newItem.copy(), false);
+                newItem.setCount(0);
+                player.sendSystemMessage(Component.literal("§c[职业限制] 你只能穿戴铁盔甲！"));
+            }
+        }
+    }
+
+    private static boolean isLeatherArmor(ArmorItem armorItem) {
+        return armorItem.getMaterial() == net.minecraft.world.item.ArmorMaterials.LEATHER;
+    }
+
+    private static boolean isIronArmor(ArmorItem armorItem) {
+        return armorItem.getMaterial() == net.minecraft.world.item.ArmorMaterials.IRON;
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamage(LivingDamageEvent event) {
+        if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
+        
+        String professionId = getEffectiveProfessionId(player);
+        if (professionId == null || professionId.isEmpty()) return;
+        
+        Profession profession = ProfessionConfig.getProfession(professionId);
+        if (profession == null) return;
+        
+        float rangedDamagePenalty = profession.getRangedDamagePenalty();
+        if (rangedDamagePenalty > 0) {
+            if (isRangedAttack(event.getSource())) {
+                float originalDamage = event.getAmount();
+                float reducedDamage = originalDamage * (1.0f - rangedDamagePenalty);
+                event.setAmount(reducedDamage);
+            }
+        }
+    }
+
+    private static boolean isRangedAttack(net.minecraft.world.damagesource.DamageSource source) {
+        String msgId = source.getMsgId();
+        return "arrow".equals(msgId) || "trident".equals(msgId) || 
+               "mob_projectile".equals(msgId) || "fireball".equals(msgId) ||
+               "witherSkull".equals(msgId) || "shulkerBullet".equals(msgId);
+    }
+
+    @SubscribeEvent
+    public static void onContractLivingAttack(net.minecraftforge.event.entity.living.LivingAttackEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (event.getEntity() instanceof Player player) {
+            String contractMod = getEffectiveContractMod(player);
+            if (contractMod == null || contractMod.isEmpty()) return;
+            
+            net.minecraft.world.damagesource.DamageSource source = event.getSource();
+            Entity attacker = source.getEntity();
+            
+            if (attacker instanceof LivingEntity livingAttacker) {
+                String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                    .getKey(livingAttacker.getType()).getNamespace();
+                
+                recordAttackerMod(player, livingAttacker);
+                
+                if (contractMod.equals(attackerMod)) {
+                    event.setCanceled(true);
+                }
+            }
+            
+            if (source.getDirectEntity() instanceof LivingEntity directAttacker) {
+                String directAttackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                    .getKey(directAttacker.getType()).getNamespace();
+                
+                recordAttackerMod(player, directAttacker);
+                
+                if (contractMod.equals(directAttackerMod)) {
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onContractLivingHurt(net.minecraftforge.event.entity.living.LivingHurtEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (event.getEntity() instanceof Player player) {
+            String contractMod = getEffectiveContractMod(player);
+            if (contractMod == null || contractMod.isEmpty()) return;
+            
+            net.minecraft.world.damagesource.DamageSource source = event.getSource();
+            Entity attacker = source.getEntity();
+            
+            if (attacker instanceof LivingEntity livingAttacker) {
+                String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                    .getKey(livingAttacker.getType()).getNamespace();
+                
+                if (contractMod.equals(attackerMod)) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+            
+            if (source.getDirectEntity() instanceof LivingEntity directAttacker) {
+                String directAttackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                    .getKey(directAttacker.getType()).getNamespace();
+                
+                if (contractMod.equals(directAttackerMod)) {
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onContractChangeTarget(net.minecraftforge.event.entity.living.LivingChangeTargetEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (event.getEntity() instanceof net.minecraft.world.entity.Mob mob && 
+            event.getNewTarget() instanceof Player player) {
+            
+            String contractMod = getEffectiveContractMod(player);
+            if (contractMod == null || contractMod.isEmpty()) return;
+            
+            String mobMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+                .getKey(mob.getType()).getNamespace();
+            
+            if (contractMod.equals(mobMod)) {
+                event.setNewTarget(null);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onContractMobEffectAdded(net.minecraftforge.event.entity.living.MobEffectEvent.Added event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (event.getEntity() instanceof Player player) {
+            String contractMod = getEffectiveContractMod(player);
+            if (contractMod == null || contractMod.isEmpty()) return;
+            
+            MobEffectInstance effectInstance = event.getEffectInstance();
+            if (effectInstance == null) return;
+            
+            net.minecraft.world.effect.MobEffect effect = effectInstance.getEffect();
+            boolean isNegativeEffect = isNegativeEffect(effect);
+            
+            if (!isNegativeEffect) return;
+            
+            String lastAttackerMod = LAST_ATTACKER_MOD.get(player.getUUID());
+            Long lastAttackTime = LAST_ATTACK_TIME.get(player.getUUID());
+            long currentTime = player.level().getGameTime();
+            
+            if (lastAttackerMod != null && lastAttackTime != null && 
+                currentTime - lastAttackTime < ATTACK_EXPIRE_TICKS &&
+                contractMod.equals(lastAttackerMod)) {
+                player.removeEffect(effect);
+            }
+        }
+    }
+
+    private static void recordAttackerMod(Player player, LivingEntity attacker) {
+        String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
+            .getKey(attacker.getType()).getNamespace();
+        LAST_ATTACKER_MOD.put(player.getUUID(), attackerMod);
+        LAST_ATTACK_TIME.put(player.getUUID(), player.level().getGameTime());
+    }
+
+    private static boolean isNegativeEffect(net.minecraft.world.effect.MobEffect effect) {
+        return effect == net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN
+            || effect == net.minecraft.world.effect.MobEffects.DIG_SLOWDOWN
+            || effect == net.minecraft.world.effect.MobEffects.HARM
+            || effect == net.minecraft.world.effect.MobEffects.CONFUSION
+            || effect == net.minecraft.world.effect.MobEffects.BLINDNESS
+            || effect == net.minecraft.world.effect.MobEffects.HUNGER
+            || effect == net.minecraft.world.effect.MobEffects.WEAKNESS
+            || effect == net.minecraft.world.effect.MobEffects.POISON
+            || effect == net.minecraft.world.effect.MobEffects.WITHER
+            || effect == net.minecraft.world.effect.MobEffects.LEVITATION
+            || effect == net.minecraft.world.effect.MobEffects.UNLUCK
+            || effect == net.minecraft.world.effect.MobEffects.DARKNESS;
     }
 }

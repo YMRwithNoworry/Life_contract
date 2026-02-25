@@ -87,6 +87,7 @@ public class ProfessionBuilder {
     private float haloDetectionRange = 32.0f;
     
     private boolean leatherArmorOnly = false;
+    private boolean ironArmorOnly = false;
     private float bonusHealth = 0.0f;
     private float bonusArmorToughness = 0.0f;
     private float meleeDamageBonus = 0.0f;
@@ -135,6 +136,11 @@ public class ProfessionBuilder {
     private float highPriestSacrificeRange = 30.0f;
     private int highPriestCooldown = 600;
     private float highPriestReviveHealth = 10.0f;
+    
+    private boolean isGhostSenator = false;
+    private float ghostSenatorHealAmount = 7.0f;
+    private int ghostSenatorStrengthDuration = 300;
+    private float ghostSenatorDetectionRadius = 20.0f;
 
     public ProfessionBuilder() {}
 
@@ -217,6 +223,7 @@ public class ProfessionBuilder {
     public ProfessionBuilder haloDetectionRange(float haloDetectionRange) { this.haloDetectionRange = haloDetectionRange; return this; }
     
     public ProfessionBuilder leatherArmorOnly(boolean leatherArmorOnly) { this.leatherArmorOnly = leatherArmorOnly; return this; }
+    public ProfessionBuilder ironArmorOnly(boolean ironArmorOnly) { this.ironArmorOnly = ironArmorOnly; return this; }
     public ProfessionBuilder bonusHealth(float bonusHealth) { this.bonusHealth = bonusHealth; return this; }
     public ProfessionBuilder bonusArmorToughness(float bonusArmorToughness) { this.bonusArmorToughness = bonusArmorToughness; return this; }
     public ProfessionBuilder meleeDamageBonus(float meleeDamageBonus) { this.meleeDamageBonus = meleeDamageBonus; return this; }
@@ -265,6 +272,11 @@ public class ProfessionBuilder {
     public ProfessionBuilder highPriestSacrificeRange(float highPriestSacrificeRange) { this.highPriestSacrificeRange = highPriestSacrificeRange; return this; }
     public ProfessionBuilder highPriestCooldown(int highPriestCooldown) { this.highPriestCooldown = highPriestCooldown; return this; }
     public ProfessionBuilder highPriestReviveHealth(float highPriestReviveHealth) { this.highPriestReviveHealth = highPriestReviveHealth; return this; }
+    
+    public ProfessionBuilder isGhostSenator(boolean isGhostSenator) { this.isGhostSenator = isGhostSenator; return this; }
+    public ProfessionBuilder ghostSenatorHealAmount(float ghostSenatorHealAmount) { this.ghostSenatorHealAmount = ghostSenatorHealAmount; return this; }
+    public ProfessionBuilder ghostSenatorStrengthDuration(int ghostSenatorStrengthDuration) { this.ghostSenatorStrengthDuration = ghostSenatorStrengthDuration; return this; }
+    public ProfessionBuilder ghostSenatorDetectionRadius(float ghostSenatorDetectionRadius) { this.ghostSenatorDetectionRadius = ghostSenatorDetectionRadius; return this; }
 
     public Profession build() {
         return new Profession(this);
@@ -334,6 +346,7 @@ public class ProfessionBuilder {
         builder.hasHalo(tag.contains("hasHalo") && tag.getBoolean("hasHalo"));
         builder.haloDetectionRange(tag.contains("haloDetectionRange") ? tag.getFloat("haloDetectionRange") : 32.0f);
         builder.leatherArmorOnly(tag.contains("leatherArmorOnly") && tag.getBoolean("leatherArmorOnly"));
+        builder.ironArmorOnly(tag.contains("ironArmorOnly") && tag.getBoolean("ironArmorOnly"));
         builder.bonusHealth(tag.contains("bonusHealth") ? tag.getFloat("bonusHealth") : 0.0f);
         builder.bonusArmorToughness(tag.contains("bonusArmorToughness") ? tag.getFloat("bonusArmorToughness") : 0.0f);
         builder.meleeDamageBonus(tag.contains("meleeDamageBonus") ? tag.getFloat("meleeDamageBonus") : 0.0f);
@@ -373,6 +386,10 @@ public class ProfessionBuilder {
         builder.highPriestSacrificeRange(tag.contains("highPriestSacrificeRange") ? tag.getFloat("highPriestSacrificeRange") : 30.0f);
         builder.highPriestCooldown(tag.contains("highPriestCooldown") ? tag.getInt("highPriestCooldown") : 600);
         builder.highPriestReviveHealth(tag.contains("highPriestReviveHealth") ? tag.getFloat("highPriestReviveHealth") : 10.0f);
+        builder.isGhostSenator(tag.contains("isGhostSenator") && tag.getBoolean("isGhostSenator"));
+        builder.ghostSenatorHealAmount(tag.contains("ghostSenatorHealAmount") ? tag.getFloat("ghostSenatorHealAmount") : 7.0f);
+        builder.ghostSenatorStrengthDuration(tag.contains("ghostSenatorStrengthDuration") ? tag.getInt("ghostSenatorStrengthDuration") : 300);
+        builder.ghostSenatorDetectionRadius(tag.contains("ghostSenatorDetectionRadius") ? tag.getFloat("ghostSenatorDetectionRadius") : 20.0f);
         return builder;
     }
 
@@ -440,6 +457,7 @@ public class ProfessionBuilder {
         builder.hasHalo(buffer.readBoolean());
         builder.haloDetectionRange(buffer.readFloat());
         builder.leatherArmorOnly(buffer.readBoolean());
+        builder.ironArmorOnly(buffer.readBoolean());
         builder.bonusHealth(buffer.readFloat());
         builder.bonusArmorToughness(buffer.readFloat());
         builder.meleeDamageBonus(buffer.readFloat());
@@ -479,6 +497,10 @@ public class ProfessionBuilder {
         builder.highPriestSacrificeRange(buffer.readFloat());
         builder.highPriestCooldown(buffer.readInt());
         builder.highPriestReviveHealth(buffer.readFloat());
+        builder.isGhostSenator(buffer.readBoolean());
+        builder.ghostSenatorHealAmount(buffer.readFloat());
+        builder.ghostSenatorStrengthDuration(buffer.readInt());
+        builder.ghostSenatorDetectionRadius(buffer.readFloat());
         return builder;
     }
 
@@ -564,6 +586,7 @@ public class ProfessionBuilder {
     boolean hasHalo() { return hasHalo; }
     float getHaloDetectionRange() { return haloDetectionRange; }
     boolean isLeatherArmorOnly() { return leatherArmorOnly; }
+    boolean isIronArmorOnly() { return ironArmorOnly; }
     float getBonusHealth() { return bonusHealth; }
     float getBonusArmorToughness() { return bonusArmorToughness; }
     float getMeleeDamageBonus() { return meleeDamageBonus; }
@@ -603,4 +626,8 @@ public class ProfessionBuilder {
     float getHighPriestSacrificeRange() { return highPriestSacrificeRange; }
     int getHighPriestCooldown() { return highPriestCooldown; }
     float getHighPriestReviveHealth() { return highPriestReviveHealth; }
+    boolean isGhostSenator() { return isGhostSenator; }
+    float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
+    int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
+    float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
 }

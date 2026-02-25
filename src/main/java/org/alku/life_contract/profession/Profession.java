@@ -71,6 +71,7 @@ public class Profession {
     private final boolean hasHalo;
     private final float haloDetectionRange;
     private final boolean leatherArmorOnly;
+    private final boolean ironArmorOnly;
     private final float bonusHealth;
     private final float bonusArmorToughness;
     private final float meleeDamageBonus;
@@ -110,6 +111,10 @@ public class Profession {
     private final float highPriestSacrificeRange;
     private final int highPriestCooldown;
     private final float highPriestReviveHealth;
+    private final boolean isGhostSenator;
+    private final float ghostSenatorHealAmount;
+    private final int ghostSenatorStrengthDuration;
+    private final float ghostSenatorDetectionRadius;
 
     Profession(ProfessionBuilder builder) {
         this.id = builder.getId();
@@ -174,6 +179,7 @@ public class Profession {
         this.hasHalo = builder.hasHalo();
         this.haloDetectionRange = builder.getHaloDetectionRange();
         this.leatherArmorOnly = builder.isLeatherArmorOnly();
+        this.ironArmorOnly = builder.isIronArmorOnly();
         this.bonusHealth = builder.getBonusHealth();
         this.bonusArmorToughness = builder.getBonusArmorToughness();
         this.meleeDamageBonus = builder.getMeleeDamageBonus();
@@ -213,6 +219,10 @@ public class Profession {
         this.highPriestSacrificeRange = builder.getHighPriestSacrificeRange();
         this.highPriestCooldown = builder.getHighPriestCooldown();
         this.highPriestReviveHealth = builder.getHighPriestReviveHealth();
+        this.isGhostSenator = builder.isGhostSenator();
+        this.ghostSenatorHealAmount = builder.getGhostSenatorHealAmount();
+        this.ghostSenatorStrengthDuration = builder.getGhostSenatorStrengthDuration();
+        this.ghostSenatorDetectionRadius = builder.getGhostSenatorDetectionRadius();
     }
 
     public static ProfessionBuilder builder() {
@@ -281,6 +291,7 @@ public class Profession {
     public boolean hasHalo() { return hasHalo; }
     public float getHaloDetectionRange() { return haloDetectionRange; }
     public boolean isLeatherArmorOnly() { return leatherArmorOnly; }
+    public boolean isIronArmorOnly() { return ironArmorOnly; }
     public float getBonusHealth() { return bonusHealth; }
     public float getBonusArmorToughness() { return bonusArmorToughness; }
     public float getMeleeDamageBonus() { return meleeDamageBonus; }
@@ -320,6 +331,10 @@ public class Profession {
     public float getHighPriestSacrificeRange() { return highPriestSacrificeRange; }
     public int getHighPriestCooldown() { return highPriestCooldown; }
     public float getHighPriestReviveHealth() { return highPriestReviveHealth; }
+    public boolean isGhostSenator() { return isGhostSenator; }
+    public float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
+    public int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
+    public float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
 
     public boolean hasBonusDamage() { return bonusDamagePercent > 0; }
     public boolean hasSlowness() { return slownessLevel > 0; }
@@ -395,6 +410,7 @@ public class Profession {
         tag.putBoolean("hasHalo", hasHalo);
         tag.putFloat("haloDetectionRange", haloDetectionRange);
         tag.putBoolean("leatherArmorOnly", leatherArmorOnly);
+        tag.putBoolean("ironArmorOnly", ironArmorOnly);
         tag.putFloat("bonusHealth", bonusHealth);
         tag.putFloat("bonusArmorToughness", bonusArmorToughness);
         tag.putFloat("meleeDamageBonus", meleeDamageBonus);
@@ -434,6 +450,10 @@ public class Profession {
         tag.putFloat("highPriestSacrificeRange", highPriestSacrificeRange);
         tag.putInt("highPriestCooldown", highPriestCooldown);
         tag.putFloat("highPriestReviveHealth", highPriestReviveHealth);
+        tag.putBoolean("isGhostSenator", isGhostSenator);
+        tag.putFloat("ghostSenatorHealAmount", ghostSenatorHealAmount);
+        tag.putInt("ghostSenatorStrengthDuration", ghostSenatorStrengthDuration);
+        tag.putFloat("ghostSenatorDetectionRadius", ghostSenatorDetectionRadius);
         return tag;
     }
 
@@ -518,6 +538,7 @@ public class Profession {
         buffer.writeBoolean(hasHalo);
         buffer.writeFloat(haloDetectionRange);
         buffer.writeBoolean(leatherArmorOnly);
+        buffer.writeBoolean(ironArmorOnly);
         buffer.writeFloat(bonusHealth);
         buffer.writeFloat(bonusArmorToughness);
         buffer.writeFloat(meleeDamageBonus);
@@ -557,6 +578,10 @@ public class Profession {
         buffer.writeFloat(highPriestSacrificeRange);
         buffer.writeInt(highPriestCooldown);
         buffer.writeFloat(highPriestReviveHealth);
+        buffer.writeBoolean(isGhostSenator);
+        buffer.writeFloat(ghostSenatorHealAmount);
+        buffer.writeInt(ghostSenatorStrengthDuration);
+        buffer.writeFloat(ghostSenatorDetectionRadius);
     }
 
     public static Profession readFromBuffer(FriendlyByteBuf buffer) {
