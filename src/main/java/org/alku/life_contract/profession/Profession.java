@@ -121,6 +121,41 @@ public class Profession {
     private final float turtleAuraRadius;
     private final int turtleAuraSlownessLevel;
     private final int turtleAuraDuration;
+    private final boolean isJungleApeGod;
+    private final int rhythmStacksMax;
+    private final float rhythmAttackSpeedPerStack;
+    private final float rhythmMoveSpeedPerStack;
+    private final int berserkDuration;
+    private final float berserkCooldownReduction;
+    private final float berserkLifeSteal;
+    private final float flatDamageReduction;
+    private final float resistanceChance;
+    private final int resistanceDuration;
+    private final float q1DamageMultiplier;
+    private final float q1MovingTargetDamageMultiplier;
+    private final int q1SlowDuration;
+    private final int q1Cooldown;
+    private final float q1Angle;
+    private final float q2MaxDistance;
+    private final float q2DamageMultiplier;
+    private final float q2KnockbackDuration;
+    private final float q2SplashDamagePercent;
+    private final float q2BonusAttackRange;
+    private final int q2BonusAttackDuration;
+    private final int q2Cooldown;
+    private final float q3Radius;
+    private final float q3DamageMultiplier;
+    private final float q3FearDuration;
+    private final float q3BerserkFearDuration;
+    private final int q3WeaknessDuration;
+    private final int q3Cooldown;
+    private final int rDuration;
+    private final float rHealPercent;
+    private final float rHealthBonusPercent;
+    private final int rPowerLevel;
+    private final int rSpeedLevel;
+    private final int rFatigueDuration;
+    private final int rCooldown;
 
     Profession(ProfessionBuilder builder) {
         this.id = builder.getId();
@@ -235,6 +270,41 @@ public class Profession {
         this.turtleAuraRadius = builder.getTurtleAuraRadius();
         this.turtleAuraSlownessLevel = builder.getTurtleAuraSlownessLevel();
         this.turtleAuraDuration = builder.getTurtleAuraDuration();
+        this.isJungleApeGod = builder.isJungleApeGod();
+        this.rhythmStacksMax = builder.getRhythmStacksMax();
+        this.rhythmAttackSpeedPerStack = builder.getRhythmAttackSpeedPerStack();
+        this.rhythmMoveSpeedPerStack = builder.getRhythmMoveSpeedPerStack();
+        this.berserkDuration = builder.getBerserkDuration();
+        this.berserkCooldownReduction = builder.getBerserkCooldownReduction();
+        this.berserkLifeSteal = builder.getBerserkLifeSteal();
+        this.flatDamageReduction = builder.getFlatDamageReduction();
+        this.resistanceChance = builder.getResistanceChance();
+        this.resistanceDuration = builder.getResistanceDuration();
+        this.q1DamageMultiplier = builder.getQ1DamageMultiplier();
+        this.q1MovingTargetDamageMultiplier = builder.getQ1MovingTargetDamageMultiplier();
+        this.q1SlowDuration = builder.getQ1SlowDuration();
+        this.q1Cooldown = builder.getQ1Cooldown();
+        this.q1Angle = builder.getQ1Angle();
+        this.q2MaxDistance = builder.getQ2MaxDistance();
+        this.q2DamageMultiplier = builder.getQ2DamageMultiplier();
+        this.q2KnockbackDuration = builder.getQ2KnockbackDuration();
+        this.q2SplashDamagePercent = builder.getQ2SplashDamagePercent();
+        this.q2BonusAttackRange = builder.getQ2BonusAttackRange();
+        this.q2BonusAttackDuration = builder.getQ2BonusAttackDuration();
+        this.q2Cooldown = builder.getQ2Cooldown();
+        this.q3Radius = builder.getQ3Radius();
+        this.q3DamageMultiplier = builder.getQ3DamageMultiplier();
+        this.q3FearDuration = builder.getQ3FearDuration();
+        this.q3BerserkFearDuration = builder.getQ3BerserkFearDuration();
+        this.q3WeaknessDuration = builder.getQ3WeaknessDuration();
+        this.q3Cooldown = builder.getQ3Cooldown();
+        this.rDuration = builder.getRDuration();
+        this.rHealPercent = builder.getRHealPercent();
+        this.rHealthBonusPercent = builder.getRHealthBonusPercent();
+        this.rPowerLevel = builder.getRPowerLevel();
+        this.rSpeedLevel = builder.getRSpeedLevel();
+        this.rFatigueDuration = builder.getRFatigueDuration();
+        this.rCooldown = builder.getRCooldown();
     }
 
     public static ProfessionBuilder builder() {
@@ -353,6 +423,41 @@ public class Profession {
     public float getTurtleAuraRadius() { return turtleAuraRadius; }
     public int getTurtleAuraSlownessLevel() { return turtleAuraSlownessLevel; }
     public int getTurtleAuraDuration() { return turtleAuraDuration; }
+    public boolean isJungleApeGod() { return isJungleApeGod; }
+    public int getRhythmStacksMax() { return rhythmStacksMax; }
+    public float getRhythmAttackSpeedPerStack() { return rhythmAttackSpeedPerStack; }
+    public float getRhythmMoveSpeedPerStack() { return rhythmMoveSpeedPerStack; }
+    public int getBerserkDuration() { return berserkDuration; }
+    public float getBerserkCooldownReduction() { return berserkCooldownReduction; }
+    public float getBerserkLifeSteal() { return berserkLifeSteal; }
+    public float getFlatDamageReduction() { return flatDamageReduction; }
+    public float getResistanceChance() { return resistanceChance; }
+    public int getResistanceDuration() { return resistanceDuration; }
+    public float getQ1DamageMultiplier() { return q1DamageMultiplier; }
+    public float getQ1MovingTargetDamageMultiplier() { return q1MovingTargetDamageMultiplier; }
+    public int getQ1SlowDuration() { return q1SlowDuration; }
+    public int getQ1Cooldown() { return q1Cooldown; }
+    public float getQ1Angle() { return q1Angle; }
+    public float getQ2MaxDistance() { return q2MaxDistance; }
+    public float getQ2DamageMultiplier() { return q2DamageMultiplier; }
+    public float getQ2KnockbackDuration() { return q2KnockbackDuration; }
+    public float getQ2SplashDamagePercent() { return q2SplashDamagePercent; }
+    public float getQ2BonusAttackRange() { return q2BonusAttackRange; }
+    public int getQ2BonusAttackDuration() { return q2BonusAttackDuration; }
+    public int getQ2Cooldown() { return q2Cooldown; }
+    public float getQ3Radius() { return q3Radius; }
+    public float getQ3DamageMultiplier() { return q3DamageMultiplier; }
+    public float getQ3FearDuration() { return q3FearDuration; }
+    public float getQ3BerserkFearDuration() { return q3BerserkFearDuration; }
+    public int getQ3WeaknessDuration() { return q3WeaknessDuration; }
+    public int getQ3Cooldown() { return q3Cooldown; }
+    public int getRDuration() { return rDuration; }
+    public float getRHealPercent() { return rHealPercent; }
+    public float getRHealthBonusPercent() { return rHealthBonusPercent; }
+    public int getRPowerLevel() { return rPowerLevel; }
+    public int getRSpeedLevel() { return rSpeedLevel; }
+    public int getRFatigueDuration() { return rFatigueDuration; }
+    public int getRCooldown() { return rCooldown; }
 
     public boolean hasBonusDamage() { return bonusDamagePercent > 0; }
     public boolean hasSlowness() { return slownessLevel > 0; }
@@ -478,6 +583,41 @@ public class Profession {
         tag.putFloat("turtleAuraRadius", turtleAuraRadius);
         tag.putInt("turtleAuraSlownessLevel", turtleAuraSlownessLevel);
         tag.putInt("turtleAuraDuration", turtleAuraDuration);
+        tag.putBoolean("isJungleApeGod", isJungleApeGod);
+        tag.putInt("rhythmStacksMax", rhythmStacksMax);
+        tag.putFloat("rhythmAttackSpeedPerStack", rhythmAttackSpeedPerStack);
+        tag.putFloat("rhythmMoveSpeedPerStack", rhythmMoveSpeedPerStack);
+        tag.putInt("berserkDuration", berserkDuration);
+        tag.putFloat("berserkCooldownReduction", berserkCooldownReduction);
+        tag.putFloat("berserkLifeSteal", berserkLifeSteal);
+        tag.putFloat("flatDamageReduction", flatDamageReduction);
+        tag.putFloat("resistanceChance", resistanceChance);
+        tag.putInt("resistanceDuration", resistanceDuration);
+        tag.putFloat("q1DamageMultiplier", q1DamageMultiplier);
+        tag.putFloat("q1MovingTargetDamageMultiplier", q1MovingTargetDamageMultiplier);
+        tag.putInt("q1SlowDuration", q1SlowDuration);
+        tag.putInt("q1Cooldown", q1Cooldown);
+        tag.putFloat("q1Angle", q1Angle);
+        tag.putFloat("q2MaxDistance", q2MaxDistance);
+        tag.putFloat("q2DamageMultiplier", q2DamageMultiplier);
+        tag.putFloat("q2KnockbackDuration", q2KnockbackDuration);
+        tag.putFloat("q2SplashDamagePercent", q2SplashDamagePercent);
+        tag.putFloat("q2BonusAttackRange", q2BonusAttackRange);
+        tag.putInt("q2BonusAttackDuration", q2BonusAttackDuration);
+        tag.putInt("q2Cooldown", q2Cooldown);
+        tag.putFloat("q3Radius", q3Radius);
+        tag.putFloat("q3DamageMultiplier", q3DamageMultiplier);
+        tag.putFloat("q3FearDuration", q3FearDuration);
+        tag.putFloat("q3BerserkFearDuration", q3BerserkFearDuration);
+        tag.putInt("q3WeaknessDuration", q3WeaknessDuration);
+        tag.putInt("q3Cooldown", q3Cooldown);
+        tag.putInt("rDuration", rDuration);
+        tag.putFloat("rHealPercent", rHealPercent);
+        tag.putFloat("rHealthBonusPercent", rHealthBonusPercent);
+        tag.putInt("rPowerLevel", rPowerLevel);
+        tag.putInt("rSpeedLevel", rSpeedLevel);
+        tag.putInt("rFatigueDuration", rFatigueDuration);
+        tag.putInt("rCooldown", rCooldown);
         return tag;
     }
 
@@ -612,6 +752,41 @@ public class Profession {
         buffer.writeFloat(turtleAuraRadius);
         buffer.writeInt(turtleAuraSlownessLevel);
         buffer.writeInt(turtleAuraDuration);
+        buffer.writeBoolean(isJungleApeGod);
+        buffer.writeInt(rhythmStacksMax);
+        buffer.writeFloat(rhythmAttackSpeedPerStack);
+        buffer.writeFloat(rhythmMoveSpeedPerStack);
+        buffer.writeInt(berserkDuration);
+        buffer.writeFloat(berserkCooldownReduction);
+        buffer.writeFloat(berserkLifeSteal);
+        buffer.writeFloat(flatDamageReduction);
+        buffer.writeFloat(resistanceChance);
+        buffer.writeInt(resistanceDuration);
+        buffer.writeFloat(q1DamageMultiplier);
+        buffer.writeFloat(q1MovingTargetDamageMultiplier);
+        buffer.writeInt(q1SlowDuration);
+        buffer.writeInt(q1Cooldown);
+        buffer.writeFloat(q1Angle);
+        buffer.writeFloat(q2MaxDistance);
+        buffer.writeFloat(q2DamageMultiplier);
+        buffer.writeFloat(q2KnockbackDuration);
+        buffer.writeFloat(q2SplashDamagePercent);
+        buffer.writeFloat(q2BonusAttackRange);
+        buffer.writeInt(q2BonusAttackDuration);
+        buffer.writeInt(q2Cooldown);
+        buffer.writeFloat(q3Radius);
+        buffer.writeFloat(q3DamageMultiplier);
+        buffer.writeFloat(q3FearDuration);
+        buffer.writeFloat(q3BerserkFearDuration);
+        buffer.writeInt(q3WeaknessDuration);
+        buffer.writeInt(q3Cooldown);
+        buffer.writeInt(rDuration);
+        buffer.writeFloat(rHealPercent);
+        buffer.writeFloat(rHealthBonusPercent);
+        buffer.writeInt(rPowerLevel);
+        buffer.writeInt(rSpeedLevel);
+        buffer.writeInt(rFatigueDuration);
+        buffer.writeInt(rCooldown);
     }
 
     public static Profession readFromBuffer(FriendlyByteBuf buffer) {

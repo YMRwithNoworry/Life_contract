@@ -62,6 +62,34 @@ public class KeyBindings {
             CATEGORY
     );
 
+    public static final KeyMapping JUNGLE_APE_Q1 = new KeyMapping(
+            "key.life_contract.jungle_ape_q1",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Z,
+            CATEGORY
+    );
+
+    public static final KeyMapping JUNGLE_APE_Q2 = new KeyMapping(
+            "key.life_contract.jungle_ape_q2",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_X,
+            CATEGORY
+    );
+
+    public static final KeyMapping JUNGLE_APE_Q3 = new KeyMapping(
+            "key.life_contract.jungle_ape_q3",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_C,
+            CATEGORY
+    );
+
+    public static final KeyMapping JUNGLE_APE_R = new KeyMapping(
+            "key.life_contract.jungle_ape_r",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_V,
+            CATEGORY
+    );
+
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(OPEN_TEAM_INVENTORY);
@@ -71,5 +99,9 @@ public class KeyBindings {
         event.register(MOUNT_SPECIAL_ABILITY);
         event.register(HEALER_ACTIVE_HEAL);
         event.register(FOOL_STEAL_PROFESSION);
+        event.register(JUNGLE_APE_Q1);
+        event.register(JUNGLE_APE_Q2);
+        event.register(JUNGLE_APE_Q3);
+        event.register(JUNGLE_APE_R);
     }
 }

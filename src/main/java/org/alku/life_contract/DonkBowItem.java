@@ -23,6 +23,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.alku.life_contract.profession.Profession;
+import org.alku.life_contract.profession.ProfessionConfig;
 
 import java.util.Comparator;
 import java.util.List;
@@ -60,6 +62,26 @@ public class DonkBowItem extends BowItem {
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entityLiving, int timeLeft) {
         if (!(entityLiving instanceof Player player)) {
             return;
+        }
+
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            String professionId = ContractEvents.getEffectiveProfessionId(serverPlayer);
+            if (professionId == null || professionId.isEmpty()) {
+                serverPlayer.displayClientMessage(
+                    Component.literal("§c[颗秒之弓] §r你没有职业，无法使用这个武器！"),
+                    true
+                );
+                return;
+            }
+            
+            Profession profession = ProfessionConfig.getProfession(professionId);
+            if (profession == null || !profession.hasDonkBowAbility()) {
+                serverPlayer.displayClientMessage(
+                    Component.literal("§c[颗秒之弓] §r只有donk职业才能使用这个武器！"),
+                    true
+                );
+                return;
+            }
         }
 
         boolean hasInfinity = true;

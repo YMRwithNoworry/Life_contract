@@ -37,6 +37,7 @@ import org.alku.life_contract.follower.FollowerHungerSystem;
 import org.alku.life_contract.death_venger.DeathVengerSystem;
 import org.alku.life_contract.healer.HealerSystem;
 import org.alku.life_contract.revive.ReviveTeammateSystem;
+import org.alku.life_contract.jungle_ape_god.JungleApeGodSystem;
 
 import java.util.*;
 
@@ -207,6 +208,7 @@ public class ContractEvents {
             ImpostorSystem.onPlayerRespawn(serverPlayer);
             HealerSystem.onPlayerRespawn(serverPlayer);
             ReviveTeammateSystem.onPlayerRespawn(serverPlayer);
+            JungleApeGodSystem.onPlayerRespawn(serverPlayer);
         }
     }
 

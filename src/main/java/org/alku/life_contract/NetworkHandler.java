@@ -36,6 +36,8 @@ import org.alku.life_contract.profession.PacketSyncProfessions;
 import org.alku.life_contract.profession.PacketSyncUnlockedProfessions;
 import org.alku.life_contract.profession.PacketUnlockProfession;
 import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.jungle_ape_god.PacketJungleApeSkill;
+import org.alku.life_contract.jungle_ape_god.PacketSyncJungleApeState;
 
 import java.util.Set;
 
@@ -250,6 +252,18 @@ public class NetworkHandler {
                 PacketSyncDeadTeammates::decode,
                 PacketSyncDeadTeammates::handle
         );
+        CHANNEL.registerMessage(id++,
+                PacketJungleApeSkill.class,
+                PacketJungleApeSkill::encode,
+                PacketJungleApeSkill::new,
+                PacketJungleApeSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncJungleApeState.class,
+                PacketSyncJungleApeState::encode,
+                PacketSyncJungleApeState::new,
+                PacketSyncJungleApeState::handle
+        );
     }
 
     public static void sendRemoveTradePacket(int slot) {
@@ -427,5 +441,13 @@ public class NetworkHandler {
 
     public static void sendSkipRevivePacket() {
         CHANNEL.sendToServer(new PacketSkipRevive());
+    }
+
+    public static void sendJungleApeSkillPacket(int skillId) {
+        CHANNEL.sendToServer(new PacketJungleApeSkill(skillId));
+    }
+
+    public static void sendJungleApeSkillPacket(int skillId, int targetId) {
+        CHANNEL.sendToServer(new PacketJungleApeSkill(skillId, targetId));
     }
 }
