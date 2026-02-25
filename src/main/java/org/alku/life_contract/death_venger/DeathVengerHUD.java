@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.profession.ClientProfessionCache;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class DeathVengerHUD {
@@ -24,7 +24,7 @@ public class DeathVengerHUD {
         String professionId = ClientDataStorage.getSelfProfessionId();
         if (professionId == null || professionId.isEmpty()) return;
 
-        Profession profession = ProfessionConfig.getProfession(professionId);
+        Profession profession = ClientProfessionCache.getProfession(professionId);
         if (profession == null || !profession.hasMarkTargetAbility()) return;
 
         if (!ClientDataStorage.hasMarkedTarget()) return;

@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.profession.ClientProfessionCache;
 
 import java.util.Random;
 
@@ -36,7 +36,7 @@ public class AngelHaloRenderer {
         String professionId = ClientDataStorage.getSelfProfessionId();
         if (professionId == null || professionId.isEmpty()) return;
 
-        Profession profession = ProfessionConfig.getProfession(professionId);
+        Profession profession = ClientProfessionCache.getProfession(professionId);
         if (profession == null || !profession.isAngel() || !profession.hasHalo()) return;
 
         renderHaloParticles(world, player);

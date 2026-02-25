@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.profession.ClientProfessionCache;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class JungleApeHUD {
@@ -29,7 +29,7 @@ public class JungleApeHUD {
         String professionId = getProfessionId(player);
         if (professionId == null || professionId.isEmpty()) return;
 
-        Profession profession = ProfessionConfig.getProfession(professionId);
+        Profession profession = ClientProfessionCache.getProfession(professionId);
         if (profession == null || !profession.isJungleApeGod()) return;
 
         GuiGraphics guiGraphics = event.getGuiGraphics();

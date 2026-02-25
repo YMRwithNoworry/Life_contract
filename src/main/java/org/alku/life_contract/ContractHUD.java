@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.profession.ClientProfessionCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class ContractHUD {
             guiGraphics.drawString(mc.font, "§6职业: §d" + selfProfessionName, x, y, color);
             y += 10;
             
-            Profession profession = ProfessionConfig.getProfession(selfProfessionId);
+            Profession profession = ClientProfessionCache.getProfession(selfProfessionId);
             if (profession != null && profession.hasDiceAbility()) {
                 boolean hasDice = hasGamblerDice(player);
                 String diceStatus = hasDice ? "§a[骰子已装备]" : "§c[骰子缺失]";
@@ -179,7 +179,7 @@ public class ContractHUD {
         if (professionId == null || professionId.isEmpty()) {
             return "";
         }
-        Profession profession = ProfessionConfig.getProfession(professionId);
+        Profession profession = ClientProfessionCache.getProfession(professionId);
         return profession != null ? profession.getName() : "";
     }
     

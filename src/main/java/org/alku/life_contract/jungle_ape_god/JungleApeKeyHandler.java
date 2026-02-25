@@ -12,7 +12,7 @@ import org.alku.life_contract.KeyBindings;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
+import org.alku.life_contract.profession.ClientProfessionCache;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class JungleApeKeyHandler {
@@ -27,7 +27,7 @@ public class JungleApeKeyHandler {
         String professionId = ClientDataStorage.getProfessionId();
         if (professionId == null || professionId.isEmpty()) return;
 
-        Profession profession = ProfessionConfig.getProfession(professionId);
+        Profession profession = ClientProfessionCache.getProfession(professionId);
         if (profession == null || !profession.isJungleApeGod()) return;
 
         if (KeyBindings.JUNGLE_APE_Q1.consumeClick()) {

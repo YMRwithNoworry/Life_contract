@@ -32,6 +32,7 @@ import org.alku.life_contract.mount.PacketMountMovement;
 import org.alku.life_contract.mount.PacketSyncMount;
 import org.alku.life_contract.profession.PacketOpenProfessionMenu;
 import org.alku.life_contract.profession.PacketSelectProfession;
+import org.alku.life_contract.profession.PacketSyncLockedProfessions;
 import org.alku.life_contract.profession.PacketSyncProfessions;
 import org.alku.life_contract.profession.PacketSyncUnlockedProfessions;
 import org.alku.life_contract.profession.PacketUnlockProfession;
@@ -235,6 +236,12 @@ public class NetworkHandler {
                 PacketSyncProfessions::handle
         );
         CHANNEL.registerMessage(id++,
+                PacketSyncLockedProfessions.class,
+                PacketSyncLockedProfessions::encode,
+                PacketSyncLockedProfessions::decode,
+                PacketSyncLockedProfessions::handle
+        );
+        CHANNEL.registerMessage(id++,
                 PacketReviveTeammate.class,
                 PacketReviveTeammate::encode,
                 PacketReviveTeammate::decode,
@@ -429,6 +436,11 @@ public class NetworkHandler {
     public static void syncUnlockedProfessions(ServerPlayer player) {
         Set<String> unlocked = ProfessionConfig.getPlayerUnlockedProfessions(player.getUUID());
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketSyncUnlockedProfessions(unlocked));
+    }
+
+    public static void syncLockedProfessions(ServerPlayer player) {
+        Set<String> locked = ProfessionConfig.getLockedProfessions();
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new PacketSyncLockedProfessions(locked));
     }
 
     public static void syncProfessions(ServerPlayer player) {

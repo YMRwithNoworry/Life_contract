@@ -154,7 +154,7 @@ public class ProfessionScreen extends Screen {
             
             boolean unlocked = ClientUnlockedProfessions.isUnlocked(profession.getId());
             
-            boolean isLocked = ProfessionConfig.isProfessionLocked(profession.getId());
+            boolean isLocked = ClientUnlockedProfessions.isLocked(profession.getId());
             
             if (isLocked) {
                 net.minecraft.world.item.ItemStack barrierStack = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BARRIER);
@@ -185,7 +185,7 @@ public class ProfessionScreen extends Screen {
                 Profession profession = professions.get(slotIndex);
                 boolean unlocked = ClientUnlockedProfessions.isUnlocked(profession.getId());
                 
-                boolean isLocked = ProfessionConfig.isProfessionLocked(profession.getId());
+                boolean isLocked = ClientUnlockedProfessions.isLocked(profession.getId());
                 
                 java.util.List<Component> tooltip = new java.util.ArrayList<>();
                 
@@ -226,7 +226,7 @@ public class ProfessionScreen extends Screen {
                 
                 boolean unlocked = ClientUnlockedProfessions.isUnlocked(profession.getId());
                 
-                boolean isLocked = ProfessionConfig.isProfessionLocked(profession.getId());
+                boolean isLocked = ClientUnlockedProfessions.isLocked(profession.getId());
                 
                 if (isLocked) {
                     confirmButton.active = false;

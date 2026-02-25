@@ -136,6 +136,10 @@ public class ContractEvents {
             DeathVengerSystem.loadMarkedTarget(serverPlayer);
             initializeUndeadPlayerOnJoin(serverPlayer);
             
+            NetworkHandler.syncProfessions(serverPlayer);
+            NetworkHandler.syncUnlockedProfessions(serverPlayer);
+            NetworkHandler.syncLockedProfessions(serverPlayer);
+            
             syncAllPlayersDataToNewPlayer(serverPlayer);
         }
     }
