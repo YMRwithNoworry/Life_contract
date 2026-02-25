@@ -117,6 +117,10 @@ public class Profession {
     private final float ghostSenatorDetectionRadius;
     private final boolean isEvilPoisoner;
     private final int poisonerStrengthDuration;
+    private final boolean hasTurtleAura;
+    private final float turtleAuraRadius;
+    private final int turtleAuraSlownessLevel;
+    private final int turtleAuraDuration;
 
     Profession(ProfessionBuilder builder) {
         this.id = builder.getId();
@@ -227,6 +231,10 @@ public class Profession {
         this.ghostSenatorDetectionRadius = builder.getGhostSenatorDetectionRadius();
         this.isEvilPoisoner = builder.isEvilPoisoner();
         this.poisonerStrengthDuration = builder.getPoisonerStrengthDuration();
+        this.hasTurtleAura = builder.hasTurtleAura();
+        this.turtleAuraRadius = builder.getTurtleAuraRadius();
+        this.turtleAuraSlownessLevel = builder.getTurtleAuraSlownessLevel();
+        this.turtleAuraDuration = builder.getTurtleAuraDuration();
     }
 
     public static ProfessionBuilder builder() {
@@ -341,6 +349,10 @@ public class Profession {
     public float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
     public boolean isEvilPoisoner() { return isEvilPoisoner; }
     public int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
+    public boolean hasTurtleAura() { return hasTurtleAura; }
+    public float getTurtleAuraRadius() { return turtleAuraRadius; }
+    public int getTurtleAuraSlownessLevel() { return turtleAuraSlownessLevel; }
+    public int getTurtleAuraDuration() { return turtleAuraDuration; }
 
     public boolean hasBonusDamage() { return bonusDamagePercent > 0; }
     public boolean hasSlowness() { return slownessLevel > 0; }
@@ -462,6 +474,10 @@ public class Profession {
         tag.putFloat("ghostSenatorDetectionRadius", ghostSenatorDetectionRadius);
         tag.putBoolean("isEvilPoisoner", isEvilPoisoner);
         tag.putInt("poisonerStrengthDuration", poisonerStrengthDuration);
+        tag.putBoolean("hasTurtleAura", hasTurtleAura);
+        tag.putFloat("turtleAuraRadius", turtleAuraRadius);
+        tag.putInt("turtleAuraSlownessLevel", turtleAuraSlownessLevel);
+        tag.putInt("turtleAuraDuration", turtleAuraDuration);
         return tag;
     }
 
@@ -592,6 +608,10 @@ public class Profession {
         buffer.writeFloat(ghostSenatorDetectionRadius);
         buffer.writeBoolean(isEvilPoisoner);
         buffer.writeInt(poisonerStrengthDuration);
+        buffer.writeBoolean(hasTurtleAura);
+        buffer.writeFloat(turtleAuraRadius);
+        buffer.writeInt(turtleAuraSlownessLevel);
+        buffer.writeInt(turtleAuraDuration);
     }
 
     public static Profession readFromBuffer(FriendlyByteBuf buffer) {

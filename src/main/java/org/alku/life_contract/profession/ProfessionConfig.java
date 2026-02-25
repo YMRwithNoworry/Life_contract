@@ -173,7 +173,11 @@ public class ProfessionConfig {
             .isGhostSenator(json.has("isGhostSenator") && json.get("isGhostSenator").getAsBoolean())
             .ghostSenatorHealAmount(json.has("ghostSenatorHealAmount") ? json.get("ghostSenatorHealAmount").getAsFloat() : 7.0f)
             .ghostSenatorStrengthDuration(json.has("ghostSenatorStrengthDuration") ? json.get("ghostSenatorStrengthDuration").getAsInt() : 300)
-            .ghostSenatorDetectionRadius(json.has("ghostSenatorDetectionRadius") ? json.get("ghostSenatorDetectionRadius").getAsFloat() : 20.0f);
+            .ghostSenatorDetectionRadius(json.has("ghostSenatorDetectionRadius") ? json.get("ghostSenatorDetectionRadius").getAsFloat() : 20.0f)
+            .hasTurtleAura(json.has("hasTurtleAura") && json.get("hasTurtleAura").getAsBoolean())
+            .turtleAuraRadius(json.has("turtleAuraRadius") ? json.get("turtleAuraRadius").getAsFloat() : 5.0f)
+            .turtleAuraSlownessLevel(json.has("turtleAuraSlownessLevel") ? json.get("turtleAuraSlownessLevel").getAsInt() : 1)
+            .turtleAuraDuration(json.has("turtleAuraDuration") ? json.get("turtleAuraDuration").getAsInt() : 100);
         
         return builder.build();
     }

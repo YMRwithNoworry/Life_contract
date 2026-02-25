@@ -144,6 +144,10 @@ public class ProfessionBuilder {
     
     private boolean isEvilPoisoner = false;
     private int poisonerStrengthDuration = 200;
+    private boolean hasTurtleAura = false;
+    private float turtleAuraRadius = 5.0f;
+    private int turtleAuraSlownessLevel = 1;
+    private int turtleAuraDuration = 100;
 
     public ProfessionBuilder() {}
 
@@ -283,6 +287,10 @@ public class ProfessionBuilder {
     
     public ProfessionBuilder isEvilPoisoner(boolean isEvilPoisoner) { this.isEvilPoisoner = isEvilPoisoner; return this; }
     public ProfessionBuilder poisonerStrengthDuration(int poisonerStrengthDuration) { this.poisonerStrengthDuration = poisonerStrengthDuration; return this; }
+    public ProfessionBuilder hasTurtleAura(boolean hasTurtleAura) { this.hasTurtleAura = hasTurtleAura; return this; }
+    public ProfessionBuilder turtleAuraRadius(float turtleAuraRadius) { this.turtleAuraRadius = turtleAuraRadius; return this; }
+    public ProfessionBuilder turtleAuraSlownessLevel(int turtleAuraSlownessLevel) { this.turtleAuraSlownessLevel = turtleAuraSlownessLevel; return this; }
+    public ProfessionBuilder turtleAuraDuration(int turtleAuraDuration) { this.turtleAuraDuration = turtleAuraDuration; return this; }
 
     public Profession build() {
         return new Profession(this);
@@ -398,6 +406,10 @@ public class ProfessionBuilder {
         builder.ghostSenatorDetectionRadius(tag.contains("ghostSenatorDetectionRadius") ? tag.getFloat("ghostSenatorDetectionRadius") : 20.0f);
         builder.isEvilPoisoner(tag.contains("isEvilPoisoner") && tag.getBoolean("isEvilPoisoner"));
         builder.poisonerStrengthDuration(tag.contains("poisonerStrengthDuration") ? tag.getInt("poisonerStrengthDuration") : 200);
+        builder.hasTurtleAura(tag.contains("hasTurtleAura") && tag.getBoolean("hasTurtleAura"));
+        builder.turtleAuraRadius(tag.contains("turtleAuraRadius") ? tag.getFloat("turtleAuraRadius") : 5.0f);
+        builder.turtleAuraSlownessLevel(tag.contains("turtleAuraSlownessLevel") ? tag.getInt("turtleAuraSlownessLevel") : 1);
+        builder.turtleAuraDuration(tag.contains("turtleAuraDuration") ? tag.getInt("turtleAuraDuration") : 100);
         return builder;
     }
 
@@ -511,6 +523,10 @@ public class ProfessionBuilder {
         builder.ghostSenatorDetectionRadius(buffer.readFloat());
         builder.isEvilPoisoner(buffer.readBoolean());
         builder.poisonerStrengthDuration(buffer.readInt());
+        builder.hasTurtleAura(buffer.readBoolean());
+        builder.turtleAuraRadius(buffer.readFloat());
+        builder.turtleAuraSlownessLevel(buffer.readInt());
+        builder.turtleAuraDuration(buffer.readInt());
         return builder;
     }
 
@@ -642,4 +658,8 @@ public class ProfessionBuilder {
     float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
     boolean isEvilPoisoner() { return isEvilPoisoner; }
     int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
+    boolean hasTurtleAura() { return hasTurtleAura; }
+    float getTurtleAuraRadius() { return turtleAuraRadius; }
+    int getTurtleAuraSlownessLevel() { return turtleAuraSlownessLevel; }
+    int getTurtleAuraDuration() { return turtleAuraDuration; }
 }

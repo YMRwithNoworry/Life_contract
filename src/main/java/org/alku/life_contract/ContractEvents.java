@@ -241,6 +241,7 @@ public class ContractEvents {
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             applyProfessionEffects(player);
+            applyTurtleAura(player);
             applyEnderPearlAbility(player, tickCount);
             applyWaterDamage(player, tickCount);
             applyEnderParticles(player);
@@ -495,6 +496,34 @@ public class ContractEvents {
                 float damagePercent = profession.getWaterWeaknessDamagePercent();
                 player.hurt(player.level().damageSources().magic(), player.getMaxHealth() * damagePercent / 100);
             }
+        }
+    }
+
+    private static void applyTurtleAura(ServerPlayer player) {
+        String professionId = getEffectiveProfessionId(player);
+        if (professionId == null) return;
+        
+        Profession profession = ProfessionConfig.getProfession(professionId);
+        if (profession == null || !profession.hasTurtleAura()) return;
+        
+        float radius = profession.getTurtleAuraRadius();
+        int slownessLevel = profession.getTurtleAuraSlownessLevel();
+        int duration = profession.getTurtleAuraDuration();
+        
+        List<LivingEntity> nearbyEntities = player.level().getEntitiesOfClass(
+            LivingEntity.class,
+            player.getBoundingBox().inflate(radius),
+            entity -> entity != player && entity.isAlive()
+        );
+        
+        for (LivingEntity entity : nearbyEntities) {
+            entity.addEffect(new MobEffectInstance(
+                MobEffects.MOVEMENT_SLOWDOWN,
+                duration,
+                slownessLevel - 1,
+                false,
+                false
+            ));
         }
     }
 
