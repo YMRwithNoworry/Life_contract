@@ -835,13 +835,27 @@ public class ContractEvents {
                 event.setAmount(reducedDamage);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onEvilPoisonerAttack(net.minecraftforge.event.entity.living.LivingAttackEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
         
-        if (profession.isEvilPoisoner()) {
-            LivingEntity target = event.getEntity();
-            int strengthDuration = profession.getPoisonerStrengthDuration();
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, strengthDuration, 0, false, true));
-            applyRandomDebuff(target);
-        }
+        String professionId = getEffectiveProfessionId(player);
+        if (professionId == null || professionId.isEmpty()) return;
+        
+        Profession profession = ProfessionConfig.getProfession(professionId);
+        if (profession == null) return;
+        
+        if (!profession.isEvilPoisoner()) return;
+        
+        LivingEntity target = event.getEntity();
+        int strengthDuration = profession.getPoisonerStrengthDuration();
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, strengthDuration, 0, false, true));
+        applyRandomDebuff(target);
+        
+        player.sendSystemMessage(Component.literal("§2[邪毒者] §f攻击触发！获得力量效果，敌人获得随机debuff"));
     }
     
     private static final MobEffect[] POISONER_DEBUFF_POOL = {

@@ -212,7 +212,9 @@ public class ProfessionConfig {
             .rPowerLevel(json.has("rPowerLevel") ? json.get("rPowerLevel").getAsInt() : 4)
             .rSpeedLevel(json.has("rSpeedLevel") ? json.get("rSpeedLevel").getAsInt() : 3)
             .rFatigueDuration(json.has("rFatigueDuration") ? json.get("rFatigueDuration").getAsInt() : 40)
-            .rCooldown(json.has("rCooldown") ? json.get("rCooldown").getAsInt() : 1200);
+            .rCooldown(json.has("rCooldown") ? json.get("rCooldown").getAsInt() : 1200)
+            .isEvilPoisoner(json.has("isEvilPoisoner") && json.get("isEvilPoisoner").getAsBoolean())
+            .poisonerStrengthDuration(json.has("poisonerStrengthDuration") ? json.get("poisonerStrengthDuration").getAsInt() : 200);
         
         return builder.build();
     }
