@@ -800,6 +800,28 @@ public class ContractEvents {
                 event.setAmount(reducedDamage);
             }
         }
+        
+        if (profession.isEvilPoisoner()) {
+            LivingEntity target = event.getEntity();
+            int strengthDuration = profession.getPoisonerStrengthDuration();
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, strengthDuration, 0, false, true));
+            applyRandomDebuff(target);
+        }
+    }
+    
+    private static final MobEffect[] POISONER_DEBUFF_POOL = {
+        MobEffects.POISON,
+        MobEffects.WEAKNESS,
+        MobEffects.MOVEMENT_SLOWDOWN,
+        MobEffects.WITHER,
+        MobEffects.HUNGER,
+        MobEffects.BLINDNESS,
+        MobEffects.DIG_SLOWDOWN
+    };
+    
+    private static void applyRandomDebuff(LivingEntity target) {
+        MobEffect randomDebuff = POISONER_DEBUFF_POOL[RANDOM.nextInt(POISONER_DEBUFF_POOL.length)];
+        target.addEffect(new MobEffectInstance(randomDebuff, 200, 2, false, true));
     }
 
     private static boolean isRangedAttack(net.minecraft.world.damagesource.DamageSource source) {
