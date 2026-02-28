@@ -9,6 +9,9 @@ displayName="Life Contract"
 description="Connects your soul to other mods."
 authors="Alku"
 
+[[mixins]]
+config="life_contract.mixins.json"
+
 [[dependencies.life_contract]]
 modId="forge"
 mandatory=true
