@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "life_contract:item/council_soul_candle_staff"
+  }
+}

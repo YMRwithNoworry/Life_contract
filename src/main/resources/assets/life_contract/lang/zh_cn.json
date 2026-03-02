@@ -28,6 +28,7 @@
   
   "key.categories.life_contract": "生灵契约",
   "key.life_contract.open_team_inventory": "打开队伍背包",
+  "container.life_contract.team_inventory": "队伍背包",
   "key.life_contract.mount_nearest": "骑乘最近生物",
   "key.life_contract.dismount": "下骑",
   "key.life_contract.mount_behavior_cycle": "切换坐骑行为",
@@ -38,6 +39,20 @@
   "key.life_contract.jungle_ape_q2": "丛林猿神-掠影突袭",
   "key.life_contract.jungle_ape_q3": "丛林猿神-野性咆哮",
   "key.life_contract.jungle_ape_r": "丛林猿神-混沌降临",
+  "key.life_contract.deploy_scout_node": "字节陈-部署侦察节点",
+  "key.life_contract.deploy_buff_node": "字节陈-部署增益节点",
+  "key.life_contract.deploy_counter_node": "字节陈-部署反制节点",
+  "key.life_contract.full_read": "字节陈-全量信息读取",
+  "key.life_contract.data_dispatch": "字节陈-战场数据调度",
+  "key.life_contract.data_ban": "字节陈-定向数据封禁",
+  "key.life_contract.byte_chen_ultimate": "字节陈-全域字节重构",
+  "key.life_contract.recycle_nodes": "字节陈-回收节点",
+  "key.life_contract.heavy_knight_charge": "重甲骑士-冲锋",
+  "key.life_contract.heavy_knight_shield_bash": "重甲骑士-盾击",
+  "key.life_contract.wraith_summon": "亡魂议员-亡魂号令",
+  "key.life_contract.wraith_domain": "亡魂议员-冥域禁锢",
+  "key.life_contract.wraith_barrage": "亡魂议员-暗蚀弹幕",
+  "key.life_contract.wraith_ultimate": "亡魂议员-亡魂议会降临",
   
   "gui.life_contract.profession.title": "职业选择",
   "gui.life_contract.profession.confirm": "确认选择",
@@ -73,6 +88,11 @@
   "gui.life_contract.mineral_generator.emerald": "绿宝石",
   
   "gui.life_contract.shop.right_click_purchase": "右键购买",
+  
+  "gui.life_contract.egg_shop.title": "生物蛋商店",
+  "gui.life_contract.egg_shop.right_click_purchase": "右键购买",
+  "gui.life_contract.egg_shop.currency": "货币: %s",
+  "gui.life_contract.egg_shop.price": "价格: %d",
   
   "hud.life_contract.title": "§e== 生灵契约 ==",
   "hud.life_contract.team_number": "§6队伍编号: §b%s",
@@ -141,6 +161,10 @@
   "profession.life_contract.gambler.desc": "命运的操纵者。使用骰子可以随机触发其他职业的技能，每次掷骰都是一场未知的冒险。",
   "profession.life_contract.fool": "傻子",
   "profession.life_contract.fool.desc": "看似愚蠢，实则狡诈。可以主动掠夺30格内某个玩家的职业，被掠夺的玩家失去职业，而傻子变成这个职业。",
+  "profession.life_contract.byte_chen": "字节陈",
+  "profession.life_contract.byte_chen.desc": "团队策略核心与信息化战场掌控者。主打全维度信息透视、战场节点布局、团队数据增益、敌方技能反制。无高额爆发伤害，核心价值是「信息差碾压」与「策略性控场」。",
+  "profession.life_contract.heavy_knight": "重甲骑士",
+  "profession.life_contract.heavy_knight.desc": "身披重甲的战士，拥有战意机制和强大的防御技能。可以激活盾墙保护队友，使用冲锋突进敌人，以及援护队友承受伤害。",
   
   "entity.life_contract.team_sentinel": "队伍守卫",
   "entity.life_contract.fire_trail": "火焰轨迹",
@@ -186,6 +210,14 @@
   "item.life_contract.ambush_orb.desc": "§b奇兵专属道具",
   "item.life_contract.team_golem_wand": "队伍铁傀儡法杖",
   
+  "item.life_contract.soulforged_hood": "魂铸兜帽",
+  "item.life_contract.soulforged_robe": "魂铸法袍",
+  "item.life_contract.soulforged_leggings": "魂铸护腿",
+  "item.life_contract.soulforged_boots": "魂铸便靴",
+  "item.life_contract.council_soul_candle_staff": "议会魂烛法杖",
+  "item.life_contract.council_emblem": "冥府议员徽记",
+  "item.life_contract.purple_hooded_skull_chestplate": "紫色兜帽骷髅胸甲",
+  
   "profession.life_contract.ambush": "奇兵",
   "profession.life_contract.ambush.desc": "神秘的战术大师。可对指定范围内的生物施加隐身效果并传送至另一区域。10秒未进行攻击动作则自动进入隐身状态。",
   
@@ -199,5 +231,7 @@
   "ambush.orb.targets": "§7  已将 §e%s §7个生物隐身并传送",
   "ambush.orb.duration": "§7  隐身持续: §b%s秒",
   "ambush.passive.invis_start": "§8§l[奇兵] §f§l你已融入阴影！",
-  "ambush.passive.invis_end": "§8§l[奇兵] §f§l隐身状态已打破！"
+  "ambush.passive.invis_end": "§8§l[奇兵] §f§l隐身状态已打破！",
+  
+  "item.life_contract.gold_coin": "金币"
 }

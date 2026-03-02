@@ -141,6 +141,54 @@ public class ProfessionBuilder {
     private float ghostSenatorHealAmount = 7.0f;
     private int ghostSenatorStrengthDuration = 300;
     private float ghostSenatorDetectionRadius = 20.0f;
+    private boolean isWraithCouncilor = false;
+    private int wraithSoulMax = 120;
+    private int wraithSoulInitial = 60;
+    private int wraithSoulRegenRate = 2;
+    private int wraithSoulDarkBonus = 1;
+    private float wraithSoulSunlightPenalty = 0.5f;
+    private int wraithSoulKillBonus = 15;
+    private int wraithSoulHitBonus = 3;
+    private int wraithSoulSummonKillBonus = 8;
+    private float wraithErosionDamage = 2.0f;
+    private float wraithErosionArmorReduction = 0.1f;
+    private float wraithErosionSlowPercent = 0.15f;
+    private int wraithErosionMaxStacks = 5;
+    private int wraithErosionDuration = 100;
+    private int wraithSummonCost = 35;
+    private int wraithSummonCooldown = 360;
+    private int wraithSummonCount = 2;
+    private float wraithSummonHealth = 20.0f;
+    private float wraithSummonDamage = 6.0f;
+    private int wraithSummonDuration = 240;
+    private float wraithSummonCorpseRange = 5.0f;
+    private int wraithSummonExtraMax = 2;
+    private int wraithDomainCost = 40;
+    private int wraithDomainCooldown = 440;
+    private float wraithDomainRadius = 3.0f;
+    private int wraithDomainDuration = 80;
+    private float wraithDomainDamage = 6.0f;
+    private float wraithDomainBossSlow = 0.5f;
+    private int wraithDomainCharmDuration = 80;
+    private int wraithBarrageBaseCost = 25;
+    private int wraithBarrageChargedCost = 10;
+    private int wraithBarrageCooldown = 200;
+    private int wraithBarrageBaseOrbs = 6;
+    private int wraithBarrageChargedOrbs = 12;
+    private float wraithBarrageBaseDamage = 4.0f;
+    private float wraithBarrageChargedDamage = 6.0f;
+    private float wraithBarrageBaseRange = 8.0f;
+    private float wraithBarrageChargedRange = 12.0f;
+    private int wraithBarrageMaxChargeTime = 30;
+    private int wraithBarrageMaxHits = 3;
+    private int wraithUltimateMinCost = 100;
+    private int wraithUltimateCooldown = 2400;
+    private int wraithUltimateCloneCount = 3;
+    private float wraithUltimateCloneDamageRatio = 0.8f;
+    private int wraithUltimateDuration = 300;
+    private int wraithUltimateSoulRegen = 10;
+    private float wraithUltimateDamageIncrease = 0.2f;
+    private int wraithUltimateExhaustDuration = 100;
     
     private boolean isEvilPoisoner = false;
     private int poisonerStrengthDuration = 200;
@@ -183,6 +231,93 @@ public class ProfessionBuilder {
     private int rSpeedLevel = 3;
     private int rFatigueDuration = 40;
     private int rCooldown = 1200;
+
+    private boolean isByteChen = false;
+    private int byteChenComputeMax = 150;
+    private int byteChenComputeInitial = 150;
+    private int byteChenComputeRegenRate = 3;
+    private float byteChenComputeNodeRegenBonus = 0.5f;
+    private int byteChenComputeOnRead = 10;
+    private int byteChenComputeOnNodeTrigger = 8;
+    private int byteChenComputeOnInterrupt = 25;
+    private int byteChenComputeLowThreshold = 20;
+    private int byteChenNodeMax = 8;
+    private int byteChenNodeRange = 32;
+    private int byteChenNodeDuration = 1200;
+    private int byteChenScoutNodeCost = 20;
+    private float byteChenScoutNodeRadius = 12.0f;
+    private int byteChenScoutNodeComputeRegen = 1;
+    private int byteChenBuffNodeCost = 25;
+    private float byteChenBuffNodeRadius = 8.0f;
+    private float byteChenBuffNodeDamageBonus = 0.1f;
+    private float byteChenBuffNodeDamageReduction = 0.1f;
+    private float byteChenBuffNodeSpeedBonus = 0.15f;
+    private float byteChenBuffNodeCooldownReduction = 0.1f;
+    private int byteChenBuffNodeMaxStacks = 3;
+    private int byteChenCounterNodeCost = 30;
+    private float byteChenCounterNodeRadius = 6.0f;
+    private int byteChenCounterNodeSilenceDuration = 40;
+    private int byteChenCounterNodeDisorderDuration = 100;
+    private float byteChenCounterNodeDamageReduction = 0.15f;
+    private float byteChenCounterNodeCooldownMultiplier = 2.0f;
+    private float byteChenDataVisionRange = 16.0f;
+    private float byteChenLightweightSpeedBonus = 0.15f;
+    private float byteChenLightweightDigSpeedBonus = 0.2f;
+    private float byteChenLightweightMeleePenalty = -0.45f;
+    private float byteChenLightweightReceivedMeleePenalty = 0.2f;
+    private int byteChenNodeRecycleCooldown = 200;
+    private float byteChenNodeRecycleRefund = 0.8f;
+    private int byteChenFullReadCost = 30;
+    private int byteChenFullReadCooldown = 300;
+    private float byteChenFullReadRadius = 32.0f;
+    private int byteChenFullReadDuration = 160;
+    private int byteChenDataDispatchCost = 40;
+    private int byteChenDataDispatchCooldown = 400;
+    private float byteChenDataDispatchSpeedBonus = 0.2f;
+    private float byteChenDataDispatchCooldownBonus = 0.2f;
+    private int byteChenDataDispatchBuffDuration = 160;
+    private int byteChenDataBanCost = 35;
+    private int byteChenDataBanCooldown = 360;
+    private float byteChenDataBanRange = 12.0f;
+    private int byteChenDataBanDuration = 80;
+    private int byteChenDataBanBossDuration = 40;
+    private float byteChenDataBanTrueDamageBonus = 0.1f;
+    private int byteChenUltimateMinCost = 120;
+    private int byteChenUltimateCooldown = 2400;
+    private float byteChenUltimateRadius = 64.0f;
+    private int byteChenUltimateDuration = 240;
+    private float byteChenUltimateDamageBonus = 0.25f;
+    private float byteChenUltimateDamageReduction = 0.25f;
+    private float byteChenUltimateSpeedBonus = 0.3f;
+    private float byteChenUltimateCooldownBonus = 0.3f;
+    private float byteChenUltimateEnemyDamageReduction = 0.3f;
+    private float byteChenUltimateEnemySpeedReduction = 0.25f;
+    private float byteChenUltimateEnemyCooldownMultiplier = 2.0f;
+    private float byteChenUltimateInterruptChance = 0.5f;
+    private int byteChenExhaustDuration = 160;
+
+    private boolean isHeavyKnight = false;
+    private float heavyKnightSpeedPenalty = 0.2f;
+    private int heavyKnightWillOnHit = 5;
+    private int heavyKnightWillOnBlock = 6;
+    private int heavyKnightWillOnDamaged = 8;
+    private float heavyKnightFullWillDamageBonus = 0.1f;
+    private float heavyKnightFullWillDamageReduction = 0.1f;
+    private int heavyKnightShieldWallTriggerTicks = 40;
+    private float heavyKnightShieldWallReduction = 0.2f;
+    private float heavyKnightShieldWallRadius = 8.0f;
+    private float heavyKnightShieldWallArmorBonus = 5.0f;
+    private int heavyKnightChargeWillCost = 30;
+    private int heavyKnightChargeCooldown = 240;
+    private float heavyKnightChargeDistance = 5.0f;
+    private float heavyKnightChargeDamage = 12.0f;
+    private float heavyKnightChargeKnockback = 3.0f;
+    private int heavyKnightProtectRange = 6;
+    private int heavyKnightProtectWillCost = 20;
+    private int heavyKnightProtectCooldown = 400;
+    private float heavyKnightShieldBashDamage = 4.0f;
+    private int heavyKnightShieldBashStunDuration = 30;
+    private int heavyKnightShieldBashCooldown = 80;
 
     public ProfessionBuilder() {}
 
@@ -319,6 +454,54 @@ public class ProfessionBuilder {
     public ProfessionBuilder ghostSenatorHealAmount(float ghostSenatorHealAmount) { this.ghostSenatorHealAmount = ghostSenatorHealAmount; return this; }
     public ProfessionBuilder ghostSenatorStrengthDuration(int ghostSenatorStrengthDuration) { this.ghostSenatorStrengthDuration = ghostSenatorStrengthDuration; return this; }
     public ProfessionBuilder ghostSenatorDetectionRadius(float ghostSenatorDetectionRadius) { this.ghostSenatorDetectionRadius = ghostSenatorDetectionRadius; return this; }
+    public ProfessionBuilder isWraithCouncilor(boolean isWraithCouncilor) { this.isWraithCouncilor = isWraithCouncilor; return this; }
+    public ProfessionBuilder wraithSoulMax(int wraithSoulMax) { this.wraithSoulMax = wraithSoulMax; return this; }
+    public ProfessionBuilder wraithSoulInitial(int wraithSoulInitial) { this.wraithSoulInitial = wraithSoulInitial; return this; }
+    public ProfessionBuilder wraithSoulRegenRate(int wraithSoulRegenRate) { this.wraithSoulRegenRate = wraithSoulRegenRate; return this; }
+    public ProfessionBuilder wraithSoulDarkBonus(int wraithSoulDarkBonus) { this.wraithSoulDarkBonus = wraithSoulDarkBonus; return this; }
+    public ProfessionBuilder wraithSoulSunlightPenalty(float wraithSoulSunlightPenalty) { this.wraithSoulSunlightPenalty = wraithSoulSunlightPenalty; return this; }
+    public ProfessionBuilder wraithSoulKillBonus(int wraithSoulKillBonus) { this.wraithSoulKillBonus = wraithSoulKillBonus; return this; }
+    public ProfessionBuilder wraithSoulHitBonus(int wraithSoulHitBonus) { this.wraithSoulHitBonus = wraithSoulHitBonus; return this; }
+    public ProfessionBuilder wraithSoulSummonKillBonus(int wraithSoulSummonKillBonus) { this.wraithSoulSummonKillBonus = wraithSoulSummonKillBonus; return this; }
+    public ProfessionBuilder wraithErosionDamage(float wraithErosionDamage) { this.wraithErosionDamage = wraithErosionDamage; return this; }
+    public ProfessionBuilder wraithErosionArmorReduction(float wraithErosionArmorReduction) { this.wraithErosionArmorReduction = wraithErosionArmorReduction; return this; }
+    public ProfessionBuilder wraithErosionSlowPercent(float wraithErosionSlowPercent) { this.wraithErosionSlowPercent = wraithErosionSlowPercent; return this; }
+    public ProfessionBuilder wraithErosionMaxStacks(int wraithErosionMaxStacks) { this.wraithErosionMaxStacks = wraithErosionMaxStacks; return this; }
+    public ProfessionBuilder wraithErosionDuration(int wraithErosionDuration) { this.wraithErosionDuration = wraithErosionDuration; return this; }
+    public ProfessionBuilder wraithSummonCost(int wraithSummonCost) { this.wraithSummonCost = wraithSummonCost; return this; }
+    public ProfessionBuilder wraithSummonCooldown(int wraithSummonCooldown) { this.wraithSummonCooldown = wraithSummonCooldown; return this; }
+    public ProfessionBuilder wraithSummonCount(int wraithSummonCount) { this.wraithSummonCount = wraithSummonCount; return this; }
+    public ProfessionBuilder wraithSummonHealth(float wraithSummonHealth) { this.wraithSummonHealth = wraithSummonHealth; return this; }
+    public ProfessionBuilder wraithSummonDamage(float wraithSummonDamage) { this.wraithSummonDamage = wraithSummonDamage; return this; }
+    public ProfessionBuilder wraithSummonDuration(int wraithSummonDuration) { this.wraithSummonDuration = wraithSummonDuration; return this; }
+    public ProfessionBuilder wraithSummonCorpseRange(float wraithSummonCorpseRange) { this.wraithSummonCorpseRange = wraithSummonCorpseRange; return this; }
+    public ProfessionBuilder wraithSummonExtraMax(int wraithSummonExtraMax) { this.wraithSummonExtraMax = wraithSummonExtraMax; return this; }
+    public ProfessionBuilder wraithDomainCost(int wraithDomainCost) { this.wraithDomainCost = wraithDomainCost; return this; }
+    public ProfessionBuilder wraithDomainCooldown(int wraithDomainCooldown) { this.wraithDomainCooldown = wraithDomainCooldown; return this; }
+    public ProfessionBuilder wraithDomainRadius(float wraithDomainRadius) { this.wraithDomainRadius = wraithDomainRadius; return this; }
+    public ProfessionBuilder wraithDomainDuration(int wraithDomainDuration) { this.wraithDomainDuration = wraithDomainDuration; return this; }
+    public ProfessionBuilder wraithDomainDamage(float wraithDomainDamage) { this.wraithDomainDamage = wraithDomainDamage; return this; }
+    public ProfessionBuilder wraithDomainBossSlow(float wraithDomainBossSlow) { this.wraithDomainBossSlow = wraithDomainBossSlow; return this; }
+    public ProfessionBuilder wraithDomainCharmDuration(int wraithDomainCharmDuration) { this.wraithDomainCharmDuration = wraithDomainCharmDuration; return this; }
+    public ProfessionBuilder wraithBarrageBaseCost(int wraithBarrageBaseCost) { this.wraithBarrageBaseCost = wraithBarrageBaseCost; return this; }
+    public ProfessionBuilder wraithBarrageChargedCost(int wraithBarrageChargedCost) { this.wraithBarrageChargedCost = wraithBarrageChargedCost; return this; }
+    public ProfessionBuilder wraithBarrageCooldown(int wraithBarrageCooldown) { this.wraithBarrageCooldown = wraithBarrageCooldown; return this; }
+    public ProfessionBuilder wraithBarrageBaseOrbs(int wraithBarrageBaseOrbs) { this.wraithBarrageBaseOrbs = wraithBarrageBaseOrbs; return this; }
+    public ProfessionBuilder wraithBarrageChargedOrbs(int wraithBarrageChargedOrbs) { this.wraithBarrageChargedOrbs = wraithBarrageChargedOrbs; return this; }
+    public ProfessionBuilder wraithBarrageBaseDamage(float wraithBarrageBaseDamage) { this.wraithBarrageBaseDamage = wraithBarrageBaseDamage; return this; }
+    public ProfessionBuilder wraithBarrageChargedDamage(float wraithBarrageChargedDamage) { this.wraithBarrageChargedDamage = wraithBarrageChargedDamage; return this; }
+    public ProfessionBuilder wraithBarrageBaseRange(float wraithBarrageBaseRange) { this.wraithBarrageBaseRange = wraithBarrageBaseRange; return this; }
+    public ProfessionBuilder wraithBarrageChargedRange(float wraithBarrageChargedRange) { this.wraithBarrageChargedRange = wraithBarrageChargedRange; return this; }
+    public ProfessionBuilder wraithBarrageMaxChargeTime(int wraithBarrageMaxChargeTime) { this.wraithBarrageMaxChargeTime = wraithBarrageMaxChargeTime; return this; }
+    public ProfessionBuilder wraithBarrageMaxHits(int wraithBarrageMaxHits) { this.wraithBarrageMaxHits = wraithBarrageMaxHits; return this; }
+    public ProfessionBuilder wraithUltimateMinCost(int wraithUltimateMinCost) { this.wraithUltimateMinCost = wraithUltimateMinCost; return this; }
+    public ProfessionBuilder wraithUltimateCooldown(int wraithUltimateCooldown) { this.wraithUltimateCooldown = wraithUltimateCooldown; return this; }
+    public ProfessionBuilder wraithUltimateCloneCount(int wraithUltimateCloneCount) { this.wraithUltimateCloneCount = wraithUltimateCloneCount; return this; }
+    public ProfessionBuilder wraithUltimateCloneDamageRatio(float wraithUltimateCloneDamageRatio) { this.wraithUltimateCloneDamageRatio = wraithUltimateCloneDamageRatio; return this; }
+    public ProfessionBuilder wraithUltimateDuration(int wraithUltimateDuration) { this.wraithUltimateDuration = wraithUltimateDuration; return this; }
+    public ProfessionBuilder wraithUltimateSoulRegen(int wraithUltimateSoulRegen) { this.wraithUltimateSoulRegen = wraithUltimateSoulRegen; return this; }
+    public ProfessionBuilder wraithUltimateDamageIncrease(float wraithUltimateDamageIncrease) { this.wraithUltimateDamageIncrease = wraithUltimateDamageIncrease; return this; }
+    public ProfessionBuilder wraithUltimateExhaustDuration(int wraithUltimateExhaustDuration) { this.wraithUltimateExhaustDuration = wraithUltimateExhaustDuration; return this; }
     
     public ProfessionBuilder isEvilPoisoner(boolean isEvilPoisoner) { this.isEvilPoisoner = isEvilPoisoner; return this; }
     public ProfessionBuilder poisonerStrengthDuration(int poisonerStrengthDuration) { this.poisonerStrengthDuration = poisonerStrengthDuration; return this; }
@@ -361,6 +544,93 @@ public class ProfessionBuilder {
     public ProfessionBuilder rSpeedLevel(int rSpeedLevel) { this.rSpeedLevel = rSpeedLevel; return this; }
     public ProfessionBuilder rFatigueDuration(int rFatigueDuration) { this.rFatigueDuration = rFatigueDuration; return this; }
     public ProfessionBuilder rCooldown(int rCooldown) { this.rCooldown = rCooldown; return this; }
+
+    public ProfessionBuilder isByteChen(boolean isByteChen) { this.isByteChen = isByteChen; return this; }
+    public ProfessionBuilder byteChenComputeMax(int byteChenComputeMax) { this.byteChenComputeMax = byteChenComputeMax; return this; }
+    public ProfessionBuilder byteChenComputeInitial(int byteChenComputeInitial) { this.byteChenComputeInitial = byteChenComputeInitial; return this; }
+    public ProfessionBuilder byteChenComputeRegenRate(int byteChenComputeRegenRate) { this.byteChenComputeRegenRate = byteChenComputeRegenRate; return this; }
+    public ProfessionBuilder byteChenComputeNodeRegenBonus(float byteChenComputeNodeRegenBonus) { this.byteChenComputeNodeRegenBonus = byteChenComputeNodeRegenBonus; return this; }
+    public ProfessionBuilder byteChenComputeOnRead(int byteChenComputeOnRead) { this.byteChenComputeOnRead = byteChenComputeOnRead; return this; }
+    public ProfessionBuilder byteChenComputeOnNodeTrigger(int byteChenComputeOnNodeTrigger) { this.byteChenComputeOnNodeTrigger = byteChenComputeOnNodeTrigger; return this; }
+    public ProfessionBuilder byteChenComputeOnInterrupt(int byteChenComputeOnInterrupt) { this.byteChenComputeOnInterrupt = byteChenComputeOnInterrupt; return this; }
+    public ProfessionBuilder byteChenComputeLowThreshold(int byteChenComputeLowThreshold) { this.byteChenComputeLowThreshold = byteChenComputeLowThreshold; return this; }
+    public ProfessionBuilder byteChenNodeMax(int byteChenNodeMax) { this.byteChenNodeMax = byteChenNodeMax; return this; }
+    public ProfessionBuilder byteChenNodeRange(int byteChenNodeRange) { this.byteChenNodeRange = byteChenNodeRange; return this; }
+    public ProfessionBuilder byteChenNodeDuration(int byteChenNodeDuration) { this.byteChenNodeDuration = byteChenNodeDuration; return this; }
+    public ProfessionBuilder byteChenScoutNodeCost(int byteChenScoutNodeCost) { this.byteChenScoutNodeCost = byteChenScoutNodeCost; return this; }
+    public ProfessionBuilder byteChenScoutNodeRadius(float byteChenScoutNodeRadius) { this.byteChenScoutNodeRadius = byteChenScoutNodeRadius; return this; }
+    public ProfessionBuilder byteChenScoutNodeComputeRegen(int byteChenScoutNodeComputeRegen) { this.byteChenScoutNodeComputeRegen = byteChenScoutNodeComputeRegen; return this; }
+    public ProfessionBuilder byteChenBuffNodeCost(int byteChenBuffNodeCost) { this.byteChenBuffNodeCost = byteChenBuffNodeCost; return this; }
+    public ProfessionBuilder byteChenBuffNodeRadius(float byteChenBuffNodeRadius) { this.byteChenBuffNodeRadius = byteChenBuffNodeRadius; return this; }
+    public ProfessionBuilder byteChenBuffNodeDamageBonus(float byteChenBuffNodeDamageBonus) { this.byteChenBuffNodeDamageBonus = byteChenBuffNodeDamageBonus; return this; }
+    public ProfessionBuilder byteChenBuffNodeDamageReduction(float byteChenBuffNodeDamageReduction) { this.byteChenBuffNodeDamageReduction = byteChenBuffNodeDamageReduction; return this; }
+    public ProfessionBuilder byteChenBuffNodeSpeedBonus(float byteChenBuffNodeSpeedBonus) { this.byteChenBuffNodeSpeedBonus = byteChenBuffNodeSpeedBonus; return this; }
+    public ProfessionBuilder byteChenBuffNodeCooldownReduction(float byteChenBuffNodeCooldownReduction) { this.byteChenBuffNodeCooldownReduction = byteChenBuffNodeCooldownReduction; return this; }
+    public ProfessionBuilder byteChenBuffNodeMaxStacks(int byteChenBuffNodeMaxStacks) { this.byteChenBuffNodeMaxStacks = byteChenBuffNodeMaxStacks; return this; }
+    public ProfessionBuilder byteChenCounterNodeCost(int byteChenCounterNodeCost) { this.byteChenCounterNodeCost = byteChenCounterNodeCost; return this; }
+    public ProfessionBuilder byteChenCounterNodeRadius(float byteChenCounterNodeRadius) { this.byteChenCounterNodeRadius = byteChenCounterNodeRadius; return this; }
+    public ProfessionBuilder byteChenCounterNodeSilenceDuration(int byteChenCounterNodeSilenceDuration) { this.byteChenCounterNodeSilenceDuration = byteChenCounterNodeSilenceDuration; return this; }
+    public ProfessionBuilder byteChenCounterNodeDisorderDuration(int byteChenCounterNodeDisorderDuration) { this.byteChenCounterNodeDisorderDuration = byteChenCounterNodeDisorderDuration; return this; }
+    public ProfessionBuilder byteChenCounterNodeDamageReduction(float byteChenCounterNodeDamageReduction) { this.byteChenCounterNodeDamageReduction = byteChenCounterNodeDamageReduction; return this; }
+    public ProfessionBuilder byteChenCounterNodeCooldownMultiplier(float byteChenCounterNodeCooldownMultiplier) { this.byteChenCounterNodeCooldownMultiplier = byteChenCounterNodeCooldownMultiplier; return this; }
+    public ProfessionBuilder byteChenDataVisionRange(float byteChenDataVisionRange) { this.byteChenDataVisionRange = byteChenDataVisionRange; return this; }
+    public ProfessionBuilder byteChenLightweightSpeedBonus(float byteChenLightweightSpeedBonus) { this.byteChenLightweightSpeedBonus = byteChenLightweightSpeedBonus; return this; }
+    public ProfessionBuilder byteChenLightweightDigSpeedBonus(float byteChenLightweightDigSpeedBonus) { this.byteChenLightweightDigSpeedBonus = byteChenLightweightDigSpeedBonus; return this; }
+    public ProfessionBuilder byteChenLightweightMeleePenalty(float byteChenLightweightMeleePenalty) { this.byteChenLightweightMeleePenalty = byteChenLightweightMeleePenalty; return this; }
+    public ProfessionBuilder byteChenLightweightReceivedMeleePenalty(float byteChenLightweightReceivedMeleePenalty) { this.byteChenLightweightReceivedMeleePenalty = byteChenLightweightReceivedMeleePenalty; return this; }
+    public ProfessionBuilder byteChenNodeRecycleCooldown(int byteChenNodeRecycleCooldown) { this.byteChenNodeRecycleCooldown = byteChenNodeRecycleCooldown; return this; }
+    public ProfessionBuilder byteChenNodeRecycleRefund(float byteChenNodeRecycleRefund) { this.byteChenNodeRecycleRefund = byteChenNodeRecycleRefund; return this; }
+    public ProfessionBuilder byteChenFullReadCost(int byteChenFullReadCost) { this.byteChenFullReadCost = byteChenFullReadCost; return this; }
+    public ProfessionBuilder byteChenFullReadCooldown(int byteChenFullReadCooldown) { this.byteChenFullReadCooldown = byteChenFullReadCooldown; return this; }
+    public ProfessionBuilder byteChenFullReadRadius(float byteChenFullReadRadius) { this.byteChenFullReadRadius = byteChenFullReadRadius; return this; }
+    public ProfessionBuilder byteChenFullReadDuration(int byteChenFullReadDuration) { this.byteChenFullReadDuration = byteChenFullReadDuration; return this; }
+    public ProfessionBuilder byteChenDataDispatchCost(int byteChenDataDispatchCost) { this.byteChenDataDispatchCost = byteChenDataDispatchCost; return this; }
+    public ProfessionBuilder byteChenDataDispatchCooldown(int byteChenDataDispatchCooldown) { this.byteChenDataDispatchCooldown = byteChenDataDispatchCooldown; return this; }
+    public ProfessionBuilder byteChenDataDispatchSpeedBonus(float byteChenDataDispatchSpeedBonus) { this.byteChenDataDispatchSpeedBonus = byteChenDataDispatchSpeedBonus; return this; }
+    public ProfessionBuilder byteChenDataDispatchCooldownBonus(float byteChenDataDispatchCooldownBonus) { this.byteChenDataDispatchCooldownBonus = byteChenDataDispatchCooldownBonus; return this; }
+    public ProfessionBuilder byteChenDataDispatchBuffDuration(int byteChenDataDispatchBuffDuration) { this.byteChenDataDispatchBuffDuration = byteChenDataDispatchBuffDuration; return this; }
+    public ProfessionBuilder byteChenDataBanCost(int byteChenDataBanCost) { this.byteChenDataBanCost = byteChenDataBanCost; return this; }
+    public ProfessionBuilder byteChenDataBanCooldown(int byteChenDataBanCooldown) { this.byteChenDataBanCooldown = byteChenDataBanCooldown; return this; }
+    public ProfessionBuilder byteChenDataBanRange(float byteChenDataBanRange) { this.byteChenDataBanRange = byteChenDataBanRange; return this; }
+    public ProfessionBuilder byteChenDataBanDuration(int byteChenDataBanDuration) { this.byteChenDataBanDuration = byteChenDataBanDuration; return this; }
+    public ProfessionBuilder byteChenDataBanBossDuration(int byteChenDataBanBossDuration) { this.byteChenDataBanBossDuration = byteChenDataBanBossDuration; return this; }
+    public ProfessionBuilder byteChenDataBanTrueDamageBonus(float byteChenDataBanTrueDamageBonus) { this.byteChenDataBanTrueDamageBonus = byteChenDataBanTrueDamageBonus; return this; }
+    public ProfessionBuilder byteChenUltimateMinCost(int byteChenUltimateMinCost) { this.byteChenUltimateMinCost = byteChenUltimateMinCost; return this; }
+    public ProfessionBuilder byteChenUltimateCooldown(int byteChenUltimateCooldown) { this.byteChenUltimateCooldown = byteChenUltimateCooldown; return this; }
+    public ProfessionBuilder byteChenUltimateRadius(float byteChenUltimateRadius) { this.byteChenUltimateRadius = byteChenUltimateRadius; return this; }
+    public ProfessionBuilder byteChenUltimateDuration(int byteChenUltimateDuration) { this.byteChenUltimateDuration = byteChenUltimateDuration; return this; }
+    public ProfessionBuilder byteChenUltimateDamageBonus(float byteChenUltimateDamageBonus) { this.byteChenUltimateDamageBonus = byteChenUltimateDamageBonus; return this; }
+    public ProfessionBuilder byteChenUltimateDamageReduction(float byteChenUltimateDamageReduction) { this.byteChenUltimateDamageReduction = byteChenUltimateDamageReduction; return this; }
+    public ProfessionBuilder byteChenUltimateSpeedBonus(float byteChenUltimateSpeedBonus) { this.byteChenUltimateSpeedBonus = byteChenUltimateSpeedBonus; return this; }
+    public ProfessionBuilder byteChenUltimateCooldownBonus(float byteChenUltimateCooldownBonus) { this.byteChenUltimateCooldownBonus = byteChenUltimateCooldownBonus; return this; }
+    public ProfessionBuilder byteChenUltimateEnemyDamageReduction(float byteChenUltimateEnemyDamageReduction) { this.byteChenUltimateEnemyDamageReduction = byteChenUltimateEnemyDamageReduction; return this; }
+    public ProfessionBuilder byteChenUltimateEnemySpeedReduction(float byteChenUltimateEnemySpeedReduction) { this.byteChenUltimateEnemySpeedReduction = byteChenUltimateEnemySpeedReduction; return this; }
+    public ProfessionBuilder byteChenUltimateEnemyCooldownMultiplier(float byteChenUltimateEnemyCooldownMultiplier) { this.byteChenUltimateEnemyCooldownMultiplier = byteChenUltimateEnemyCooldownMultiplier; return this; }
+    public ProfessionBuilder byteChenUltimateInterruptChance(float byteChenUltimateInterruptChance) { this.byteChenUltimateInterruptChance = byteChenUltimateInterruptChance; return this; }
+    public ProfessionBuilder byteChenExhaustDuration(int byteChenExhaustDuration) { this.byteChenExhaustDuration = byteChenExhaustDuration; return this; }
+
+    public ProfessionBuilder isHeavyKnight(boolean isHeavyKnight) { this.isHeavyKnight = isHeavyKnight; return this; }
+    public ProfessionBuilder heavyKnightSpeedPenalty(float heavyKnightSpeedPenalty) { this.heavyKnightSpeedPenalty = heavyKnightSpeedPenalty; return this; }
+    public ProfessionBuilder heavyKnightWillOnHit(int heavyKnightWillOnHit) { this.heavyKnightWillOnHit = heavyKnightWillOnHit; return this; }
+    public ProfessionBuilder heavyKnightWillOnBlock(int heavyKnightWillOnBlock) { this.heavyKnightWillOnBlock = heavyKnightWillOnBlock; return this; }
+    public ProfessionBuilder heavyKnightWillOnDamaged(int heavyKnightWillOnDamaged) { this.heavyKnightWillOnDamaged = heavyKnightWillOnDamaged; return this; }
+    public ProfessionBuilder heavyKnightFullWillDamageBonus(float heavyKnightFullWillDamageBonus) { this.heavyKnightFullWillDamageBonus = heavyKnightFullWillDamageBonus; return this; }
+    public ProfessionBuilder heavyKnightFullWillDamageReduction(float heavyKnightFullWillDamageReduction) { this.heavyKnightFullWillDamageReduction = heavyKnightFullWillDamageReduction; return this; }
+    public ProfessionBuilder heavyKnightShieldWallTriggerTicks(int heavyKnightShieldWallTriggerTicks) { this.heavyKnightShieldWallTriggerTicks = heavyKnightShieldWallTriggerTicks; return this; }
+    public ProfessionBuilder heavyKnightShieldWallReduction(float heavyKnightShieldWallReduction) { this.heavyKnightShieldWallReduction = heavyKnightShieldWallReduction; return this; }
+    public ProfessionBuilder heavyKnightShieldWallRadius(float heavyKnightShieldWallRadius) { this.heavyKnightShieldWallRadius = heavyKnightShieldWallRadius; return this; }
+    public ProfessionBuilder heavyKnightShieldWallArmorBonus(float heavyKnightShieldWallArmorBonus) { this.heavyKnightShieldWallArmorBonus = heavyKnightShieldWallArmorBonus; return this; }
+    public ProfessionBuilder heavyKnightChargeWillCost(int heavyKnightChargeWillCost) { this.heavyKnightChargeWillCost = heavyKnightChargeWillCost; return this; }
+    public ProfessionBuilder heavyKnightChargeCooldown(int heavyKnightChargeCooldown) { this.heavyKnightChargeCooldown = heavyKnightChargeCooldown; return this; }
+    public ProfessionBuilder heavyKnightChargeDistance(float heavyKnightChargeDistance) { this.heavyKnightChargeDistance = heavyKnightChargeDistance; return this; }
+    public ProfessionBuilder heavyKnightChargeDamage(float heavyKnightChargeDamage) { this.heavyKnightChargeDamage = heavyKnightChargeDamage; return this; }
+    public ProfessionBuilder heavyKnightChargeKnockback(float heavyKnightChargeKnockback) { this.heavyKnightChargeKnockback = heavyKnightChargeKnockback; return this; }
+    public ProfessionBuilder heavyKnightProtectRange(int heavyKnightProtectRange) { this.heavyKnightProtectRange = heavyKnightProtectRange; return this; }
+    public ProfessionBuilder heavyKnightProtectWillCost(int heavyKnightProtectWillCost) { this.heavyKnightProtectWillCost = heavyKnightProtectWillCost; return this; }
+    public ProfessionBuilder heavyKnightProtectCooldown(int heavyKnightProtectCooldown) { this.heavyKnightProtectCooldown = heavyKnightProtectCooldown; return this; }
+    public ProfessionBuilder heavyKnightShieldBashDamage(float heavyKnightShieldBashDamage) { this.heavyKnightShieldBashDamage = heavyKnightShieldBashDamage; return this; }
+    public ProfessionBuilder heavyKnightShieldBashStunDuration(int heavyKnightShieldBashStunDuration) { this.heavyKnightShieldBashStunDuration = heavyKnightShieldBashStunDuration; return this; }
+    public ProfessionBuilder heavyKnightShieldBashCooldown(int heavyKnightShieldBashCooldown) { this.heavyKnightShieldBashCooldown = heavyKnightShieldBashCooldown; return this; }
 
     public Profession build() {
         return new Profession(this);
@@ -474,6 +744,54 @@ public class ProfessionBuilder {
         builder.ghostSenatorHealAmount(tag.contains("ghostSenatorHealAmount") ? tag.getFloat("ghostSenatorHealAmount") : 7.0f);
         builder.ghostSenatorStrengthDuration(tag.contains("ghostSenatorStrengthDuration") ? tag.getInt("ghostSenatorStrengthDuration") : 300);
         builder.ghostSenatorDetectionRadius(tag.contains("ghostSenatorDetectionRadius") ? tag.getFloat("ghostSenatorDetectionRadius") : 20.0f);
+        builder.isWraithCouncilor(tag.contains("isWraithCouncilor") && tag.getBoolean("isWraithCouncilor"));
+        builder.wraithSoulMax(tag.contains("wraithSoulMax") ? tag.getInt("wraithSoulMax") : 120);
+        builder.wraithSoulInitial(tag.contains("wraithSoulInitial") ? tag.getInt("wraithSoulInitial") : 60);
+        builder.wraithSoulRegenRate(tag.contains("wraithSoulRegenRate") ? tag.getInt("wraithSoulRegenRate") : 2);
+        builder.wraithSoulDarkBonus(tag.contains("wraithSoulDarkBonus") ? tag.getInt("wraithSoulDarkBonus") : 1);
+        builder.wraithSoulSunlightPenalty(tag.contains("wraithSoulSunlightPenalty") ? tag.getFloat("wraithSoulSunlightPenalty") : 0.5f);
+        builder.wraithSoulKillBonus(tag.contains("wraithSoulKillBonus") ? tag.getInt("wraithSoulKillBonus") : 15);
+        builder.wraithSoulHitBonus(tag.contains("wraithSoulHitBonus") ? tag.getInt("wraithSoulHitBonus") : 3);
+        builder.wraithSoulSummonKillBonus(tag.contains("wraithSoulSummonKillBonus") ? tag.getInt("wraithSoulSummonKillBonus") : 8);
+        builder.wraithErosionDamage(tag.contains("wraithErosionDamage") ? tag.getFloat("wraithErosionDamage") : 2.0f);
+        builder.wraithErosionArmorReduction(tag.contains("wraithErosionArmorReduction") ? tag.getFloat("wraithErosionArmorReduction") : 0.1f);
+        builder.wraithErosionSlowPercent(tag.contains("wraithErosionSlowPercent") ? tag.getFloat("wraithErosionSlowPercent") : 0.15f);
+        builder.wraithErosionMaxStacks(tag.contains("wraithErosionMaxStacks") ? tag.getInt("wraithErosionMaxStacks") : 5);
+        builder.wraithErosionDuration(tag.contains("wraithErosionDuration") ? tag.getInt("wraithErosionDuration") : 100);
+        builder.wraithSummonCost(tag.contains("wraithSummonCost") ? tag.getInt("wraithSummonCost") : 35);
+        builder.wraithSummonCooldown(tag.contains("wraithSummonCooldown") ? tag.getInt("wraithSummonCooldown") : 360);
+        builder.wraithSummonCount(tag.contains("wraithSummonCount") ? tag.getInt("wraithSummonCount") : 2);
+        builder.wraithSummonHealth(tag.contains("wraithSummonHealth") ? tag.getFloat("wraithSummonHealth") : 20.0f);
+        builder.wraithSummonDamage(tag.contains("wraithSummonDamage") ? tag.getFloat("wraithSummonDamage") : 6.0f);
+        builder.wraithSummonDuration(tag.contains("wraithSummonDuration") ? tag.getInt("wraithSummonDuration") : 240);
+        builder.wraithSummonCorpseRange(tag.contains("wraithSummonCorpseRange") ? tag.getFloat("wraithSummonCorpseRange") : 5.0f);
+        builder.wraithSummonExtraMax(tag.contains("wraithSummonExtraMax") ? tag.getInt("wraithSummonExtraMax") : 2);
+        builder.wraithDomainCost(tag.contains("wraithDomainCost") ? tag.getInt("wraithDomainCost") : 40);
+        builder.wraithDomainCooldown(tag.contains("wraithDomainCooldown") ? tag.getInt("wraithDomainCooldown") : 440);
+        builder.wraithDomainRadius(tag.contains("wraithDomainRadius") ? tag.getFloat("wraithDomainRadius") : 3.0f);
+        builder.wraithDomainDuration(tag.contains("wraithDomainDuration") ? tag.getInt("wraithDomainDuration") : 80);
+        builder.wraithDomainDamage(tag.contains("wraithDomainDamage") ? tag.getFloat("wraithDomainDamage") : 6.0f);
+        builder.wraithDomainBossSlow(tag.contains("wraithDomainBossSlow") ? tag.getFloat("wraithDomainBossSlow") : 0.5f);
+        builder.wraithDomainCharmDuration(tag.contains("wraithDomainCharmDuration") ? tag.getInt("wraithDomainCharmDuration") : 80);
+        builder.wraithBarrageBaseCost(tag.contains("wraithBarrageBaseCost") ? tag.getInt("wraithBarrageBaseCost") : 25);
+        builder.wraithBarrageChargedCost(tag.contains("wraithBarrageChargedCost") ? tag.getInt("wraithBarrageChargedCost") : 10);
+        builder.wraithBarrageCooldown(tag.contains("wraithBarrageCooldown") ? tag.getInt("wraithBarrageCooldown") : 200);
+        builder.wraithBarrageBaseOrbs(tag.contains("wraithBarrageBaseOrbs") ? tag.getInt("wraithBarrageBaseOrbs") : 6);
+        builder.wraithBarrageChargedOrbs(tag.contains("wraithBarrageChargedOrbs") ? tag.getInt("wraithBarrageChargedOrbs") : 12);
+        builder.wraithBarrageBaseDamage(tag.contains("wraithBarrageBaseDamage") ? tag.getFloat("wraithBarrageBaseDamage") : 4.0f);
+        builder.wraithBarrageChargedDamage(tag.contains("wraithBarrageChargedDamage") ? tag.getFloat("wraithBarrageChargedDamage") : 6.0f);
+        builder.wraithBarrageBaseRange(tag.contains("wraithBarrageBaseRange") ? tag.getFloat("wraithBarrageBaseRange") : 8.0f);
+        builder.wraithBarrageChargedRange(tag.contains("wraithBarrageChargedRange") ? tag.getFloat("wraithBarrageChargedRange") : 12.0f);
+        builder.wraithBarrageMaxChargeTime(tag.contains("wraithBarrageMaxChargeTime") ? tag.getInt("wraithBarrageMaxChargeTime") : 30);
+        builder.wraithBarrageMaxHits(tag.contains("wraithBarrageMaxHits") ? tag.getInt("wraithBarrageMaxHits") : 3);
+        builder.wraithUltimateMinCost(tag.contains("wraithUltimateMinCost") ? tag.getInt("wraithUltimateMinCost") : 100);
+        builder.wraithUltimateCooldown(tag.contains("wraithUltimateCooldown") ? tag.getInt("wraithUltimateCooldown") : 2400);
+        builder.wraithUltimateCloneCount(tag.contains("wraithUltimateCloneCount") ? tag.getInt("wraithUltimateCloneCount") : 3);
+        builder.wraithUltimateCloneDamageRatio(tag.contains("wraithUltimateCloneDamageRatio") ? tag.getFloat("wraithUltimateCloneDamageRatio") : 0.8f);
+        builder.wraithUltimateDuration(tag.contains("wraithUltimateDuration") ? tag.getInt("wraithUltimateDuration") : 300);
+        builder.wraithUltimateSoulRegen(tag.contains("wraithUltimateSoulRegen") ? tag.getInt("wraithUltimateSoulRegen") : 10);
+        builder.wraithUltimateDamageIncrease(tag.contains("wraithUltimateDamageIncrease") ? tag.getFloat("wraithUltimateDamageIncrease") : 0.2f);
+        builder.wraithUltimateExhaustDuration(tag.contains("wraithUltimateExhaustDuration") ? tag.getInt("wraithUltimateExhaustDuration") : 100);
         builder.isEvilPoisoner(tag.contains("isEvilPoisoner") && tag.getBoolean("isEvilPoisoner"));
         builder.poisonerStrengthDuration(tag.contains("poisonerStrengthDuration") ? tag.getInt("poisonerStrengthDuration") : 200);
         builder.hasTurtleAura(tag.contains("hasTurtleAura") && tag.getBoolean("hasTurtleAura"));
@@ -515,6 +833,91 @@ public class ProfessionBuilder {
         builder.rSpeedLevel(tag.contains("rSpeedLevel") ? tag.getInt("rSpeedLevel") : 3);
         builder.rFatigueDuration(tag.contains("rFatigueDuration") ? tag.getInt("rFatigueDuration") : 40);
         builder.rCooldown(tag.contains("rCooldown") ? tag.getInt("rCooldown") : 1200);
+        builder.isByteChen(tag.contains("isByteChen") && tag.getBoolean("isByteChen"));
+        builder.byteChenComputeMax(tag.contains("byteChenComputeMax") ? tag.getInt("byteChenComputeMax") : 150);
+        builder.byteChenComputeInitial(tag.contains("byteChenComputeInitial") ? tag.getInt("byteChenComputeInitial") : 150);
+        builder.byteChenComputeRegenRate(tag.contains("byteChenComputeRegenRate") ? tag.getInt("byteChenComputeRegenRate") : 3);
+        builder.byteChenComputeNodeRegenBonus(tag.contains("byteChenComputeNodeRegenBonus") ? tag.getFloat("byteChenComputeNodeRegenBonus") : 0.5f);
+        builder.byteChenComputeOnRead(tag.contains("byteChenComputeOnRead") ? tag.getInt("byteChenComputeOnRead") : 10);
+        builder.byteChenComputeOnNodeTrigger(tag.contains("byteChenComputeOnNodeTrigger") ? tag.getInt("byteChenComputeOnNodeTrigger") : 8);
+        builder.byteChenComputeOnInterrupt(tag.contains("byteChenComputeOnInterrupt") ? tag.getInt("byteChenComputeOnInterrupt") : 25);
+        builder.byteChenComputeLowThreshold(tag.contains("byteChenComputeLowThreshold") ? tag.getInt("byteChenComputeLowThreshold") : 20);
+        builder.byteChenNodeMax(tag.contains("byteChenNodeMax") ? tag.getInt("byteChenNodeMax") : 8);
+        builder.byteChenNodeRange(tag.contains("byteChenNodeRange") ? tag.getInt("byteChenNodeRange") : 32);
+        builder.byteChenNodeDuration(tag.contains("byteChenNodeDuration") ? tag.getInt("byteChenNodeDuration") : 1200);
+        builder.byteChenScoutNodeCost(tag.contains("byteChenScoutNodeCost") ? tag.getInt("byteChenScoutNodeCost") : 20);
+        builder.byteChenScoutNodeRadius(tag.contains("byteChenScoutNodeRadius") ? tag.getFloat("byteChenScoutNodeRadius") : 12.0f);
+        builder.byteChenScoutNodeComputeRegen(tag.contains("byteChenScoutNodeComputeRegen") ? tag.getInt("byteChenScoutNodeComputeRegen") : 1);
+        builder.byteChenBuffNodeCost(tag.contains("byteChenBuffNodeCost") ? tag.getInt("byteChenBuffNodeCost") : 25);
+        builder.byteChenBuffNodeRadius(tag.contains("byteChenBuffNodeRadius") ? tag.getFloat("byteChenBuffNodeRadius") : 8.0f);
+        builder.byteChenBuffNodeDamageBonus(tag.contains("byteChenBuffNodeDamageBonus") ? tag.getFloat("byteChenBuffNodeDamageBonus") : 0.1f);
+        builder.byteChenBuffNodeDamageReduction(tag.contains("byteChenBuffNodeDamageReduction") ? tag.getFloat("byteChenBuffNodeDamageReduction") : 0.1f);
+        builder.byteChenBuffNodeSpeedBonus(tag.contains("byteChenBuffNodeSpeedBonus") ? tag.getFloat("byteChenBuffNodeSpeedBonus") : 0.15f);
+        builder.byteChenBuffNodeCooldownReduction(tag.contains("byteChenBuffNodeCooldownReduction") ? tag.getFloat("byteChenBuffNodeCooldownReduction") : 0.1f);
+        builder.byteChenBuffNodeMaxStacks(tag.contains("byteChenBuffNodeMaxStacks") ? tag.getInt("byteChenBuffNodeMaxStacks") : 3);
+        builder.byteChenCounterNodeCost(tag.contains("byteChenCounterNodeCost") ? tag.getInt("byteChenCounterNodeCost") : 30);
+        builder.byteChenCounterNodeRadius(tag.contains("byteChenCounterNodeRadius") ? tag.getFloat("byteChenCounterNodeRadius") : 6.0f);
+        builder.byteChenCounterNodeSilenceDuration(tag.contains("byteChenCounterNodeSilenceDuration") ? tag.getInt("byteChenCounterNodeSilenceDuration") : 40);
+        builder.byteChenCounterNodeDisorderDuration(tag.contains("byteChenCounterNodeDisorderDuration") ? tag.getInt("byteChenCounterNodeDisorderDuration") : 100);
+        builder.byteChenCounterNodeDamageReduction(tag.contains("byteChenCounterNodeDamageReduction") ? tag.getFloat("byteChenCounterNodeDamageReduction") : 0.15f);
+        builder.byteChenCounterNodeCooldownMultiplier(tag.contains("byteChenCounterNodeCooldownMultiplier") ? tag.getFloat("byteChenCounterNodeCooldownMultiplier") : 2.0f);
+        builder.byteChenDataVisionRange(tag.contains("byteChenDataVisionRange") ? tag.getFloat("byteChenDataVisionRange") : 16.0f);
+        builder.byteChenLightweightSpeedBonus(tag.contains("byteChenLightweightSpeedBonus") ? tag.getFloat("byteChenLightweightSpeedBonus") : 0.15f);
+        builder.byteChenLightweightDigSpeedBonus(tag.contains("byteChenLightweightDigSpeedBonus") ? tag.getFloat("byteChenLightweightDigSpeedBonus") : 0.2f);
+        builder.byteChenLightweightMeleePenalty(tag.contains("byteChenLightweightMeleePenalty") ? tag.getFloat("byteChenLightweightMeleePenalty") : -0.45f);
+        builder.byteChenLightweightReceivedMeleePenalty(tag.contains("byteChenLightweightReceivedMeleePenalty") ? tag.getFloat("byteChenLightweightReceivedMeleePenalty") : 0.2f);
+        builder.byteChenNodeRecycleCooldown(tag.contains("byteChenNodeRecycleCooldown") ? tag.getInt("byteChenNodeRecycleCooldown") : 200);
+        builder.byteChenNodeRecycleRefund(tag.contains("byteChenNodeRecycleRefund") ? tag.getFloat("byteChenNodeRecycleRefund") : 0.8f);
+        builder.byteChenFullReadCost(tag.contains("byteChenFullReadCost") ? tag.getInt("byteChenFullReadCost") : 30);
+        builder.byteChenFullReadCooldown(tag.contains("byteChenFullReadCooldown") ? tag.getInt("byteChenFullReadCooldown") : 300);
+        builder.byteChenFullReadRadius(tag.contains("byteChenFullReadRadius") ? tag.getFloat("byteChenFullReadRadius") : 32.0f);
+        builder.byteChenFullReadDuration(tag.contains("byteChenFullReadDuration") ? tag.getInt("byteChenFullReadDuration") : 160);
+        builder.byteChenDataDispatchCost(tag.contains("byteChenDataDispatchCost") ? tag.getInt("byteChenDataDispatchCost") : 40);
+        builder.byteChenDataDispatchCooldown(tag.contains("byteChenDataDispatchCooldown") ? tag.getInt("byteChenDataDispatchCooldown") : 400);
+        builder.byteChenDataDispatchSpeedBonus(tag.contains("byteChenDataDispatchSpeedBonus") ? tag.getFloat("byteChenDataDispatchSpeedBonus") : 0.2f);
+        builder.byteChenDataDispatchCooldownBonus(tag.contains("byteChenDataDispatchCooldownBonus") ? tag.getFloat("byteChenDataDispatchCooldownBonus") : 0.2f);
+        builder.byteChenDataDispatchBuffDuration(tag.contains("byteChenDataDispatchBuffDuration") ? tag.getInt("byteChenDataDispatchBuffDuration") : 160);
+        builder.byteChenDataBanCost(tag.contains("byteChenDataBanCost") ? tag.getInt("byteChenDataBanCost") : 35);
+        builder.byteChenDataBanCooldown(tag.contains("byteChenDataBanCooldown") ? tag.getInt("byteChenDataBanCooldown") : 360);
+        builder.byteChenDataBanRange(tag.contains("byteChenDataBanRange") ? tag.getFloat("byteChenDataBanRange") : 12.0f);
+        builder.byteChenDataBanDuration(tag.contains("byteChenDataBanDuration") ? tag.getInt("byteChenDataBanDuration") : 80);
+        builder.byteChenDataBanBossDuration(tag.contains("byteChenDataBanBossDuration") ? tag.getInt("byteChenDataBanBossDuration") : 40);
+        builder.byteChenDataBanTrueDamageBonus(tag.contains("byteChenDataBanTrueDamageBonus") ? tag.getFloat("byteChenDataBanTrueDamageBonus") : 0.1f);
+        builder.byteChenUltimateMinCost(tag.contains("byteChenUltimateMinCost") ? tag.getInt("byteChenUltimateMinCost") : 120);
+        builder.byteChenUltimateCooldown(tag.contains("byteChenUltimateCooldown") ? tag.getInt("byteChenUltimateCooldown") : 2400);
+        builder.byteChenUltimateRadius(tag.contains("byteChenUltimateRadius") ? tag.getFloat("byteChenUltimateRadius") : 64.0f);
+        builder.byteChenUltimateDuration(tag.contains("byteChenUltimateDuration") ? tag.getInt("byteChenUltimateDuration") : 240);
+        builder.byteChenUltimateDamageBonus(tag.contains("byteChenUltimateDamageBonus") ? tag.getFloat("byteChenUltimateDamageBonus") : 0.25f);
+        builder.byteChenUltimateDamageReduction(tag.contains("byteChenUltimateDamageReduction") ? tag.getFloat("byteChenUltimateDamageReduction") : 0.25f);
+        builder.byteChenUltimateSpeedBonus(tag.contains("byteChenUltimateSpeedBonus") ? tag.getFloat("byteChenUltimateSpeedBonus") : 0.3f);
+        builder.byteChenUltimateCooldownBonus(tag.contains("byteChenUltimateCooldownBonus") ? tag.getFloat("byteChenUltimateCooldownBonus") : 0.3f);
+        builder.byteChenUltimateEnemyDamageReduction(tag.contains("byteChenUltimateEnemyDamageReduction") ? tag.getFloat("byteChenUltimateEnemyDamageReduction") : 0.3f);
+        builder.byteChenUltimateEnemySpeedReduction(tag.contains("byteChenUltimateEnemySpeedReduction") ? tag.getFloat("byteChenUltimateEnemySpeedReduction") : 0.25f);
+        builder.byteChenUltimateEnemyCooldownMultiplier(tag.contains("byteChenUltimateEnemyCooldownMultiplier") ? tag.getFloat("byteChenUltimateEnemyCooldownMultiplier") : 2.0f);
+        builder.byteChenUltimateInterruptChance(tag.contains("byteChenUltimateInterruptChance") ? tag.getFloat("byteChenUltimateInterruptChance") : 0.5f);
+        builder.byteChenExhaustDuration(tag.contains("byteChenExhaustDuration") ? tag.getInt("byteChenExhaustDuration") : 160);
+        builder.isHeavyKnight(tag.contains("isHeavyKnight") && tag.getBoolean("isHeavyKnight"));
+        builder.heavyKnightSpeedPenalty(tag.contains("heavyKnightSpeedPenalty") ? tag.getFloat("heavyKnightSpeedPenalty") : 0.2f);
+        builder.heavyKnightWillOnHit(tag.contains("heavyKnightWillOnHit") ? tag.getInt("heavyKnightWillOnHit") : 5);
+        builder.heavyKnightWillOnBlock(tag.contains("heavyKnightWillOnBlock") ? tag.getInt("heavyKnightWillOnBlock") : 6);
+        builder.heavyKnightWillOnDamaged(tag.contains("heavyKnightWillOnDamaged") ? tag.getInt("heavyKnightWillOnDamaged") : 8);
+        builder.heavyKnightFullWillDamageBonus(tag.contains("heavyKnightFullWillDamageBonus") ? tag.getFloat("heavyKnightFullWillDamageBonus") : 0.1f);
+        builder.heavyKnightFullWillDamageReduction(tag.contains("heavyKnightFullWillDamageReduction") ? tag.getFloat("heavyKnightFullWillDamageReduction") : 0.1f);
+        builder.heavyKnightShieldWallTriggerTicks(tag.contains("heavyKnightShieldWallTriggerTicks") ? tag.getInt("heavyKnightShieldWallTriggerTicks") : 40);
+        builder.heavyKnightShieldWallReduction(tag.contains("heavyKnightShieldWallReduction") ? tag.getFloat("heavyKnightShieldWallReduction") : 0.2f);
+        builder.heavyKnightShieldWallRadius(tag.contains("heavyKnightShieldWallRadius") ? tag.getFloat("heavyKnightShieldWallRadius") : 8.0f);
+        builder.heavyKnightShieldWallArmorBonus(tag.contains("heavyKnightShieldWallArmorBonus") ? tag.getFloat("heavyKnightShieldWallArmorBonus") : 5.0f);
+        builder.heavyKnightChargeWillCost(tag.contains("heavyKnightChargeWillCost") ? tag.getInt("heavyKnightChargeWillCost") : 30);
+        builder.heavyKnightChargeCooldown(tag.contains("heavyKnightChargeCooldown") ? tag.getInt("heavyKnightChargeCooldown") : 240);
+        builder.heavyKnightChargeDistance(tag.contains("heavyKnightChargeDistance") ? tag.getFloat("heavyKnightChargeDistance") : 5.0f);
+        builder.heavyKnightChargeDamage(tag.contains("heavyKnightChargeDamage") ? tag.getFloat("heavyKnightChargeDamage") : 12.0f);
+        builder.heavyKnightChargeKnockback(tag.contains("heavyKnightChargeKnockback") ? tag.getFloat("heavyKnightChargeKnockback") : 3.0f);
+        builder.heavyKnightProtectRange(tag.contains("heavyKnightProtectRange") ? tag.getInt("heavyKnightProtectRange") : 6);
+        builder.heavyKnightProtectWillCost(tag.contains("heavyKnightProtectWillCost") ? tag.getInt("heavyKnightProtectWillCost") : 20);
+        builder.heavyKnightProtectCooldown(tag.contains("heavyKnightProtectCooldown") ? tag.getInt("heavyKnightProtectCooldown") : 400);
+        builder.heavyKnightShieldBashDamage(tag.contains("heavyKnightShieldBashDamage") ? tag.getFloat("heavyKnightShieldBashDamage") : 4.0f);
+        builder.heavyKnightShieldBashStunDuration(tag.contains("heavyKnightShieldBashStunDuration") ? tag.getInt("heavyKnightShieldBashStunDuration") : 30);
+        builder.heavyKnightShieldBashCooldown(tag.contains("heavyKnightShieldBashCooldown") ? tag.getInt("heavyKnightShieldBashCooldown") : 80);
         return builder;
     }
 
@@ -626,6 +1029,54 @@ public class ProfessionBuilder {
         builder.ghostSenatorHealAmount(buffer.readFloat());
         builder.ghostSenatorStrengthDuration(buffer.readInt());
         builder.ghostSenatorDetectionRadius(buffer.readFloat());
+        builder.isWraithCouncilor(buffer.readBoolean());
+        builder.wraithSoulMax(buffer.readInt());
+        builder.wraithSoulInitial(buffer.readInt());
+        builder.wraithSoulRegenRate(buffer.readInt());
+        builder.wraithSoulDarkBonus(buffer.readInt());
+        builder.wraithSoulSunlightPenalty(buffer.readFloat());
+        builder.wraithSoulKillBonus(buffer.readInt());
+        builder.wraithSoulHitBonus(buffer.readInt());
+        builder.wraithSoulSummonKillBonus(buffer.readInt());
+        builder.wraithErosionDamage(buffer.readFloat());
+        builder.wraithErosionArmorReduction(buffer.readFloat());
+        builder.wraithErosionSlowPercent(buffer.readFloat());
+        builder.wraithErosionMaxStacks(buffer.readInt());
+        builder.wraithErosionDuration(buffer.readInt());
+        builder.wraithSummonCost(buffer.readInt());
+        builder.wraithSummonCooldown(buffer.readInt());
+        builder.wraithSummonCount(buffer.readInt());
+        builder.wraithSummonHealth(buffer.readFloat());
+        builder.wraithSummonDamage(buffer.readFloat());
+        builder.wraithSummonDuration(buffer.readInt());
+        builder.wraithSummonCorpseRange(buffer.readFloat());
+        builder.wraithSummonExtraMax(buffer.readInt());
+        builder.wraithDomainCost(buffer.readInt());
+        builder.wraithDomainCooldown(buffer.readInt());
+        builder.wraithDomainRadius(buffer.readFloat());
+        builder.wraithDomainDuration(buffer.readInt());
+        builder.wraithDomainDamage(buffer.readFloat());
+        builder.wraithDomainBossSlow(buffer.readFloat());
+        builder.wraithDomainCharmDuration(buffer.readInt());
+        builder.wraithBarrageBaseCost(buffer.readInt());
+        builder.wraithBarrageChargedCost(buffer.readInt());
+        builder.wraithBarrageCooldown(buffer.readInt());
+        builder.wraithBarrageBaseOrbs(buffer.readInt());
+        builder.wraithBarrageChargedOrbs(buffer.readInt());
+        builder.wraithBarrageBaseDamage(buffer.readFloat());
+        builder.wraithBarrageChargedDamage(buffer.readFloat());
+        builder.wraithBarrageBaseRange(buffer.readFloat());
+        builder.wraithBarrageChargedRange(buffer.readFloat());
+        builder.wraithBarrageMaxChargeTime(buffer.readInt());
+        builder.wraithBarrageMaxHits(buffer.readInt());
+        builder.wraithUltimateMinCost(buffer.readInt());
+        builder.wraithUltimateCooldown(buffer.readInt());
+        builder.wraithUltimateCloneCount(buffer.readInt());
+        builder.wraithUltimateCloneDamageRatio(buffer.readFloat());
+        builder.wraithUltimateDuration(buffer.readInt());
+        builder.wraithUltimateSoulRegen(buffer.readInt());
+        builder.wraithUltimateDamageIncrease(buffer.readFloat());
+        builder.wraithUltimateExhaustDuration(buffer.readInt());
         builder.isEvilPoisoner(buffer.readBoolean());
         builder.poisonerStrengthDuration(buffer.readInt());
         builder.hasTurtleAura(buffer.readBoolean());
@@ -667,6 +1118,69 @@ public class ProfessionBuilder {
         builder.rSpeedLevel(buffer.readInt());
         builder.rFatigueDuration(buffer.readInt());
         builder.rCooldown(buffer.readInt());
+        builder.isByteChen(buffer.readBoolean());
+        builder.byteChenComputeMax(buffer.readInt());
+        builder.byteChenComputeInitial(buffer.readInt());
+        builder.byteChenComputeRegenRate(buffer.readInt());
+        builder.byteChenComputeNodeRegenBonus(buffer.readFloat());
+        builder.byteChenComputeOnRead(buffer.readInt());
+        builder.byteChenComputeOnNodeTrigger(buffer.readInt());
+        builder.byteChenComputeOnInterrupt(buffer.readInt());
+        builder.byteChenComputeLowThreshold(buffer.readInt());
+        builder.byteChenNodeMax(buffer.readInt());
+        builder.byteChenNodeRange(buffer.readInt());
+        builder.byteChenNodeDuration(buffer.readInt());
+        builder.byteChenScoutNodeCost(buffer.readInt());
+        builder.byteChenScoutNodeRadius(buffer.readFloat());
+        builder.byteChenScoutNodeComputeRegen(buffer.readInt());
+        builder.byteChenBuffNodeCost(buffer.readInt());
+        builder.byteChenBuffNodeRadius(buffer.readFloat());
+        builder.byteChenBuffNodeDamageBonus(buffer.readFloat());
+        builder.byteChenBuffNodeDamageReduction(buffer.readFloat());
+        builder.byteChenBuffNodeSpeedBonus(buffer.readFloat());
+        builder.byteChenBuffNodeCooldownReduction(buffer.readFloat());
+        builder.byteChenBuffNodeMaxStacks(buffer.readInt());
+        builder.byteChenCounterNodeCost(buffer.readInt());
+        builder.byteChenCounterNodeRadius(buffer.readFloat());
+        builder.byteChenCounterNodeSilenceDuration(buffer.readInt());
+        builder.byteChenCounterNodeDisorderDuration(buffer.readInt());
+        builder.byteChenCounterNodeDamageReduction(buffer.readFloat());
+        builder.byteChenCounterNodeCooldownMultiplier(buffer.readFloat());
+        builder.byteChenDataVisionRange(buffer.readFloat());
+        builder.byteChenLightweightSpeedBonus(buffer.readFloat());
+        builder.byteChenLightweightDigSpeedBonus(buffer.readFloat());
+        builder.byteChenLightweightMeleePenalty(buffer.readFloat());
+        builder.byteChenLightweightReceivedMeleePenalty(buffer.readFloat());
+        builder.byteChenNodeRecycleCooldown(buffer.readInt());
+        builder.byteChenNodeRecycleRefund(buffer.readFloat());
+        builder.byteChenFullReadCost(buffer.readInt());
+        builder.byteChenFullReadCooldown(buffer.readInt());
+        builder.byteChenFullReadRadius(buffer.readFloat());
+        builder.byteChenFullReadDuration(buffer.readInt());
+        builder.byteChenDataDispatchCost(buffer.readInt());
+        builder.byteChenDataDispatchCooldown(buffer.readInt());
+        builder.byteChenDataDispatchSpeedBonus(buffer.readFloat());
+        builder.byteChenDataDispatchCooldownBonus(buffer.readFloat());
+        builder.byteChenDataDispatchBuffDuration(buffer.readInt());
+        builder.byteChenDataBanCost(buffer.readInt());
+        builder.byteChenDataBanCooldown(buffer.readInt());
+        builder.byteChenDataBanRange(buffer.readFloat());
+        builder.byteChenDataBanDuration(buffer.readInt());
+        builder.byteChenDataBanBossDuration(buffer.readInt());
+        builder.byteChenDataBanTrueDamageBonus(buffer.readFloat());
+        builder.byteChenUltimateMinCost(buffer.readInt());
+        builder.byteChenUltimateCooldown(buffer.readInt());
+        builder.byteChenUltimateRadius(buffer.readFloat());
+        builder.byteChenUltimateDuration(buffer.readInt());
+        builder.byteChenUltimateDamageBonus(buffer.readFloat());
+        builder.byteChenUltimateDamageReduction(buffer.readFloat());
+        builder.byteChenUltimateSpeedBonus(buffer.readFloat());
+        builder.byteChenUltimateCooldownBonus(buffer.readFloat());
+        builder.byteChenUltimateEnemyDamageReduction(buffer.readFloat());
+        builder.byteChenUltimateEnemySpeedReduction(buffer.readFloat());
+        builder.byteChenUltimateEnemyCooldownMultiplier(buffer.readFloat());
+        builder.byteChenUltimateInterruptChance(buffer.readFloat());
+        builder.byteChenExhaustDuration(buffer.readInt());
         return builder;
     }
 
@@ -796,6 +1310,54 @@ public class ProfessionBuilder {
     float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
     int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
     float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
+    boolean isWraithCouncilor() { return isWraithCouncilor; }
+    int getWraithSoulMax() { return wraithSoulMax; }
+    int getWraithSoulInitial() { return wraithSoulInitial; }
+    int getWraithSoulRegenRate() { return wraithSoulRegenRate; }
+    int getWraithSoulDarkBonus() { return wraithSoulDarkBonus; }
+    float getWraithSoulSunlightPenalty() { return wraithSoulSunlightPenalty; }
+    int getWraithSoulKillBonus() { return wraithSoulKillBonus; }
+    int getWraithSoulHitBonus() { return wraithSoulHitBonus; }
+    int getWraithSoulSummonKillBonus() { return wraithSoulSummonKillBonus; }
+    float getWraithErosionDamage() { return wraithErosionDamage; }
+    float getWraithErosionArmorReduction() { return wraithErosionArmorReduction; }
+    float getWraithErosionSlowPercent() { return wraithErosionSlowPercent; }
+    int getWraithErosionMaxStacks() { return wraithErosionMaxStacks; }
+    int getWraithErosionDuration() { return wraithErosionDuration; }
+    int getWraithSummonCost() { return wraithSummonCost; }
+    int getWraithSummonCooldown() { return wraithSummonCooldown; }
+    int getWraithSummonCount() { return wraithSummonCount; }
+    float getWraithSummonHealth() { return wraithSummonHealth; }
+    float getWraithSummonDamage() { return wraithSummonDamage; }
+    int getWraithSummonDuration() { return wraithSummonDuration; }
+    float getWraithSummonCorpseRange() { return wraithSummonCorpseRange; }
+    int getWraithSummonExtraMax() { return wraithSummonExtraMax; }
+    int getWraithDomainCost() { return wraithDomainCost; }
+    int getWraithDomainCooldown() { return wraithDomainCooldown; }
+    float getWraithDomainRadius() { return wraithDomainRadius; }
+    int getWraithDomainDuration() { return wraithDomainDuration; }
+    float getWraithDomainDamage() { return wraithDomainDamage; }
+    float getWraithDomainBossSlow() { return wraithDomainBossSlow; }
+    int getWraithDomainCharmDuration() { return wraithDomainCharmDuration; }
+    int getWraithBarrageBaseCost() { return wraithBarrageBaseCost; }
+    int getWraithBarrageChargedCost() { return wraithBarrageChargedCost; }
+    int getWraithBarrageCooldown() { return wraithBarrageCooldown; }
+    int getWraithBarrageBaseOrbs() { return wraithBarrageBaseOrbs; }
+    int getWraithBarrageChargedOrbs() { return wraithBarrageChargedOrbs; }
+    float getWraithBarrageBaseDamage() { return wraithBarrageBaseDamage; }
+    float getWraithBarrageChargedDamage() { return wraithBarrageChargedDamage; }
+    float getWraithBarrageBaseRange() { return wraithBarrageBaseRange; }
+    float getWraithBarrageChargedRange() { return wraithBarrageChargedRange; }
+    int getWraithBarrageMaxChargeTime() { return wraithBarrageMaxChargeTime; }
+    int getWraithBarrageMaxHits() { return wraithBarrageMaxHits; }
+    int getWraithUltimateMinCost() { return wraithUltimateMinCost; }
+    int getWraithUltimateCooldown() { return wraithUltimateCooldown; }
+    int getWraithUltimateCloneCount() { return wraithUltimateCloneCount; }
+    float getWraithUltimateCloneDamageRatio() { return wraithUltimateCloneDamageRatio; }
+    int getWraithUltimateDuration() { return wraithUltimateDuration; }
+    int getWraithUltimateSoulRegen() { return wraithUltimateSoulRegen; }
+    float getWraithUltimateDamageIncrease() { return wraithUltimateDamageIncrease; }
+    int getWraithUltimateExhaustDuration() { return wraithUltimateExhaustDuration; }
     boolean isEvilPoisoner() { return isEvilPoisoner; }
     int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
     boolean hasTurtleAura() { return hasTurtleAura; }
@@ -837,4 +1399,89 @@ public class ProfessionBuilder {
     int getRSpeedLevel() { return rSpeedLevel; }
     int getRFatigueDuration() { return rFatigueDuration; }
     int getRCooldown() { return rCooldown; }
+    boolean isByteChen() { return isByteChen; }
+    int getByteChenComputeMax() { return byteChenComputeMax; }
+    int getByteChenComputeInitial() { return byteChenComputeInitial; }
+    int getByteChenComputeRegenRate() { return byteChenComputeRegenRate; }
+    float getByteChenComputeNodeRegenBonus() { return byteChenComputeNodeRegenBonus; }
+    int getByteChenComputeOnRead() { return byteChenComputeOnRead; }
+    int getByteChenComputeOnNodeTrigger() { return byteChenComputeOnNodeTrigger; }
+    int getByteChenComputeOnInterrupt() { return byteChenComputeOnInterrupt; }
+    int getByteChenComputeLowThreshold() { return byteChenComputeLowThreshold; }
+    int getByteChenNodeMax() { return byteChenNodeMax; }
+    int getByteChenNodeRange() { return byteChenNodeRange; }
+    int getByteChenNodeDuration() { return byteChenNodeDuration; }
+    int getByteChenScoutNodeCost() { return byteChenScoutNodeCost; }
+    float getByteChenScoutNodeRadius() { return byteChenScoutNodeRadius; }
+    int getByteChenScoutNodeComputeRegen() { return byteChenScoutNodeComputeRegen; }
+    int getByteChenBuffNodeCost() { return byteChenBuffNodeCost; }
+    float getByteChenBuffNodeRadius() { return byteChenBuffNodeRadius; }
+    float getByteChenBuffNodeDamageBonus() { return byteChenBuffNodeDamageBonus; }
+    float getByteChenBuffNodeDamageReduction() { return byteChenBuffNodeDamageReduction; }
+    float getByteChenBuffNodeSpeedBonus() { return byteChenBuffNodeSpeedBonus; }
+    float getByteChenBuffNodeCooldownReduction() { return byteChenBuffNodeCooldownReduction; }
+    int getByteChenBuffNodeMaxStacks() { return byteChenBuffNodeMaxStacks; }
+    int getByteChenCounterNodeCost() { return byteChenCounterNodeCost; }
+    float getByteChenCounterNodeRadius() { return byteChenCounterNodeRadius; }
+    int getByteChenCounterNodeSilenceDuration() { return byteChenCounterNodeSilenceDuration; }
+    int getByteChenCounterNodeDisorderDuration() { return byteChenCounterNodeDisorderDuration; }
+    float getByteChenCounterNodeDamageReduction() { return byteChenCounterNodeDamageReduction; }
+    float getByteChenCounterNodeCooldownMultiplier() { return byteChenCounterNodeCooldownMultiplier; }
+    float getByteChenDataVisionRange() { return byteChenDataVisionRange; }
+    float getByteChenLightweightSpeedBonus() { return byteChenLightweightSpeedBonus; }
+    float getByteChenLightweightDigSpeedBonus() { return byteChenLightweightDigSpeedBonus; }
+    float getByteChenLightweightMeleePenalty() { return byteChenLightweightMeleePenalty; }
+    float getByteChenLightweightReceivedMeleePenalty() { return byteChenLightweightReceivedMeleePenalty; }
+    int getByteChenNodeRecycleCooldown() { return byteChenNodeRecycleCooldown; }
+    float getByteChenNodeRecycleRefund() { return byteChenNodeRecycleRefund; }
+    int getByteChenFullReadCost() { return byteChenFullReadCost; }
+    int getByteChenFullReadCooldown() { return byteChenFullReadCooldown; }
+    float getByteChenFullReadRadius() { return byteChenFullReadRadius; }
+    int getByteChenFullReadDuration() { return byteChenFullReadDuration; }
+    int getByteChenDataDispatchCost() { return byteChenDataDispatchCost; }
+    int getByteChenDataDispatchCooldown() { return byteChenDataDispatchCooldown; }
+    float getByteChenDataDispatchSpeedBonus() { return byteChenDataDispatchSpeedBonus; }
+    float getByteChenDataDispatchCooldownBonus() { return byteChenDataDispatchCooldownBonus; }
+    int getByteChenDataDispatchBuffDuration() { return byteChenDataDispatchBuffDuration; }
+    int getByteChenDataBanCost() { return byteChenDataBanCost; }
+    int getByteChenDataBanCooldown() { return byteChenDataBanCooldown; }
+    float getByteChenDataBanRange() { return byteChenDataBanRange; }
+    int getByteChenDataBanDuration() { return byteChenDataBanDuration; }
+    int getByteChenDataBanBossDuration() { return byteChenDataBanBossDuration; }
+    float getByteChenDataBanTrueDamageBonus() { return byteChenDataBanTrueDamageBonus; }
+    int getByteChenUltimateMinCost() { return byteChenUltimateMinCost; }
+    int getByteChenUltimateCooldown() { return byteChenUltimateCooldown; }
+    float getByteChenUltimateRadius() { return byteChenUltimateRadius; }
+    int getByteChenUltimateDuration() { return byteChenUltimateDuration; }
+    float getByteChenUltimateDamageBonus() { return byteChenUltimateDamageBonus; }
+    float getByteChenUltimateDamageReduction() { return byteChenUltimateDamageReduction; }
+    float getByteChenUltimateSpeedBonus() { return byteChenUltimateSpeedBonus; }
+    float getByteChenUltimateCooldownBonus() { return byteChenUltimateCooldownBonus; }
+    float getByteChenUltimateEnemyDamageReduction() { return byteChenUltimateEnemyDamageReduction; }
+    float getByteChenUltimateEnemySpeedReduction() { return byteChenUltimateEnemySpeedReduction; }
+    float getByteChenUltimateEnemyCooldownMultiplier() { return byteChenUltimateEnemyCooldownMultiplier; }
+    float getByteChenUltimateInterruptChance() { return byteChenUltimateInterruptChance; }
+    int getByteChenExhaustDuration() { return byteChenExhaustDuration; }
+    boolean isHeavyKnight() { return isHeavyKnight; }
+    float getHeavyKnightSpeedPenalty() { return heavyKnightSpeedPenalty; }
+    int getHeavyKnightWillOnHit() { return heavyKnightWillOnHit; }
+    int getHeavyKnightWillOnBlock() { return heavyKnightWillOnBlock; }
+    int getHeavyKnightWillOnDamaged() { return heavyKnightWillOnDamaged; }
+    float getHeavyKnightFullWillDamageBonus() { return heavyKnightFullWillDamageBonus; }
+    float getHeavyKnightFullWillDamageReduction() { return heavyKnightFullWillDamageReduction; }
+    int getHeavyKnightShieldWallTriggerTicks() { return heavyKnightShieldWallTriggerTicks; }
+    float getHeavyKnightShieldWallReduction() { return heavyKnightShieldWallReduction; }
+    float getHeavyKnightShieldWallRadius() { return heavyKnightShieldWallRadius; }
+    float getHeavyKnightShieldWallArmorBonus() { return heavyKnightShieldWallArmorBonus; }
+    int getHeavyKnightChargeWillCost() { return heavyKnightChargeWillCost; }
+    int getHeavyKnightChargeCooldown() { return heavyKnightChargeCooldown; }
+    float getHeavyKnightChargeDistance() { return heavyKnightChargeDistance; }
+    float getHeavyKnightChargeDamage() { return heavyKnightChargeDamage; }
+    float getHeavyKnightChargeKnockback() { return heavyKnightChargeKnockback; }
+    int getHeavyKnightProtectRange() { return heavyKnightProtectRange; }
+    int getHeavyKnightProtectWillCost() { return heavyKnightProtectWillCost; }
+    int getHeavyKnightProtectCooldown() { return heavyKnightProtectCooldown; }
+    float getHeavyKnightShieldBashDamage() { return heavyKnightShieldBashDamage; }
+    int getHeavyKnightShieldBashStunDuration() { return heavyKnightShieldBashStunDuration; }
+    int getHeavyKnightShieldBashCooldown() { return heavyKnightShieldBashCooldown; }
 }

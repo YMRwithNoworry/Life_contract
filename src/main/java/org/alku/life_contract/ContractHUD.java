@@ -89,6 +89,13 @@ public class ContractHUD {
                 guiGraphics.drawString(mc.font, "§e赌徒骰子: " + diceStatus, x, y, color);
                 y += 10;
             }
+            
+            if (profession != null && profession.isWraithCouncilor()) {
+                int rightX = screenWidth - 10;
+                int rightY = screenHeight / 2 - 100;
+                
+                renderWraithCouncilorHUD(guiGraphics, mc, player, rightX, rightY, profession);
+            }
         }
 
         List<ClientDataStorage.PlayerData> teamMembers = new ArrayList<>();
@@ -191,5 +198,94 @@ public class ContractHUD {
             }
         }
         return false;
+    }
+    
+    private static int renderWraithCouncilorHUD(GuiGraphics guiGraphics, Minecraft mc, Player player, int x, int y, Profession profession) {
+        net.minecraft.nbt.CompoundTag data = player.getPersistentData();
+        
+        int soulValue = data.getInt("WraithSoulValueClient");
+        int maxSoul = profession.getWraithSoulMax();
+        int summonCd = data.getInt("WraithSummonCooldownClient");
+        int domainCd = data.getInt("WraithDomainCooldownClient");
+        int barrageCd = data.getInt("WraithBarrageCooldownClient");
+        int ultimateCd = data.getInt("WraithUltimateCooldownClient");
+        boolean ultimateActive = data.getBoolean("WraithUltimateActiveClient");
+        boolean exhausted = data.getBoolean("WraithExhaustedClient");
+        boolean charging = data.getBoolean("WraithChargingBarrageClient");
+        int chargeTime = data.getInt("WraithBarrageChargeTimeClient");
+        
+        y += 5;
+        String title = "§5== 亡魂议员 ==";
+        guiGraphics.drawString(mc.font, title, x - mc.font.width(title), y, 0xAA00AA);
+        y += 10;
+        
+        String soulText = "§5冥魂值: " + renderBar(soulValue, maxSoul, 20, "§5", "§d") + " §f" + soulValue + "§7/§f" + maxSoul;
+        guiGraphics.drawString(mc.font, soulText, x - mc.font.width(soulText), y, 0xFFFFFF);
+        y += 10;
+        
+        if (exhausted) {
+            String exhaustedText = "§c[力竭状态]";
+            guiGraphics.drawString(mc.font, exhaustedText, x - mc.font.width(exhaustedText), y, 0xFF0000);
+            y += 10;
+        }
+        
+        if (ultimateActive) {
+            String ultimateText = "§d[亡魂议会降临]";
+            guiGraphics.drawString(mc.font, ultimateText, x - mc.font.width(ultimateText), y, 0xAA00AA);
+            y += 10;
+        }
+        
+        y += 3;
+        String cooldownTitle = "§7技能冷却:";
+        guiGraphics.drawString(mc.font, cooldownTitle, x - mc.font.width(cooldownTitle), y, 0xAAAAAA);
+        y += 10;
+        
+        String summonStatus = formatCooldown(summonCd, "亡魂号令[Z]", profession.getWraithSummonCooldown());
+        guiGraphics.drawString(mc.font, summonStatus, x - mc.font.width(summonStatus), y, 0xFFFFFF);
+        y += 10;
+        
+        String domainStatus = formatCooldown(domainCd, "冥域禁锢[X]", profession.getWraithDomainCooldown());
+        guiGraphics.drawString(mc.font, domainStatus, x - mc.font.width(domainStatus), y, 0xFFFFFF);
+        y += 10;
+        
+        String barrageStatus;
+        if (charging) {
+            int maxCharge = profession.getWraithBarrageMaxChargeTime();
+            int chargePercent = (int)((chargeTime / (float)maxCharge) * 100);
+            barrageStatus = "§e暗蚀弹幕[C] §a蓄力中 " + chargePercent + "%";
+        } else {
+            barrageStatus = formatCooldown(barrageCd, "暗蚀弹幕[C]", profession.getWraithBarrageCooldown());
+        }
+        guiGraphics.drawString(mc.font, barrageStatus, x - mc.font.width(barrageStatus), y, 0xFFFFFF);
+        y += 10;
+        
+        String ultimateStatus = formatCooldown(ultimateCd, "议会降临[V]", profession.getWraithUltimateCooldown());
+        guiGraphics.drawString(mc.font, ultimateStatus, x - mc.font.width(ultimateStatus), y, 0xFFFFFF);
+        y += 10;
+        
+        return y;
+    }
+    
+    private static String renderBar(int current, int max, int length, String filledColor, String emptyColor) {
+        int filled = (int)((current / (float)max) * length);
+        StringBuilder bar = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            if (i < filled) {
+                bar.append(filledColor).append("█");
+            } else {
+                bar.append(emptyColor).append("░");
+            }
+        }
+        return bar.toString();
+    }
+    
+    private static String formatCooldown(int currentCd, String skillName, int maxCd) {
+        if (currentCd <= 0) {
+            return "§a" + skillName + " §f[就绪]";
+        } else {
+            int seconds = (int)Math.ceil(currentCd / 20.0);
+            int totalSeconds = (int)Math.ceil(maxCd / 20.0);
+            return "§c" + skillName + " §e" + seconds + "§7/§e" + totalSeconds + "秒";
+        }
     }
 }

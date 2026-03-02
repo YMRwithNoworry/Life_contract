@@ -29,4 +29,17 @@ public class TeamInventoryScreen extends AbstractContainerScreen<TeamInventoryMe
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
+
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        super.renderLabels(guiGraphics, mouseX, mouseY);
+        
+        guiGraphics.drawString(this.font, 
+            Component.translatable("container.life_contract.team_inventory"), 
+            8, 6, 4210752, false);
+        
+        guiGraphics.drawString(this.font, 
+            this.playerInventoryTitle, 
+            8, this.imageHeight - 96, 4210752, false);
+    }
 }

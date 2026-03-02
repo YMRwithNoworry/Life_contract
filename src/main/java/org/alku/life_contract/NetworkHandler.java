@@ -39,6 +39,10 @@ import org.alku.life_contract.profession.PacketUnlockProfession;
 import org.alku.life_contract.profession.ProfessionConfig;
 import org.alku.life_contract.jungle_ape_god.PacketJungleApeSkill;
 import org.alku.life_contract.jungle_ape_god.PacketSyncJungleApeState;
+import org.alku.life_contract.byte_chen.PacketByteChenSkill;
+import org.alku.life_contract.byte_chen.PacketSyncByteChenState;
+import org.alku.life_contract.heavy_knight.PacketHeavyKnightSkill;
+import org.alku.life_contract.heavy_knight.PacketSyncHeavyKnightState;
 
 import java.util.Set;
 
@@ -271,6 +275,48 @@ public class NetworkHandler {
                 PacketSyncJungleApeState::new,
                 PacketSyncJungleApeState::handle
         );
+        CHANNEL.registerMessage(id++,
+                PacketByteChenSkill.class,
+                PacketByteChenSkill::encode,
+                PacketByteChenSkill::decode,
+                PacketByteChenSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncByteChenState.class,
+                PacketSyncByteChenState::encode,
+                PacketSyncByteChenState::decode,
+                PacketSyncByteChenState::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketHeavyKnightSkill.class,
+                PacketHeavyKnightSkill::encode,
+                PacketHeavyKnightSkill::decode,
+                PacketHeavyKnightSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncHeavyKnightState.class,
+                PacketSyncHeavyKnightState::encode,
+                PacketSyncHeavyKnightState::decode,
+                PacketSyncHeavyKnightState::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketWraithSkill.class,
+                PacketWraithSkill::encode,
+                PacketWraithSkill::new,
+                PacketWraithSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncWraithState.class,
+                PacketSyncWraithState::encode,
+                PacketSyncWraithState::new,
+                PacketSyncWraithState::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncTeamInventory.class,
+                PacketSyncTeamInventory::encode,
+                PacketSyncTeamInventory::new,
+                PacketSyncTeamInventory::handle
+        );
     }
 
     public static void sendRemoveTradePacket(int slot) {
@@ -461,5 +507,54 @@ public class NetworkHandler {
 
     public static void sendJungleApeSkillPacket(int skillId, int targetId) {
         CHANNEL.sendToServer(new PacketJungleApeSkill(skillId, targetId));
+    }
+
+    public static void sendHeavyKnightSkillPacket(int skillId) {
+        CHANNEL.sendToServer(new PacketHeavyKnightSkill(skillId));
+    }
+    
+    public static void sendWraithSkillPacket(int skillId, net.minecraft.world.phys.Vec3 targetPos) {
+        CHANNEL.sendToServer(new PacketWraithSkill(skillId, targetPos.x, targetPos.y, targetPos.z));
+    }
+
+    public static void sendOpenEggShopPacket() {
+        CHANNEL.sendToServer(new PacketOpenEggShop());
+    }
+
+    public static void sendBuyEggPacket(int index) {
+        CHANNEL.sendToServer(new PacketBuyEgg(index));
+    }
+
+    public static void openEggShop(ServerPlayer player) {
+        player.openMenu(new SimpleMenuProvider(
+                (windowId, inv, p) -> new EggShopMenu(windowId, inv),
+                Component.literal("生物蛋商店")
+        ));
+    }
+
+    public static void handleBuyEgg(ServerPlayer player, int index) {
+        EggShopConfig.EggShopEntry entry = EggShopConfig.getEntry(index);
+        if (entry == null) {
+            player.sendSystemMessage(Component.literal("§c这个物品无法购买！"));
+            return;
+        }
+
+        ItemStack currency = entry.getCurrency();
+        int price = entry.getPrice();
+        int hasCurrency = countItems(player, currency);
+
+        if (hasCurrency < price) {
+            player.sendSystemMessage(Component.literal("§c货币不足！需要 " + price + " " + currency.getHoverName().getString()));
+            return;
+        }
+
+        removeItems(player, currency, price);
+        ItemStack eggStack = entry.createEggStack();
+        if (!eggStack.isEmpty()) {
+            giveItem(player, eggStack);
+            player.sendSystemMessage(Component.literal("§a购买成功！获得 " + entry.getDisplayName()));
+        } else {
+            player.sendSystemMessage(Component.literal("§c无法创建该生物蛋！"));
+        }
     }
 }

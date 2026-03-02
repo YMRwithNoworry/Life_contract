@@ -38,6 +38,7 @@ import org.alku.life_contract.death_venger.DeathVengerSystem;
 import org.alku.life_contract.healer.HealerSystem;
 import org.alku.life_contract.revive.ReviveTeammateSystem;
 import org.alku.life_contract.jungle_ape_god.JungleApeGodSystem;
+import org.alku.life_contract.byte_chen.ByteChenSystem;
 
 import java.util.*;
 
@@ -134,6 +135,7 @@ public class ContractEvents {
             ImpostorSystem.onPlayerJoin(serverPlayer);
             FollowerHungerSystem.syncHungerMultiplierToClient(serverPlayer);
             DeathVengerSystem.loadMarkedTarget(serverPlayer);
+            ByteChenSystem.onPlayerJoin(serverPlayer);
             initializeUndeadPlayerOnJoin(serverPlayer);
             
             NetworkHandler.syncProfessions(serverPlayer);
@@ -141,6 +143,13 @@ public class ContractEvents {
             NetworkHandler.syncLockedProfessions(serverPlayer);
             
             syncAllPlayersDataToNewPlayer(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (!event.getEntity().level().isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            ByteChenSystem.onPlayerLeave(serverPlayer);
         }
     }
     
@@ -213,6 +222,7 @@ public class ContractEvents {
             HealerSystem.onPlayerRespawn(serverPlayer);
             ReviveTeammateSystem.onPlayerRespawn(serverPlayer);
             JungleApeGodSystem.onPlayerRespawn(serverPlayer);
+            ByteChenSystem.onPlayerRespawn(serverPlayer);
         }
     }
 
@@ -878,6 +888,38 @@ public class ContractEvents {
         return "arrow".equals(msgId) || "trident".equals(msgId) || 
                "mob_projectile".equals(msgId) || "fireball".equals(msgId) ||
                "witherSkull".equals(msgId) || "shulkerBullet".equals(msgId);
+    }
+
+    @SubscribeEvent
+    public static void onTeamFriendlyFire(net.minecraftforge.event.entity.living.LivingAttackEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (!(event.getEntity() instanceof Player targetPlayer)) return;
+        
+        net.minecraft.world.damagesource.DamageSource source = event.getSource();
+        Entity attacker = source.getEntity();
+        
+        if (attacker instanceof Player attackerPlayer) {
+            if (ContractEvents.isSameTeam(attackerPlayer, targetPlayer)) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onTeamFriendlyFireHurt(net.minecraftforge.event.entity.living.LivingHurtEvent event) {
+        if (event.getEntity().level().isClientSide()) return;
+        
+        if (!(event.getEntity() instanceof Player targetPlayer)) return;
+        
+        net.minecraft.world.damagesource.DamageSource source = event.getSource();
+        Entity attacker = source.getEntity();
+        
+        if (attacker instanceof Player attackerPlayer) {
+            if (ContractEvents.isSameTeam(attackerPlayer, targetPlayer)) {
+                event.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent

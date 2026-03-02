@@ -33,6 +33,16 @@
   "profession.life_contract.gambler.desc": "A master of fate. Use the dice to randomly trigger skills from other professions. Every roll is an unknown adventure.",
   "profession.life_contract.fool": "Fool",
   "profession.life_contract.fool.desc": "Seemingly foolish, actually cunning. Can actively steal the profession of a player within 30 blocks. The stolen player loses their profession, and the Fool becomes that profession.",
+  "profession.life_contract.byte_chen": "Byte Chen",
+  "profession.life_contract.byte_chen.desc": "Team strategy core and information battlefield controller. Focuses on full-dimensional information perspective, battlefield node layout, team data buffs, and enemy skill counterplay. No high burst damage, core value is 'information advantage' and 'strategic control'.",
+  "key.life_contract.deploy_scout_node": "Byte Chen-Deploy Scout Node",
+  "key.life_contract.deploy_buff_node": "Byte Chen-Deploy Buff Node",
+  "key.life_contract.deploy_counter_node": "Byte Chen-Deploy Counter Node",
+  "key.life_contract.full_read": "Byte Chen-Full Information Read",
+  "key.life_contract.data_dispatch": "Byte Chen-Data Dispatch",
+  "key.life_contract.data_ban": "Byte Chen-Data Ban",
+  "key.life_contract.byte_chen_ultimate": "Byte Chen-Global Byte Reconstruction",
+  "key.life_contract.recycle_nodes": "Byte Chen-Recycle Nodes",
   "profession.life_contract.faceless_deceiver": "Faceless Deceiver",
   "profession.life_contract.faceless_deceiver.desc": "A mysterious contractor. Can establish a soul contract with one creature, gaining all its attributes and special abilities, but will be eliminated when the contract creature dies.",
   
@@ -84,5 +94,14 @@
   "ambush.orb.targets": "§7  Teleported §e%s §7creatures with invisibility",
   "ambush.orb.duration": "§7  Invisibility duration: §b%s seconds",
   "ambush.passive.invis_start": "§8§l[Ambush] §f§lYou have merged into the shadows!",
-  "ambush.passive.invis_end": "§8§l[Ambush] §f§lInvisibility broken!"
+  "ambush.passive.invis_end": "§8§l[Ambush] §f§lInvisibility broken!",
+  "item.life_contract.purple_hooded_skull_chestplate": "Purple Hooded Skull Chestplate",
+  
+  "key.life_contract.open_egg_shop": "Open Egg Shop",
+  "gui.life_contract.egg_shop.title": "Egg Shop",
+  "gui.life_contract.egg_shop.right_click_purchase": "Right-click to purchase",
+  "gui.life_contract.egg_shop.currency": "Currency: %s",
+  "gui.life_contract.egg_shop.price": "Price: %d",
+  
+  "item.life_contract.gold_coin": "Gold Coin"
 }

@@ -1,0 +1,72 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.soulforged_leggings",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 1,
+        "visible_bounds_height": 1,
+        "visible_bounds_offset": [0, 0, 0]
+      },
+      "bones": [
+        {
+          "name": "waist_band",
+          "pivot": [0, 12, 0],
+          "cubes": [
+            {
+              "origin": [-4, 11, -2],
+              "size": [8, 2, 4],
+              "uv": [12, 0]
+            }
+          ]
+        },
+        {
+          "name": "left_leg",
+          "pivot": [2, 12, 0],
+          "cubes": [
+            {
+              "origin": [2, 0, -2],
+              "size": [2, 12, 4],
+              "uv": [0, 0]
+            }
+          ]
+        },
+        {
+          "name": "right_leg",
+          "pivot": [-2, 12, 0],
+          "cubes": [
+            {
+              "origin": [-4, 0, -2],
+              "size": [2, 12, 4],
+              "uv": [6, 0]
+            }
+          ]
+        },
+        {
+          "name": "skull_knee_left",
+          "pivot": [2, 6.5, -2.5],
+          "cubes": [
+            {
+              "origin": [1.5, 5, -3],
+              "size": [3, 3, 1],
+              "uv": [28, 0]
+            }
+          ]
+        },
+        {
+          "name": "skull_knee_right",
+          "pivot": [-2, 6.5, -2.5],
+          "cubes": [
+            {
+              "origin": [-4.5, 5, -3],
+              "size": [3, 3, 1],
+              "uv": [24, 0]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -115,6 +115,54 @@ public class Profession {
     private final float ghostSenatorHealAmount;
     private final int ghostSenatorStrengthDuration;
     private final float ghostSenatorDetectionRadius;
+    private final boolean isWraithCouncilor;
+    private final int wraithSoulMax;
+    private final int wraithSoulInitial;
+    private final int wraithSoulRegenRate;
+    private final int wraithSoulDarkBonus;
+    private final float wraithSoulSunlightPenalty;
+    private final int wraithSoulKillBonus;
+    private final int wraithSoulHitBonus;
+    private final int wraithSoulSummonKillBonus;
+    private final float wraithErosionDamage;
+    private final float wraithErosionArmorReduction;
+    private final float wraithErosionSlowPercent;
+    private final int wraithErosionMaxStacks;
+    private final int wraithErosionDuration;
+    private final int wraithSummonCost;
+    private final int wraithSummonCooldown;
+    private final int wraithSummonCount;
+    private final float wraithSummonHealth;
+    private final float wraithSummonDamage;
+    private final int wraithSummonDuration;
+    private final float wraithSummonCorpseRange;
+    private final int wraithSummonExtraMax;
+    private final int wraithDomainCost;
+    private final int wraithDomainCooldown;
+    private final float wraithDomainRadius;
+    private final int wraithDomainDuration;
+    private final float wraithDomainDamage;
+    private final float wraithDomainBossSlow;
+    private final int wraithDomainCharmDuration;
+    private final int wraithBarrageBaseCost;
+    private final int wraithBarrageChargedCost;
+    private final int wraithBarrageCooldown;
+    private final int wraithBarrageBaseOrbs;
+    private final int wraithBarrageChargedOrbs;
+    private final float wraithBarrageBaseDamage;
+    private final float wraithBarrageChargedDamage;
+    private final float wraithBarrageBaseRange;
+    private final float wraithBarrageChargedRange;
+    private final int wraithBarrageMaxChargeTime;
+    private final int wraithBarrageMaxHits;
+    private final int wraithUltimateMinCost;
+    private final int wraithUltimateCooldown;
+    private final int wraithUltimateCloneCount;
+    private final float wraithUltimateCloneDamageRatio;
+    private final int wraithUltimateDuration;
+    private final int wraithUltimateSoulRegen;
+    private final float wraithUltimateDamageIncrease;
+    private final int wraithUltimateExhaustDuration;
     private final boolean isEvilPoisoner;
     private final int poisonerStrengthDuration;
     private final boolean hasTurtleAura;
@@ -156,6 +204,93 @@ public class Profession {
     private final int rSpeedLevel;
     private final int rFatigueDuration;
     private final int rCooldown;
+    
+    private final boolean isHeavyKnight;
+    private final float heavyKnightSpeedPenalty;
+    private final int heavyKnightWillOnHit;
+    private final int heavyKnightWillOnBlock;
+    private final int heavyKnightWillOnDamaged;
+    private final float heavyKnightFullWillDamageBonus;
+    private final float heavyKnightFullWillDamageReduction;
+    private final int heavyKnightShieldWallTriggerTicks;
+    private final float heavyKnightShieldWallReduction;
+    private final float heavyKnightShieldWallRadius;
+    private final float heavyKnightShieldWallArmorBonus;
+    private final int heavyKnightChargeWillCost;
+    private final int heavyKnightChargeCooldown;
+    private final float heavyKnightChargeDistance;
+    private final float heavyKnightChargeDamage;
+    private final float heavyKnightChargeKnockback;
+    private final int heavyKnightProtectRange;
+    private final int heavyKnightProtectWillCost;
+    private final int heavyKnightProtectCooldown;
+    private final float heavyKnightShieldBashDamage;
+    private final int heavyKnightShieldBashStunDuration;
+    private final int heavyKnightShieldBashCooldown;
+
+    private final boolean isByteChen;
+    private final int byteChenComputeMax;
+    private final int byteChenComputeInitial;
+    private final int byteChenComputeRegenRate;
+    private final float byteChenComputeNodeRegenBonus;
+    private final int byteChenComputeOnRead;
+    private final int byteChenComputeOnNodeTrigger;
+    private final int byteChenComputeOnInterrupt;
+    private final int byteChenComputeLowThreshold;
+    private final int byteChenNodeMax;
+    private final int byteChenNodeRange;
+    private final int byteChenNodeDuration;
+    private final int byteChenScoutNodeCost;
+    private final float byteChenScoutNodeRadius;
+    private final int byteChenScoutNodeComputeRegen;
+    private final int byteChenBuffNodeCost;
+    private final float byteChenBuffNodeRadius;
+    private final float byteChenBuffNodeDamageBonus;
+    private final float byteChenBuffNodeDamageReduction;
+    private final float byteChenBuffNodeSpeedBonus;
+    private final float byteChenBuffNodeCooldownReduction;
+    private final int byteChenBuffNodeMaxStacks;
+    private final int byteChenCounterNodeCost;
+    private final float byteChenCounterNodeRadius;
+    private final int byteChenCounterNodeSilenceDuration;
+    private final int byteChenCounterNodeDisorderDuration;
+    private final float byteChenCounterNodeDamageReduction;
+    private final float byteChenCounterNodeCooldownMultiplier;
+    private final float byteChenDataVisionRange;
+    private final float byteChenLightweightSpeedBonus;
+    private final float byteChenLightweightDigSpeedBonus;
+    private final float byteChenLightweightMeleePenalty;
+    private final float byteChenLightweightReceivedMeleePenalty;
+    private final int byteChenNodeRecycleCooldown;
+    private final float byteChenNodeRecycleRefund;
+    private final int byteChenFullReadCost;
+    private final int byteChenFullReadCooldown;
+    private final float byteChenFullReadRadius;
+    private final int byteChenFullReadDuration;
+    private final int byteChenDataDispatchCost;
+    private final int byteChenDataDispatchCooldown;
+    private final float byteChenDataDispatchSpeedBonus;
+    private final float byteChenDataDispatchCooldownBonus;
+    private final int byteChenDataDispatchBuffDuration;
+    private final int byteChenDataBanCost;
+    private final int byteChenDataBanCooldown;
+    private final float byteChenDataBanRange;
+    private final int byteChenDataBanDuration;
+    private final int byteChenDataBanBossDuration;
+    private final float byteChenDataBanTrueDamageBonus;
+    private final int byteChenUltimateMinCost;
+    private final int byteChenUltimateCooldown;
+    private final float byteChenUltimateRadius;
+    private final int byteChenUltimateDuration;
+    private final float byteChenUltimateDamageBonus;
+    private final float byteChenUltimateDamageReduction;
+    private final float byteChenUltimateSpeedBonus;
+    private final float byteChenUltimateCooldownBonus;
+    private final float byteChenUltimateEnemyDamageReduction;
+    private final float byteChenUltimateEnemySpeedReduction;
+    private final float byteChenUltimateEnemyCooldownMultiplier;
+    private final float byteChenUltimateInterruptChance;
+    private final int byteChenExhaustDuration;
 
     Profession(ProfessionBuilder builder) {
         this.id = builder.getId();
@@ -264,6 +399,54 @@ public class Profession {
         this.ghostSenatorHealAmount = builder.getGhostSenatorHealAmount();
         this.ghostSenatorStrengthDuration = builder.getGhostSenatorStrengthDuration();
         this.ghostSenatorDetectionRadius = builder.getGhostSenatorDetectionRadius();
+        this.isWraithCouncilor = builder.isWraithCouncilor();
+        this.wraithSoulMax = builder.getWraithSoulMax();
+        this.wraithSoulInitial = builder.getWraithSoulInitial();
+        this.wraithSoulRegenRate = builder.getWraithSoulRegenRate();
+        this.wraithSoulDarkBonus = builder.getWraithSoulDarkBonus();
+        this.wraithSoulSunlightPenalty = builder.getWraithSoulSunlightPenalty();
+        this.wraithSoulKillBonus = builder.getWraithSoulKillBonus();
+        this.wraithSoulHitBonus = builder.getWraithSoulHitBonus();
+        this.wraithSoulSummonKillBonus = builder.getWraithSoulSummonKillBonus();
+        this.wraithErosionDamage = builder.getWraithErosionDamage();
+        this.wraithErosionArmorReduction = builder.getWraithErosionArmorReduction();
+        this.wraithErosionSlowPercent = builder.getWraithErosionSlowPercent();
+        this.wraithErosionMaxStacks = builder.getWraithErosionMaxStacks();
+        this.wraithErosionDuration = builder.getWraithErosionDuration();
+        this.wraithSummonCost = builder.getWraithSummonCost();
+        this.wraithSummonCooldown = builder.getWraithSummonCooldown();
+        this.wraithSummonCount = builder.getWraithSummonCount();
+        this.wraithSummonHealth = builder.getWraithSummonHealth();
+        this.wraithSummonDamage = builder.getWraithSummonDamage();
+        this.wraithSummonDuration = builder.getWraithSummonDuration();
+        this.wraithSummonCorpseRange = builder.getWraithSummonCorpseRange();
+        this.wraithSummonExtraMax = builder.getWraithSummonExtraMax();
+        this.wraithDomainCost = builder.getWraithDomainCost();
+        this.wraithDomainCooldown = builder.getWraithDomainCooldown();
+        this.wraithDomainRadius = builder.getWraithDomainRadius();
+        this.wraithDomainDuration = builder.getWraithDomainDuration();
+        this.wraithDomainDamage = builder.getWraithDomainDamage();
+        this.wraithDomainBossSlow = builder.getWraithDomainBossSlow();
+        this.wraithDomainCharmDuration = builder.getWraithDomainCharmDuration();
+        this.wraithBarrageBaseCost = builder.getWraithBarrageBaseCost();
+        this.wraithBarrageChargedCost = builder.getWraithBarrageChargedCost();
+        this.wraithBarrageCooldown = builder.getWraithBarrageCooldown();
+        this.wraithBarrageBaseOrbs = builder.getWraithBarrageBaseOrbs();
+        this.wraithBarrageChargedOrbs = builder.getWraithBarrageChargedOrbs();
+        this.wraithBarrageBaseDamage = builder.getWraithBarrageBaseDamage();
+        this.wraithBarrageChargedDamage = builder.getWraithBarrageChargedDamage();
+        this.wraithBarrageBaseRange = builder.getWraithBarrageBaseRange();
+        this.wraithBarrageChargedRange = builder.getWraithBarrageChargedRange();
+        this.wraithBarrageMaxChargeTime = builder.getWraithBarrageMaxChargeTime();
+        this.wraithBarrageMaxHits = builder.getWraithBarrageMaxHits();
+        this.wraithUltimateMinCost = builder.getWraithUltimateMinCost();
+        this.wraithUltimateCooldown = builder.getWraithUltimateCooldown();
+        this.wraithUltimateCloneCount = builder.getWraithUltimateCloneCount();
+        this.wraithUltimateCloneDamageRatio = builder.getWraithUltimateCloneDamageRatio();
+        this.wraithUltimateDuration = builder.getWraithUltimateDuration();
+        this.wraithUltimateSoulRegen = builder.getWraithUltimateSoulRegen();
+        this.wraithUltimateDamageIncrease = builder.getWraithUltimateDamageIncrease();
+        this.wraithUltimateExhaustDuration = builder.getWraithUltimateExhaustDuration();
         this.isEvilPoisoner = builder.isEvilPoisoner();
         this.poisonerStrengthDuration = builder.getPoisonerStrengthDuration();
         this.hasTurtleAura = builder.hasTurtleAura();
@@ -305,6 +488,91 @@ public class Profession {
         this.rSpeedLevel = builder.getRSpeedLevel();
         this.rFatigueDuration = builder.getRFatigueDuration();
         this.rCooldown = builder.getRCooldown();
+        this.isHeavyKnight = builder.isHeavyKnight();
+        this.heavyKnightSpeedPenalty = builder.getHeavyKnightSpeedPenalty();
+        this.heavyKnightWillOnHit = builder.getHeavyKnightWillOnHit();
+        this.heavyKnightWillOnBlock = builder.getHeavyKnightWillOnBlock();
+        this.heavyKnightWillOnDamaged = builder.getHeavyKnightWillOnDamaged();
+        this.heavyKnightFullWillDamageBonus = builder.getHeavyKnightFullWillDamageBonus();
+        this.heavyKnightFullWillDamageReduction = builder.getHeavyKnightFullWillDamageReduction();
+        this.heavyKnightShieldWallTriggerTicks = builder.getHeavyKnightShieldWallTriggerTicks();
+        this.heavyKnightShieldWallReduction = builder.getHeavyKnightShieldWallReduction();
+        this.heavyKnightShieldWallRadius = builder.getHeavyKnightShieldWallRadius();
+        this.heavyKnightShieldWallArmorBonus = builder.getHeavyKnightShieldWallArmorBonus();
+        this.heavyKnightChargeWillCost = builder.getHeavyKnightChargeWillCost();
+        this.heavyKnightChargeCooldown = builder.getHeavyKnightChargeCooldown();
+        this.heavyKnightChargeDistance = builder.getHeavyKnightChargeDistance();
+        this.heavyKnightChargeDamage = builder.getHeavyKnightChargeDamage();
+        this.heavyKnightChargeKnockback = builder.getHeavyKnightChargeKnockback();
+        this.heavyKnightProtectRange = builder.getHeavyKnightProtectRange();
+        this.heavyKnightProtectWillCost = builder.getHeavyKnightProtectWillCost();
+        this.heavyKnightProtectCooldown = builder.getHeavyKnightProtectCooldown();
+        this.heavyKnightShieldBashDamage = builder.getHeavyKnightShieldBashDamage();
+        this.heavyKnightShieldBashStunDuration = builder.getHeavyKnightShieldBashStunDuration();
+        this.heavyKnightShieldBashCooldown = builder.getHeavyKnightShieldBashCooldown();
+        this.isByteChen = builder.isByteChen();
+        this.byteChenComputeMax = builder.getByteChenComputeMax();
+        this.byteChenComputeInitial = builder.getByteChenComputeInitial();
+        this.byteChenComputeRegenRate = builder.getByteChenComputeRegenRate();
+        this.byteChenComputeNodeRegenBonus = builder.getByteChenComputeNodeRegenBonus();
+        this.byteChenComputeOnRead = builder.getByteChenComputeOnRead();
+        this.byteChenComputeOnNodeTrigger = builder.getByteChenComputeOnNodeTrigger();
+        this.byteChenComputeOnInterrupt = builder.getByteChenComputeOnInterrupt();
+        this.byteChenComputeLowThreshold = builder.getByteChenComputeLowThreshold();
+        this.byteChenNodeMax = builder.getByteChenNodeMax();
+        this.byteChenNodeRange = builder.getByteChenNodeRange();
+        this.byteChenNodeDuration = builder.getByteChenNodeDuration();
+        this.byteChenScoutNodeCost = builder.getByteChenScoutNodeCost();
+        this.byteChenScoutNodeRadius = builder.getByteChenScoutNodeRadius();
+        this.byteChenScoutNodeComputeRegen = builder.getByteChenScoutNodeComputeRegen();
+        this.byteChenBuffNodeCost = builder.getByteChenBuffNodeCost();
+        this.byteChenBuffNodeRadius = builder.getByteChenBuffNodeRadius();
+        this.byteChenBuffNodeDamageBonus = builder.getByteChenBuffNodeDamageBonus();
+        this.byteChenBuffNodeDamageReduction = builder.getByteChenBuffNodeDamageReduction();
+        this.byteChenBuffNodeSpeedBonus = builder.getByteChenBuffNodeSpeedBonus();
+        this.byteChenBuffNodeCooldownReduction = builder.getByteChenBuffNodeCooldownReduction();
+        this.byteChenBuffNodeMaxStacks = builder.getByteChenBuffNodeMaxStacks();
+        this.byteChenCounterNodeCost = builder.getByteChenCounterNodeCost();
+        this.byteChenCounterNodeRadius = builder.getByteChenCounterNodeRadius();
+        this.byteChenCounterNodeSilenceDuration = builder.getByteChenCounterNodeSilenceDuration();
+        this.byteChenCounterNodeDisorderDuration = builder.getByteChenCounterNodeDisorderDuration();
+        this.byteChenCounterNodeDamageReduction = builder.getByteChenCounterNodeDamageReduction();
+        this.byteChenCounterNodeCooldownMultiplier = builder.getByteChenCounterNodeCooldownMultiplier();
+        this.byteChenDataVisionRange = builder.getByteChenDataVisionRange();
+        this.byteChenLightweightSpeedBonus = builder.getByteChenLightweightSpeedBonus();
+        this.byteChenLightweightDigSpeedBonus = builder.getByteChenLightweightDigSpeedBonus();
+        this.byteChenLightweightMeleePenalty = builder.getByteChenLightweightMeleePenalty();
+        this.byteChenLightweightReceivedMeleePenalty = builder.getByteChenLightweightReceivedMeleePenalty();
+        this.byteChenNodeRecycleCooldown = builder.getByteChenNodeRecycleCooldown();
+        this.byteChenNodeRecycleRefund = builder.getByteChenNodeRecycleRefund();
+        this.byteChenFullReadCost = builder.getByteChenFullReadCost();
+        this.byteChenFullReadCooldown = builder.getByteChenFullReadCooldown();
+        this.byteChenFullReadRadius = builder.getByteChenFullReadRadius();
+        this.byteChenFullReadDuration = builder.getByteChenFullReadDuration();
+        this.byteChenDataDispatchCost = builder.getByteChenDataDispatchCost();
+        this.byteChenDataDispatchCooldown = builder.getByteChenDataDispatchCooldown();
+        this.byteChenDataDispatchSpeedBonus = builder.getByteChenDataDispatchSpeedBonus();
+        this.byteChenDataDispatchCooldownBonus = builder.getByteChenDataDispatchCooldownBonus();
+        this.byteChenDataDispatchBuffDuration = builder.getByteChenDataDispatchBuffDuration();
+        this.byteChenDataBanCost = builder.getByteChenDataBanCost();
+        this.byteChenDataBanCooldown = builder.getByteChenDataBanCooldown();
+        this.byteChenDataBanRange = builder.getByteChenDataBanRange();
+        this.byteChenDataBanDuration = builder.getByteChenDataBanDuration();
+        this.byteChenDataBanBossDuration = builder.getByteChenDataBanBossDuration();
+        this.byteChenDataBanTrueDamageBonus = builder.getByteChenDataBanTrueDamageBonus();
+        this.byteChenUltimateMinCost = builder.getByteChenUltimateMinCost();
+        this.byteChenUltimateCooldown = builder.getByteChenUltimateCooldown();
+        this.byteChenUltimateRadius = builder.getByteChenUltimateRadius();
+        this.byteChenUltimateDuration = builder.getByteChenUltimateDuration();
+        this.byteChenUltimateDamageBonus = builder.getByteChenUltimateDamageBonus();
+        this.byteChenUltimateDamageReduction = builder.getByteChenUltimateDamageReduction();
+        this.byteChenUltimateSpeedBonus = builder.getByteChenUltimateSpeedBonus();
+        this.byteChenUltimateCooldownBonus = builder.getByteChenUltimateCooldownBonus();
+        this.byteChenUltimateEnemyDamageReduction = builder.getByteChenUltimateEnemyDamageReduction();
+        this.byteChenUltimateEnemySpeedReduction = builder.getByteChenUltimateEnemySpeedReduction();
+        this.byteChenUltimateEnemyCooldownMultiplier = builder.getByteChenUltimateEnemyCooldownMultiplier();
+        this.byteChenUltimateInterruptChance = builder.getByteChenUltimateInterruptChance();
+        this.byteChenExhaustDuration = builder.getByteChenExhaustDuration();
     }
 
     public static ProfessionBuilder builder() {
@@ -417,6 +685,54 @@ public class Profession {
     public float getGhostSenatorHealAmount() { return ghostSenatorHealAmount; }
     public int getGhostSenatorStrengthDuration() { return ghostSenatorStrengthDuration; }
     public float getGhostSenatorDetectionRadius() { return ghostSenatorDetectionRadius; }
+    public boolean isWraithCouncilor() { return isWraithCouncilor; }
+    public int getWraithSoulMax() { return wraithSoulMax; }
+    public int getWraithSoulInitial() { return wraithSoulInitial; }
+    public int getWraithSoulRegenRate() { return wraithSoulRegenRate; }
+    public int getWraithSoulDarkBonus() { return wraithSoulDarkBonus; }
+    public float getWraithSoulSunlightPenalty() { return wraithSoulSunlightPenalty; }
+    public int getWraithSoulKillBonus() { return wraithSoulKillBonus; }
+    public int getWraithSoulHitBonus() { return wraithSoulHitBonus; }
+    public int getWraithSoulSummonKillBonus() { return wraithSoulSummonKillBonus; }
+    public float getWraithErosionDamage() { return wraithErosionDamage; }
+    public float getWraithErosionArmorReduction() { return wraithErosionArmorReduction; }
+    public float getWraithErosionSlowPercent() { return wraithErosionSlowPercent; }
+    public int getWraithErosionMaxStacks() { return wraithErosionMaxStacks; }
+    public int getWraithErosionDuration() { return wraithErosionDuration; }
+    public int getWraithSummonCost() { return wraithSummonCost; }
+    public int getWraithSummonCooldown() { return wraithSummonCooldown; }
+    public int getWraithSummonCount() { return wraithSummonCount; }
+    public float getWraithSummonHealth() { return wraithSummonHealth; }
+    public float getWraithSummonDamage() { return wraithSummonDamage; }
+    public int getWraithSummonDuration() { return wraithSummonDuration; }
+    public float getWraithSummonCorpseRange() { return wraithSummonCorpseRange; }
+    public int getWraithSummonExtraMax() { return wraithSummonExtraMax; }
+    public int getWraithDomainCost() { return wraithDomainCost; }
+    public int getWraithDomainCooldown() { return wraithDomainCooldown; }
+    public float getWraithDomainRadius() { return wraithDomainRadius; }
+    public int getWraithDomainDuration() { return wraithDomainDuration; }
+    public float getWraithDomainDamage() { return wraithDomainDamage; }
+    public float getWraithDomainBossSlow() { return wraithDomainBossSlow; }
+    public int getWraithDomainCharmDuration() { return wraithDomainCharmDuration; }
+    public int getWraithBarrageBaseCost() { return wraithBarrageBaseCost; }
+    public int getWraithBarrageChargedCost() { return wraithBarrageChargedCost; }
+    public int getWraithBarrageCooldown() { return wraithBarrageCooldown; }
+    public int getWraithBarrageBaseOrbs() { return wraithBarrageBaseOrbs; }
+    public int getWraithBarrageChargedOrbs() { return wraithBarrageChargedOrbs; }
+    public float getWraithBarrageBaseDamage() { return wraithBarrageBaseDamage; }
+    public float getWraithBarrageChargedDamage() { return wraithBarrageChargedDamage; }
+    public float getWraithBarrageBaseRange() { return wraithBarrageBaseRange; }
+    public float getWraithBarrageChargedRange() { return wraithBarrageChargedRange; }
+    public int getWraithBarrageMaxChargeTime() { return wraithBarrageMaxChargeTime; }
+    public int getWraithBarrageMaxHits() { return wraithBarrageMaxHits; }
+    public int getWraithUltimateMinCost() { return wraithUltimateMinCost; }
+    public int getWraithUltimateCooldown() { return wraithUltimateCooldown; }
+    public int getWraithUltimateCloneCount() { return wraithUltimateCloneCount; }
+    public float getWraithUltimateCloneDamageRatio() { return wraithUltimateCloneDamageRatio; }
+    public int getWraithUltimateDuration() { return wraithUltimateDuration; }
+    public int getWraithUltimateSoulRegen() { return wraithUltimateSoulRegen; }
+    public float getWraithUltimateDamageIncrease() { return wraithUltimateDamageIncrease; }
+    public int getWraithUltimateExhaustDuration() { return wraithUltimateExhaustDuration; }
     public boolean isEvilPoisoner() { return isEvilPoisoner; }
     public int getPoisonerStrengthDuration() { return poisonerStrengthDuration; }
     public boolean hasTurtleAura() { return hasTurtleAura; }
@@ -458,6 +774,93 @@ public class Profession {
     public int getRSpeedLevel() { return rSpeedLevel; }
     public int getRFatigueDuration() { return rFatigueDuration; }
     public int getRCooldown() { return rCooldown; }
+
+    public boolean isByteChen() { return isByteChen; }
+    public int getByteChenComputeMax() { return byteChenComputeMax; }
+    public int getByteChenComputeInitial() { return byteChenComputeInitial; }
+    public int getByteChenComputeRegenRate() { return byteChenComputeRegenRate; }
+    public float getByteChenComputeNodeRegenBonus() { return byteChenComputeNodeRegenBonus; }
+    public int getByteChenComputeOnRead() { return byteChenComputeOnRead; }
+    public int getByteChenComputeOnNodeTrigger() { return byteChenComputeOnNodeTrigger; }
+    public int getByteChenComputeOnInterrupt() { return byteChenComputeOnInterrupt; }
+    public int getByteChenComputeLowThreshold() { return byteChenComputeLowThreshold; }
+    public int getByteChenNodeMax() { return byteChenNodeMax; }
+    public int getByteChenNodeRange() { return byteChenNodeRange; }
+    public int getByteChenNodeDuration() { return byteChenNodeDuration; }
+    public int getByteChenScoutNodeCost() { return byteChenScoutNodeCost; }
+    public float getByteChenScoutNodeRadius() { return byteChenScoutNodeRadius; }
+    public int getByteChenScoutNodeComputeRegen() { return byteChenScoutNodeComputeRegen; }
+    public int getByteChenBuffNodeCost() { return byteChenBuffNodeCost; }
+    public float getByteChenBuffNodeRadius() { return byteChenBuffNodeRadius; }
+    public float getByteChenBuffNodeDamageBonus() { return byteChenBuffNodeDamageBonus; }
+    public float getByteChenBuffNodeDamageReduction() { return byteChenBuffNodeDamageReduction; }
+    public float getByteChenBuffNodeSpeedBonus() { return byteChenBuffNodeSpeedBonus; }
+    public float getByteChenBuffNodeCooldownReduction() { return byteChenBuffNodeCooldownReduction; }
+    public int getByteChenBuffNodeMaxStacks() { return byteChenBuffNodeMaxStacks; }
+    public int getByteChenCounterNodeCost() { return byteChenCounterNodeCost; }
+    public float getByteChenCounterNodeRadius() { return byteChenCounterNodeRadius; }
+    public int getByteChenCounterNodeSilenceDuration() { return byteChenCounterNodeSilenceDuration; }
+    public int getByteChenCounterNodeDisorderDuration() { return byteChenCounterNodeDisorderDuration; }
+    public float getByteChenCounterNodeDamageReduction() { return byteChenCounterNodeDamageReduction; }
+    public float getByteChenCounterNodeCooldownMultiplier() { return byteChenCounterNodeCooldownMultiplier; }
+    public float getByteChenDataVisionRange() { return byteChenDataVisionRange; }
+    public float getByteChenLightweightSpeedBonus() { return byteChenLightweightSpeedBonus; }
+    public float getByteChenLightweightDigSpeedBonus() { return byteChenLightweightDigSpeedBonus; }
+    public float getByteChenLightweightMeleePenalty() { return byteChenLightweightMeleePenalty; }
+    public float getByteChenLightweightReceivedMeleePenalty() { return byteChenLightweightReceivedMeleePenalty; }
+    public int getByteChenNodeRecycleCooldown() { return byteChenNodeRecycleCooldown; }
+    public float getByteChenNodeRecycleRefund() { return byteChenNodeRecycleRefund; }
+    public int getByteChenFullReadCost() { return byteChenFullReadCost; }
+    public int getByteChenFullReadCooldown() { return byteChenFullReadCooldown; }
+    public float getByteChenFullReadRadius() { return byteChenFullReadRadius; }
+    public int getByteChenFullReadDuration() { return byteChenFullReadDuration; }
+    public int getByteChenDataDispatchCost() { return byteChenDataDispatchCost; }
+    public int getByteChenDataDispatchCooldown() { return byteChenDataDispatchCooldown; }
+    public float getByteChenDataDispatchSpeedBonus() { return byteChenDataDispatchSpeedBonus; }
+    public float getByteChenDataDispatchCooldownBonus() { return byteChenDataDispatchCooldownBonus; }
+    public int getByteChenDataDispatchBuffDuration() { return byteChenDataDispatchBuffDuration; }
+    public int getByteChenDataBanCost() { return byteChenDataBanCost; }
+    public int getByteChenDataBanCooldown() { return byteChenDataBanCooldown; }
+    public float getByteChenDataBanRange() { return byteChenDataBanRange; }
+    public int getByteChenDataBanDuration() { return byteChenDataBanDuration; }
+    public int getByteChenDataBanBossDuration() { return byteChenDataBanBossDuration; }
+    public float getByteChenDataBanTrueDamageBonus() { return byteChenDataBanTrueDamageBonus; }
+    public int getByteChenUltimateMinCost() { return byteChenUltimateMinCost; }
+    public int getByteChenUltimateCooldown() { return byteChenUltimateCooldown; }
+    public float getByteChenUltimateRadius() { return byteChenUltimateRadius; }
+    public int getByteChenUltimateDuration() { return byteChenUltimateDuration; }
+    public float getByteChenUltimateDamageBonus() { return byteChenUltimateDamageBonus; }
+    public float getByteChenUltimateDamageReduction() { return byteChenUltimateDamageReduction; }
+    public float getByteChenUltimateSpeedBonus() { return byteChenUltimateSpeedBonus; }
+    public float getByteChenUltimateCooldownBonus() { return byteChenUltimateCooldownBonus; }
+    public float getByteChenUltimateEnemyDamageReduction() { return byteChenUltimateEnemyDamageReduction; }
+    public float getByteChenUltimateEnemySpeedReduction() { return byteChenUltimateEnemySpeedReduction; }
+    public float getByteChenUltimateEnemyCooldownMultiplier() { return byteChenUltimateEnemyCooldownMultiplier; }
+    public float getByteChenUltimateInterruptChance() { return byteChenUltimateInterruptChance; }
+    public int getByteChenExhaustDuration() { return byteChenExhaustDuration; }
+
+    public boolean isHeavyKnight() { return isHeavyKnight; }
+    public float getHeavyKnightSpeedPenalty() { return heavyKnightSpeedPenalty; }
+    public int getHeavyKnightWillOnHit() { return heavyKnightWillOnHit; }
+    public int getHeavyKnightWillOnBlock() { return heavyKnightWillOnBlock; }
+    public int getHeavyKnightWillOnDamaged() { return heavyKnightWillOnDamaged; }
+    public float getHeavyKnightFullWillDamageBonus() { return heavyKnightFullWillDamageBonus; }
+    public float getHeavyKnightFullWillDamageReduction() { return heavyKnightFullWillDamageReduction; }
+    public int getHeavyKnightShieldWallTriggerTicks() { return heavyKnightShieldWallTriggerTicks; }
+    public float getHeavyKnightShieldWallReduction() { return heavyKnightShieldWallReduction; }
+    public float getHeavyKnightShieldWallRadius() { return heavyKnightShieldWallRadius; }
+    public float getHeavyKnightShieldWallArmorBonus() { return heavyKnightShieldWallArmorBonus; }
+    public int getHeavyKnightChargeWillCost() { return heavyKnightChargeWillCost; }
+    public int getHeavyKnightChargeCooldown() { return heavyKnightChargeCooldown; }
+    public float getHeavyKnightChargeDistance() { return heavyKnightChargeDistance; }
+    public float getHeavyKnightChargeDamage() { return heavyKnightChargeDamage; }
+    public float getHeavyKnightChargeKnockback() { return heavyKnightChargeKnockback; }
+    public int getHeavyKnightProtectRange() { return heavyKnightProtectRange; }
+    public int getHeavyKnightProtectWillCost() { return heavyKnightProtectWillCost; }
+    public int getHeavyKnightProtectCooldown() { return heavyKnightProtectCooldown; }
+    public float getHeavyKnightShieldBashDamage() { return heavyKnightShieldBashDamage; }
+    public int getHeavyKnightShieldBashStunDuration() { return heavyKnightShieldBashStunDuration; }
+    public int getHeavyKnightShieldBashCooldown() { return heavyKnightShieldBashCooldown; }
 
     public boolean hasBonusDamage() { return bonusDamagePercent > 0; }
     public boolean hasSlowness() { return slownessLevel > 0; }
@@ -577,6 +980,54 @@ public class Profession {
         tag.putFloat("ghostSenatorHealAmount", ghostSenatorHealAmount);
         tag.putInt("ghostSenatorStrengthDuration", ghostSenatorStrengthDuration);
         tag.putFloat("ghostSenatorDetectionRadius", ghostSenatorDetectionRadius);
+        tag.putBoolean("isWraithCouncilor", isWraithCouncilor);
+        tag.putInt("wraithSoulMax", wraithSoulMax);
+        tag.putInt("wraithSoulInitial", wraithSoulInitial);
+        tag.putInt("wraithSoulRegenRate", wraithSoulRegenRate);
+        tag.putInt("wraithSoulDarkBonus", wraithSoulDarkBonus);
+        tag.putFloat("wraithSoulSunlightPenalty", wraithSoulSunlightPenalty);
+        tag.putInt("wraithSoulKillBonus", wraithSoulKillBonus);
+        tag.putInt("wraithSoulHitBonus", wraithSoulHitBonus);
+        tag.putInt("wraithSoulSummonKillBonus", wraithSoulSummonKillBonus);
+        tag.putFloat("wraithErosionDamage", wraithErosionDamage);
+        tag.putFloat("wraithErosionArmorReduction", wraithErosionArmorReduction);
+        tag.putFloat("wraithErosionSlowPercent", wraithErosionSlowPercent);
+        tag.putInt("wraithErosionMaxStacks", wraithErosionMaxStacks);
+        tag.putInt("wraithErosionDuration", wraithErosionDuration);
+        tag.putInt("wraithSummonCost", wraithSummonCost);
+        tag.putInt("wraithSummonCooldown", wraithSummonCooldown);
+        tag.putInt("wraithSummonCount", wraithSummonCount);
+        tag.putFloat("wraithSummonHealth", wraithSummonHealth);
+        tag.putFloat("wraithSummonDamage", wraithSummonDamage);
+        tag.putInt("wraithSummonDuration", wraithSummonDuration);
+        tag.putFloat("wraithSummonCorpseRange", wraithSummonCorpseRange);
+        tag.putInt("wraithSummonExtraMax", wraithSummonExtraMax);
+        tag.putInt("wraithDomainCost", wraithDomainCost);
+        tag.putInt("wraithDomainCooldown", wraithDomainCooldown);
+        tag.putFloat("wraithDomainRadius", wraithDomainRadius);
+        tag.putInt("wraithDomainDuration", wraithDomainDuration);
+        tag.putFloat("wraithDomainDamage", wraithDomainDamage);
+        tag.putFloat("wraithDomainBossSlow", wraithDomainBossSlow);
+        tag.putInt("wraithDomainCharmDuration", wraithDomainCharmDuration);
+        tag.putInt("wraithBarrageBaseCost", wraithBarrageBaseCost);
+        tag.putInt("wraithBarrageChargedCost", wraithBarrageChargedCost);
+        tag.putInt("wraithBarrageCooldown", wraithBarrageCooldown);
+        tag.putInt("wraithBarrageBaseOrbs", wraithBarrageBaseOrbs);
+        tag.putInt("wraithBarrageChargedOrbs", wraithBarrageChargedOrbs);
+        tag.putFloat("wraithBarrageBaseDamage", wraithBarrageBaseDamage);
+        tag.putFloat("wraithBarrageChargedDamage", wraithBarrageChargedDamage);
+        tag.putFloat("wraithBarrageBaseRange", wraithBarrageBaseRange);
+        tag.putFloat("wraithBarrageChargedRange", wraithBarrageChargedRange);
+        tag.putInt("wraithBarrageMaxChargeTime", wraithBarrageMaxChargeTime);
+        tag.putInt("wraithBarrageMaxHits", wraithBarrageMaxHits);
+        tag.putInt("wraithUltimateMinCost", wraithUltimateMinCost);
+        tag.putInt("wraithUltimateCooldown", wraithUltimateCooldown);
+        tag.putInt("wraithUltimateCloneCount", wraithUltimateCloneCount);
+        tag.putFloat("wraithUltimateCloneDamageRatio", wraithUltimateCloneDamageRatio);
+        tag.putInt("wraithUltimateDuration", wraithUltimateDuration);
+        tag.putInt("wraithUltimateSoulRegen", wraithUltimateSoulRegen);
+        tag.putFloat("wraithUltimateDamageIncrease", wraithUltimateDamageIncrease);
+        tag.putInt("wraithUltimateExhaustDuration", wraithUltimateExhaustDuration);
         tag.putBoolean("isEvilPoisoner", isEvilPoisoner);
         tag.putInt("poisonerStrengthDuration", poisonerStrengthDuration);
         tag.putBoolean("hasTurtleAura", hasTurtleAura);
@@ -618,6 +1069,91 @@ public class Profession {
         tag.putInt("rSpeedLevel", rSpeedLevel);
         tag.putInt("rFatigueDuration", rFatigueDuration);
         tag.putInt("rCooldown", rCooldown);
+        tag.putBoolean("isByteChen", isByteChen);
+        tag.putInt("byteChenComputeMax", byteChenComputeMax);
+        tag.putInt("byteChenComputeInitial", byteChenComputeInitial);
+        tag.putInt("byteChenComputeRegenRate", byteChenComputeRegenRate);
+        tag.putFloat("byteChenComputeNodeRegenBonus", byteChenComputeNodeRegenBonus);
+        tag.putInt("byteChenComputeOnRead", byteChenComputeOnRead);
+        tag.putInt("byteChenComputeOnNodeTrigger", byteChenComputeOnNodeTrigger);
+        tag.putInt("byteChenComputeOnInterrupt", byteChenComputeOnInterrupt);
+        tag.putInt("byteChenComputeLowThreshold", byteChenComputeLowThreshold);
+        tag.putInt("byteChenNodeMax", byteChenNodeMax);
+        tag.putInt("byteChenNodeRange", byteChenNodeRange);
+        tag.putInt("byteChenNodeDuration", byteChenNodeDuration);
+        tag.putInt("byteChenScoutNodeCost", byteChenScoutNodeCost);
+        tag.putFloat("byteChenScoutNodeRadius", byteChenScoutNodeRadius);
+        tag.putInt("byteChenScoutNodeComputeRegen", byteChenScoutNodeComputeRegen);
+        tag.putInt("byteChenBuffNodeCost", byteChenBuffNodeCost);
+        tag.putFloat("byteChenBuffNodeRadius", byteChenBuffNodeRadius);
+        tag.putFloat("byteChenBuffNodeDamageBonus", byteChenBuffNodeDamageBonus);
+        tag.putFloat("byteChenBuffNodeDamageReduction", byteChenBuffNodeDamageReduction);
+        tag.putFloat("byteChenBuffNodeSpeedBonus", byteChenBuffNodeSpeedBonus);
+        tag.putFloat("byteChenBuffNodeCooldownReduction", byteChenBuffNodeCooldownReduction);
+        tag.putInt("byteChenBuffNodeMaxStacks", byteChenBuffNodeMaxStacks);
+        tag.putInt("byteChenCounterNodeCost", byteChenCounterNodeCost);
+        tag.putFloat("byteChenCounterNodeRadius", byteChenCounterNodeRadius);
+        tag.putInt("byteChenCounterNodeSilenceDuration", byteChenCounterNodeSilenceDuration);
+        tag.putInt("byteChenCounterNodeDisorderDuration", byteChenCounterNodeDisorderDuration);
+        tag.putFloat("byteChenCounterNodeDamageReduction", byteChenCounterNodeDamageReduction);
+        tag.putFloat("byteChenCounterNodeCooldownMultiplier", byteChenCounterNodeCooldownMultiplier);
+        tag.putFloat("byteChenDataVisionRange", byteChenDataVisionRange);
+        tag.putFloat("byteChenLightweightSpeedBonus", byteChenLightweightSpeedBonus);
+        tag.putFloat("byteChenLightweightDigSpeedBonus", byteChenLightweightDigSpeedBonus);
+        tag.putFloat("byteChenLightweightMeleePenalty", byteChenLightweightMeleePenalty);
+        tag.putFloat("byteChenLightweightReceivedMeleePenalty", byteChenLightweightReceivedMeleePenalty);
+        tag.putInt("byteChenNodeRecycleCooldown", byteChenNodeRecycleCooldown);
+        tag.putFloat("byteChenNodeRecycleRefund", byteChenNodeRecycleRefund);
+        tag.putInt("byteChenFullReadCost", byteChenFullReadCost);
+        tag.putInt("byteChenFullReadCooldown", byteChenFullReadCooldown);
+        tag.putFloat("byteChenFullReadRadius", byteChenFullReadRadius);
+        tag.putInt("byteChenFullReadDuration", byteChenFullReadDuration);
+        tag.putInt("byteChenDataDispatchCost", byteChenDataDispatchCost);
+        tag.putInt("byteChenDataDispatchCooldown", byteChenDataDispatchCooldown);
+        tag.putFloat("byteChenDataDispatchSpeedBonus", byteChenDataDispatchSpeedBonus);
+        tag.putFloat("byteChenDataDispatchCooldownBonus", byteChenDataDispatchCooldownBonus);
+        tag.putInt("byteChenDataDispatchBuffDuration", byteChenDataDispatchBuffDuration);
+        tag.putInt("byteChenDataBanCost", byteChenDataBanCost);
+        tag.putInt("byteChenDataBanCooldown", byteChenDataBanCooldown);
+        tag.putFloat("byteChenDataBanRange", byteChenDataBanRange);
+        tag.putInt("byteChenDataBanDuration", byteChenDataBanDuration);
+        tag.putInt("byteChenDataBanBossDuration", byteChenDataBanBossDuration);
+        tag.putFloat("byteChenDataBanTrueDamageBonus", byteChenDataBanTrueDamageBonus);
+        tag.putInt("byteChenUltimateMinCost", byteChenUltimateMinCost);
+        tag.putInt("byteChenUltimateCooldown", byteChenUltimateCooldown);
+        tag.putFloat("byteChenUltimateRadius", byteChenUltimateRadius);
+        tag.putInt("byteChenUltimateDuration", byteChenUltimateDuration);
+        tag.putFloat("byteChenUltimateDamageBonus", byteChenUltimateDamageBonus);
+        tag.putFloat("byteChenUltimateDamageReduction", byteChenUltimateDamageReduction);
+        tag.putFloat("byteChenUltimateSpeedBonus", byteChenUltimateSpeedBonus);
+        tag.putFloat("byteChenUltimateCooldownBonus", byteChenUltimateCooldownBonus);
+        tag.putFloat("byteChenUltimateEnemyDamageReduction", byteChenUltimateEnemyDamageReduction);
+        tag.putFloat("byteChenUltimateEnemySpeedReduction", byteChenUltimateEnemySpeedReduction);
+        tag.putFloat("byteChenUltimateEnemyCooldownMultiplier", byteChenUltimateEnemyCooldownMultiplier);
+        tag.putFloat("byteChenUltimateInterruptChance", byteChenUltimateInterruptChance);
+        tag.putInt("byteChenExhaustDuration", byteChenExhaustDuration);
+        tag.putBoolean("isHeavyKnight", isHeavyKnight);
+        tag.putFloat("heavyKnightSpeedPenalty", heavyKnightSpeedPenalty);
+        tag.putInt("heavyKnightWillOnHit", heavyKnightWillOnHit);
+        tag.putInt("heavyKnightWillOnBlock", heavyKnightWillOnBlock);
+        tag.putInt("heavyKnightWillOnDamaged", heavyKnightWillOnDamaged);
+        tag.putFloat("heavyKnightFullWillDamageBonus", heavyKnightFullWillDamageBonus);
+        tag.putFloat("heavyKnightFullWillDamageReduction", heavyKnightFullWillDamageReduction);
+        tag.putInt("heavyKnightShieldWallTriggerTicks", heavyKnightShieldWallTriggerTicks);
+        tag.putFloat("heavyKnightShieldWallReduction", heavyKnightShieldWallReduction);
+        tag.putFloat("heavyKnightShieldWallRadius", heavyKnightShieldWallRadius);
+        tag.putFloat("heavyKnightShieldWallArmorBonus", heavyKnightShieldWallArmorBonus);
+        tag.putInt("heavyKnightChargeWillCost", heavyKnightChargeWillCost);
+        tag.putInt("heavyKnightChargeCooldown", heavyKnightChargeCooldown);
+        tag.putFloat("heavyKnightChargeDistance", heavyKnightChargeDistance);
+        tag.putFloat("heavyKnightChargeDamage", heavyKnightChargeDamage);
+        tag.putFloat("heavyKnightChargeKnockback", heavyKnightChargeKnockback);
+        tag.putInt("heavyKnightProtectRange", heavyKnightProtectRange);
+        tag.putInt("heavyKnightProtectWillCost", heavyKnightProtectWillCost);
+        tag.putInt("heavyKnightProtectCooldown", heavyKnightProtectCooldown);
+        tag.putFloat("heavyKnightShieldBashDamage", heavyKnightShieldBashDamage);
+        tag.putInt("heavyKnightShieldBashStunDuration", heavyKnightShieldBashStunDuration);
+        tag.putInt("heavyKnightShieldBashCooldown", heavyKnightShieldBashCooldown);
         return tag;
     }
 
@@ -746,6 +1282,54 @@ public class Profession {
         buffer.writeFloat(ghostSenatorHealAmount);
         buffer.writeInt(ghostSenatorStrengthDuration);
         buffer.writeFloat(ghostSenatorDetectionRadius);
+        buffer.writeBoolean(isWraithCouncilor);
+        buffer.writeInt(wraithSoulMax);
+        buffer.writeInt(wraithSoulInitial);
+        buffer.writeInt(wraithSoulRegenRate);
+        buffer.writeInt(wraithSoulDarkBonus);
+        buffer.writeFloat(wraithSoulSunlightPenalty);
+        buffer.writeInt(wraithSoulKillBonus);
+        buffer.writeInt(wraithSoulHitBonus);
+        buffer.writeInt(wraithSoulSummonKillBonus);
+        buffer.writeFloat(wraithErosionDamage);
+        buffer.writeFloat(wraithErosionArmorReduction);
+        buffer.writeFloat(wraithErosionSlowPercent);
+        buffer.writeInt(wraithErosionMaxStacks);
+        buffer.writeInt(wraithErosionDuration);
+        buffer.writeInt(wraithSummonCost);
+        buffer.writeInt(wraithSummonCooldown);
+        buffer.writeInt(wraithSummonCount);
+        buffer.writeFloat(wraithSummonHealth);
+        buffer.writeFloat(wraithSummonDamage);
+        buffer.writeInt(wraithSummonDuration);
+        buffer.writeFloat(wraithSummonCorpseRange);
+        buffer.writeInt(wraithSummonExtraMax);
+        buffer.writeInt(wraithDomainCost);
+        buffer.writeInt(wraithDomainCooldown);
+        buffer.writeFloat(wraithDomainRadius);
+        buffer.writeInt(wraithDomainDuration);
+        buffer.writeFloat(wraithDomainDamage);
+        buffer.writeFloat(wraithDomainBossSlow);
+        buffer.writeInt(wraithDomainCharmDuration);
+        buffer.writeInt(wraithBarrageBaseCost);
+        buffer.writeInt(wraithBarrageChargedCost);
+        buffer.writeInt(wraithBarrageCooldown);
+        buffer.writeInt(wraithBarrageBaseOrbs);
+        buffer.writeInt(wraithBarrageChargedOrbs);
+        buffer.writeFloat(wraithBarrageBaseDamage);
+        buffer.writeFloat(wraithBarrageChargedDamage);
+        buffer.writeFloat(wraithBarrageBaseRange);
+        buffer.writeFloat(wraithBarrageChargedRange);
+        buffer.writeInt(wraithBarrageMaxChargeTime);
+        buffer.writeInt(wraithBarrageMaxHits);
+        buffer.writeInt(wraithUltimateMinCost);
+        buffer.writeInt(wraithUltimateCooldown);
+        buffer.writeInt(wraithUltimateCloneCount);
+        buffer.writeFloat(wraithUltimateCloneDamageRatio);
+        buffer.writeInt(wraithUltimateDuration);
+        buffer.writeInt(wraithUltimateSoulRegen);
+        buffer.writeFloat(wraithUltimateDamageIncrease);
+        buffer.writeInt(wraithUltimateExhaustDuration);
         buffer.writeBoolean(isEvilPoisoner);
         buffer.writeInt(poisonerStrengthDuration);
         buffer.writeBoolean(hasTurtleAura);
@@ -787,6 +1371,91 @@ public class Profession {
         buffer.writeInt(rSpeedLevel);
         buffer.writeInt(rFatigueDuration);
         buffer.writeInt(rCooldown);
+        buffer.writeBoolean(isByteChen);
+        buffer.writeInt(byteChenComputeMax);
+        buffer.writeInt(byteChenComputeInitial);
+        buffer.writeInt(byteChenComputeRegenRate);
+        buffer.writeFloat(byteChenComputeNodeRegenBonus);
+        buffer.writeInt(byteChenComputeOnRead);
+        buffer.writeInt(byteChenComputeOnNodeTrigger);
+        buffer.writeInt(byteChenComputeOnInterrupt);
+        buffer.writeInt(byteChenComputeLowThreshold);
+        buffer.writeInt(byteChenNodeMax);
+        buffer.writeInt(byteChenNodeRange);
+        buffer.writeInt(byteChenNodeDuration);
+        buffer.writeInt(byteChenScoutNodeCost);
+        buffer.writeFloat(byteChenScoutNodeRadius);
+        buffer.writeInt(byteChenScoutNodeComputeRegen);
+        buffer.writeInt(byteChenBuffNodeCost);
+        buffer.writeFloat(byteChenBuffNodeRadius);
+        buffer.writeFloat(byteChenBuffNodeDamageBonus);
+        buffer.writeFloat(byteChenBuffNodeDamageReduction);
+        buffer.writeFloat(byteChenBuffNodeSpeedBonus);
+        buffer.writeFloat(byteChenBuffNodeCooldownReduction);
+        buffer.writeInt(byteChenBuffNodeMaxStacks);
+        buffer.writeInt(byteChenCounterNodeCost);
+        buffer.writeFloat(byteChenCounterNodeRadius);
+        buffer.writeInt(byteChenCounterNodeSilenceDuration);
+        buffer.writeInt(byteChenCounterNodeDisorderDuration);
+        buffer.writeFloat(byteChenCounterNodeDamageReduction);
+        buffer.writeFloat(byteChenCounterNodeCooldownMultiplier);
+        buffer.writeFloat(byteChenDataVisionRange);
+        buffer.writeFloat(byteChenLightweightSpeedBonus);
+        buffer.writeFloat(byteChenLightweightDigSpeedBonus);
+        buffer.writeFloat(byteChenLightweightMeleePenalty);
+        buffer.writeFloat(byteChenLightweightReceivedMeleePenalty);
+        buffer.writeInt(byteChenNodeRecycleCooldown);
+        buffer.writeFloat(byteChenNodeRecycleRefund);
+        buffer.writeInt(byteChenFullReadCost);
+        buffer.writeInt(byteChenFullReadCooldown);
+        buffer.writeFloat(byteChenFullReadRadius);
+        buffer.writeInt(byteChenFullReadDuration);
+        buffer.writeInt(byteChenDataDispatchCost);
+        buffer.writeInt(byteChenDataDispatchCooldown);
+        buffer.writeFloat(byteChenDataDispatchSpeedBonus);
+        buffer.writeFloat(byteChenDataDispatchCooldownBonus);
+        buffer.writeInt(byteChenDataDispatchBuffDuration);
+        buffer.writeInt(byteChenDataBanCost);
+        buffer.writeInt(byteChenDataBanCooldown);
+        buffer.writeFloat(byteChenDataBanRange);
+        buffer.writeInt(byteChenDataBanDuration);
+        buffer.writeInt(byteChenDataBanBossDuration);
+        buffer.writeFloat(byteChenDataBanTrueDamageBonus);
+        buffer.writeInt(byteChenUltimateMinCost);
+        buffer.writeInt(byteChenUltimateCooldown);
+        buffer.writeFloat(byteChenUltimateRadius);
+        buffer.writeInt(byteChenUltimateDuration);
+        buffer.writeFloat(byteChenUltimateDamageBonus);
+        buffer.writeFloat(byteChenUltimateDamageReduction);
+        buffer.writeFloat(byteChenUltimateSpeedBonus);
+        buffer.writeFloat(byteChenUltimateCooldownBonus);
+        buffer.writeFloat(byteChenUltimateEnemyDamageReduction);
+        buffer.writeFloat(byteChenUltimateEnemySpeedReduction);
+        buffer.writeFloat(byteChenUltimateEnemyCooldownMultiplier);
+        buffer.writeFloat(byteChenUltimateInterruptChance);
+        buffer.writeInt(byteChenExhaustDuration);
+        buffer.writeBoolean(isHeavyKnight);
+        buffer.writeFloat(heavyKnightSpeedPenalty);
+        buffer.writeInt(heavyKnightWillOnHit);
+        buffer.writeInt(heavyKnightWillOnBlock);
+        buffer.writeInt(heavyKnightWillOnDamaged);
+        buffer.writeFloat(heavyKnightFullWillDamageBonus);
+        buffer.writeFloat(heavyKnightFullWillDamageReduction);
+        buffer.writeInt(heavyKnightShieldWallTriggerTicks);
+        buffer.writeFloat(heavyKnightShieldWallReduction);
+        buffer.writeFloat(heavyKnightShieldWallRadius);
+        buffer.writeFloat(heavyKnightShieldWallArmorBonus);
+        buffer.writeInt(heavyKnightChargeWillCost);
+        buffer.writeInt(heavyKnightChargeCooldown);
+        buffer.writeFloat(heavyKnightChargeDistance);
+        buffer.writeFloat(heavyKnightChargeDamage);
+        buffer.writeFloat(heavyKnightChargeKnockback);
+        buffer.writeInt(heavyKnightProtectRange);
+        buffer.writeInt(heavyKnightProtectWillCost);
+        buffer.writeInt(heavyKnightProtectCooldown);
+        buffer.writeFloat(heavyKnightShieldBashDamage);
+        buffer.writeInt(heavyKnightShieldBashStunDuration);
+        buffer.writeInt(heavyKnightShieldBashCooldown);
     }
 
     public static Profession readFromBuffer(FriendlyByteBuf buffer) {

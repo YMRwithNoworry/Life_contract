@@ -90,6 +90,55 @@ public class KeyBindings {
             CATEGORY
     );
 
+    public static final KeyMapping HEAVY_KNIGHT_CHARGE = new KeyMapping(
+            "key.life_contract.heavy_knight_charge",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Z,
+            CATEGORY
+    );
+
+    public static final KeyMapping HEAVY_KNIGHT_SHIELD_BASH = new KeyMapping(
+            "key.life_contract.heavy_knight_shield_bash",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_X,
+            CATEGORY
+    );
+    
+    public static final KeyMapping WRAITH_SUMMON = new KeyMapping(
+            "key.life_contract.wraith_summon",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Z,
+            CATEGORY
+    );
+    
+    public static final KeyMapping WRAITH_DOMAIN = new KeyMapping(
+            "key.life_contract.wraith_domain",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_X,
+            CATEGORY
+    );
+    
+    public static final KeyMapping WRAITH_BARRAGE = new KeyMapping(
+            "key.life_contract.wraith_barrage",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_C,
+            CATEGORY
+    );
+    
+    public static final KeyMapping WRAITH_ULTIMATE = new KeyMapping(
+            "key.life_contract.wraith_ultimate",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_V,
+            CATEGORY
+    );
+
+    public static final KeyMapping OPEN_EGG_SHOP = new KeyMapping(
+            "key.life_contract.open_egg_shop",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_N,
+            CATEGORY
+    );
+
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(OPEN_TEAM_INVENTORY);
@@ -103,5 +152,13 @@ public class KeyBindings {
         event.register(JUNGLE_APE_Q2);
         event.register(JUNGLE_APE_Q3);
         event.register(JUNGLE_APE_R);
+        event.register(HEAVY_KNIGHT_CHARGE);
+        event.register(HEAVY_KNIGHT_SHIELD_BASH);
+        event.register(WRAITH_SUMMON);
+        event.register(WRAITH_DOMAIN);
+        event.register(WRAITH_BARRAGE);
+        event.register(WRAITH_ULTIMATE);
+        event.register(OPEN_EGG_SHOP);
+        org.alku.life_contract.byte_chen.ByteChenKeyHandler.registerKeyMappings(event);
     }
 }

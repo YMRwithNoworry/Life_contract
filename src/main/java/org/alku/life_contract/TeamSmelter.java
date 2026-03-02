@@ -121,7 +121,10 @@ public class TeamSmelter {
     }
 
     private static void processTeamInventory(ServerPlayer player, UUID leaderUUID) {
-        TeamInventory inventory = TeamInventory.getByLeaderUUID(leaderUUID);
+        TeamInventory inventory = TeamInventory.getByTeamId(leaderUUID);
+        if (inventory == null) {
+            inventory = TeamInventory.getOrCreate(player);
+        }
         if (inventory == null) {
             return;
         }

@@ -9,19 +9,34 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.UUID;
+
 public class TeamInventoryMenu extends AbstractContainerMenu {
 
     private final Container container;
+    private final TeamInventory teamInventory;
     private static final int CONTAINER_SIZE = 54;
+    private final UUID teamId;
 
     public TeamInventoryMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
-        this(windowId, playerInventory, new SimpleContainer(CONTAINER_SIZE));
+        this(windowId, playerInventory, new SimpleContainer(CONTAINER_SIZE), null);
     }
 
     public TeamInventoryMenu(int windowId, Inventory playerInventory, Container container) {
+        this(windowId, playerInventory, container, null);
+    }
+
+    public TeamInventoryMenu(int windowId, Inventory playerInventory, Container container, UUID teamId) {
         super(Life_contract.TEAM_INVENTORY_MENU.get(), windowId);
-        checkContainerSize(container, CONTAINER_SIZE);
         this.container = container;
+        this.teamId = teamId;
+        
+        if (container instanceof TeamInventory teamInv) {
+            this.teamInventory = teamInv;
+        } else {
+            this.teamInventory = null;
+        }
+        
         container.startOpen(playerInventory.player);
 
         for (int row = 0; row < 6; ++row) {
@@ -41,9 +56,20 @@ public class TeamInventoryMenu extends AbstractContainerMenu {
         }
     }
 
+    public TeamInventory getTeamInventory() {
+        return teamInventory;
+    }
+
+    public UUID getTeamId() {
+        return teamId;
+    }
+
     @Override
     public boolean stillValid(Player player) {
-        return container.stillValid(player);
+        if (teamInventory != null) {
+            return teamInventory.stillValid(player);
+        }
+        return this.container.stillValid(player);
     }
 
     @Override
@@ -82,6 +108,14 @@ public class TeamInventoryMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        container.stopOpen(player);
+        this.container.stopOpen(player);
+    }
+
+    public static TeamInventoryMenu createForTeam(int windowId, Inventory playerInventory, UUID teamId) {
+        TeamInventory teamInv = TeamInventory.getByTeamId(teamId);
+        if (teamInv == null) {
+            teamInv = TeamInventory.getOrCreate(playerInventory.player);
+        }
+        return new TeamInventoryMenu(windowId, playerInventory, teamInv, teamId);
     }
 }

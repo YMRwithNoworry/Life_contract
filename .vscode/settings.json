@@ -1,5 +1,6 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "java.search.scope": "all",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "domyh-auto-accept.enabled": false
 }

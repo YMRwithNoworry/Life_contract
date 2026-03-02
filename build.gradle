@@ -118,10 +118,16 @@ repositories {
     maven {
         url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
+    maven {
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    
+    runtimeOnly fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
     
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'

@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -24,14 +25,34 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 
 import org.alku.life_contract.follower.FollowerWandMenu;
 import org.alku.life_contract.follower.FollowerWandItem;
+import org.alku.life_contract.follower.FollowerWandScreen;
 import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
 import org.alku.life_contract.mineral_generator.MineralGeneratorBlock;
 import org.alku.life_contract.mineral_generator.MineralGeneratorMenu;
+import org.alku.life_contract.mineral_generator.MineralGeneratorScreen;
 import org.alku.life_contract.profession.ProfessionConfig;
 import org.alku.life_contract.revive.ReviveTeammateMenu;
+import org.alku.life_contract.revive.ReviveTeammateScreen;
+import org.alku.life_contract.byte_chen.ByteChenHUD;
+import org.alku.life_contract.wraith_councilor.SoulforgedArmorMaterial;
+import org.alku.life_contract.wraith_councilor.SoulforgedArmorItem;
+import org.alku.life_contract.wraith_councilor.CouncilSoulCandleStaffItem;
+import org.alku.life_contract.wraith_councilor.CouncilEmblemItem;
+import org.alku.life_contract.wraith_councilor.PurpleHoodedSkullArmorItem;
+import org.alku.life_contract.byte_chen.DataTerminalArmorMaterial;
+import org.alku.life_contract.byte_chen.DataGogglesItem;
+import org.alku.life_contract.byte_chen.TerminalRobeItem;
+import org.alku.life_contract.byte_chen.DataLeggingsItem;
+import org.alku.life_contract.byte_chen.FlashBootsItem;
+import org.alku.life_contract.byte_chen.ByteCodeScepterItem;
+import org.alku.life_contract.byte_chen.ChenCoreChipItem;
 
 @Mod(Life_contract.MODID)
 public class Life_contract {
@@ -55,6 +76,36 @@ public class Life_contract {
             () -> new FacelessDeceiverMaskItem(new Item.Properties()));
     public static final RegistryObject<Item> AMBUSH_ORB = ITEMS.register("ambush_orb", AmbushOrbItem::new);
     public static final RegistryObject<Item> TEAM_GOLEM_WAND = ITEMS.register("team_golem_wand", TeamGolemWandItem::new);
+    
+    public static final RegistryObject<Item> SOULFORGED_HOOD = ITEMS.register("soulforged_hood",
+            () -> new SoulforgedArmorItem(ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> SOULFORGED_ROBE = ITEMS.register("soulforged_robe",
+            () -> new SoulforgedArmorItem(ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> SOULFORGED_LEGGINGS = ITEMS.register("soulforged_leggings",
+            () -> new SoulforgedArmorItem(ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> SOULFORGED_BOOTS = ITEMS.register("soulforged_boots",
+            () -> new SoulforgedArmorItem(ArmorItem.Type.BOOTS, new Item.Properties()));
+    public static final RegistryObject<Item> COUNCIL_SOUL_CANDLE_STAFF = ITEMS.register("council_soul_candle_staff",
+            () -> new CouncilSoulCandleStaffItem(net.minecraft.world.item.Tiers.WOOD, 2, -2.0f, new Item.Properties()));
+    public static final RegistryObject<Item> COUNCIL_EMBLEM = ITEMS.register("council_emblem",
+            () -> new CouncilEmblemItem(new Item.Properties()));
+    public static final RegistryObject<Item> PURPLE_HOODED_SKULL_CHESTPLATE = ITEMS.register("purple_hooded_skull_chestplate",
+            () -> new PurpleHoodedSkullArmorItem(ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    
+    public static final RegistryObject<Item> DATA_GOGGLES = ITEMS.register("data_goggles",
+            () -> new DataGogglesItem(DataTerminalArmorMaterial.INSTANCE, new Item.Properties()));
+    public static final RegistryObject<Item> TERMINAL_ROBE = ITEMS.register("terminal_robe",
+            () -> new TerminalRobeItem(DataTerminalArmorMaterial.INSTANCE, new Item.Properties()));
+    public static final RegistryObject<Item> DATA_LEGGINGS = ITEMS.register("data_leggings",
+            () -> new DataLeggingsItem(DataTerminalArmorMaterial.INSTANCE, new Item.Properties()));
+    public static final RegistryObject<Item> FLASH_BOOTS = ITEMS.register("flash_boots",
+            () -> new FlashBootsItem(DataTerminalArmorMaterial.INSTANCE, new Item.Properties()));
+    public static final RegistryObject<Item> BYTE_CODE_SCEPTER = ITEMS.register("byte_code_scepter",
+            () -> new ByteCodeScepterItem(net.minecraft.world.item.Tiers.WOOD, 2, -2.8f, new Item.Properties()));
+    public static final RegistryObject<Item> CHEN_CORE_CHIP = ITEMS.register("chen_core_chip",
+            () -> new ChenCoreChipItem(new Item.Properties()));
+    
+    public static final RegistryObject<Item> GOLD_COIN = ITEMS.register("gold_coin", GoldCoinItem::new);
 
     public static final RegistryObject<net.minecraft.world.level.block.Block> MINERAL_GENERATOR_BLOCK = BLOCKS.register("mineral_generator",
             () -> new MineralGeneratorBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties.of()
@@ -80,6 +131,8 @@ public class Life_contract {
             () -> IForgeMenuType.create(FollowerWandMenu::new));
     public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
             () -> IForgeMenuType.create(ReviveTeammateMenu::new));
+    public static final RegistryObject<MenuType<EggShopMenu>> EGG_SHOP_MENU = MENU_TYPES.register("egg_shop",
+            () -> IForgeMenuType.create(EggShopMenu::new));
 
     public static final RegistryObject<EntityType<TeamSentinel>> TEAM_SENTINEL = ENTITY_TYPES.register("team_sentinel",
             () -> EntityType.Builder.of(TeamSentinel::new, MobCategory.MISC)
@@ -109,6 +162,20 @@ public class Life_contract {
                 output.accept(FACELESS_DECEIVER_MASK.get());
                 output.accept(AMBUSH_ORB.get());
                 output.accept(TEAM_GOLEM_WAND.get());
+                output.accept(SOULFORGED_HOOD.get());
+                output.accept(SOULFORGED_ROBE.get());
+                output.accept(SOULFORGED_LEGGINGS.get());
+                output.accept(SOULFORGED_BOOTS.get());
+                output.accept(COUNCIL_SOUL_CANDLE_STAFF.get());
+                output.accept(COUNCIL_EMBLEM.get());
+                output.accept(PURPLE_HOODED_SKULL_CHESTPLATE.get());
+                output.accept(DATA_GOGGLES.get());
+                output.accept(TERMINAL_ROBE.get());
+                output.accept(DATA_LEGGINGS.get());
+                output.accept(FLASH_BOOTS.get());
+                output.accept(BYTE_CODE_SCEPTER.get());
+                output.accept(CHEN_CORE_CHIP.get());
+                output.accept(GOLD_COIN.get());
             }).build());
 
     public Life_contract() {
@@ -132,67 +199,30 @@ public class Life_contract {
         public static void onServerStarting(net.minecraftforge.event.server.ServerStartingEvent event) {
             TradeConfig.init();
             ProfessionConfig.load();
+            EggShopConfig.init(event.getServer().getServerDirectory());
         }
     }
 
     @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ClientModEvents {
         @SubscribeEvent
+        public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
+            event.registerAboveAll("byte_chen_hud", new ByteChenHUD());
+        }
+
+        @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
+                net.minecraft.client.gui.screens.MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(SHOP_MENU.get(), ShopScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(TRADE_SETUP_MENU.get(), TradeSetupScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(TRADE_SHOP_MENU.get(), TradeShopScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(MINERAL_GENERATOR_MENU.get(), MineralGeneratorScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(EGG_SHOP_MENU.get(), EggShopScreen::new);
+                
                 try {
-                    Class<?> screensClass = Class.forName("net.minecraft.client.gui.screens.MenuScreens");
-                    Class<?> screenClass = Class.forName("net.minecraft.client.gui.screens.Screen");
-                    
-                    Class<?> teamInvScreenClass = Class.forName("org.alku.life_contract.TeamInventoryScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, TEAM_INVENTORY_MENU.get(), 
-                            teamInvScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> shopScreenClass = Class.forName("org.alku.life_contract.ShopScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, SHOP_MENU.get(), 
-                            shopScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> tradeSetupScreenClass = Class.forName("org.alku.life_contract.TradeSetupScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, TRADE_SETUP_MENU.get(), 
-                            tradeSetupScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> tradeShopScreenClass = Class.forName("org.alku.life_contract.TradeShopScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, TRADE_SHOP_MENU.get(), 
-                            tradeShopScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> mineralGenScreenClass = Class.forName("org.alku.life_contract.mineral_generator.MineralGeneratorScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, MINERAL_GENERATOR_MENU.get(), 
-                            mineralGenScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> followerWandScreenClass = Class.forName("org.alku.life_contract.follower.FollowerWandScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, FOLLOWER_WAND_MENU.get(), 
-                            followerWandScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
-                    Class<?> reviveScreenClass = Class.forName("org.alku.life_contract.revive.ReviveTeammateScreen");
-                    screensClass.getMethod("register", MenuType.class, Class.forName("net.minecraft.client.gui.screens.MenuScreens$ScreenConstructor"))
-                        .invoke(null, REVIVE_TEAMMATE_MENU.get(), 
-                            reviveScreenClass.getConstructor(MenuType.class, 
-                                Class.forName("net.minecraft.world.entity.player.Inventory"),
-                                Class.forName("net.minecraft.network.chat.Component")));
-                    
                     Class<?> itemPropertiesClass = Class.forName("net.minecraft.client.renderer.item.ItemProperties");
                     Class<?> itemPropertyFunctionClass = Class.forName("net.minecraft.client.renderer.item.ItemProperties$PropertyFunction");
                     
@@ -322,48 +352,27 @@ public class Life_contract {
             if (event.phase != TickEvent.Phase.END)
                 return;
 
-            try {
-                Class<?> mcClass = Class.forName("net.minecraft.client.Minecraft");
-                Object mc = mcClass.getMethod("getInstance").invoke(null);
-                Object player = mcClass.getMethod("player").invoke(mc);
-                if (player == null)
-                    return;
+            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.player == null)
+                return;
 
-                Class<?> keyBindingsClass = Class.forName("org.alku.life_contract.KeyBindings");
-                Object openTeamInv = keyBindingsClass.getField("OPEN_TEAM_INVENTORY").get(null);
-                java.lang.reflect.Method consumeClick = openTeamInv.getClass().getMethod("consumeClick");
-                
-                while ((boolean) consumeClick.invoke(openTeamInv)) {
-                    Object level = player.getClass().getMethod("level").invoke(player);
-                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
-                    if (!isClientSide)
-                        return;
-                    NetworkHandler.sendOpenTeamInventoryPacket();
-                }
-
-                Object healerActiveHeal = keyBindingsClass.getField("HEALER_ACTIVE_HEAL").get(null);
-                while ((boolean) consumeClick.invoke(healerActiveHeal)) {
-                    Object level = player.getClass().getMethod("level").invoke(player);
-                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
-                    if (!isClientSide)
-                        return;
-                    NetworkHandler.sendHealerActiveHealPacket();
-                }
-
-                Object foolStealProfession = keyBindingsClass.getField("FOOL_STEAL_PROFESSION").get(null);
-                while ((boolean) consumeClick.invoke(foolStealProfession)) {
-                    Object level = player.getClass().getMethod("level").invoke(player);
-                    boolean isClientSide = (boolean) level.getClass().getMethod("isClientSide").invoke(level);
-                    if (!isClientSide)
-                        return;
-                    FoolSystem.sendStealPacket(null);
-                }
-
-                Class<?> clientDataStorageClass = Class.forName("org.alku.life_contract.ClientDataStorage");
-                clientDataStorageClass.getMethod("tickHealerCooldown").invoke(null);
-            } catch (Exception e) {
-                e.printStackTrace();
+            while (KeyBindings.OPEN_TEAM_INVENTORY.consumeClick()) {
+                NetworkHandler.sendOpenTeamInventoryPacket();
             }
+            
+            while (KeyBindings.HEALER_ACTIVE_HEAL.consumeClick()) {
+                NetworkHandler.sendHealerActiveHealPacket();
+            }
+            
+            while (KeyBindings.FOOL_STEAL_PROFESSION.consumeClick()) {
+                FoolSystem.sendStealPacket(null);
+            }
+            
+            while (KeyBindings.OPEN_EGG_SHOP.consumeClick()) {
+                NetworkHandler.sendOpenEggShopPacket();
+            }
+
+            ClientDataStorage.tickHealerCooldown();
         }
     }
 
