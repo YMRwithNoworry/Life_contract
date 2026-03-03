@@ -158,17 +158,13 @@ public class FacelessDeceiverSystem {
         
         var speedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speedAttribute != null && mobSpeed > 0) {
-            double basePlayerSpeed = 0.1;
-            double speedBonus = mobSpeed - basePlayerSpeed;
-            if (speedBonus > 0) {
-                AttributeModifier speedModifier = new AttributeModifier(
-                    SPEED_MODIFIER_UUID,
-                    "FacelessDeceiverSpeed",
-                    speedBonus,
-                    AttributeModifier.Operation.ADDITION
-                );
-                speedAttribute.addPermanentModifier(speedModifier);
-            }
+            AttributeModifier speedModifier = new AttributeModifier(
+                SPEED_MODIFIER_UUID,
+                "FacelessDeceiverSpeed",
+                mobSpeed,
+                AttributeModifier.Operation.ADDITION
+            );
+            speedAttribute.addPermanentModifier(speedModifier);
         }
         
         var knockbackAttribute = player.getAttribute(Attributes.KNOCKBACK_RESISTANCE);
@@ -369,11 +365,11 @@ public class FacelessDeceiverSystem {
             UUID contractEntityUUID = getContractEntityUUID(player);
             if (contractEntityUUID != null) {
                 PLAYER_CONTRACT_ENTITY_MAP.put(player.getUUID(), contractEntityUUID);
+                ENTITY_OWNER_MAP.put(contractEntityUUID, player.getUUID());
                 
                 if (player.level() instanceof ServerLevel serverLevel) {
                     for (Entity entity : serverLevel.getAllEntities()) {
                         if (entity instanceof Mob mob && entity.getUUID().equals(contractEntityUUID)) {
-                            ENTITY_OWNER_MAP.put(contractEntityUUID, player.getUUID());
                             applyEntityAttributes(player, mob);
                             break;
                         }

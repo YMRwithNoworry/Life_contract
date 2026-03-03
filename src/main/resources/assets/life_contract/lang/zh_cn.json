@@ -245,5 +245,24 @@
   "apostle.skill.fireball_success": "§6[使徒] §f释放火球！目标获得易伤和治疗效果减半！",
   "apostle.skill.no_target": "§c[使徒] §f未找到目标！",
   
-  "item.life_contract.gold_coin": "金币"
+  "item.life_contract.gold_coin": "金币",
+  
+  "item.life_contract.chef_spatula": "主厨锅铲",
+  "item.life_contract.portable_pot": "便携炖锅",
+  "item.life_contract.seasoning_box": "万能调味盒",
+  "item.life_contract.energy_breakfast": "元气早餐",
+  "item.life_contract.nourishing_soup": "滋补炖汤",
+  "item.life_contract.spicy_hot_pot": "辛辣干锅",
+  "item.life_contract.sweet_dessert": "甜心甜品",
+  "item.life_contract.nether_cuisine": "下界风味餐",
+  "item.life_contract.legendary_feast": "传世满汉全席",
+  "item.life_contract.emergency_dish": "应急料理",
+  
+  "profession.life_contract.gourmet": "美食家",
+  "profession.life_contract.gourmet.desc": "无甲美食大师，通过鲜味值系统获得强大增益。手持专属厨具可烹饪美食、投喂队友、释放技能。穿戴任何盔甲将失去所有职业效果。",
+  
+  "key.life_contract.gourmet_emergency": "美食家-应急快炒",
+  "key.life_contract.gourmet_bomb": "美食家-风味爆弹",
+  "key.life_contract.gourmet_feed": "美食家-暖心投喂",
+  "key.life_contract.gourmet_ultimate": "美食家-厨神降临"
 }

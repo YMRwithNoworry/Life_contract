@@ -103,5 +103,24 @@
   "gui.life_contract.egg_shop.currency": "Currency: %s",
   "gui.life_contract.egg_shop.price": "Price: %d",
   
-  "item.life_contract.gold_coin": "Gold Coin"
+  "item.life_contract.gold_coin": "Gold Coin",
+  
+  "item.life_contract.chef_spatula": "Chef Spatula",
+  "item.life_contract.portable_pot": "Portable Pot",
+  "item.life_contract.seasoning_box": "Seasoning Box",
+  "item.life_contract.energy_breakfast": "Energy Breakfast",
+  "item.life_contract.nourishing_soup": "Nourishing Soup",
+  "item.life_contract.spicy_hot_pot": "Spicy Hot Pot",
+  "item.life_contract.sweet_dessert": "Sweet Dessert",
+  "item.life_contract.nether_cuisine": "Nether Cuisine",
+  "item.life_contract.legendary_feast": "Legendary Feast",
+  "item.life_contract.emergency_dish": "Emergency Dish",
+  
+  "profession.life_contract.gourmet": "Gourmet",
+  "profession.life_contract.gourmet.desc": "An unarmored food master who gains powerful buffs through the Umami system. Wields exclusive kitchen tools to cook delicacies, feed teammates, and unleash skills. Wearing any armor disables all profession effects.",
+  
+  "key.life_contract.gourmet_emergency": "Gourmet-Emergency Stir Fry",
+  "key.life_contract.gourmet_bomb": "Gourmet-Flavor Bomb",
+  "key.life_contract.gourmet_feed": "Gourmet-Warm Feed",
+  "key.life_contract.gourmet_ultimate": "Gourmet-God Chef Descent"
 }

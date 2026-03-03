@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.CreatureEggItem;
+import org.alku.life_contract.FacelessDeceiverSystem;
 
 import java.util.List;
 import java.util.UUID;
@@ -73,12 +74,17 @@ public class FollowerWandItem extends Item {
             return InteractionResult.FAIL;
         }
 
+        Mob mob = (Mob) target;
+
+        if (FacelessDeceiverSystem.isContractEntity(mob)) {
+            player.sendSystemMessage(Component.literal("§c无法收服伪面士的契约生物！"));
+            return InteractionResult.FAIL;
+        }
+
         if (getCapturedCount(stack) >= CONTAINER_SIZE) {
             player.sendSystemMessage(Component.literal("§c跟随之杖已满！请先释放一些生物。"));
             return InteractionResult.FAIL;
         }
-
-        Mob mob = (Mob) target;
         
         CompoundTag captureTag = new CompoundTag();
         captureTag.putUUID(TAG_OWNER_UUID, player.getUUID());

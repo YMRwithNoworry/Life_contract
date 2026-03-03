@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class LegendaryFeastItem extends Item {
 
-    private static final UUID HEALTH_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-legendary001");
+    private static final UUID HEALTH_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
 
     public LegendaryFeastItem() {
         super(new Properties().stacksTo(16).food(

@@ -176,6 +176,16 @@ public class Life_contract {
                 output.accept(BYTE_CODE_SCEPTER.get());
                 output.accept(CHEN_CORE_CHIP.get());
                 output.accept(GOLD_COIN.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.CHEF_SPATULA.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.PORTABLE_POT.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.SEASONING_BOX.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.ENERGY_BREAKFAST.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.NOURISHING_SOUP.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.SPICY_HOT_POT.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.SWEET_DESSERT.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.NETHER_CUISINE.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.LEGENDARY_FEAST.get());
+                output.accept(org.alku.life_contract.gourmet.GourmetItems.EMERGENCY_DISH.get());
             }).build());
 
     public Life_contract() {
