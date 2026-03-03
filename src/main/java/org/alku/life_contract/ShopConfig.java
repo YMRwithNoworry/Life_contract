@@ -14,7 +14,7 @@ public class ShopConfig {
     }
 
     private static void addDefaultItems() {
-        ItemStack currency = new ItemStack(Items.GOLD_INGOT);
+        ItemStack currency = new ItemStack(Life_contract.GOLD_COIN.get());
 
         addItem(new ItemStack(Items.DIAMOND_SWORD), currency, 10);
         addItem(new ItemStack(Items.DIAMOND_PICKAXE), currency, 8);
@@ -80,7 +80,7 @@ public class ShopConfig {
     public static void setItem(int slot, ItemStack result, ItemStack currency, int price) {
         if (slot >= 0 && slot < 54) {
             while (SHOP_ITEMS.size() <= slot) {
-                SHOP_ITEMS.add(new ShopItem(ItemStack.EMPTY, new ItemStack(Items.GOLD_INGOT), 0));
+                SHOP_ITEMS.add(new ShopItem(ItemStack.EMPTY, new ItemStack(Life_contract.GOLD_COIN.get()), 0));
             }
             SHOP_ITEMS.set(slot, new ShopItem(result, currency, price));
         }

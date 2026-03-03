@@ -28,9 +28,21 @@ public class HeavyKnightKeyHandler {
         if (player == null) return;
 
         Profession profession = ClientProfessionCache.getCurrentProfession();
-        if (profession == null || !profession.isHeavyKnight()) return;
+        String professionId = ClientProfessionCache.getCurrentProfessionId();
+        
+        if (profession == null) {
+            if (professionId != null && !professionId.isEmpty()) {
+                System.out.println("[HeavyKnight] profession is null, id: " + professionId + ", available: " + ClientProfessionCache.getProfessions().size());
+            }
+            return;
+        }
+        
+        if (!profession.isHeavyKnight()) {
+            return;
+        }
 
         if (KeyBindings.HEAVY_KNIGHT_CHARGE.isDown() && !chargePressed) {
+            System.out.println("[HeavyKnight] Sending charge skill packet");
             NetworkHandler.CHANNEL.sendToServer(new PacketHeavyKnightSkill(PacketHeavyKnightSkill.SKILL_CHARGE));
             chargePressed = true;
         } else if (!KeyBindings.HEAVY_KNIGHT_CHARGE.isDown()) {
@@ -38,6 +50,7 @@ public class HeavyKnightKeyHandler {
         }
 
         if (KeyBindings.HEAVY_KNIGHT_SHIELD_BASH.isDown() && !shieldBashPressed) {
+            System.out.println("[HeavyKnight] Sending shield bash skill packet");
             NetworkHandler.CHANNEL.sendToServer(new PacketHeavyKnightSkill(PacketHeavyKnightSkill.SKILL_SHIELD_BASH));
             shieldBashPressed = true;
         } else if (!KeyBindings.HEAVY_KNIGHT_SHIELD_BASH.isDown()) {

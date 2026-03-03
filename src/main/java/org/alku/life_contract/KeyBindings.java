@@ -139,6 +139,20 @@ public class KeyBindings {
             CATEGORY
     );
 
+    public static final KeyMapping APOSTLE_TELEPORT = new KeyMapping(
+            "key.life_contract.apostle_teleport",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Z,
+            CATEGORY
+    );
+
+    public static final KeyMapping APOSTLE_FIREBALL = new KeyMapping(
+            "key.life_contract.apostle_fireball",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_X,
+            CATEGORY
+    );
+
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(OPEN_TEAM_INVENTORY);
@@ -159,6 +173,8 @@ public class KeyBindings {
         event.register(WRAITH_BARRAGE);
         event.register(WRAITH_ULTIMATE);
         event.register(OPEN_EGG_SHOP);
+        event.register(APOSTLE_TELEPORT);
+        event.register(APOSTLE_FIREBALL);
         org.alku.life_contract.byte_chen.ByteChenKeyHandler.registerKeyMappings(event);
     }
 }

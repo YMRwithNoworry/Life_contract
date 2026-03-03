@@ -43,6 +43,8 @@ import org.alku.life_contract.byte_chen.PacketByteChenSkill;
 import org.alku.life_contract.byte_chen.PacketSyncByteChenState;
 import org.alku.life_contract.heavy_knight.PacketHeavyKnightSkill;
 import org.alku.life_contract.heavy_knight.PacketSyncHeavyKnightState;
+import org.alku.life_contract.apostle.PacketApostleSkill;
+import org.alku.life_contract.apostle.PacketSyncApostleState;
 
 import java.util.Set;
 
@@ -300,6 +302,18 @@ public class NetworkHandler {
                 PacketSyncHeavyKnightState::handle
         );
         CHANNEL.registerMessage(id++,
+                PacketApostleSkill.class,
+                PacketApostleSkill::encode,
+                PacketApostleSkill::new,
+                PacketApostleSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncApostleState.class,
+                PacketSyncApostleState::encode,
+                PacketSyncApostleState::new,
+                PacketSyncApostleState::handle
+        );
+        CHANNEL.registerMessage(id++,
                 PacketWraithSkill.class,
                 PacketWraithSkill::encode,
                 PacketWraithSkill::new,
@@ -316,6 +330,30 @@ public class NetworkHandler {
                 PacketSyncTeamInventory::encode,
                 PacketSyncTeamInventory::new,
                 PacketSyncTeamInventory::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketOpenEggShop.class,
+                PacketOpenEggShop::encode,
+                PacketOpenEggShop::new,
+                PacketOpenEggShop::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketBuyEgg.class,
+                PacketBuyEgg::encode,
+                PacketBuyEgg::new,
+                PacketBuyEgg::handle
+        );
+        CHANNEL.registerMessage(id++,
+                org.alku.life_contract.gourmet.PacketGourmetSkill.class,
+                org.alku.life_contract.gourmet.PacketGourmetSkill::encode,
+                org.alku.life_contract.gourmet.PacketGourmetSkill::decode,
+                org.alku.life_contract.gourmet.PacketGourmetSkill::handle
+        );
+        CHANNEL.registerMessage(id++,
+                org.alku.life_contract.gourmet.PacketSyncGourmetState.class,
+                org.alku.life_contract.gourmet.PacketSyncGourmetState::encode,
+                org.alku.life_contract.gourmet.PacketSyncGourmetState::decode,
+                org.alku.life_contract.gourmet.PacketSyncGourmetState::handle
         );
     }
 
@@ -511,6 +549,10 @@ public class NetworkHandler {
 
     public static void sendHeavyKnightSkillPacket(int skillId) {
         CHANNEL.sendToServer(new PacketHeavyKnightSkill(skillId));
+    }
+
+    public static void sendApostleSkillPacket(int skillId) {
+        CHANNEL.sendToServer(new PacketApostleSkill(skillId));
     }
     
     public static void sendWraithSkillPacket(int skillId, net.minecraft.world.phys.Vec3 targetPos) {

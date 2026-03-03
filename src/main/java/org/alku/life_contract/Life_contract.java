@@ -188,6 +188,8 @@ public class Life_contract {
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
 
+        org.alku.life_contract.gourmet.GourmetItems.ITEMS.register(modEventBus);
+
         NetworkHandler.register();
 
         MinecraftForge.EVENT_BUS.register(this);

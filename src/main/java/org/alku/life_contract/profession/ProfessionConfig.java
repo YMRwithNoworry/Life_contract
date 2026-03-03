@@ -63,6 +63,29 @@ public class ProfessionConfig {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            loadDefaultProfessions();
+        }
+    }
+
+    private static void loadDefaultProfessions() {
+        try (InputStreamReader reader = new InputStreamReader(
+                ProfessionConfig.class.getClassLoader().getResourceAsStream("default_professions.json"), 
+                StandardCharsets.UTF_8)) {
+            if (reader != null) {
+                JsonObject json = GSON.fromJson(reader, JsonObject.class);
+                if (json != null && json.has("professions")) {
+                    JsonArray array = json.getAsJsonArray("professions");
+                    professions.clear();
+                    for (int i = 0; i < array.size(); i++) {
+                        JsonObject profJson = array.get(i).getAsJsonObject();
+                        Profession profession = loadProfessionFromJson(profJson);
+                        professions.add(profession);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -347,7 +370,11 @@ public class ProfessionConfig {
             .byteChenUltimateEnemySpeedReduction(json.has("byteChenUltimateEnemySpeedReduction") ? json.get("byteChenUltimateEnemySpeedReduction").getAsFloat() : 0.25f)
             .byteChenUltimateEnemyCooldownMultiplier(json.has("byteChenUltimateEnemyCooldownMultiplier") ? json.get("byteChenUltimateEnemyCooldownMultiplier").getAsFloat() : 2.0f)
             .byteChenUltimateInterruptChance(json.has("byteChenUltimateInterruptChance") ? json.get("byteChenUltimateInterruptChance").getAsFloat() : 0.5f)
-            .byteChenExhaustDuration(json.has("byteChenExhaustDuration") ? json.get("byteChenExhaustDuration").getAsInt() : 160);
+            .byteChenExhaustDuration(json.has("byteChenExhaustDuration") ? json.get("byteChenExhaustDuration").getAsInt() : 160)
+            .isApostle(json.has("isApostle") && json.get("isApostle").getAsBoolean())
+            .apostleDebuffDuration(json.has("apostleDebuffDuration") ? json.get("apostleDebuffDuration").getAsInt() : 100)
+            .apostleArrowFireRadius(json.has("apostleArrowFireRadius") ? json.get("apostleArrowFireRadius").getAsInt() : 3)
+            .apostleArrowFireDuration(json.has("apostleArrowFireDuration") ? json.get("apostleArrowFireDuration").getAsFloat() : 5.0f);
         
         return builder.build();
     }

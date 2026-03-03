@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "life_contract.mixins.refmap.json",
   "mixins": [
+    "SpawnEggItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -12,7 +12,9 @@ import net.minecraft.world.item.ItemStack;
 public class EggShopMenu extends AbstractContainerMenu {
 
     private final Container container;
-    private static final int CONTAINER_SIZE = 54;
+    public static final int CONTAINER_SIZE = 54;
+    public static final int ROWS = 6;
+    public static final int COLS = 9;
 
     public EggShopMenu(int windowId, Inventory playerInventory) {
         this(windowId, playerInventory, new SimpleContainer(CONTAINER_SIZE));
@@ -55,6 +57,19 @@ public class EggShopMenu extends AbstractContainerMenu {
                 if (!eggStack.isEmpty()) {
                     container.setItem(i, eggStack);
                 }
+            }
+        }
+    }
+
+    public void updateItems(int scrollOffset) {
+        for (int i = 0; i < CONTAINER_SIZE; i++) {
+            int entryIndex = i + scrollOffset;
+            EggShopConfig.EggShopEntry entry = EggShopConfig.getEntry(entryIndex);
+            if (entry != null) {
+                ItemStack eggStack = entry.createEggStack();
+                container.setItem(i, eggStack);
+            } else {
+                container.setItem(i, ItemStack.EMPTY);
             }
         }
     }

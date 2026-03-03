@@ -1,0 +1,77 @@
+tfth：the_flesh_that_hates∶pig_spawn_egg 6
+ the_flesh_that_hates∶cow_spawn_egg 6
+   the_flesh_that_hates∶sheep_spawn_egg 6
+    the_flesh_that_hates∶piece_spawn_egg 6
+  the_flesh_that_hates∶servant_spawn_egg 6
+  the_flesh_that_hates∶human_spawn_egg 8
+  the_flesh_that_hates∶pillager_spawn_egg 8  the_flesh_that_hates∶plaquecontaminator_spawn_egg 10
+  the_flesh_that_hates∶villager_spawn_egg 10
+ the_flesh_that_hates∶boomer_spawn_egg 12
+the_flesh_that_hates∶dog_spawn_egg 12
+the_flesh_that_hates∶vindicator_spawn_egg 12
+ the_flesh_that_hates∶flesh_howler_spawn_egg 14
+the_flesh_that_hates∶plaquecreatureone_spawn_egg 20
+the_flesh_that_hates∶bruteplaquecreatureone_spawn_egg 20
+the_flesh_that_hates∶flesh_hunter_two_spawn_egg 30
+ the_flesh_that_hates∶plaquecrerturetwo_spawn_egg 30
+ the_flesh_that_hates∶plaquethreelegcreature_spawn_egg 30
+the_flesh_that_hates∶flesh_suffer_spawn_egg 50
+ the_flesh_that_hates∶flesh_hunter_spawn_egg 60
+ the_flesh_that_hates∶flesh_community_spawn_egg 150
+spore：
+spore∶infected_spawnegg 6
+spore∶inf_pillager_spawnegg 7
+spore∶inf_husk_spawnegg 8
+spore∶inf_drowned_spawnegg 8
+spore∶inf_villager_spawnegg 8
+spore∶inf_diseased_villager_spawnegg 8
+spore∶inf_witch_spawnegg 10 
+spore∶inf_wanderer_spawnegg 10
+spore∶inf_player_spawnegg 12
+spore∶inf_vind_spawnegg 25
+spore∶inf_evo_spawnegg 20
+spore∶inf_hazmat_spawnegg 10 
+spore∶scent_spawnegg 25
+spore∶knight_spawnegg 35 
+spore∶griefer_spawnegg 35 
+spore∶braio_spawnegg 35 
+spore∶slasher_spawnegg 33
+spore∶leaper_spawnegg 35 
+spore∶jagd_spawnegg 40 
+spore∶busser_spawnegg 40 
+spore∶spitter_spawnegg 30 
+spore∶stalker_spawnegg 40 
+spore∶howler_spawnegg 45 
+spore∶prot_spawnegg 45 
+spore∶scavenger_spawnegg 45
+spore∶brute_spawnegg 50 
+spore∶inebriater_spawnegg 35
+spore∶volatile_spawnegg 50
+spore∶meph_spawnegg 50 
+spore∶nuclea_spawnegg 55 
+spore∶gastgaber_spawnegg 60 
+spore∶specter_spawnegg 70
+spore∶wendigo_spawnegg 90
+spore∶inquisitor_spawnegg 90
+spore∶brotkatze_spawnegg 90
+spore∶ogre_spawnegg 95
+spore∶hvindicator_spawnegg 95
+spore∶hevoker_spawnegg 100 
+spore∶vanguard_spawnegg 100
+spore∶brain_remnants 100
+pha：
+phayriosisreborn∶spawn_phayrector 12
+phayriosisreborn∶spawn_converted_human 12
+phayriosisreborn∶spawnconvertedvillager 12
+phayriosisreborn∶spawn_converted_chicken12
+phayriosisreborn∶spawn_converted_sheep12
+phayriosisreborn∶spawn_converted_pillager 20
+phayriosisreborn∶spawn_converted_husk 20
+phayriosisreborn∶spawn_converted_creeper 25
+phayriosisreborn∶spawn_converted_wandering_trader 30
+phayriosisreborn∶spawn_converted_skeleton 20
+phayriosisreborn∶spawn_converted_sniffer 35
+phayriosisreborn∶spawn_converted_enderman 70
+phayriosisreborn∶spawn_converted_revager 70
+phayriosisreborn∶spawn_converted_golem 80
+

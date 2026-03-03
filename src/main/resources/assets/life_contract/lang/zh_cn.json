@@ -233,5 +233,17 @@
   "ambush.passive.invis_start": "§8§l[奇兵] §f§l你已融入阴影！",
   "ambush.passive.invis_end": "§8§l[奇兵] §f§l隐身状态已打破！",
   
+  "profession.life_contract.apostle": "使徒",
+  "profession.life_contract.apostle.desc": "火焰与亡灵的使者。免疫火焰伤害，亡灵生物不会攻击你。射出的箭矢自带火焰并点燃周围，为敌人施加易伤debuff。在下界获得50%减伤，但近战武器只造成10%伤害。免疫所有药水效果。可瞬移8格距离（冷却10秒），或向目标释放火球（冷却15秒），为目标添加5秒debuff期间受到治疗减半。",
+  
+  "key.life_contract.apostle_teleport": "使徒-瞬移",
+  "key.life_contract.apostle_fireball": "使徒-火球",
+  
+  "apostle.skill.teleport_cooldown": "§c[使徒] §f瞬移冷却中，还需等待 §e%s §f秒！",
+  "apostle.skill.fireball_cooldown": "§c[使徒] §f火球冷却中，还需等待 §e%s §f秒！",
+  "apostle.skill.teleport_success": "§6[使徒] §f瞬移成功！",
+  "apostle.skill.fireball_success": "§6[使徒] §f释放火球！目标获得易伤和治疗效果减半！",
+  "apostle.skill.no_target": "§c[使徒] §f未找到目标！",
+  
   "item.life_contract.gold_coin": "金币"
 }

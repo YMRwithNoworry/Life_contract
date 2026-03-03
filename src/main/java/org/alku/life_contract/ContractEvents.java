@@ -39,6 +39,7 @@ import org.alku.life_contract.healer.HealerSystem;
 import org.alku.life_contract.revive.ReviveTeammateSystem;
 import org.alku.life_contract.jungle_ape_god.JungleApeGodSystem;
 import org.alku.life_contract.byte_chen.ByteChenSystem;
+import org.alku.life_contract.apostle.ApostleSystem;
 
 import java.util.*;
 
@@ -136,6 +137,7 @@ public class ContractEvents {
             FollowerHungerSystem.syncHungerMultiplierToClient(serverPlayer);
             DeathVengerSystem.loadMarkedTarget(serverPlayer);
             ByteChenSystem.onPlayerJoin(serverPlayer);
+            ApostleSystem.onPlayerJoin(serverPlayer);
             initializeUndeadPlayerOnJoin(serverPlayer);
             
             NetworkHandler.syncProfessions(serverPlayer);
@@ -223,6 +225,7 @@ public class ContractEvents {
             ReviveTeammateSystem.onPlayerRespawn(serverPlayer);
             JungleApeGodSystem.onPlayerRespawn(serverPlayer);
             ByteChenSystem.onPlayerRespawn(serverPlayer);
+            ApostleSystem.onPlayerRespawn(serverPlayer);
         }
     }
 

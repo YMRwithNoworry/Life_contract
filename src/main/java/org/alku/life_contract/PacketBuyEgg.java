@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PacketBuyEgg {
-    private int index;
+    private final int index;
 
     public PacketBuyEgg(int index) {
         this.index = index;

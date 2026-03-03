@@ -69,6 +69,7 @@ public class ProfessionBuilder {
     private boolean hasDonkBowAbility = false;
     
     private boolean hasGourmetAbility = false;
+    private boolean isGourmet = false;
     private float gourmetHealthBonus = 4.0f;
     private float gourmetDamageBonus = 0.5f;
     private int gourmetDailyLimit = 0;
@@ -319,6 +320,19 @@ public class ProfessionBuilder {
     private int heavyKnightShieldBashStunDuration = 30;
     private int heavyKnightShieldBashCooldown = 80;
 
+    private boolean isApostle = false;
+    private float apostleMeleeDamagePercent = 0.1f;
+    private float apostleNetherDamageReduction = 0.5f;
+    private int apostleTeleportCooldown = 200;
+    private float apostleTeleportDistance = 8.0f;
+    private int apostleFireballCooldown = 300;
+    private float apostleFireballDamage = 6.0f;
+    private int apostleDebuffDuration = 100;
+    private float apostleDebuffDamageIncrease = 0.2f;
+    private float apostleHealingReduction = 0.5f;
+    private int apostleArrowFireRadius = 3;
+    private float apostleArrowFireDuration = 5.0f;
+
     public ProfessionBuilder() {}
 
     public ProfessionBuilder id(String id) { this.id = id != null ? id : "unknown"; return this; }
@@ -382,6 +396,7 @@ public class ProfessionBuilder {
     public ProfessionBuilder hasDonkBowAbility(boolean hasDonkBowAbility) { this.hasDonkBowAbility = hasDonkBowAbility; return this; }
     
     public ProfessionBuilder hasGourmetAbility(boolean hasGourmetAbility) { this.hasGourmetAbility = hasGourmetAbility; return this; }
+    public ProfessionBuilder isGourmet(boolean isGourmet) { this.isGourmet = isGourmet; return this; }
     public ProfessionBuilder gourmetHealthBonus(float gourmetHealthBonus) { this.gourmetHealthBonus = gourmetHealthBonus; return this; }
     public ProfessionBuilder gourmetDamageBonus(float gourmetDamageBonus) { this.gourmetDamageBonus = gourmetDamageBonus; return this; }
     public ProfessionBuilder gourmetDailyLimit(int gourmetDailyLimit) { this.gourmetDailyLimit = gourmetDailyLimit; return this; }
@@ -632,6 +647,19 @@ public class ProfessionBuilder {
     public ProfessionBuilder heavyKnightShieldBashStunDuration(int heavyKnightShieldBashStunDuration) { this.heavyKnightShieldBashStunDuration = heavyKnightShieldBashStunDuration; return this; }
     public ProfessionBuilder heavyKnightShieldBashCooldown(int heavyKnightShieldBashCooldown) { this.heavyKnightShieldBashCooldown = heavyKnightShieldBashCooldown; return this; }
 
+    public ProfessionBuilder isApostle(boolean isApostle) { this.isApostle = isApostle; return this; }
+    public ProfessionBuilder apostleMeleeDamagePercent(float apostleMeleeDamagePercent) { this.apostleMeleeDamagePercent = apostleMeleeDamagePercent; return this; }
+    public ProfessionBuilder apostleNetherDamageReduction(float apostleNetherDamageReduction) { this.apostleNetherDamageReduction = apostleNetherDamageReduction; return this; }
+    public ProfessionBuilder apostleTeleportCooldown(int apostleTeleportCooldown) { this.apostleTeleportCooldown = apostleTeleportCooldown; return this; }
+    public ProfessionBuilder apostleTeleportDistance(float apostleTeleportDistance) { this.apostleTeleportDistance = apostleTeleportDistance; return this; }
+    public ProfessionBuilder apostleFireballCooldown(int apostleFireballCooldown) { this.apostleFireballCooldown = apostleFireballCooldown; return this; }
+    public ProfessionBuilder apostleFireballDamage(float apostleFireballDamage) { this.apostleFireballDamage = apostleFireballDamage; return this; }
+    public ProfessionBuilder apostleDebuffDuration(int apostleDebuffDuration) { this.apostleDebuffDuration = apostleDebuffDuration; return this; }
+    public ProfessionBuilder apostleDebuffDamageIncrease(float apostleDebuffDamageIncrease) { this.apostleDebuffDamageIncrease = apostleDebuffDamageIncrease; return this; }
+    public ProfessionBuilder apostleHealingReduction(float apostleHealingReduction) { this.apostleHealingReduction = apostleHealingReduction; return this; }
+    public ProfessionBuilder apostleArrowFireRadius(int apostleArrowFireRadius) { this.apostleArrowFireRadius = apostleArrowFireRadius; return this; }
+    public ProfessionBuilder apostleArrowFireDuration(float apostleArrowFireDuration) { this.apostleArrowFireDuration = apostleArrowFireDuration; return this; }
+
     public Profession build() {
         return new Profession(this);
     }
@@ -686,6 +714,7 @@ public class ProfessionBuilder {
         builder.hasLuckyCloverAbility(tag.contains("hasLuckyCloverAbility") && tag.getBoolean("hasLuckyCloverAbility"));
         builder.hasDonkBowAbility(tag.contains("hasDonkBowAbility") && tag.getBoolean("hasDonkBowAbility"));
         builder.hasGourmetAbility(tag.contains("hasGourmetAbility") && tag.getBoolean("hasGourmetAbility"));
+        builder.isGourmet(tag.contains("isGourmet") && tag.getBoolean("isGourmet"));
         builder.gourmetHealthBonus(tag.contains("gourmetHealthBonus") ? tag.getFloat("gourmetHealthBonus") : 4.0f);
         builder.gourmetDamageBonus(tag.contains("gourmetDamageBonus") ? tag.getFloat("gourmetDamageBonus") : 0.5f);
         builder.gourmetDailyLimit(tag.contains("gourmetDailyLimit") ? tag.getInt("gourmetDailyLimit") : 0);
@@ -918,6 +947,18 @@ public class ProfessionBuilder {
         builder.heavyKnightShieldBashDamage(tag.contains("heavyKnightShieldBashDamage") ? tag.getFloat("heavyKnightShieldBashDamage") : 4.0f);
         builder.heavyKnightShieldBashStunDuration(tag.contains("heavyKnightShieldBashStunDuration") ? tag.getInt("heavyKnightShieldBashStunDuration") : 30);
         builder.heavyKnightShieldBashCooldown(tag.contains("heavyKnightShieldBashCooldown") ? tag.getInt("heavyKnightShieldBashCooldown") : 80);
+        builder.isApostle(tag.contains("isApostle") && tag.getBoolean("isApostle"));
+        builder.apostleMeleeDamagePercent(tag.contains("apostleMeleeDamagePercent") ? tag.getFloat("apostleMeleeDamagePercent") : 0.1f);
+        builder.apostleNetherDamageReduction(tag.contains("apostleNetherDamageReduction") ? tag.getFloat("apostleNetherDamageReduction") : 0.5f);
+        builder.apostleTeleportCooldown(tag.contains("apostleTeleportCooldown") ? tag.getInt("apostleTeleportCooldown") : 200);
+        builder.apostleTeleportDistance(tag.contains("apostleTeleportDistance") ? tag.getFloat("apostleTeleportDistance") : 8.0f);
+        builder.apostleFireballCooldown(tag.contains("apostleFireballCooldown") ? tag.getInt("apostleFireballCooldown") : 300);
+        builder.apostleFireballDamage(tag.contains("apostleFireballDamage") ? tag.getFloat("apostleFireballDamage") : 6.0f);
+        builder.apostleDebuffDuration(tag.contains("apostleDebuffDuration") ? tag.getInt("apostleDebuffDuration") : 100);
+        builder.apostleDebuffDamageIncrease(tag.contains("apostleDebuffDamageIncrease") ? tag.getFloat("apostleDebuffDamageIncrease") : 0.2f);
+        builder.apostleHealingReduction(tag.contains("apostleHealingReduction") ? tag.getFloat("apostleHealingReduction") : 0.5f);
+        builder.apostleArrowFireRadius(tag.contains("apostleArrowFireRadius") ? tag.getInt("apostleArrowFireRadius") : 3);
+        builder.apostleArrowFireDuration(tag.contains("apostleArrowFireDuration") ? tag.getFloat("apostleArrowFireDuration") : 5.0f);
         return builder;
     }
 
@@ -971,6 +1012,7 @@ public class ProfessionBuilder {
         builder.hasLuckyCloverAbility(buffer.readBoolean());
         builder.hasDonkBowAbility(buffer.readBoolean());
         builder.hasGourmetAbility(buffer.readBoolean());
+        builder.isGourmet(buffer.readBoolean());
         builder.gourmetHealthBonus(buffer.readFloat());
         builder.gourmetDamageBonus(buffer.readFloat());
         builder.gourmetDailyLimit(buffer.readInt());
@@ -1181,6 +1223,40 @@ public class ProfessionBuilder {
         builder.byteChenUltimateEnemyCooldownMultiplier(buffer.readFloat());
         builder.byteChenUltimateInterruptChance(buffer.readFloat());
         builder.byteChenExhaustDuration(buffer.readInt());
+        builder.isHeavyKnight(buffer.readBoolean());
+        builder.heavyKnightSpeedPenalty(buffer.readFloat());
+        builder.heavyKnightWillOnHit(buffer.readInt());
+        builder.heavyKnightWillOnBlock(buffer.readInt());
+        builder.heavyKnightWillOnDamaged(buffer.readInt());
+        builder.heavyKnightFullWillDamageBonus(buffer.readFloat());
+        builder.heavyKnightFullWillDamageReduction(buffer.readFloat());
+        builder.heavyKnightShieldWallTriggerTicks(buffer.readInt());
+        builder.heavyKnightShieldWallReduction(buffer.readFloat());
+        builder.heavyKnightShieldWallRadius(buffer.readFloat());
+        builder.heavyKnightShieldWallArmorBonus(buffer.readFloat());
+        builder.heavyKnightChargeWillCost(buffer.readInt());
+        builder.heavyKnightChargeCooldown(buffer.readInt());
+        builder.heavyKnightChargeDistance(buffer.readFloat());
+        builder.heavyKnightChargeDamage(buffer.readFloat());
+        builder.heavyKnightChargeKnockback(buffer.readFloat());
+        builder.heavyKnightProtectRange(buffer.readInt());
+        builder.heavyKnightProtectWillCost(buffer.readInt());
+        builder.heavyKnightProtectCooldown(buffer.readInt());
+        builder.heavyKnightShieldBashDamage(buffer.readFloat());
+        builder.heavyKnightShieldBashStunDuration(buffer.readInt());
+        builder.heavyKnightShieldBashCooldown(buffer.readInt());
+        builder.isApostle(buffer.readBoolean());
+        builder.apostleMeleeDamagePercent(buffer.readFloat());
+        builder.apostleNetherDamageReduction(buffer.readFloat());
+        builder.apostleTeleportCooldown(buffer.readInt());
+        builder.apostleTeleportDistance(buffer.readFloat());
+        builder.apostleFireballCooldown(buffer.readInt());
+        builder.apostleFireballDamage(buffer.readFloat());
+        builder.apostleDebuffDuration(buffer.readInt());
+        builder.apostleDebuffDamageIncrease(buffer.readFloat());
+        builder.apostleHealingReduction(buffer.readFloat());
+        builder.apostleArrowFireRadius(buffer.readInt());
+        builder.apostleArrowFireDuration(buffer.readFloat());
         return builder;
     }
 
@@ -1252,6 +1328,7 @@ public class ProfessionBuilder {
     boolean hasLuckyCloverAbility() { return hasLuckyCloverAbility; }
     boolean hasDonkBowAbility() { return hasDonkBowAbility; }
     boolean hasGourmetAbility() { return hasGourmetAbility; }
+    boolean isGourmet() { return isGourmet; }
     float getGourmetHealthBonus() { return gourmetHealthBonus; }
     float getGourmetDamageBonus() { return gourmetDamageBonus; }
     int getGourmetDailyLimit() { return gourmetDailyLimit; }
@@ -1484,4 +1561,17 @@ public class ProfessionBuilder {
     float getHeavyKnightShieldBashDamage() { return heavyKnightShieldBashDamage; }
     int getHeavyKnightShieldBashStunDuration() { return heavyKnightShieldBashStunDuration; }
     int getHeavyKnightShieldBashCooldown() { return heavyKnightShieldBashCooldown; }
+
+    boolean isApostle() { return isApostle; }
+    float getApostleMeleeDamagePercent() { return apostleMeleeDamagePercent; }
+    float getApostleNetherDamageReduction() { return apostleNetherDamageReduction; }
+    int getApostleTeleportCooldown() { return apostleTeleportCooldown; }
+    float getApostleTeleportDistance() { return apostleTeleportDistance; }
+    int getApostleFireballCooldown() { return apostleFireballCooldown; }
+    float getApostleFireballDamage() { return apostleFireballDamage; }
+    int getApostleDebuffDuration() { return apostleDebuffDuration; }
+    float getApostleDebuffDamageIncrease() { return apostleDebuffDamageIncrease; }
+    float getApostleHealingReduction() { return apostleHealingReduction; }
+    int getApostleArrowFireRadius() { return apostleArrowFireRadius; }
+    float getApostleArrowFireDuration() { return apostleArrowFireDuration; }
 }
