@@ -11,9 +11,6 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ClientProfessionCache;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +24,6 @@ public class ContractHUD {
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "contract_status", HUD_OVERLAY);
-        event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "mineral_generator", MINERAL_GENERATOR_OVERLAY);
     }
 
     public static final IGuiOverlay HUD_OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
@@ -56,9 +52,6 @@ public class ContractHUD {
                 : (player.getPersistentData().contains(TeamOrganizerItem.TAG_TEAM_NUMBER)
                         ? player.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER)
                         : -1);
-        String selfProfessionId = myData != null ? myData.profession
-                : player.getPersistentData().getString("LifeContractProfession");
-        String selfProfessionName = getProfessionDisplayName(selfProfessionId);
 
         UUID myTeamUUID = (leaderUUID != null) ? leaderUUID : myUUID;
 
@@ -78,26 +71,6 @@ public class ContractHUD {
             y += 10;
         }
 
-        if (!selfProfessionName.isEmpty()) {
-            guiGraphics.drawString(mc.font, "§6职业: §d" + selfProfessionName, x, y, color);
-            y += 10;
-            
-            Profession profession = ClientProfessionCache.getProfession(selfProfessionId);
-            if (profession != null && profession.hasDiceAbility()) {
-                boolean hasDice = hasGamblerDice(player);
-                String diceStatus = hasDice ? "§a[骰子已装备]" : "§c[骰子缺失]";
-                guiGraphics.drawString(mc.font, "§e赌徒骰子: " + diceStatus, x, y, color);
-                y += 10;
-            }
-            
-            if (profession != null && profession.isWraithCouncilor()) {
-                int rightX = screenWidth - 10;
-                int rightY = screenHeight / 2 - 100;
-                
-                renderWraithCouncilorHUD(guiGraphics, mc, player, rightX, rightY, profession);
-            }
-        }
-
         List<ClientDataStorage.PlayerData> teamMembers = new ArrayList<>();
         String myName = player.getName().getString();
         for (ClientDataStorage.PlayerData data : ClientDataStorage.PLAYER_DATA_CACHE.values()) {
@@ -114,178 +87,11 @@ public class ContractHUD {
             y += 10;
             for (ClientDataStorage.PlayerData memberData : teamMembers) {
                 String memberName = memberData.playerName;
-                String memberProfessionId = memberData.profession;
-                String memberProfessionName = getProfessionDisplayName(memberProfessionId);
                 String prefix = memberName.equals(myName) ? "§a● " : "§7- ";
                 String displayText = prefix + memberName;
-                if (!memberProfessionName.isEmpty()) {
-                    displayText += " §d[" + memberProfessionName + "]";
-                }
                 guiGraphics.drawString(mc.font, displayText, x, y, memberName.equals(myName) ? 0x00FF00 : 0xAAAAAA);
                 y += 10;
             }
         }
     };
-    
-    public static final IGuiOverlay MINERAL_GENERATOR_OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        if (player == null || mc.level == null)
-            return;
-
-        int x = screenWidth - 10;
-        int y = 10;
-        int color = 0xFFFFFF;
-
-        BlockPos playerPos = player.blockPosition();
-        for (Map.Entry<BlockPos, ClientDataStorage.MineralGeneratorData> entry : ClientDataStorage.MINERAL_GENERATOR_CACHE.entrySet()) {
-            BlockPos pos = entry.getKey();
-            ClientDataStorage.MineralGeneratorData data = entry.getValue();
-            
-            if (pos.distSqr(playerPos) <= 100.0) {
-                String mineralName = getMineralDisplayName(data.mineralType);
-                String statusText;
-                
-                if (data.enabled) {
-                    long currentClientTick = mc.level.getGameTime();
-                    long tickDelta = currentClientTick - data.serverTick;
-                    long ticksRemaining = Math.max(0, data.lastTick + data.interval * 20 - (data.serverTick + tickDelta));
-                    int secondsRemaining = (int) Math.ceil(ticksRemaining / 20.0);
-                    statusText = "§6" + mineralName + "\n§e下次产出: §a" + secondsRemaining + "§e秒";
-                } else {
-                    statusText = "§7" + mineralName + "\n§8已关闭";
-                }
-                
-                String[] lines = statusText.split("\n");
-                int lineHeight = mc.font.lineHeight;
-                int totalHeight = lines.length * lineHeight;
-                
-                int textY = y;
-                for (int i = 0; i < lines.length; i++) {
-                    String line = lines[i];
-                    int textWidth = mc.font.width(line);
-                    guiGraphics.drawString(mc.font, line, x - textWidth, textY + i * lineHeight, color);
-                }
-                
-                y += totalHeight + 10;
-            }
-        }
-    };
-    
-    private static String getMineralDisplayName(String mineralType) {
-        return switch (mineralType.toUpperCase()) {
-            case "IRON" -> "铁锭";
-            case "GOLD" -> "金锭";
-            case "DIAMOND" -> "钻石";
-            case "EMERALD" -> "绿宝石";
-            default -> mineralType;
-        };
-    }
-    
-    private static String getProfessionDisplayName(String professionId) {
-        if (professionId == null || professionId.isEmpty()) {
-            return "";
-        }
-        Profession profession = ClientProfessionCache.getProfession(professionId);
-        return profession != null ? profession.getName() : "";
-    }
-    
-    private static boolean hasGamblerDice(Player player) {
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            net.minecraft.world.item.ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() == Life_contract.GAMBLER_DICE.get()) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    private static int renderWraithCouncilorHUD(GuiGraphics guiGraphics, Minecraft mc, Player player, int x, int y, Profession profession) {
-        net.minecraft.nbt.CompoundTag data = player.getPersistentData();
-        
-        int soulValue = data.getInt("WraithSoulValueClient");
-        int maxSoul = profession.getWraithSoulMax();
-        int summonCd = data.getInt("WraithSummonCooldownClient");
-        int domainCd = data.getInt("WraithDomainCooldownClient");
-        int barrageCd = data.getInt("WraithBarrageCooldownClient");
-        int ultimateCd = data.getInt("WraithUltimateCooldownClient");
-        boolean ultimateActive = data.getBoolean("WraithUltimateActiveClient");
-        boolean exhausted = data.getBoolean("WraithExhaustedClient");
-        boolean charging = data.getBoolean("WraithChargingBarrageClient");
-        int chargeTime = data.getInt("WraithBarrageChargeTimeClient");
-        
-        y += 5;
-        String title = "§5== 亡魂议员 ==";
-        guiGraphics.drawString(mc.font, title, x - mc.font.width(title), y, 0xAA00AA);
-        y += 10;
-        
-        String soulText = "§5冥魂值: " + renderBar(soulValue, maxSoul, 20, "§5", "§d") + " §f" + soulValue + "§7/§f" + maxSoul;
-        guiGraphics.drawString(mc.font, soulText, x - mc.font.width(soulText), y, 0xFFFFFF);
-        y += 10;
-        
-        if (exhausted) {
-            String exhaustedText = "§c[力竭状态]";
-            guiGraphics.drawString(mc.font, exhaustedText, x - mc.font.width(exhaustedText), y, 0xFF0000);
-            y += 10;
-        }
-        
-        if (ultimateActive) {
-            String ultimateText = "§d[亡魂议会降临]";
-            guiGraphics.drawString(mc.font, ultimateText, x - mc.font.width(ultimateText), y, 0xAA00AA);
-            y += 10;
-        }
-        
-        y += 3;
-        String cooldownTitle = "§7技能冷却:";
-        guiGraphics.drawString(mc.font, cooldownTitle, x - mc.font.width(cooldownTitle), y, 0xAAAAAA);
-        y += 10;
-        
-        String summonStatus = formatCooldown(summonCd, "亡魂号令[Z]", profession.getWraithSummonCooldown());
-        guiGraphics.drawString(mc.font, summonStatus, x - mc.font.width(summonStatus), y, 0xFFFFFF);
-        y += 10;
-        
-        String domainStatus = formatCooldown(domainCd, "冥域禁锢[X]", profession.getWraithDomainCooldown());
-        guiGraphics.drawString(mc.font, domainStatus, x - mc.font.width(domainStatus), y, 0xFFFFFF);
-        y += 10;
-        
-        String barrageStatus;
-        if (charging) {
-            int maxCharge = profession.getWraithBarrageMaxChargeTime();
-            int chargePercent = (int)((chargeTime / (float)maxCharge) * 100);
-            barrageStatus = "§e暗蚀弹幕[C] §a蓄力中 " + chargePercent + "%";
-        } else {
-            barrageStatus = formatCooldown(barrageCd, "暗蚀弹幕[C]", profession.getWraithBarrageCooldown());
-        }
-        guiGraphics.drawString(mc.font, barrageStatus, x - mc.font.width(barrageStatus), y, 0xFFFFFF);
-        y += 10;
-        
-        String ultimateStatus = formatCooldown(ultimateCd, "议会降临[V]", profession.getWraithUltimateCooldown());
-        guiGraphics.drawString(mc.font, ultimateStatus, x - mc.font.width(ultimateStatus), y, 0xFFFFFF);
-        y += 10;
-        
-        return y;
-    }
-    
-    private static String renderBar(int current, int max, int length, String filledColor, String emptyColor) {
-        int filled = (int)((current / (float)max) * length);
-        StringBuilder bar = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            if (i < filled) {
-                bar.append(filledColor).append("█");
-            } else {
-                bar.append(emptyColor).append("░");
-            }
-        }
-        return bar.toString();
-    }
-    
-    private static String formatCooldown(int currentCd, String skillName, int maxCd) {
-        if (currentCd <= 0) {
-            return "§a" + skillName + " §f[就绪]";
-        } else {
-            int seconds = (int)Math.ceil(currentCd / 20.0);
-            int totalSeconds = (int)Math.ceil(maxCd / 20.0);
-            return "§c" + skillName + " §e" + seconds + "§7/§e" + totalSeconds + "秒";
-        }
-    }
 }

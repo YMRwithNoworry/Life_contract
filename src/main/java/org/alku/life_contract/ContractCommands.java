@@ -2,7 +2,6 @@ package org.alku.life_contract;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -19,11 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import org.alku.life_contract.profession.Profession;
-import org.alku.life_contract.profession.ProfessionConfig;
-import org.alku.life_contract.mineral_generator.MineralGenerationConfig;
-import org.alku.life_contract.mineral_generator.MineralGeneratorBlockEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -131,112 +125,6 @@ public class ContractCommands {
                                         return 1;
                                 })));
 
-                contract.then(Commands.literal("spawn_shop")
-                        .requires(source -> source.hasPermission(2))
-                        .executes(context -> {
-                                ServerPlayer player = context.getSource().getPlayerOrException();
-                                
-                                try {
-                                        net.minecraft.world.entity.npc.Villager villager = new net.minecraft.world.entity.npc.Villager(
-                                                net.minecraft.world.entity.EntityType.VILLAGER,
-                                                player.level());
-                                        Vec3 pos = player.position();
-                                        villager.moveTo(pos.x, pos.y, pos.z, player.getYRot(), player.getXRot());
-                                        
-                                        villager.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED).setBaseValue(0.0);
-                                        villager.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-                                        villager.setPersistenceRequired();
-                                        villager.setNoAi(true);
-                                        villager.setInvulnerable(true);
-                                        
-                                        villager.setCustomName(net.minecraft.network.chat.Component.literal("§6商店"));
-                                        villager.setCustomNameVisible(true);
-                                        
-                                        villager.getPersistentData().putBoolean("isShopVillager", true);
-
-                                        player.level().addFreshEntity(villager);
-
-                                        context.getSource().sendSuccess(() ->
-                                                Component.literal("§a[生灵契约] §f已生成商店村民！"), true);
-                                } catch (Exception e) {
-                                        context.getSource().sendFailure(
-                                                Component.literal("§c[生灵契约] 生成商店失败: " + e.getMessage()));
-                                        e.printStackTrace();
-                                }
-                                return 1;
-                        }));
-
-                contract.then(Commands.literal("shop")
-                        .requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("set")
-                                .executes(context -> {
-                                        ServerPlayer player = context.getSource().getPlayerOrException();
-                                        NetworkHandler.openTradeSetup(player);
-                                        return 1;
-                                }))
-                        .then(Commands.literal("remove")
-                                .executes(context -> {
-                                        ServerPlayer player = context.getSource().getPlayerOrException();
-                                        NetworkHandler.openTradeShop(player, true);
-                                        return 1;
-                                }))
-                        .then(Commands.literal("clear")
-                                .executes(context -> {
-                                        TradeConfig.clear();
-                                        context.getSource().sendSuccess(() ->
-                                                Component.literal("§a[生灵契约] §f交易已清空！"), true);
-                                        return 1;
-                                })));
-
-                contract.then(Commands.literal("mineral_generator")
-                        .then(Commands.argument("mineral_type", StringArgumentType.string())
-                                .suggests((context, builder) -> {
-                                        builder.suggest("iron");
-                                        builder.suggest("gold");
-                                        builder.suggest("diamond");
-                                        builder.suggest("emerald");
-                                        return builder.buildFuture();
-                                })
-                                .then(Commands.argument("interval", IntegerArgumentType.integer(1))
-                                        .executes(context -> {
-                                                ServerPlayer player = context.getSource().getPlayerOrException();
-                                                String mineralTypeStr = StringArgumentType.getString(context, "mineral_type");
-                                                int interval = IntegerArgumentType.getInteger(context, "interval");
-                                                
-                                                try {
-                                                        net.minecraft.core.BlockPos pos = player.blockPosition();
-                                                        net.minecraft.world.level.Level level = player.level();
-                                                        
-                                                        net.minecraft.world.level.block.state.BlockState state = Life_contract.MINERAL_GENERATOR_BLOCK.get().defaultBlockState();
-                                                        level.setBlock(pos, state, 3);
-                                                        
-                                                        BlockEntity blockEntity = level.getBlockEntity(pos);
-                                                        if (blockEntity instanceof MineralGeneratorBlockEntity generator) {
-                                                                MineralGeneratorBlockEntity.MineralType type = MineralGeneratorBlockEntity.MineralType.IRON;
-                                                                try {
-                                                                        type = MineralGeneratorBlockEntity.MineralType.valueOf(mineralTypeStr.toUpperCase());
-                                                                } catch (IllegalArgumentException e) {
-                                                                        if (mineralTypeStr.equalsIgnoreCase("iron")) type = MineralGeneratorBlockEntity.MineralType.IRON;
-                                                                        else if (mineralTypeStr.equalsIgnoreCase("gold")) type = MineralGeneratorBlockEntity.MineralType.GOLD;
-                                                                        else if (mineralTypeStr.equalsIgnoreCase("diamond")) type = MineralGeneratorBlockEntity.MineralType.DIAMOND;
-                                                                        else if (mineralTypeStr.equalsIgnoreCase("emerald")) type = MineralGeneratorBlockEntity.MineralType.EMERALD;
-                                                                }
-                                                                generator.setMineralType(type);
-                                                                generator.setInterval(interval);
-                                                                generator.setLastTick(level.getGameTime());
-                                                                generator.setEnabled(true);
-                                                        }
-                                                        
-                                                        context.getSource().sendSuccess(() ->
-                                                                Component.literal("§a[生灵契约] §f已在脚下生成矿物生成器！类型: " + mineralTypeStr + ", 间隔: " + interval + "秒"), true);
-                                                } catch (Exception e) {
-                                                        context.getSource().sendFailure(
-                                                                Component.literal("§c[生灵契约] 生成矿物生成器失败: " + e.getMessage()));
-                                                        e.printStackTrace();
-                                                }
-                                                return 1;
-                                        }))));
-
                 contract.then(Commands.literal("pool")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("add")
@@ -270,8 +158,6 @@ public class ContractCommands {
 
                 registerTeamCommands(contract);
                 registerAdminCommand(contract);
-                registerProfessionCommand(contract);
-                registerToggleMineralCommand(contract);
 
                 event.getDispatcher().register(contract);
         }
@@ -311,7 +197,6 @@ public class ContractCommands {
                                                                 player.getPersistentData().putString(SoulContractItem.TAG_CONTRACT_MOD, leaderMod);
                                                         }
                                                         ContractEvents.syncData(player);
-                                                        NetworkHandler.openProfessionMenu(player);
                                                 }
 
                                                 context.getSource().sendSuccess(() -> Component
@@ -370,7 +255,6 @@ public class ContractCommands {
                                                         }
 
                                                         ContractEvents.syncData(player);
-                                                        NetworkHandler.openProfessionMenu(player);
                                                 }
 
                                                 String message = poolEmpty 
@@ -442,216 +326,26 @@ public class ContractCommands {
                                                 String lName = leaderPlayer != null ? leaderPlayer.getName().getString() : "未知(" + leaderUUID.toString().substring(0, 8) + ")";
                                                 String lMod = "无";
                                                 int lTeamNumber = -1;
-                                                String lProfession = "";
                                                 if (leaderPlayer != null) {
                                                         lMod = leaderPlayer.getPersistentData().getString(SoulContractItem.TAG_CONTRACT_MOD);
                                                         if (lMod.isEmpty()) lMod = "无";
                                                         lTeamNumber = leaderPlayer.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER);
-                                                        String lProfessionId = leaderPlayer.getPersistentData().getString("LifeContractProfession");
-                                                        Profession lProfessionObj = ProfessionConfig.getProfession(lProfessionId);
-                                                        lProfession = lProfessionObj != null ? lProfessionObj.getName() : "";
                                                 }
 
                                                 final String finalLeaderName = lName;
                                                 final String finalModId = lMod;
                                                 final int finalTeamNumber = lTeamNumber;
-                                                final String finalLeaderProfession = lProfession;
                                                 String teamNumberStr = finalTeamNumber > 0 ? "§e#" + finalTeamNumber + " " : "";
-                                                String leaderProfessionStr = !finalLeaderProfession.isEmpty() ? " §d[" + finalLeaderProfession + "]" : "";
                                                 context.getSource().sendSuccess(() -> Component
-                                                        .literal("§6队: " + teamNumberStr + "§b" + finalLeaderName + leaderProfessionStr + " §7[" + finalModId + "]"), false);
+                                                        .literal("§6队: " + teamNumberStr + "§b" + finalLeaderName + " §7[" + finalModId + "]"), false);
 
                                                 for (ServerPlayer m : members) {
                                                         if (!m.getUUID().equals(leaderUUID)) {
                                                                 final String mName = m.getName().getString();
-                                                                String mProfessionId = m.getPersistentData().getString("LifeContractProfession");
-                                                                Profession mProfessionObj = ProfessionConfig.getProfession(mProfessionId);
-                                                                final String mProfession = mProfessionObj != null ? mProfessionObj.getName() : "";
-                                                                String memberProfessionStr = !mProfession.isEmpty() ? " §d[" + mProfession + "]" : "";
                                                                 context.getSource().sendSuccess(() -> Component
-                                                                        .literal(" §8- §f" + mName + memberProfessionStr), false);
+                                                                        .literal(" §8- §f" + mName), false);
                                                         }
                                                 }
-                                        }
-                                        return 1;
-                                })));
-        }
-
-        private static void registerProfessionCommand(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
-                contract.then(Commands.literal("profession")
-                        .requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("list")
-                                .executes(context -> {
-                                        List<Profession> professions = ProfessionConfig.getProfessions();
-                                        context.getSource().sendSuccess(
-                                                () -> Component.literal("§e== 职业列表 (" + professions.size() + ") =="), false);
-                                        for (Profession prof : professions) {
-                                                String locked = prof.requiresPassword() ? " §c[需密码]" : " §a[开放]";
-                                                context.getSource().sendSuccess(
-                                                        () -> Component.literal(" §8- §f" + prof.getName() + " §7(" + prof.getId() + ")" + locked), false);
-                                        }
-                                        return 1;
-                                }))
-                        .then(Commands.literal("open")
-                                .executes(context -> {
-                                        ServerPlayer player = context.getSource().getPlayerOrException();
-                                        NetworkHandler.openProfessionMenu(player);
-                                        return 1;
-                                }))
-                        .then(Commands.literal("set")
-                                .then(Commands.argument("target", EntityArgument.player())
-                                        .then(Commands.argument("profession", StringArgumentType.string())
-                                                .suggests((ctx, builder) -> {
-                                                        for (Profession prof : ProfessionConfig.getProfessions()) {
-                                                                builder.suggest(prof.getId());
-                                                        }
-                                                        return builder.buildFuture();
-                                                })
-                                                .executes(context -> {
-                                                        ServerPlayer target = EntityArgument.getPlayer(context, "target");
-                                                        String professionId = StringArgumentType.getString(context, "profession");
-                                                        Profession profession = ProfessionConfig.getProfession(professionId);
-                                                        if (profession == null) {
-                                                                context.getSource().sendFailure(Component.literal("§c职业不存在: " + professionId));
-                                                                return 0;
-                                                        }
-                                                        ProfessionConfig.setPlayerProfession(target.getUUID(), professionId);
-                                                        target.getPersistentData().putString("LifeContractProfession", professionId);
-                                                        context.getSource().sendSuccess(() -> Component.literal(
-                                                                "§a[生灵契约] §f已为 " + target.getName().getString() + " 设置职业: §e" + profession.getName()), true);
-                                                        return 1;
-                                                }))))
-                        .then(Commands.literal("unlock")
-                                .then(Commands.argument("target", EntityArgument.player())
-                                        .then(Commands.argument("profession", StringArgumentType.string())
-                                                .suggests((ctx, builder) -> {
-                                                        for (Profession prof : ProfessionConfig.getProfessions()) {
-                                                                if (prof.requiresPassword()) {
-                                                                        builder.suggest(prof.getId());
-                                                                }
-                                                        }
-                                                        return builder.buildFuture();
-                                                })
-                                                .executes(context -> {
-                                                        ServerPlayer target = EntityArgument.getPlayer(context, "target");
-                                                        String professionId = StringArgumentType.getString(context, "profession");
-                                                        Profession profession = ProfessionConfig.getProfession(professionId);
-                                                        if (profession == null) {
-                                                                context.getSource().sendFailure(Component.literal("§c职业不存在: " + professionId));
-                                                                return 0;
-                                                        }
-                                                        ProfessionConfig.unlockProfession(target.getUUID(), professionId, profession.getPassword());
-                                                        context.getSource().sendSuccess(() -> Component.literal(
-                                                                "§a[生灵契约] §f已为 " + target.getName().getString() + " 解锁职业: §e" + profession.getName()), true);
-                                                        return 1;
-                                                }))))
-                        .then(Commands.literal("reset_unlocks")
-                                .executes(context -> {
-                                        ProfessionConfig.resetUnlocks();
-                                        context.getSource().sendSuccess(() -> Component.literal("§a[生灵契约] §f已重置所有玩家的职业解锁状态"), true);
-                                        return 1;
-                                }))
-                        .then(Commands.literal("lock")
-                                .then(Commands.argument("profession", StringArgumentType.string())
-                                        .suggests((ctx, builder) -> {
-                                                for (Profession prof : ProfessionConfig.getProfessions()) {
-                                                        builder.suggest(prof.getId());
-                                                }
-                                                return builder.buildFuture();
-                                        })
-                                        .executes(context -> {
-                                                String professionId = StringArgumentType.getString(context, "profession");
-                                                Profession profession = ProfessionConfig.getProfession(professionId);
-                                                if (profession == null) {
-                                                        context.getSource().sendFailure(Component.literal("§c职业不存在: " + professionId));
-                                                        return 0;
-                                                }
-                                                if (ProfessionConfig.isProfessionLocked(professionId)) {
-                                                        context.getSource().sendFailure(Component.literal("§c职业 §e" + profession.getName() + " §c已被锁定"));
-                                                        return 0;
-                                                }
-                                                ProfessionConfig.lockProfession(professionId);
-                                                context.getSource().sendSuccess(() -> Component.literal(
-                                                        "§a[生灵契约] §f已锁定职业: §e" + profession.getName() + " §f，所有玩家无法选择此职业"), true);
-                                                return 1;
-                                        })))
-                        .then(Commands.literal("unlock_global")
-                                .then(Commands.argument("profession", StringArgumentType.string())
-                                        .suggests((ctx, builder) -> {
-                                                for (String lockedId : ProfessionConfig.getLockedProfessions()) {
-                                                        builder.suggest(lockedId);
-                                                }
-                                                return builder.buildFuture();
-                                        })
-                                        .executes(context -> {
-                                                String professionId = StringArgumentType.getString(context, "profession");
-                                                Profession profession = ProfessionConfig.getProfession(professionId);
-                                                if (profession == null) {
-                                                        context.getSource().sendFailure(Component.literal("§c职业不存在: " + professionId));
-                                                        return 0;
-                                                }
-                                                if (!ProfessionConfig.isProfessionLocked(professionId)) {
-                                                        context.getSource().sendFailure(Component.literal("§c职业 §e" + profession.getName() + " §c未被锁定"));
-                                                        return 0;
-                                                }
-                                                ProfessionConfig.unlockProfessionGlobal(professionId);
-                                                context.getSource().sendSuccess(() -> Component.literal(
-                                                        "§a[生灵契约] §f已解锁职业: §e" + profession.getName() + " §f，玩家现在可以选择此职业"), true);
-                                                return 1;
-                                        })))
-                        .then(Commands.literal("list_locked")
-                                .executes(context -> {
-                                        Set<String> locked = ProfessionConfig.getLockedProfessions();
-                                        if (locked.isEmpty()) {
-                                                context.getSource().sendSuccess(() -> Component.literal("§e[生灵契约] §f当前没有锁定的职业"), false);
-                                        } else {
-                                                context.getSource().sendSuccess(() -> Component.literal("§e== 锁定的职业 (" + locked.size() + ") =="), false);
-                                                for (String profId : locked) {
-                                                        Profession prof = ProfessionConfig.getProfession(profId);
-                                                        String name = prof != null ? prof.getName() : profId;
-                                                        final String finalName = name;
-                                                        context.getSource().sendSuccess(() -> Component.literal(" §c- §f" + finalName + " §7(" + profId + ")"), false);
-                                                }
-                                        }
-                                        return 1;
-                                })));
-        }
-
-        private static void registerToggleMineralCommand(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
-                contract.then(Commands.literal("toggle_mineral")
-                        .requires(source -> source.hasPermission(2))
-                        .executes(context -> {
-                                boolean enabled = MineralGenerationConfig.isGlobalGenerationEnabled();
-                                context.getSource().sendSuccess(() -> Component.literal(
-                                        "§e[生灵契约] §f当前矿物生成状态: " + (enabled ? "§a启用" : "§c禁用") + " §7(使用 on/off 切换)"), false);
-                                return 1;
-                        })
-                        .then(Commands.argument("state", StringArgumentType.string())
-                                .suggests((ctx, builder) -> {
-                                        builder.suggest("on");
-                                        builder.suggest("off");
-                                        builder.suggest("status");
-                                        return builder.buildFuture();
-                                })
-                                .executes(context -> {
-                                        String state = StringArgumentType.getString(context, "state").toLowerCase();
-                                        
-                                        if (state.equals("on")) {
-                                                MineralGenerationConfig.setGlobalGenerationEnabled(true);
-                                                context.getSource().sendSuccess(() -> Component.literal(
-                                                        "§a[生灵契约] §f全局矿物生成已启用！所有矿物生成器将正常工作。"), true);
-                                        } else if (state.equals("off")) {
-                                                MineralGenerationConfig.setGlobalGenerationEnabled(false);
-                                                context.getSource().sendSuccess(() -> Component.literal(
-                                                        "§c[生灵契约] §f全局矿物生成已禁用！所有矿物生成器将停止产出。"), true);
-                                        } else if (state.equals("status")) {
-                                                boolean enabled = MineralGenerationConfig.isGlobalGenerationEnabled();
-                                                context.getSource().sendSuccess(() -> Component.literal(
-                                                        "§e[生灵契约] §f当前矿物生成状态: " + (enabled ? "§a启用" : "§c禁用")), false);
-                                        } else {
-                                                context.getSource().sendFailure(Component.literal(
-                                                        "§c[生灵契约] 无效参数！使用 on/off/status"));
-                                                return 0;
                                         }
                                         return 1;
                                 })));

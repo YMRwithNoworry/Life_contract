@@ -30,3 +30,9 @@ mandatory=true
 versionRange="[4.4,)"
 ordering="AFTER"
 side="BOTH"
+[[dependencies.life_contract]]
+modId="curios"
+mandatory=true
+versionRange="[5.9,)"
+ordering="AFTER"
+side="BOTH"

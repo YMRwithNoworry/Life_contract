@@ -30,8 +30,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import org.alku.life_contract.follower.FollowerEvents;
-import org.alku.life_contract.mount.BeastRiderBuffSystem;
-import org.alku.life_contract.mount.BeastRiderMountSystem;
 
 import java.util.List;
 
@@ -378,10 +376,6 @@ public class CreatureEggItem extends Item {
             
             if (player != null) {
                 FollowerEvents.registerFollower(mob, player.getUUID());
-            }
-            
-            if (player != null && BeastRiderMountSystem.isBeastRider(player)) {
-                BeastRiderBuffSystem.applyBeastRiderBuff(mob, player.getUUID());
             }
             
             level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.PLAYERS, 1.0F, 0.8F);

@@ -26,8 +26,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
-import org.alku.life_contract.mount.BeastRiderBuffSystem;
-import org.alku.life_contract.mount.BeastRiderMountSystem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,10 +59,6 @@ public class FollowerEvents {
                 setupFollowerAI(mob, ownerUUID);
                 
                 syncFollowerToClients(mob, ownerUUID, true);
-            }
-            
-            if (tag.contains(BeastRiderBuffSystem.TAG_BEAST_RIDER_BUFFED)) {
-                BeastRiderBuffSystem.loadFromNBT(mob);
             }
         }
     }
@@ -185,9 +179,6 @@ public class FollowerEvents {
         
         if (mob.level() instanceof ServerLevel serverLevel) {
             net.minecraft.server.level.ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
-            if (owner != null && BeastRiderMountSystem.isBeastRider(owner)) {
-                BeastRiderBuffSystem.applyBeastRiderBuff(mob, ownerUUID);
-            }
             if (owner != null) {
                 FollowerHungerSystem.onFollowerRegistered(owner, mob);
             }
