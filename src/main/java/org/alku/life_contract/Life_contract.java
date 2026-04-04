@@ -50,6 +50,7 @@ public class Life_contract {
     public static final RegistryObject<Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
     public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
     public static final RegistryObject<Item> SURVIVOR_EMBLEM = ITEMS.register("survivor_emblem", SurvivorEmblemItem::new);
+    public static final RegistryObject<Item> SPORE_GLAND = ITEMS.register("spore_gland", SporeGlandItem::new);
 
     public static final RegistryObject<MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU = MENU_TYPES.register("team_inventory",
             () -> IForgeMenuType.create(TeamInventoryMenu::new));
@@ -80,6 +81,7 @@ public class Life_contract {
                 output.accept(FOLLOWER_WAND.get());
                 output.accept(CREATURE_EGG.get());
                 output.accept(SURVIVOR_EMBLEM.get());
+                output.accept(SPORE_GLAND.get());
             }).build());
 
     public Life_contract() {
