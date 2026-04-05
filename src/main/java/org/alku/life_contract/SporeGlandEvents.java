@@ -3,6 +3,7 @@ package org.alku.life_contract;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,11 +22,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-
+import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
@@ -87,35 +84,18 @@ public class SporeGlandEvents {
         if (!(target instanceof LivingEntity livingTarget)) return;
         if (livingTarget instanceof Player) return;
         
-        Optional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper()
-                .getCuriosHandler(player).resolve();
+        Optional<ItemStack> sporeGland = CuriosIntegration.getEquippedItem(player, SporeGlandItem.class);
         
-        if (curiosHandler.isPresent()) {
-            ICuriosItemHandler handler = curiosHandler.get();
-            Optional<ICurioStacksHandler> stacksHandler = handler.getStacksHandler("curio");
+        if (sporeGland.isPresent() && RANDOM.nextFloat() < SPORE_CHANCE) {
+            applySlowInfection(livingTarget, player);
             
-            if (stacksHandler.isPresent()) {
-                IDynamicStackHandler stackHandler = stacksHandler.get().getStacks();
-                for (int i = 0; i < stackHandler.getSlots(); i++) {
-                    ItemStack stack = stackHandler.getStackInSlot(i);
-                    if (stack.getItem() instanceof SporeGlandItem) {
-                        if (RANDOM.nextFloat() < SPORE_CHANCE) {
-                            applySlowInfection(livingTarget, player);
-                            
-                            if (player.level() instanceof ServerLevel serverLevel) {
-                                serverLevel.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR,
-                                        livingTarget.getX(), livingTarget.getY() + 1, livingTarget.getZ(),
-                                        20, 0.5, 0.5, 0.5, 0.1);
-                                
-                                serverLevel.playSound(null, livingTarget.getX(), livingTarget.getY(), livingTarget.getZ(),
-                                        SoundEvents.SPORE_BLOSSOM_BREAK, SoundSource.PLAYERS, 1.0f, 1.0f);
-                            }
-                            
-                            player.sendSystemMessage(Component.literal("§a[孢子腺体] §f孢子已传播！"));
-                        }
-                        return;
-                    }
-                }
+            if (player.level() instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR,
+                        livingTarget.getX(), livingTarget.getY() + 1, livingTarget.getZ(),
+                        20, 0.5, 0.5, 0.5, 0.1);
+                
+                serverLevel.playSound(null, livingTarget.getX(), livingTarget.getY(), livingTarget.getZ(),
+                        SoundEvents.SPORE_BLOSSOM_BREAK, SoundSource.PLAYERS, 1.0f, 1.0f);
             }
         }
     }
@@ -125,8 +105,7 @@ public class SporeGlandEvents {
         data.putBoolean(TAG_SLOW_INFECTION, true);
         data.putInt(TAG_SPORE_SPAWN_TIME, target.tickCount + INFECTION_DURATION);
         
-        target.addEffect(new MobEffectInstance(MobEffects.POISON, INFECTION_DURATION, 0, false, true));
-        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, INFECTION_DURATION, 1, false, true));
+        target.addEffect(new MobEffectInstance(Life_contract.SLOW_INFECTION.get(), INFECTION_DURATION, 0, false, true));
     }
 
     @SubscribeEvent
@@ -150,20 +129,26 @@ public class SporeGlandEvents {
     private static void spawnSporeMinion(LivingEntity source) {
         if (!(source.level() instanceof ServerLevel serverLevel)) return;
         
-        Zombie sporeMinion = new Zombie(EntityType.ZOMBIE, serverLevel);
-        sporeMinion.moveTo(source.getX(), source.getY(), source.getZ(), source.getYRot(), source.getXRot());
+        ResourceLocation sporeEntityId = new ResourceLocation("spore", "inf_human");
+        EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(sporeEntityId);
         
-        sporeMinion.setCustomName(Component.literal("§a小孢子怪"));
-        sporeMinion.setCustomNameVisible(true);
+        if (entityType == null) {
+            return;
+        }
         
-        sporeMinion.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0);
-        sporeMinion.setHealth(20.0f);
-        sporeMinion.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        sporeMinion.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.0);
+        Entity entity = entityType.create(serverLevel);
+        if (entity == null) {
+            return;
+        }
         
-        sporeMinion.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 600, 0, false, true));
+        entity.moveTo(source.getX(), source.getY(), source.getZ(), source.getYRot(), source.getXRot());
         
-        serverLevel.addFreshEntity(sporeMinion);
+        if (entity instanceof LivingEntity livingEntity) {
+            livingEntity.setCustomName(Component.literal("§a真菌感染:孢子"));
+            livingEntity.setCustomNameVisible(true);
+        }
+        
+        serverLevel.addFreshEntity(entity);
         
         serverLevel.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR,
                 source.getX(), source.getY() + 1, source.getZ(),

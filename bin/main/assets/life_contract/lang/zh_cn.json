@@ -42,6 +42,8 @@
   
   "entity.life_contract.team_sentinel": "队伍守卫",
   
+  "effect.life_contract.slow_infection": "缓慢感染",
+  
   "message.life_contract.enabled": "开启",
   "message.life_contract.disabled": "关闭"
 }

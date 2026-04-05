@@ -3,6 +3,7 @@ package org.alku.life_contract;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +45,7 @@ public class Life_contract {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
 
     public static final RegistryObject<Item> SOUL_CONTRACT = ITEMS.register("soul_contract", SoulContractItem::new);
     public static final RegistryObject<Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
@@ -51,6 +53,8 @@ public class Life_contract {
     public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
     public static final RegistryObject<Item> SURVIVOR_EMBLEM = ITEMS.register("survivor_emblem", SurvivorEmblemItem::new);
     public static final RegistryObject<Item> SPORE_GLAND = ITEMS.register("spore_gland", SporeGlandItem::new);
+
+    public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
     public static final RegistryObject<MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU = MENU_TYPES.register("team_inventory",
             () -> IForgeMenuType.create(TeamInventoryMenu::new));
@@ -91,6 +95,7 @@ public class Life_contract {
         CREATIVE_TABS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
+        MOB_EFFECTS.register(modEventBus);
 
         NetworkHandler.register();
 

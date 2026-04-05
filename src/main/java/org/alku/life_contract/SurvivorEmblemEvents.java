@@ -7,10 +7,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.Optional;
 
@@ -33,96 +29,56 @@ public class SurvivorEmblemEvents {
     }
 
     private static void handlePlayerKill(ServerPlayer killer, ServerPlayer victim) {
-        Optional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper()
-                .getCuriosHandler(killer).resolve();
+        Optional<ItemStack> emblem = CuriosIntegration.getEquippedItem(killer, SurvivorEmblemItem.class);
         
-        if (curiosHandler.isPresent()) {
-            ICuriosItemHandler handler = curiosHandler.get();
-            Optional<ICurioStacksHandler> stacksHandler = handler.getStacksHandler("curio");
+        if (emblem.isPresent()) {
+            ItemStack stack = emblem.get();
+            SurvivorEmblemItem.addKill(stack);
+            SurvivorEmblemItem emblemItem = (SurvivorEmblemItem) stack.getItem();
+            emblemItem.applyAttributes(killer, stack);
             
-            if (stacksHandler.isPresent()) {
-                IDynamicStackHandler stackHandler = stacksHandler.get().getStacks();
-                for (int i = 0; i < stackHandler.getSlots(); i++) {
-                    ItemStack stack = stackHandler.getStackInSlot(i);
-                    if (stack.getItem() instanceof SurvivorEmblemItem) {
-                        SurvivorEmblemItem.addKill(stack);
-                        SurvivorEmblemItem emblem = (SurvivorEmblemItem) stack.getItem();
-                        emblem.applyAttributes(killer, stack);
-                        
-                        int kills = SurvivorEmblemItem.getKills(stack);
-                        killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                                "§6[幸存者徽记] §f击杀数: §e" + kills + " §7(+" + 
-                                (kills * SurvivorEmblemItem.ATTACK_DAMAGE_PER_KILL) + " 攻击, +" +
-                                (kills * SurvivorEmblemItem.MAX_HEALTH_PER_KILL) + " 生命, +" +
-                                (kills * SurvivorEmblemItem.ARMOR_PER_KILL) + " 护甲)"));
-                        return;
-                    }
+            int kills = SurvivorEmblemItem.getKills(stack);
+            killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§6[幸存者徽记] §f击杀数: §e" + kills + " §7(+" + 
+                    (kills * SurvivorEmblemItem.ATTACK_DAMAGE_PER_KILL) + " 攻击, +" +
+                    (kills * SurvivorEmblemItem.MAX_HEALTH_PER_KILL) + " 生命, +" +
+                    (kills * SurvivorEmblemItem.ARMOR_PER_KILL) + " 护甲)"));
+        } else {
+            ItemStack newEmblem = new ItemStack(Life_contract.SURVIVOR_EMBLEM.get());
+            SurvivorEmblemItem.setKills(newEmblem, 1);
+            
+            boolean equipped = CuriosIntegration.equipItem(killer, newEmblem, "curio");
+            
+            if (!equipped) {
+                if (!killer.addItem(newEmblem)) {
+                    killer.drop(newEmblem, false);
                 }
             }
+            
+            killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§6[幸存者徽记] §f获得幸存者徽记！击杀数: §e1"));
         }
-        
-        // 如果玩家没有徽记，创建一个新的
-        ItemStack newEmblem = new ItemStack(Life_contract.SURVIVOR_EMBLEM.get());
-        SurvivorEmblemItem.setKills(newEmblem, 1);
-        
-        boolean equipped = CuriosApi.getCuriosHelper().getCuriosHandler(killer)
-                .resolve()
-                .map(handler -> {
-                    Optional<ICurioStacksHandler> stacksHandler = handler.getStacksHandler("curio");
-                    if (stacksHandler.isPresent()) {
-                        IDynamicStackHandler stackHandler = stacksHandler.get().getStacks();
-                        for (int i = 0; i < stackHandler.getSlots(); i++) {
-                            if (stackHandler.getStackInSlot(i).isEmpty()) {
-                                stackHandler.setStackInSlot(i, newEmblem);
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }).orElse(false);
-        
-        if (!equipped) {
-            if (!killer.addItem(newEmblem)) {
-                killer.drop(newEmblem, false);
-            }
-        }
-        
-        killer.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                "§6[幸存者徽记] §f获得幸存者徽记！击杀数: §e1"));
     }
 
     private static void dropEmblemOnDeath(ServerPlayer victim) {
-        Optional<ICuriosItemHandler> curiosHandler = CuriosApi.getCuriosHelper()
-                .getCuriosHandler(victim).resolve();
+        Optional<ItemStack> emblem = CuriosIntegration.getEquippedItem(victim, SurvivorEmblemItem.class);
         
-        if (curiosHandler.isPresent()) {
-            ICuriosItemHandler handler = curiosHandler.get();
-            Optional<ICurioStacksHandler> stacksHandler = handler.getStacksHandler("curio");
+        if (emblem.isPresent()) {
+            ItemStack emblemDrop = emblem.get().copy();
+            emblem.get().setCount(0);
             
-            if (stacksHandler.isPresent()) {
-                IDynamicStackHandler stackHandler = stacksHandler.get().getStacks();
-                for (int i = 0; i < stackHandler.getSlots(); i++) {
-                    ItemStack stack = stackHandler.getStackInSlot(i);
-                    if (stack.getItem() instanceof SurvivorEmblemItem) {
-                        ItemStack emblemDrop = stack.copy();
-                        stackHandler.setStackInSlot(i, ItemStack.EMPTY);
-                        
-                        net.minecraft.world.entity.item.ItemEntity itemEntity = 
-                                new net.minecraft.world.entity.item.ItemEntity(
-                                        victim.level(), 
-                                        victim.getX(), 
-                                        victim.getY(), 
-                                        victim.getZ(), 
-                                        emblemDrop);
-                        victim.level().addFreshEntity(itemEntity);
-                        
-                        int kills = SurvivorEmblemItem.getKills(emblemDrop);
-                        victim.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                                "§c[幸存者徽记] §f你的徽记已掉落！击杀数: §e" + kills));
-                        return;
-                    }
-                }
-            }
+            net.minecraft.world.entity.item.ItemEntity itemEntity = 
+                    new net.minecraft.world.entity.item.ItemEntity(
+                            victim.level(), 
+                            victim.getX(), 
+                            victim.getY(), 
+                            victim.getZ(), 
+                            emblemDrop);
+            victim.level().addFreshEntity(itemEntity);
+            
+            int kills = SurvivorEmblemItem.getKills(emblemDrop);
+            victim.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§c[幸存者徽记] §f你的徽记已掉落！击杀数: §e" + kills));
         }
     }
 

@@ -11,5 +11,7 @@
   
   "key.categories.life_contract": "Life Contract",
   "key.life_contract.open_team_inventory": "Open Team Inventory",
-  "container.life_contract.team_inventory": "Team Inventory"
+  "container.life_contract.team_inventory": "Team Inventory",
+  
+  "effect.life_contract.slow_infection": "Slow Infection"
 }
