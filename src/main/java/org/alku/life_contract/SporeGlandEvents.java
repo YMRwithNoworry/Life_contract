@@ -129,7 +129,7 @@ public class SporeGlandEvents {
     private static void spawnSporeMinion(LivingEntity source) {
         if (!(source.level() instanceof ServerLevel serverLevel)) return;
         
-        ResourceLocation sporeEntityId = new ResourceLocation("spore", "inf_human");
+        ResourceLocation sporeEntityId = ResourceLocation.fromNamespaceAndPath("spore", "inf_human");
         EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(sporeEntityId);
         
         if (entityType == null) {

@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExtendedArmorRenderer {
 
-    private static final ResourceLocation ARMOR_ICONS = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation ARMOR_ICONS = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
     private static final int ICON_WIDTH = 9;
     private static final int ICON_HEIGHT = 9;
 

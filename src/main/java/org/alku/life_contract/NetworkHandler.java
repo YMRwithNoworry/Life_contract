@@ -16,13 +16,15 @@ import org.alku.life_contract.revive.PacketSyncDeadTeammates;
 import org.alku.life_contract.follower.PacketOpenFollowerWand;
 import org.alku.life_contract.follower.PacketSyncFollower;
 import org.alku.life_contract.follower.PacketSyncFollowerHunger;
+import org.alku.life_contract.events.PacketSyncEvents;
+import org.alku.life_contract.PacketSyncChaosBalance;
 
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
 
     @SuppressWarnings("deprecation")
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(Life_contract.MODID, "main"),
+            ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -83,6 +85,24 @@ public class NetworkHandler {
                 PacketSyncTeamInventory::encode,
                 PacketSyncTeamInventory::new,
                 PacketSyncTeamInventory::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncEvents.class,
+                PacketSyncEvents::encode,
+                PacketSyncEvents::new,
+                PacketSyncEvents::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncChaosBalance.class,
+                PacketSyncChaosBalance::encode,
+                PacketSyncChaosBalance::new,
+                PacketSyncChaosBalance::handle
+        );
+        CHANNEL.registerMessage(id++,
+                PacketSyncInfection.class,
+                PacketSyncInfection::encode,
+                PacketSyncInfection::new,
+                PacketSyncInfection::handle
         );
     }
 

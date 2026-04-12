@@ -198,8 +198,10 @@ public class FollowerWandItem extends Item {
         if (captureTag.contains("Health")) {
             itemTag.putFloat(CreatureEggItem.TAG_CAPTURED_HEALTH, captureTag.getFloat("Health"));
         }
-        if (captureTag.contains("Attributes")) {
-            net.minecraft.nbt.ListTag attributes = captureTag.getList("Attributes", 10);
+        
+        CompoundTag entityData = captureTag.getCompound(TAG_ENTITY_DATA);
+        if (entityData.contains("Attributes")) {
+            net.minecraft.nbt.ListTag attributes = entityData.getList("Attributes", 10);
             for (int i = 0; i < attributes.size(); i++) {
                 CompoundTag attr = attributes.getCompound(i);
                 if (attr.getString("Name").equals("minecraft:generic.max_health")) {
@@ -245,6 +247,11 @@ public class FollowerWandItem extends Item {
                     String customName = CreatureEggItem.getCustomName(stack);
                     if (customName != null) {
                         captureTag.putString(TAG_CUSTOM_NAME, customName);
+                    }
+                    
+                    float health = CreatureEggItem.getCapturedHealth(stack);
+                    if (health > 0) {
+                        captureTag.putFloat("Health", health);
                     }
                 }
                 

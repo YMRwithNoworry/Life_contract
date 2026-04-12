@@ -134,7 +134,29 @@ public class SurvivorEmblemItem extends Item implements ICurioItem {
     
     @Override
     public boolean canEquip(SlotContext slotContext, ItemStack stack) {
+        if (slotContext.entity() instanceof Player player) {
+            return !hasSameAccessoryEquipped(player, this.getClass());
+        }
         return true;
+    }
+    
+    private boolean hasSameAccessoryEquipped(Player player, Class<?> itemClass) {
+        var curiosHelper = top.theillusivec4.curios.api.CuriosApi.getCuriosHelper();
+        var handlerOpt = curiosHelper.getCuriosHandler(player).resolve();
+        if (handlerOpt.isEmpty()) return false;
+        
+        var handler = handlerOpt.get();
+        for (var entry : handler.getCurios().entrySet()) {
+            var stacksHandler = entry.getValue();
+            var stacks = stacksHandler.getStacks();
+            for (int i = 0; i < stacks.getSlots(); i++) {
+                var equippedStack = stacks.getStackInSlot(i);
+                if (!equippedStack.isEmpty() && itemClass.isInstance(equippedStack.getItem())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

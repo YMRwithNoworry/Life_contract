@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ReviveTeammateScreen extends AbstractContainerScreen<ReviveTeammateMenu> {
 
-    private static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation("textures/gui/container/generic_54.png");
+    private static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
     
     private final List<Button> teammateButtons = new ArrayList<>();
     private Button skipButton;

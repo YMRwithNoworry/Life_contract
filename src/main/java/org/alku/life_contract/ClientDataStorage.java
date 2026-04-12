@@ -1,8 +1,11 @@
 package org.alku.life_contract;
 
 import net.minecraft.core.BlockPos;
+import org.alku.life_contract.events.PacketSyncEvents;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,6 +20,18 @@ public class ClientDataStorage {
     private static int markedTargetZ = 0;
     
     private static int healerCooldown = 0;
+    
+    private static boolean gameActive = false;
+    private static boolean sporeSurgeActive = false;
+    private static int sporeSurgeRemaining = 0;
+    private static boolean purificationRiftActive = false;
+    private static int safeBubbleRemaining = 0;
+    private static List<int[]> bubblePositions = new ArrayList<>();
+    private static boolean bountyActive = false;
+    private static String bountyTargetName = "";
+    private static boolean endgameOverloadActive = false;
+    private static boolean sporeRainActive = false;
+    private static int sporeRainRemaining = 0;
 
     public static class PlayerData {
         public String contractMod = "";
@@ -145,4 +160,58 @@ public class ClientDataStorage {
             healerCooldown--;
         }
     }
+    
+    public static void setEventData(boolean gameActive, boolean sporeSurgeActive, int sporeSurgeRemaining,
+                                     boolean purificationRiftActive, int safeBubbleRemaining,
+                                     List<?> bubbleDataList,
+                                     boolean bountyActive, String bountyTargetName, boolean endgameOverloadActive,
+                                     boolean sporeRainActive, int sporeRainRemaining) {
+        ClientDataStorage.gameActive = gameActive;
+        ClientDataStorage.sporeSurgeActive = sporeSurgeActive;
+        ClientDataStorage.sporeSurgeRemaining = sporeSurgeRemaining;
+        ClientDataStorage.purificationRiftActive = purificationRiftActive;
+        ClientDataStorage.safeBubbleRemaining = safeBubbleRemaining;
+        
+        ClientDataStorage.bubblePositions.clear();
+        if (bubbleDataList != null) {
+            for (Object obj : bubbleDataList) {
+                if (obj instanceof PacketSyncEvents.BubbleData) {
+                    PacketSyncEvents.BubbleData bd = (PacketSyncEvents.BubbleData) obj;
+                    ClientDataStorage.bubblePositions.add(new int[]{bd.x, bd.y, bd.z, (int) bd.radius});
+                }
+            }
+        }
+        
+        ClientDataStorage.bountyActive = bountyActive;
+        ClientDataStorage.bountyTargetName = bountyTargetName != null ? bountyTargetName : "";
+        ClientDataStorage.endgameOverloadActive = endgameOverloadActive;
+        ClientDataStorage.sporeRainActive = sporeRainActive;
+        ClientDataStorage.sporeRainRemaining = sporeRainRemaining;
+    }
+    
+    public static boolean isGameActive() { return gameActive; }
+    public static boolean isSporeSurgeActive() { return sporeSurgeActive; }
+    public static int getSporeSurgeRemaining() { return sporeSurgeRemaining; }
+    public static boolean isPurificationRiftActive() { return purificationRiftActive; }
+    public static int getSafeBubbleRemaining() { return safeBubbleRemaining; }
+    public static List<int[]> getBubblePositions() { return bubblePositions; }
+    public static boolean isBountyActive() { return bountyActive; }
+    public static String getBountyTargetName() { return bountyTargetName; }
+    public static boolean isEndgameOverloadActive() { return endgameOverloadActive; }
+    public static boolean isSporeRainActive() { return sporeRainActive; }
+    public static int getSporeRainRemaining() { return sporeRainRemaining; }
+    
+    private static double chaosBalanceBonus = 0;
+    private static int chaosInfectedCount = 0;
+    private static int chaosNonInfectedCount = 0;
+    
+    public static void setChaosBalanceData(double bonus, int infected, int nonInfected) {
+        chaosBalanceBonus = bonus;
+        chaosInfectedCount = infected;
+        chaosNonInfectedCount = nonInfected;
+    }
+    
+    public static double getChaosBalanceBonus() { return chaosBalanceBonus; }
+    public static int getChaosInfectedCount() { return chaosInfectedCount; }
+    public static int getChaosNonInfectedCount() { return chaosNonInfectedCount; }
 }

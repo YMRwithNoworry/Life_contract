@@ -10,6 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,6 +31,8 @@ import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
+
+import org.alku.life_contract.events.GameEventManager;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ContractCommands {
@@ -158,8 +161,166 @@ public class ContractCommands {
 
                 registerTeamCommands(contract);
                 registerAdminCommand(contract);
+                registerGameCommands(contract);
 
                 event.getDispatcher().register(contract);
+        }
+        
+        private static void registerGameCommands(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
+                contract.then(Commands.literal("game")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("start")
+                                .executes(context -> {
+                                        ServerPlayer player = context.getSource().getPlayerOrException();
+                                        GameEventManager.startGame(player.serverLevel(), player.getX(), player.getZ());
+                                        
+                                        net.minecraft.server.MinecraftServer server = player.getServer();
+                                        if (server != null) {
+                                                server.getCommands().performPrefixedCommand(
+                                                        server.createCommandSourceStack(),
+                                                        "bw_auto_start 60 0.8 45 20"
+                                                );
+                                        }
+                                        
+                                        context.getSource().sendSuccess(() -> 
+                                                Component.literal("§a[游戏事件] §f游戏已开始！边界已收缩至你周围600x600区域。"), true);
+                                        return 1;
+                                }))
+                        .then(Commands.literal("pause")
+                                .executes(context -> {
+                                        GameEventManager.pauseGame();
+                                        return 1;
+                                }))
+                        .then(Commands.literal("resume")
+                                .executes(context -> {
+                                        GameEventManager.resumeGame();
+                                        return 1;
+                                }))
+                        .then(Commands.literal("stop")
+                                .executes(context -> {
+                                        GameEventManager.stopGame();
+                                        context.getSource().sendSuccess(() -> 
+                                                Component.literal("§c[游戏事件] §f游戏已停止。"), true);
+                                        return 1;
+                                }))
+                        .then(Commands.literal("status")
+                                .executes(context -> {
+                                        boolean active = GameEventManager.isGameActive();
+                                        boolean paused = GameEventManager.isGamePaused();
+                                        long elapsed = GameEventManager.getElapsedSeconds();
+                                        
+                                        if (!active) {
+                                                context.getSource().sendSuccess(() -> 
+                                                        Component.literal("§7[游戏事件] §f游戏未开始。"), false);
+                                        } else if (paused) {
+                                                context.getSource().sendSuccess(() -> 
+                                                        Component.literal("§e[游戏事件] §f游戏已暂停。已进行时间: §b" + formatTime(elapsed)), false);
+                                        } else {
+                                                context.getSource().sendSuccess(() -> 
+                                                        Component.literal("§a[游戏事件] §f游戏进行中。已进行时间: §b" + formatTime(elapsed)), false);
+                                        }
+                                        return 1;
+                                }))
+                        .then(Commands.literal("event")
+                                .then(Commands.literal("trigger")
+                                        .then(Commands.argument("event_name", StringArgumentType.string())
+                                                .suggests((context, builder) -> {
+                                                        String remaining = builder.getRemaining().toLowerCase();
+                                                        String[] events = {"spore_surge", "bounty", "purification_rift", "endgame_overload", "spore_rain"};
+                                                        for (String event : events) {
+                                                                if (event.startsWith(remaining)) {
+                                                                        builder.suggest(event);
+                                                                }
+                                                        }
+                                                        return builder.buildFuture();
+                                                })
+                                                .executes(context -> {
+                                                        String eventName = StringArgumentType.getString(context, "event_name");
+                                                        return triggerEvent(context, eventName);
+                                                })))
+                                .then(Commands.literal("stop")
+                                        .then(Commands.argument("event_name", StringArgumentType.string())
+                                                .suggests((context, builder) -> {
+                                                        String remaining = builder.getRemaining().toLowerCase();
+                                                        String[] events = {"spore_surge", "bounty", "purification_rift", "endgame_overload", "spore_rain"};
+                                                        for (String event : events) {
+                                                                if (event.startsWith(remaining)) {
+                                                                        builder.suggest(event);
+                                                                }
+                                                        }
+                                                        return builder.buildFuture();
+                                                })
+                                                .executes(context -> {
+                                                        String eventName = StringArgumentType.getString(context, "event_name");
+                                                        return stopEvent(context, eventName);
+                                                })))));
+        }
+        
+        private static int triggerEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
+                ServerLevel level = context.getSource().getLevel();
+                switch (eventName.toLowerCase()) {
+                        case "spore_surge":
+                                GameEventManager.forceTriggerSporeSurge(level);
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§c[游戏事件] §f已强制触发 §e孢潮推进 §f事件！"), true);
+                                return 1;
+                        case "bounty":
+                                GameEventManager.forceTriggerBountyHunt();
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§e[游戏事件] §f已强制触发 §e清道夫悬赏 §f事件！"), true);
+                                return 1;
+                        case "purification_rift":
+                                GameEventManager.forceTriggerPurificationRift(level);
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§b[游戏事件] §f已强制触发 §e净化裂隙 §f事件！"), true);
+                                return 1;
+                        case "endgame_overload":
+                                GameEventManager.forceTriggerEndgameOverload(level);
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§4[游戏事件] §f已强制触发 §e终局过载 §f事件！"), true);
+                                return 1;
+                        case "spore_rain":
+                                GameEventManager.forceTriggerSporeRain(level);
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§2[游戏事件] §f已强制触发 §e孢子雨 §f事件！"), true);
+                                return 1;
+                        default:
+                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                return 0;
+                }
+        }
+        
+        private static int stopEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
+                switch (eventName.toLowerCase()) {
+                        case "spore_surge":
+                                GameEventManager.stopSporeSurge();
+                                return 1;
+                        case "bounty":
+                                GameEventManager.clearBounty();
+                                return 1;
+                        case "purification_rift":
+                                GameEventManager.stopPurificationRift();
+                                return 1;
+                        case "endgame_overload":
+                                GameEventManager.stopEndgameOverload();
+                                return 1;
+                        case "spore_rain":
+                                GameEventManager.stopSporeRain();
+                                return 1;
+                        default:
+                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
+                                context.getSource().sendSuccess(() -> 
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                return 0;
+                }
+        }
+        
+        private static String formatTime(long seconds) {
+                long minutes = seconds / 60;
+                long secs = seconds % 60;
+                return String.format("%d:%02d", minutes, secs);
         }
 
         private static void registerTeamCommands(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {

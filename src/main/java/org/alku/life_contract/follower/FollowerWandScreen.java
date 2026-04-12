@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class FollowerWandScreen extends AbstractContainerScreen<FollowerWandMenu> {
 
-    private static final ResourceLocation CONTAINER_LOCATION = new ResourceLocation("textures/gui/container/generic_54.png");
+    private static final ResourceLocation CONTAINER_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
 
     public FollowerWandScreen(FollowerWandMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

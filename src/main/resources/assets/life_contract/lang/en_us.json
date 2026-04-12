@@ -1,17 +1,16 @@
 {
+  "itemGroup.life_contract": "Life Contract",
   "item.life_contract.soul_contract": "Soul Contract",
   "item.life_contract.team_organizer": "Team Organizer",
   "item.life_contract.follower_wand": "Follower Wand",
   "item.life_contract.creature_egg": "Creature Egg",
   "item.life_contract.survivor_emblem": "Survivor Emblem",
   "item.life_contract.spore_gland": "Spore Gland",
-  "item.life_contract.soul_contract.desc": "Connects your soul to a species.",
-  
-  "itemGroup.life_contract": "Life Contract Mod",
-  
-  "key.categories.life_contract": "Life Contract",
-  "key.life_contract.open_team_inventory": "Open Team Inventory",
-  "container.life_contract.team_inventory": "Team Inventory",
-  
-  "effect.life_contract.slow_infection": "Slow Infection"
+  "item.life_contract.spore_bomb": "Spore Bomb",
+  "item.life_contract.chaos_balance": "Chaos Balance",
+  "block.life_contract.infection_purifier": "Infection Purifier",
+  "effect.life_contract.slow_infection": "Slow Infection",
+  "gui.life_contract.team_inventory": "Team Inventory",
+  "gui.life_contract.follower_wand": "Follower Wand",
+  "gui.life_contract.revive_teammate": "Revive Teammate"
 }
