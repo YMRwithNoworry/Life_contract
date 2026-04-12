@@ -20,7 +20,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -38,6 +40,7 @@ import org.alku.life_contract.follower.FollowerWandScreen;
 import org.alku.life_contract.revive.ReviveTeammateMenu;
 import org.alku.life_contract.revive.ReviveTeammateScreen;
 import org.alku.life_contract.blocks.ModBlocks;
+import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 @Mod(Life_contract.MODID)
 public class Life_contract {
@@ -56,6 +59,7 @@ public class Life_contract {
     public static final RegistryObject<Item> SURVIVOR_EMBLEM = ITEMS.register("survivor_emblem", SurvivorEmblemItem::new);
     public static final RegistryObject<Item> SPORE_GLAND = ITEMS.register("spore_gland", SporeGlandItem::new);
     public static final RegistryObject<Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
+    public static final RegistryObject<Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
     public static final RegistryObject<Item> CHAOS_BALANCE = ITEMS.register("chaos_balance", ChaosBalanceItem::new);
 
     public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
@@ -91,11 +95,14 @@ public class Life_contract {
                 output.accept(SURVIVOR_EMBLEM.get());
                 output.accept(SPORE_GLAND.get());
                 output.accept(SPORE_BOMB.get());
+                output.accept(MEAT_PASTE.get());
                 output.accept(CHAOS_BALANCE.get());
             }).build());
 
     public Life_contract() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);

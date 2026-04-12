@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "item": "life_contract:meat_paste"
+    }
+  },
+  "result": {
+    "item": "life_contract:spore_bomb",
+    "count": 1
+  }
+}
