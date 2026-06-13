@@ -53,6 +53,7 @@ public class GameEventManager {
     private static int totalEliminations = 0;
     private static UUID bountyTarget = null;
     private static int bountyKillReward = 0;
+    private static final Map<UUID, Integer> sporeRainExposureTicks = new HashMap<>();
     
     private static final List<SafeBubble> safeBubbles = new ArrayList<>();
     private static double borderDamageMultiplier = 1.0;
@@ -77,6 +78,10 @@ public class GameEventManager {
     private static boolean sporeRainActive = false;
     private static long sporeRainStartTick = 0;
     private static final int SPORE_RAIN_DURATION_SECONDS = 60;
+    private static final int SPORE_RAIN_INFECTION_INTERVAL_TICKS = 100;
+    private static final int SPORE_RAIN_INFECTION_AMOUNT = 1;
+    private static final int SPORE_RAIN_RECOVERY_INTERVAL_TICKS = 20;
+    private static final int SPORE_RAIN_RECOVERY_AMOUNT = 1;
     
     private static final String[] ELITE_MOB_IDS = {
         "spore:knight", "spore:griefer", "spore:braiomil", "spore:leaper",
@@ -179,6 +184,7 @@ public class GameEventManager {
         bountyKillReward = 0;
         totalEliminations = 0;
         borderDamageMultiplier = 1.0;
+        sporeRainExposureTicks.clear();
         
         sporeSurgeTriggered = false;
         purificationRiftTriggered = false;
@@ -288,6 +294,7 @@ public class GameEventManager {
     public static void stopSporeRain() {
         sporeRainActive = false;
         sporeRainStartTick = 0;
+        sporeRainExposureTicks.clear();
         broadcastMessage(Component.literal("§a[游戏事件] §f孢子雨事件已停止。"));
     }
     
@@ -373,11 +380,13 @@ public class GameEventManager {
             long rainElapsed = (currentTick - sporeRainStartTick) / 20;
             if (rainElapsed >= SPORE_RAIN_DURATION_SECONDS) {
                 sporeRainActive = false;
+                sporeRainStartTick = 0;
+                sporeRainExposureTicks.clear();
                 broadcastMessage(Component.literal("§2[孢子雨] §f孢子雨已停止！"));
-            } else {
-                tickSporeRain();
             }
         }
+        
+        tickSporeRain(currentTick);
         
         tickSafeBubbles();
         
@@ -579,6 +588,7 @@ public class GameEventManager {
     private static void triggerSporeRain(long currentTick) {
         sporeRainStartTick = currentTick;
         sporeRainActive = true;
+        sporeRainExposureTicks.clear();
         broadcastMessage(Component.literal("§2[孢子雨] §f孢子雨降临！暴露在天空下的玩家将增加感染值！"));
     }
     
@@ -650,21 +660,30 @@ public class GameEventManager {
         }
     }
     
-    private static void tickSporeRain() {
+    private static void tickSporeRain(long currentTick) {
         for (ServerPlayer player : currentLevel.getPlayers(p -> true)) {
             if (player.isCreative() || player.isSpectator()) continue;
             
-            if (isPlayerExposedToRain(player)) {
-                if (currentLevel.getGameTime() % 20 == 0) {
-                    PlayerInfectionSystem.addInfection(player, 2);
+            UUID playerId = player.getUUID();
+            boolean exposedToSporeRain = sporeRainActive && sporeRainStartTick > 0 && isPlayerExposedToRain(player);
+            if (exposedToSporeRain) {
+                int exposureTicks = sporeRainExposureTicks.getOrDefault(playerId, 0) + 1;
+                sporeRainExposureTicks.put(playerId, exposureTicks);
+                if (exposureTicks % SPORE_RAIN_INFECTION_INTERVAL_TICKS == 0) {
+                    PlayerInfectionSystem.addInfection(player, SPORE_RAIN_INFECTION_AMOUNT);
                 }
-                if (currentLevel.getGameTime() % 200 == 0) {
+                if (currentTick % 200 == 0) {
                     player.sendSystemMessage(Component.literal("§2[孢子雨] §f你暴露在孢子雨中！感染值正在增加！"));
                 }
+            } else if (currentTick % SPORE_RAIN_RECOVERY_INTERVAL_TICKS == 0 && PlayerInfectionSystem.getInfection(player) > 0) {
+                sporeRainExposureTicks.remove(playerId);
+                PlayerInfectionSystem.addInfection(player, -SPORE_RAIN_RECOVERY_AMOUNT);
+            } else {
+                sporeRainExposureTicks.remove(playerId);
             }
         }
         
-        if (currentLevel.getGameTime() % 2 == 0) {
+        if (sporeRainActive && currentTick % 2 == 0) {
             spawnSporeRainParticles();
         }
     }
