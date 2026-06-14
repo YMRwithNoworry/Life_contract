@@ -15,7 +15,11 @@ import org.alku.life_contract.Life_contract;
 public class FollowerWandMenu extends AbstractContainerMenu {
 
     private final SimpleContainer container;
-    public static final int CONTAINER_SIZE = 9;
+    public static final int CONTAINER_SIZE = FollowerWandItem.CONTAINER_SIZE;
+    private static final int COLUMNS = 9;
+    private static final int ROWS = CONTAINER_SIZE / COLUMNS;
+    private static final int PLAYER_INVENTORY_Y = 140;
+    private static final int HOTBAR_Y = 198;
     private final InteractionHand hand;
     private final Player player;
 
@@ -32,18 +36,20 @@ public class FollowerWandMenu extends AbstractContainerMenu {
         this.container = FollowerWandItem.getContainer(wand);
         container.startOpen(playerInventory.player);
 
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new OutputOnlySlot(container, col, 8 + col * 18, 18));
-        }
-
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 50 + row * 18));
+        for (int row = 0; row < ROWS; ++row) {
+            for (int col = 0; col < COLUMNS; ++col) {
+                this.addSlot(new OutputOnlySlot(container, col + row * COLUMNS, 8 + col * 18, 18 + row * 18));
             }
         }
 
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 108));
+        for (int row = 0; row < 3; ++row) {
+            for (int col = 0; col < COLUMNS; ++col) {
+                this.addSlot(new Slot(playerInventory, col + row * COLUMNS + 9, 8 + col * 18, PLAYER_INVENTORY_Y + row * 18));
+            }
+        }
+
+        for (int col = 0; col < COLUMNS; ++col) {
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, HOTBAR_Y));
         }
     }
 

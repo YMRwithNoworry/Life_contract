@@ -7,28 +7,33 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -42,6 +47,34 @@ public class FollowerEvents {
     private static final Map<UUID, Long> PROTECTION_MESSAGE_COOLDOWN = new HashMap<>();
     private static final long TARGET_EXPIRE_TIME = 200;
     private static final long MESSAGE_COOLDOWN_TICKS = 60;
+    private static final String TAG_FOLLOWER_OWNER_UUID = "FollowerOwnerUUID";
+    private static final String TAG_INHERIT_FOLLOWER_OWNER_UUID = "LifeContractInheritedFollowerOwnerUUID";
+    private static final double SUMMON_INHERIT_RADIUS = 12.0D;
+    private static final Set<UUID> INHERITED_SUMMONS = new HashSet<>();
+    private static final String[] OWNER_METHOD_NAMES = {
+        "getOwner",
+        "getOwnerUUID",
+        "getOwnerId",
+        "getSummoner",
+        "getSummonerUUID",
+        "getCaster",
+        "getCasterUUID",
+        "getTrueOwner",
+        "getTrueOwnerUUID"
+    };
+
+    @SubscribeEvent
+    public static void onMobFinalizeSpawn(MobSpawnEvent.FinalizeSpawn event) {
+        if (event.getLevel().isClientSide() || event.getSpawnType() != MobSpawnType.MOB_SUMMONED) {
+            return;
+        }
+
+        Mob mob = event.getEntity();
+        UUID ownerUUID = findSummonedFollowerOwner(mob);
+        if (ownerUUID != null) {
+            mob.getPersistentData().putUUID(TAG_INHERIT_FOLLOWER_OWNER_UUID, ownerUUID);
+        }
+    }
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
@@ -50,15 +83,29 @@ public class FollowerEvents {
         Entity entity = event.getEntity();
         if (entity instanceof Mob mob) {
             CompoundTag tag = mob.getPersistentData();
-            if (tag.contains("FollowerOwnerUUID")) {
-                UUID ownerUUID = tag.getUUID("FollowerOwnerUUID");
-                FOLLOWER_OWNER_MAP.put(mob.getUUID(), ownerUUID);
-                
-                mob.setPersistenceRequired();
-                
-                setupFollowerAI(mob, ownerUUID);
-                
-                syncFollowerToClients(mob, ownerUUID, true);
+            if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
+                registerFollowerWithoutHungerNotification(mob, tag.getUUID(TAG_FOLLOWER_OWNER_UUID));
+                return;
+            }
+
+            if (tag.contains(TAG_INHERIT_FOLLOWER_OWNER_UUID)) {
+                UUID ownerUUID = tag.getUUID(TAG_INHERIT_FOLLOWER_OWNER_UUID);
+                tag.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
+                registerInheritedSummon(mob, ownerUUID);
+                return;
+            }
+
+            UUID directOwnerUUID = findDirectFollowerOwner(mob);
+            if (directOwnerUUID != null) {
+                registerInheritedSummon(mob, directOwnerUUID);
+                return;
+            }
+
+            if (mob.getSpawnType() == MobSpawnType.MOB_SUMMONED) {
+                UUID ownerUUID = findNearbyFollowerOwner(mob);
+                if (ownerUUID != null) {
+                    registerInheritedSummon(mob, ownerUUID);
+                }
             }
         }
     }
@@ -68,6 +115,112 @@ public class FollowerEvents {
         
         mob.targetSelector.addGoal(1, new FollowerAttackGoal(mob, ownerUUID));
         mob.goalSelector.addGoal(4, new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F));
+    }
+
+    private static UUID findSummonedFollowerOwner(Mob mob) {
+        UUID directOwner = findDirectFollowerOwner(mob);
+        if (directOwner != null) {
+            return directOwner;
+        }
+
+        return findNearbyFollowerOwner(mob);
+    }
+
+    private static UUID findDirectFollowerOwner(Mob mob) {
+        for (String methodName : OWNER_METHOD_NAMES) {
+            Object value = invokeZeroArgMethod(mob, methodName);
+            UUID ownerUUID = resolveFollowerOwner(value, mob);
+            if (ownerUUID != null) {
+                return ownerUUID;
+            }
+        }
+
+        return null;
+    }
+
+    private static Object invokeZeroArgMethod(Mob mob, String methodName) {
+        Class<?> type = mob.getClass();
+        while (type != null && type != Object.class) {
+            try {
+                Method method = type.getDeclaredMethod(methodName);
+                if (method.getParameterCount() == 0 && !Modifier.isStatic(method.getModifiers())) {
+                    method.setAccessible(true);
+                    return method.invoke(mob);
+                }
+            } catch (NoSuchMethodException ignored) {
+                type = type.getSuperclass();
+                continue;
+            } catch (ReflectiveOperationException | RuntimeException ignored) {
+                return null;
+            }
+            type = type.getSuperclass();
+        }
+
+        try {
+            Method method = mob.getClass().getMethod(methodName);
+            if (method.getParameterCount() == 0 && !Modifier.isStatic(method.getModifiers())) {
+                return method.invoke(mob);
+            }
+        } catch (ReflectiveOperationException | RuntimeException ignored) {
+            return null;
+        }
+
+        return null;
+    }
+
+    private static UUID resolveFollowerOwner(Object value, Mob summonedMob) {
+        if (value instanceof Optional<?> optional) {
+            return optional.map(innerValue -> resolveFollowerOwner(innerValue, summonedMob)).orElse(null);
+        }
+
+        if (value instanceof Mob ownerMob && ownerMob != summonedMob) {
+            return getOwnerUUID(ownerMob);
+        }
+
+        if (value instanceof UUID ownerEntityUUID) {
+            Entity ownerEntity = summonedMob.level() instanceof ServerLevel serverLevel ? serverLevel.getEntity(ownerEntityUUID) : null;
+            if (ownerEntity instanceof Mob ownerMob && ownerMob != summonedMob) {
+                return getOwnerUUID(ownerMob);
+            }
+        }
+
+        return null;
+    }
+
+    private static UUID findNearbyFollowerOwner(Mob summonedMob) {
+        if (!(summonedMob.level() instanceof ServerLevel serverLevel)) {
+            return null;
+        }
+
+        double radius = SUMMON_INHERIT_RADIUS;
+        for (Mob candidate : serverLevel.getEntitiesOfClass(Mob.class, summonedMob.getBoundingBox().inflate(radius))) {
+            if (candidate == summonedMob || !candidate.isAlive()) {
+                continue;
+            }
+
+            UUID ownerUUID = getOwnerUUID(candidate);
+            if (ownerUUID != null) {
+                return ownerUUID;
+            }
+        }
+
+        return null;
+    }
+
+    private static void registerFollowerWithoutHungerNotification(Mob mob, UUID ownerUUID) {
+        mob.getPersistentData().putUUID(TAG_FOLLOWER_OWNER_UUID, ownerUUID);
+        mob.setPersistenceRequired();
+        FOLLOWER_OWNER_MAP.put(mob.getUUID(), ownerUUID);
+        setupFollowerAI(mob, ownerUUID);
+        syncFollowerToClients(mob, ownerUUID, true);
+    }
+
+    private static void registerInheritedSummon(Mob mob, UUID ownerUUID) {
+        if (INHERITED_SUMMONS.add(mob.getUUID())) {
+            registerFollower(mob, ownerUUID);
+        } else {
+            registerFollowerWithoutHungerNotification(mob, ownerUUID);
+        }
     }
 
     @SubscribeEvent
@@ -82,7 +235,7 @@ public class FollowerEvents {
             }
             
             if (target instanceof Mob mob) {
-                UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
+                UUID ownerUUID = getOwnerUUID(mob);
                 if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
                     event.setCanceled(true);
                     
@@ -98,7 +251,7 @@ public class FollowerEvents {
             PLAYER_ATTACKER_TIME.put(player.getUUID(), player.level().getGameTime());
             
             if (attacker instanceof Mob mob) {
-                UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
+                UUID ownerUUID = getOwnerUUID(mob);
                 if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
                     event.setCanceled(true);
                 }
@@ -163,7 +316,7 @@ public class FollowerEvents {
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
         if (event.getEntity() instanceof Mob mob && event.getNewTarget() instanceof Player player) {
-            UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
+            UUID ownerUUID = getOwnerUUID(mob);
             if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
                 event.setNewTarget(null);
             }
@@ -171,13 +324,14 @@ public class FollowerEvents {
     }
 
     public static void registerFollower(Mob mob, UUID ownerUUID) {
-        mob.getPersistentData().putUUID("FollowerOwnerUUID", ownerUUID);
+        UUID oldOwnerUUID = getOwnerUUID(mob);
+        mob.getPersistentData().putUUID(TAG_FOLLOWER_OWNER_UUID, ownerUUID);
         mob.setPersistenceRequired();
         FOLLOWER_OWNER_MAP.put(mob.getUUID(), ownerUUID);
         setupFollowerAI(mob, ownerUUID);
         syncFollowerToClients(mob, ownerUUID, true);
         
-        if (mob.level() instanceof ServerLevel serverLevel) {
+        if ((oldOwnerUUID == null || !oldOwnerUUID.equals(ownerUUID)) && mob.level() instanceof ServerLevel serverLevel) {
             net.minecraft.server.level.ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
             if (owner != null) {
                 FollowerHungerSystem.onFollowerRegistered(owner, mob);
@@ -186,8 +340,10 @@ public class FollowerEvents {
     }
 
     public static void unregisterFollower(Mob mob) {
-        UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
+        UUID ownerUUID = getOwnerUUID(mob);
         FOLLOWER_OWNER_MAP.remove(mob.getUUID());
+        mob.getPersistentData().remove(TAG_FOLLOWER_OWNER_UUID);
+        INHERITED_SUMMONS.remove(mob.getUUID());
         syncFollowerToClients(mob, null, false);
         
         if (ownerUUID != null && mob.level() instanceof ServerLevel serverLevel) {
@@ -213,11 +369,17 @@ public class FollowerEvents {
     }
 
     public static UUID getOwnerUUID(Mob mob) {
-        return FOLLOWER_OWNER_MAP.get(mob.getUUID());
+        UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
+        if (ownerUUID == null && mob.getPersistentData().hasUUID(TAG_FOLLOWER_OWNER_UUID)) {
+            ownerUUID = mob.getPersistentData().getUUID(TAG_FOLLOWER_OWNER_UUID);
+            FOLLOWER_OWNER_MAP.put(mob.getUUID(), ownerUUID);
+        }
+        return ownerUUID;
     }
 
     public static void clearFollower(UUID mobUUID) {
         FOLLOWER_OWNER_MAP.remove(mobUUID);
+        INHERITED_SUMMONS.remove(mobUUID);
     }
 
     @SubscribeEvent
@@ -233,8 +395,8 @@ public class FollowerEvents {
         for (Entity entity : serverLevel.getAllEntities()) {
             if (entity instanceof Mob mob) {
                 CompoundTag tag = mob.getPersistentData();
-                if (tag.contains("FollowerOwnerUUID")) {
-                    UUID ownerUUID = tag.getUUID("FollowerOwnerUUID");
+                if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
+                    UUID ownerUUID = tag.getUUID(TAG_FOLLOWER_OWNER_UUID);
                     if (ownerUUID.equals(playerUUID)) {
                         PacketSyncFollower packet = new PacketSyncFollower(mob.getUUID(), ownerUUID, true);
                         NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
@@ -257,8 +419,8 @@ public class FollowerEvents {
         for (Entity entity : serverLevel.getAllEntities()) {
             if (entity instanceof Mob mob) {
                 CompoundTag tag = mob.getPersistentData();
-                if (tag.contains("FollowerOwnerUUID")) {
-                    UUID ownerUUID = tag.getUUID("FollowerOwnerUUID");
+                if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
+                    UUID ownerUUID = tag.getUUID(TAG_FOLLOWER_OWNER_UUID);
                     if (ownerUUID.equals(playerUUID)) {
                         PacketSyncFollower packet = new PacketSyncFollower(mob.getUUID(), ownerUUID, true);
                         NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);

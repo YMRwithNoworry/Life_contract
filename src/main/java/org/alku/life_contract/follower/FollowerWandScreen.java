@@ -9,10 +9,11 @@ import net.minecraft.world.entity.player.Inventory;
 public class FollowerWandScreen extends AbstractContainerScreen<FollowerWandMenu> {
 
     private static final ResourceLocation CONTAINER_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
+    private static final int CONTAINER_ROWS = FollowerWandMenu.CONTAINER_SIZE / 9;
 
     public FollowerWandScreen(FollowerWandMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageHeight = 133;
+        this.imageHeight = 114 + CONTAINER_ROWS * 18;
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
@@ -32,7 +33,8 @@ public class FollowerWandScreen extends AbstractContainerScreen<FollowerWandMenu
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, 36);
-        guiGraphics.blit(CONTAINER_LOCATION, i, j + 36, 0, 125, this.imageWidth, 97);
+        int inventoryStartY = CONTAINER_ROWS * 18 + 17;
+        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, inventoryStartY);
+        guiGraphics.blit(CONTAINER_LOCATION, i, j + inventoryStartY, 0, 126, this.imageWidth, 96);
     }
 }
