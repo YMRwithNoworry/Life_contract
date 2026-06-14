@@ -3,14 +3,17 @@ package org.alku.life_contract.events;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class GameDataStorage extends SavedData {
@@ -34,6 +37,7 @@ public class GameDataStorage extends SavedData {
     
     private final List<BubbleSaveData> safeBubbles = new ArrayList<>();
     private final Map<UUID, PlayerStatsSaveData> playerStats = new HashMap<>();
+    private final Set<UUID> gameStartPlayerIds = new HashSet<>();
     
     public static class BubbleSaveData {
         public final double x, y, z;
@@ -108,6 +112,11 @@ public class GameDataStorage extends SavedData {
                 playerTag.getInt("Deaths")
             ));
         }
+
+        ListTag gameStartPlayersList = tag.getList("GameStartPlayerIds", Tag.TAG_STRING);
+        for (int i = 0; i < gameStartPlayersList.size(); i++) {
+            data.gameStartPlayerIds.add(UUID.fromString(gameStartPlayersList.getString(i)));
+        }
         
         return data;
     }
@@ -154,6 +163,12 @@ public class GameDataStorage extends SavedData {
             statsTag.put(entry.getKey().toString(), playerTag);
         }
         tag.put("PlayerStats", statsTag);
+
+        ListTag gameStartPlayersList = new ListTag();
+        for (UUID playerId : gameStartPlayerIds) {
+            gameStartPlayersList.add(StringTag.valueOf(playerId.toString()));
+        }
+        tag.put("GameStartPlayerIds", gameStartPlayersList);
         
         return tag;
     }
@@ -188,6 +203,9 @@ public class GameDataStorage extends SavedData {
         
         this.playerStats.clear();
         this.playerStats.putAll(GameEventManager.getPlayerStatsForSave());
+
+        this.gameStartPlayerIds.clear();
+        this.gameStartPlayerIds.addAll(GameEventManager.getGameStartPlayerIdsForSave());
         
         setDirty();
     }
@@ -209,7 +227,8 @@ public class GameDataStorage extends SavedData {
                 borderDamageMultiplier,
                 sporeSurgeStartTick,
                 safeBubbles,
-                playerStats
+                playerStats,
+                gameStartPlayerIds
             );
         }
     }

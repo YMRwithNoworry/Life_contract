@@ -168,8 +168,20 @@ public class ContractCommands {
         
         private static void registerGameCommands(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
                 contract.then(Commands.literal("game")
-                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("join_low_team")
+                                .executes(context -> {
+                                        ServerPlayer joiningPlayer = context.getSource().getPlayerOrException();
+                                        return GameEventManager.joinSmallestTeam(joiningPlayer) ? 1 : 0;
+                                }))
+                        .then(Commands.literal("stay_spectator")
+                                .executes(context -> {
+                                        ServerPlayer joiningPlayer = context.getSource().getPlayerOrException();
+                                        joiningPlayer.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+                                        joiningPlayer.sendSystemMessage(Component.literal("§7[生灵契约] 你将继续保持旁观状态。"));
+                                        return 1;
+                                }))
                         .then(Commands.literal("start")
+                                .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         ServerPlayer player = context.getSource().getPlayerOrException();
                                         GameEventManager.startGame(player.serverLevel(), player.getX(), player.getZ());
@@ -196,16 +208,19 @@ public class ContractCommands {
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")
+                                .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         GameEventManager.pauseGame();
                                         return 1;
                                 }))
                         .then(Commands.literal("resume")
+                                .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         GameEventManager.resumeGame();
                                         return 1;
                                 }))
                         .then(Commands.literal("stop")
+                                .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         GameEventManager.stopGame();
                                         context.getSource().sendSuccess(() -> 
@@ -213,6 +228,7 @@ public class ContractCommands {
                                         return 1;
                                 }))
                         .then(Commands.literal("status")
+                                .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         boolean active = GameEventManager.isGameActive();
                                         boolean paused = GameEventManager.isGamePaused();
@@ -231,6 +247,7 @@ public class ContractCommands {
                                         return 1;
                                 }))
                         .then(Commands.literal("event")
+                                .requires(source -> source.hasPermission(2))
                                 .then(Commands.literal("trigger")
                                         .then(Commands.argument("event_name", StringArgumentType.string())
                                                 .suggests((context, builder) -> {

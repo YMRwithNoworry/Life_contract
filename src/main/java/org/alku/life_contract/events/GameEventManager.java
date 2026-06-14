@@ -28,6 +28,8 @@ import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.PlayerInfectionSystem;
 import org.alku.life_contract.ContractEvents;
+import org.alku.life_contract.SoulContractItem;
+import org.alku.life_contract.TeamOrganizerItem;
 import org.alku.life_contract.compat.CaerulaArborCompat;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -51,6 +53,7 @@ public class GameEventManager {
     private static boolean endgameOverloadManuallyStopped = false;
     
     private static int initialPlayerCount = 0;
+    private static final Set<UUID> gameStartPlayerIds = new HashSet<>();
     
     private static int totalEliminations = 0;
     private static UUID bountyTarget = null;
@@ -80,8 +83,8 @@ public class GameEventManager {
     private static boolean sporeRainActive = false;
     private static long sporeRainStartTick = 0;
     private static final int SPORE_RAIN_DURATION_SECONDS = 60;
-    private static final int SPORE_RAIN_INFECTION_INTERVAL_TICKS = 100;
-    private static final int SPORE_RAIN_INFECTION_AMOUNT = 1;
+    private static final int SPORE_RAIN_INFECTION_INTERVAL_TICKS = 10;
+    private static final int SPORE_RAIN_INFECTION_AMOUNT = 2;
     private static final int SPORE_RAIN_RECOVERY_INTERVAL_TICKS = 20;
     private static final int SPORE_RAIN_RECOVERY_AMOUNT = 1;
     
@@ -143,6 +146,12 @@ public class GameEventManager {
         safeBubbles.clear();
         sporeSurgeStartTick = 0;
         initialPlayerCount = getSurvivalPlayerCount();
+        gameStartPlayerIds.clear();
+        for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
+            if (isActiveGamePlayer(player)) {
+                gameStartPlayerIds.add(player.getUUID());
+            }
+        }
         
         WorldBorder worldBorder = level.getWorldBorder();
         worldBorder.setCenter(centerX, centerZ);
@@ -196,15 +205,57 @@ public class GameEventManager {
         endgameOverloadManuallyStopped = false;
         sporeSurgeStartTick = 0;
         initialPlayerCount = 0;
+        gameStartPlayerIds.clear();
         
         broadcastMessage(Component.literal("§c[游戏事件] §f游戏已结束，所有事件已清除。"));
     }
     
     public static boolean isGameActive() { return gameActive; }
     public static boolean isGamePaused() { return gamePaused; }
+    public static boolean isPlayerPartOfGame(UUID playerUUID) { return gameStartPlayerIds.contains(playerUUID); }
     public static double getBorderDamageMultiplier() { return borderDamageMultiplier; }
     public static List<SafeBubble> getSafeBubbles() { return safeBubbles; }
     public static UUID getBountyTarget() { return bountyTarget; }
+    
+    public static Set<UUID> getGameStartPlayerIdsForSave() {
+        return new HashSet<>(gameStartPlayerIds);
+    }
+    
+    public static void handleLateJoinPlayer(ServerPlayer player) {
+        if (!gameActive || isPlayerPartOfGame(player.getUUID())) {
+            return;
+        }
+
+        player.setGameMode(GameType.SPECTATOR);
+    }
+    
+    public static boolean joinSmallestTeam(ServerPlayer player) {
+        if (!gameActive || currentLevel == null) {
+            player.sendSystemMessage(Component.literal("§c[生灵契约] 游戏尚未开始。"));
+            return false;
+        }
+
+        if (isPlayerPartOfGame(player.getUUID())) {
+            player.sendSystemMessage(Component.literal("§e[生灵契约] 你已经是本局游戏玩家。"));
+            return false;
+        }
+
+        ServerPlayer leader = findSmallestTeamLeader();
+        if (leader == null) {
+            player.sendSystemMessage(Component.literal("§c[生灵契约] 没有可加入的队伍。"));
+            return false;
+        }
+
+        assignPlayerToLeaderTeam(player, leader);
+        gameStartPlayerIds.add(player.getUUID());
+        player.setGameMode(GameType.SURVIVAL);
+        PlayerInfectionSystem.resetInfection(player);
+
+        player.sendSystemMessage(Component.literal("§a[生灵契约] 你已加入人数最少的队伍：§e" + leader.getName().getString()));
+        broadcastMessage(Component.literal("§a[生灵契约] §f" + player.getName().getString() + " §f加入了队伍 §e" + leader.getName().getString()));
+        saveGameData();
+        return true;
+    }
     public static long getElapsedSeconds() {
         if (!gameActive || currentLevel == null) return 0;
         return (currentLevel.getGameTime() - gameStartTick) / 20;
@@ -824,13 +875,84 @@ public class GameEventManager {
     private static List<ServerPlayer> getSurvivalPlayers() {
         if (currentLevel == null) return new ArrayList<>();
         
-        return currentLevel.getPlayers(p -> 
-            p.gameMode.getGameModeForPlayer() == GameType.SURVIVAL ||
-            p.gameMode.getGameModeForPlayer() == GameType.ADVENTURE);
+        return currentLevel.getPlayers(GameEventManager::isActiveGamePlayer);
     }
     
     private static int getSurvivalPlayerCount() {
         return getSurvivalPlayers().size();
+    }
+    
+    private static boolean isActiveGamePlayer(ServerPlayer player) {
+        GameType gameType = player.gameMode.getGameModeForPlayer();
+        return gameType == GameType.SURVIVAL || gameType == GameType.ADVENTURE;
+    }
+    
+    private static ServerPlayer findSmallestTeamLeader() {
+        if (currentLevel == null) {
+            return null;
+        }
+
+        Map<UUID, List<ServerPlayer>> teams = new HashMap<>();
+        Map<UUID, ServerPlayer> leaders = new HashMap<>();
+        for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
+            if (!isPlayerPartOfGame(player.getUUID()) || !isActiveGamePlayer(player)) {
+                continue;
+            }
+
+            UUID leaderUUID = ContractEvents.getLeaderUUID(player);
+            if (leaderUUID == null) {
+                leaderUUID = player.getUUID();
+            }
+
+            teams.computeIfAbsent(leaderUUID, key -> new ArrayList<>()).add(player);
+            if (player.getUUID().equals(leaderUUID)) {
+                leaders.put(leaderUUID, player);
+            }
+        }
+
+        ServerPlayer bestLeader = null;
+        int bestSize = Integer.MAX_VALUE;
+        List<Map.Entry<UUID, List<ServerPlayer>>> entries = new ArrayList<>(teams.entrySet());
+        Collections.shuffle(entries);
+        for (Map.Entry<UUID, List<ServerPlayer>> entry : entries) {
+            ServerPlayer leader = leaders.get(entry.getKey());
+            if (leader == null) {
+                leader = currentLevel.getServer().getPlayerList().getPlayer(entry.getKey());
+            }
+            if (leader == null) {
+                continue;
+            }
+
+            int size = entry.getValue().size();
+            if (size < bestSize) {
+                bestSize = size;
+                bestLeader = leader;
+            }
+        }
+
+        return bestLeader;
+    }
+
+    private static void assignPlayerToLeaderTeam(ServerPlayer player, ServerPlayer leader) {
+        UUID leaderUUID = leader.getUUID();
+        player.getPersistentData().putUUID(TeamOrganizerItem.TAG_LEADER_UUID, leaderUUID);
+        player.getPersistentData().putString(TeamOrganizerItem.TAG_LEADER_NAME, leader.getName().getString());
+
+        int teamNumber = leader.getPersistentData().contains(TeamOrganizerItem.TAG_TEAM_NUMBER)
+            ? leader.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER)
+            : Math.abs(leaderUUID.hashCode() % 9999) + 1;
+        leader.getPersistentData().putInt(TeamOrganizerItem.TAG_TEAM_NUMBER, teamNumber);
+        player.getPersistentData().putInt(TeamOrganizerItem.TAG_TEAM_NUMBER, teamNumber);
+
+        String leaderMod = leader.getPersistentData().getString(SoulContractItem.TAG_CONTRACT_MOD);
+        if (!leaderMod.isEmpty()) {
+            player.getPersistentData().putString(SoulContractItem.TAG_CONTRACT_MOD, leaderMod);
+        } else {
+            player.getPersistentData().remove(SoulContractItem.TAG_CONTRACT_MOD);
+        }
+
+        ContractEvents.syncData(leader);
+        ContractEvents.syncData(player);
     }
     
     private static void broadcastMessage(Component message) {
@@ -929,7 +1051,8 @@ public class GameEventManager {
                                          int initPlayers, int eliminations, UUID bounty, int bountyReward,
                                          double borderMult, long sporeStart, 
                                          List<GameDataStorage.BubbleSaveData> savedBubbles,
-                                         Map<UUID, GameDataStorage.PlayerStatsSaveData> savedStats) {
+                                         Map<UUID, GameDataStorage.PlayerStatsSaveData> savedStats,
+                                         Set<UUID> savedGameStartPlayerIds) {
         currentLevel = level;
         gameActive = true;
         gameStartTick = startTick;
@@ -946,6 +1069,10 @@ public class GameEventManager {
         bountyKillReward = bountyReward;
         borderDamageMultiplier = borderMult;
         sporeSurgeStartTick = sporeStart;
+        gameStartPlayerIds.clear();
+        if (savedGameStartPlayerIds != null) {
+            gameStartPlayerIds.addAll(savedGameStartPlayerIds);
+        }
         
         safeBubbles.clear();
         for (GameDataStorage.BubbleSaveData data : savedBubbles) {

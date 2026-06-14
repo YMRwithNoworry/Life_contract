@@ -3,11 +3,15 @@ package org.alku.life_contract;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -15,6 +19,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import org.alku.life_contract.events.GameEventManager;
 
 import java.util.*;
 
@@ -74,8 +79,30 @@ public class ContractEvents {
         syncData(event.getEntity());
         
         if (!event.getEntity().level().isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            GameEventManager.handleLateJoinPlayer(serverPlayer);
             syncAllPlayersDataToNewPlayer(serverPlayer);
+            if (serverPlayer.gameMode.getGameModeForPlayer() == GameType.SPECTATOR && !GameEventManager.isPlayerPartOfGame(serverPlayer.getUUID())) {
+                sendLateJoinChoices(serverPlayer);
+            }
         }
+    }
+
+    private static void sendLateJoinChoices(ServerPlayer player) {
+        if (!GameEventManager.isGameActive()) {
+            return;
+        }
+
+        player.sendSystemMessage(Component.literal("§e[生灵契约] §f游戏已开始，你已默认进入旁观者模式。"));
+        player.sendSystemMessage(Component.literal("")
+            .append(Component.literal("§a[加入人数最少的队伍]")
+                .setStyle(Style.EMPTY
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/contract game join_low_team"))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击加入当前人数最少的队伍")))))
+            .append(Component.literal("  "))
+            .append(Component.literal("§7[保持旁观]")
+                .setStyle(Style.EMPTY
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/contract game stay_spectator"))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("点击保持旁观状态"))))));
     }
     
     private static void syncAllPlayersDataToNewPlayer(ServerPlayer newPlayer) {
