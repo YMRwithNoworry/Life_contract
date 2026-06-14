@@ -20,8 +20,18 @@ public class EventHUD {
     
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelowAll("spore_rain_tint", SPORE_RAIN_TINT_OVERLAY);
         event.registerAbove(VanillaGuiOverlay.EXPERIENCE_BAR.id(), "event_status", EVENT_HUD_OVERLAY);
     }
+
+    public static final IGuiOverlay SPORE_RAIN_TINT_OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) return;
+        if (!ClientDataStorage.isSporeRainActive()) return;
+        if (!mc.level.canSeeSky(mc.player.blockPosition())) return;
+
+        guiGraphics.fill(0, 0, screenWidth, screenHeight, 0x33FFD45A);
+    };
     
     public static final IGuiOverlay EVENT_HUD_OVERLAY = (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
         if (!isEnabled) return;

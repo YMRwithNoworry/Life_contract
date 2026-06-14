@@ -150,6 +150,7 @@ public class GameEventManager {
         for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
             if (isActiveGamePlayer(player)) {
                 gameStartPlayerIds.add(player.getUUID());
+                PlayerInfectionSystem.resetInfection(player);
             }
         }
         
