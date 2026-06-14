@@ -341,8 +341,10 @@ public class CreatureEggItem extends Item {
             float capturedMaxHealth = getCapturedMaxHealth(stack);
             if (capturedMaxHealth > 0) {
                 mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(capturedMaxHealth);
-                mob.setHealth(Math.min(capturedHealth, capturedMaxHealth));
             }
+            float restoredMaxHealth = mob.getMaxHealth();
+            float restoredHealth = capturedHealth > 0 ? Math.min(capturedHealth, restoredMaxHealth) : restoredMaxHealth;
+            mob.setHealth(Math.max(1.0F, restoredHealth));
             
             if (stack.hasTag() && stack.getTag() != null && stack.getTag().getBoolean(TAG_IS_WITHER_GACHA)) {
                 mob.addEffect(new net.minecraft.world.effect.MobEffectInstance(
@@ -403,6 +405,16 @@ public class CreatureEggItem extends Item {
         entityData.remove("DeathLootTableSeed");
         entityData.remove("Leash");
         entityData.remove("Invisible");
+        entityData.remove("Health");
+        entityData.remove("AbsorptionAmount");
+        entityData.remove("NoAI");
+        entityData.remove("NoGravity");
+        entityData.remove("Invulnerable");
+        entityData.remove("Silent");
+        entityData.remove("Glowing");
+        entityData.remove("PortalCooldown");
+        entityData.remove("TicksFrozen");
+        entityData.remove("Passengers");
     }
 
     private static void spawnParticles(ServerLevel level, BlockPos pos) {
