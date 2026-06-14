@@ -317,32 +317,19 @@ public class CreatureEggItem extends Item {
             return false;
         }
 
-        Entity entity = entityType.spawn(level, stack, player, pos, net.minecraft.world.entity.MobSpawnType.SPAWN_EGG, true, true);
-
+        Entity entity = entityType.create(level);
         if (entity instanceof Mob mob) {
-            mob.setPersistenceRequired();
-            
-            CompoundTag entityData = getEntityData(stack);
+            CompoundTag entityData = getEntityData(stack).copy();
             if (!entityData.isEmpty()) {
-                entityData.remove("UUID");
-                entityData.remove("Pos");
-                entityData.remove("Dimension");
-                entityData.remove("DeathTime");
-                entityData.remove("HurtTime");
-                entityData.remove("HurtByTimestamp");
-                entityData.remove("FallDistance");
-                entityData.remove("Fire");
-                entityData.remove("Air");
-                entityData.remove("OnGround");
-                entityData.remove("SpawningEntities");
-                entityData.remove("DeathLootTable");
-                entityData.remove("DeathLootTableSeed");
-                entityData.remove("Leash");
-                
+                sanitizeCapturedEntityData(entityData);
                 mob.load(entityData);
-                mob.setPersistenceRequired();
-                mob.setHealth(mob.getHealth());
             }
+
+            float yaw = player != null ? player.getYRot() : level.random.nextFloat() * 360.0F;
+            mob.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, yaw, 0.0F);
+            mob.setYHeadRot(yaw);
+            mob.setYBodyRot(yaw);
+            mob.setPersistenceRequired();
             
             String customName = getCustomName(stack);
             if (customName != null) {
@@ -369,11 +356,16 @@ public class CreatureEggItem extends Item {
             
             mob.setInvulnerable(false);
             mob.setNoAi(false);
+            mob.setInvisible(false);
             mob.clearFire();
             mob.fallDistance = 0;
             mob.setTicksFrozen(0);
             mob.setDeltaMovement(Vec3.ZERO);
-            
+
+            if (!level.addFreshEntity(mob)) {
+                return false;
+            }
+
             if (player != null) {
                 FollowerEvents.registerFollower(mob, player.getUUID());
             }
@@ -390,11 +382,27 @@ public class CreatureEggItem extends Item {
             }
             
             return true;
-        } else if (entity != null) {
-            entity.discard();
         }
 
         return false;
+    }
+
+    private static void sanitizeCapturedEntityData(CompoundTag entityData) {
+        entityData.remove("UUID");
+        entityData.remove("Pos");
+        entityData.remove("Dimension");
+        entityData.remove("DeathTime");
+        entityData.remove("HurtTime");
+        entityData.remove("HurtByTimestamp");
+        entityData.remove("FallDistance");
+        entityData.remove("Fire");
+        entityData.remove("Air");
+        entityData.remove("OnGround");
+        entityData.remove("SpawningEntities");
+        entityData.remove("DeathLootTable");
+        entityData.remove("DeathLootTableSeed");
+        entityData.remove("Leash");
+        entityData.remove("Invisible");
     }
 
     private static void spawnParticles(ServerLevel level, BlockPos pos) {
