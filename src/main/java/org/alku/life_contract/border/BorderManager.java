@@ -20,6 +20,7 @@ import java.util.List;
 public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
+    private static final long BORDER_TRANSITION_TICKS = 60L;
     
     public static class BorderData {
         private final ServerLevel level;
@@ -81,6 +82,12 @@ public class BorderManager {
             this.currentSize = Math.max(10, newSize);
             applyToLevel();
         }
+
+        public void transitionSize(double newSize, long durationTicks) {
+            this.currentSize = Math.max(10, newSize);
+            net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
+            worldBorder.lerpSizeBetween(worldBorder.getSize(), currentSize, Math.max(1L, durationTicks * 50L));
+        }
         
         public void applyToLevel() {
             net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
@@ -136,7 +143,7 @@ public class BorderManager {
             double currentSize = border.getCurrentSize();
             double newSize = currentSize * (1 - shrinkPercentage / 100.0);
             border.setTargetSize(newSize);
-            border.updateSize(newSize);
+            border.transitionSize(newSize, BORDER_TRANSITION_TICKS);
             shrinkCount++;
             
             broadcastMessage(Component.literal("§c[边界] §f边界已缩小！当前大小: §e" + 
