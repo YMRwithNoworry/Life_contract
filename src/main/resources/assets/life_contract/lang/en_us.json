@@ -9,8 +9,12 @@
   "item.life_contract.spore_bomb": "Spore Bomb",
   "item.life_contract.meat_paste": "Meat Paste",
   "item.life_contract.chaos_balance": "Chaos Balance",
+  "item.life_contract.life_topology": "Life Topology",
   "block.life_contract.infection_purifier": "Infection Purifier",
   "effect.life_contract.slow_infection": "Slow Infection",
+  "key.categories.life_contract": "Life Contract",
+  "key.life_contract.open_team_inventory": "Open Team Inventory",
+  "key.life_contract.toggle_topology_map": "Toggle Life Topology Map",
   "gui.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.follower_wand": "Follower Wand",
   "gui.life_contract.revive_teammate": "Revive Teammate"

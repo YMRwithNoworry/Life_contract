@@ -27,6 +27,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.PlayerInfectionSystem;
+import org.alku.life_contract.ContractEvents;
+import org.alku.life_contract.compat.CaerulaArborCompat;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
@@ -390,7 +392,7 @@ public class GameEventManager {
         
         tickSafeBubbles();
         
-        if (currentLevel.getGameTime() % 20 == 0) {
+        if (currentLevel.getGameTime() % 4 == 0) {
             syncToAllClients();
         }
     }
@@ -457,6 +459,12 @@ public class GameEventManager {
             if (victim.gameMode.getGameModeForPlayer() != GameType.SURVIVAL && 
                 victim.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
                 return;
+            }
+
+            int lifePoints = CaerulaArborCompat.getLifePoints(victim);
+            if (lifePoints == 1) {
+                victim.setGameMode(GameType.SPECTATOR);
+                broadcastMessage(Component.literal("§c[出局] §f" + victim.getGameProfile().getName() + " 生命数耗尽，已出局。"));
             }
             
             totalEliminations++;
@@ -847,8 +855,31 @@ public class GameEventManager {
         for (SafeBubble bubble : safeBubbles) {
             Vec3 pos = bubble.getPosition();
             bubbleDataList.add(new PacketSyncEvents.BubbleData(
-                (int) pos.x, (int) pos.y, (int) pos.z, bubble.getRadius()
+                (int) pos.x, (int) pos.y, (int) pos.z, bubble.getRadius(), bubble.getColorIndex()
             ));
+        }
+
+        WorldBorder border = currentLevel.getWorldBorder();
+        List<PacketSyncEvents.PlayerPosData> playerPosList = new ArrayList<>();
+        UUID bountyUUID = null;
+        int bountyX = 0;
+        int bountyZ = 0;
+        for (ServerPlayer p : currentLevel.getPlayers(p -> !p.isSpectator())) {
+            UUID leader = ContractEvents.getLeaderUUID(p);
+            playerPosList.add(new PacketSyncEvents.PlayerPosData(
+                p.getUUID(),
+                p.getGameProfile().getName(),
+                leader,
+                (int) p.getX(),
+                (int) p.getZ(),
+                p.getYRot(),
+                CaerulaArborCompat.getLifePoints(p)
+            ));
+            if (bountyTarget != null && bountyTarget.equals(p.getUUID())) {
+                bountyUUID = bountyTarget;
+                bountyX = (int) p.getX();
+                bountyZ = (int) p.getZ();
+            }
         }
         
         PacketSyncEvents packet = new PacketSyncEvents(
@@ -862,7 +893,14 @@ public class GameEventManager {
             getBountyTargetName(),
             endgameOverloadTriggered,
             sporeRainActive,
-            getSporeRainRemainingSeconds()
+            getSporeRainRemainingSeconds(),
+            border.getCenterX(),
+            border.getCenterZ(),
+            border.getSize(),
+            playerPosList,
+            bountyUUID,
+            bountyX,
+            bountyZ
         );
         
         NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), packet);

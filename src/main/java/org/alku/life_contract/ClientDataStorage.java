@@ -32,6 +32,13 @@ public class ClientDataStorage {
     private static boolean endgameOverloadActive = false;
     private static boolean sporeRainActive = false;
     private static int sporeRainRemaining = 0;
+    private static double borderCenterX = 0;
+    private static double borderCenterZ = 0;
+    private static double borderSize = 0;
+    private static List<PacketSyncEvents.PlayerPosData> playerPositions = new ArrayList<>();
+    private static UUID bountyTargetUUID = null;
+    private static int bountyTargetX = 0;
+    private static int bountyTargetZ = 0;
 
     public static class PlayerData {
         public String contractMod = "";
@@ -165,7 +172,10 @@ public class ClientDataStorage {
                                      boolean purificationRiftActive, int safeBubbleRemaining,
                                      List<?> bubbleDataList,
                                      boolean bountyActive, String bountyTargetName, boolean endgameOverloadActive,
-                                     boolean sporeRainActive, int sporeRainRemaining) {
+                                     boolean sporeRainActive, int sporeRainRemaining,
+                                     double borderCenterX, double borderCenterZ, double borderSize,
+                                     List<PacketSyncEvents.PlayerPosData> playerPositions,
+                                     UUID bountyTargetUUID, int bountyTargetX, int bountyTargetZ) {
         ClientDataStorage.gameActive = gameActive;
         ClientDataStorage.sporeSurgeActive = sporeSurgeActive;
         ClientDataStorage.sporeSurgeRemaining = sporeSurgeRemaining;
@@ -187,6 +197,13 @@ public class ClientDataStorage {
         ClientDataStorage.endgameOverloadActive = endgameOverloadActive;
         ClientDataStorage.sporeRainActive = sporeRainActive;
         ClientDataStorage.sporeRainRemaining = sporeRainRemaining;
+        ClientDataStorage.borderCenterX = borderCenterX;
+        ClientDataStorage.borderCenterZ = borderCenterZ;
+        ClientDataStorage.borderSize = borderSize;
+        ClientDataStorage.playerPositions = playerPositions != null ? playerPositions : new ArrayList<>();
+        ClientDataStorage.bountyTargetUUID = bountyTargetUUID;
+        ClientDataStorage.bountyTargetX = bountyTargetX;
+        ClientDataStorage.bountyTargetZ = bountyTargetZ;
     }
     
     public static boolean isGameActive() { return gameActive; }
@@ -200,6 +217,13 @@ public class ClientDataStorage {
     public static boolean isEndgameOverloadActive() { return endgameOverloadActive; }
     public static boolean isSporeRainActive() { return sporeRainActive; }
     public static int getSporeRainRemaining() { return sporeRainRemaining; }
+    public static double getBorderCenterX() { return borderCenterX; }
+    public static double getBorderCenterZ() { return borderCenterZ; }
+    public static double getBorderSize() { return borderSize; }
+    public static List<PacketSyncEvents.PlayerPosData> getPlayerPositions() { return playerPositions; }
+    public static UUID getBountyTargetUUID() { return bountyTargetUUID; }
+    public static int getBountyTargetX() { return bountyTargetX; }
+    public static int getBountyTargetZ() { return bountyTargetZ; }
     
     private static double chaosBalanceBonus = 0;
     private static int chaosInfectedCount = 0;

@@ -1,11 +1,17 @@
 package org.alku.life_contract;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider;
+import top.theillusivec4.curios.common.network.server.SPacketGrabbedItem;
 
 import java.util.Optional;
 
@@ -52,30 +58,44 @@ public class CuriosIntegration {
         Optional<ICuriosItemHandler> handlerOpt = CuriosApi.getCuriosHelper()
                 .getCuriosHandler(player)
                 .resolve();
-        
+
         if (handlerOpt.isEmpty()) {
             return false;
         }
-        
+
         ICuriosItemHandler handler = handlerOpt.get();
         Optional<ICurioStacksHandler> stacksHandlerOpt = handler.getStacksHandler(slot);
-        
+
         if (stacksHandlerOpt.isEmpty()) {
             return false;
         }
-        
+
         IDynamicStackHandler stackHandler = stacksHandlerOpt.get().getStacks();
-        
+
         for (int i = 0; i < stackHandler.getSlots(); i++) {
             if (stackHandler.getStackInSlot(i).isEmpty()) {
                 stackHandler.setStackInSlot(i, item);
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
+    public static void openCuriosInventory(ServerPlayer player) {
+        AbstractContainerMenu currentMenu = player.containerMenu;
+        ItemStack carried = player.isSpectator() ? ItemStack.EMPTY : currentMenu.getCarried().copy();
+        currentMenu.setCarried(ItemStack.EMPTY);
+        NetworkHooks.openScreen(player, new CuriosContainerProvider());
+        if (!carried.isEmpty()) {
+            player.containerMenu.setCarried(carried);
+            top.theillusivec4.curios.common.network.NetworkHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> player),
+                    new SPacketGrabbedItem(carried)
+            );
+        }
+    }
+
     public static void init() {
     }
 }
