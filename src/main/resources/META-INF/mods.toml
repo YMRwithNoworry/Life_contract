@@ -67,6 +67,12 @@ versionRange="[26.2,)"
 ordering="AFTER"
 side="CLIENT"
 [[dependencies.life_contract]]
+modId="ftbultimine"
+mandatory=false
+versionRange="[2001.1.8,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.life_contract]]
 modId="cloth_config"
 mandatory=true
 versionRange="[11.1,)"

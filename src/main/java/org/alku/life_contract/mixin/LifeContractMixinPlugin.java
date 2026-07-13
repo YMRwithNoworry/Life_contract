@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public final class LifeContractMixinPlugin implements IMixinConfigPlugin {
     private static final String XAERO_MIXIN = "org.alku.life_contract.mixin.XaeroMinimapRendererMixin";
+    private static final String ULTIMINE_MIXIN = "org.alku.life_contract.mixin.FTBUltimineMixin";
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!XAERO_MIXIN.equals(mixinClassName)) {
+        if (!XAERO_MIXIN.equals(mixinClassName) && !ULTIMINE_MIXIN.equals(mixinClassName)) {
             return true;
         }
         try {

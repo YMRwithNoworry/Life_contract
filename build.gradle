@@ -133,6 +133,10 @@ repositories {
         url = 'https://maven.architectury.dev/'
     }
     maven {
+        name = 'FTB Maven'
+        url = 'https://maven.ftb.dev/releases'
+    }
+    maven {
         url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
     maven {
@@ -157,6 +161,9 @@ dependencies {
     runtimeOnly fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
     implementation fg.deobf('me.shedaniel.cloth:cloth-config-forge:11.1.136')
+    compileOnly('dev.ftb.mods:ftb-ultimine-forge:2001.1.8') {
+        transitive = false
+    }
     compileOnly fg.deobf('maven.modrinth:xaeros-minimap:nqVwHuEZ')
     runtimeOnly fg.deobf('maven.modrinth:xaeros-minimap:nqVwHuEZ')
     
