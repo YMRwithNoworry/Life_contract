@@ -7,6 +7,9 @@
   "plugin": "org.alku.life_contract.mixin.LifeContractMixinPlugin",
   "mixins": [
     "DedicatedServerSpawnProtectionMixin",
+    "DimensionTypeHeightMixin",
+    "NoiseGeneratorSettingsMixin",
+    "StrongholdStructureMixin",
     "ServerPlayerGameModeMixin",
     "ServerGamePacketListenerImplMixin",
     "PlayerExhaustionMixin",

@@ -22,9 +22,16 @@ def ldlib2Artifact = 'ldlib2-forge-1.20.1'
 def ldlib2Version = '2.2.27+mc1.20.1'
 def ldlib2Jar = file(findProperty('ldlib2_jar_path')
         ?: "E:/代码/MC模组/LDlib2/forge/build/libs/${ldlib2Artifact}-${ldlib2Version}.jar")
+def phayriosisLegacyArtifact = 'phayriosis'
+def phayriosisLegacyVersion = '1.3.91.0-forge-1.20.1'
+def phayriosisLegacyJar = file(findProperty('phayriosis_legacy_jar_path')
+        ?: "D:/Downloads/${phayriosisLegacyArtifact}-${phayriosisLegacyVersion}.jar")
 
 if (!ldlib2Jar.isFile()) {
     throw new GradleException("LDLib2 Forge jar not found: ${ldlib2Jar}. Set -Pldlib2_jar_path=<path-to-ldlib2-jar>.")
+}
+if (!phayriosisLegacyJar.isFile()) {
+    throw new GradleException("Legacy Phayriosis jar not found: ${phayriosisLegacyJar}. Set -Pphayriosis_legacy_jar_path=<path-to-phayriosis-jar>.")
 }
 
 minecraft {
@@ -125,8 +132,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     flatDir {
-        name = 'LocalLDLib2'
-        dirs ldlib2Jar.parentFile
+        name = 'LocalModJars'
+        dirs ldlib2Jar.parentFile, phayriosisLegacyJar.parentFile
     }
     mavenCentral()
     maven {
@@ -153,6 +160,7 @@ dependencies {
 
     // Resolve the supplied production jar by coordinates so ForgeGradle remaps it for the named dev runtime.
     implementation fg.deobf("local.ldlib2:${ldlib2Artifact}:${ldlib2Version}")
+    implementation fg.deobf("local.phayriosis:${phayriosisLegacyArtifact}:${phayriosisLegacyVersion}")
     runtimeOnly fg.deobf('dev.architectury:architectury-forge:9.2.14')
     jarJar('org.jetbrains.kotlin:kotlin-stdlib:[2.1.20,2.2.0)') {
         jarJar.pin(it, '2.1.20')

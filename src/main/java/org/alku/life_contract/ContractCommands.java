@@ -244,9 +244,9 @@ public class ContractCommands {
                                                 );
                                         }
                                         
-                                        context.getSource().sendSuccess(() -> 
+                                        context.getSource().sendSuccess(() ->
                                                 Component.literal("§a[游戏] §f游戏已开始！" + result.message()
-                                                        + "，边界已收缩至你周围600x600区域。"), true);
+                                                        + "，边界已以末地要塞传送门为中心设置为600x600。"), true);
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")
