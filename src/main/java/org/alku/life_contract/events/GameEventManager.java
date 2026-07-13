@@ -174,6 +174,12 @@ public final class GameEventManager {
         player.getPersistentData().putUUID(TeamOrganizerItem.TAG_LEADER_UUID, leader);
         player.getPersistentData().putString(TeamOrganizerItem.TAG_LEADER_NAME,
                 leaderPlayer != null ? leaderPlayer.getGameProfile().getName() : leader.toString());
+        if (leaderPlayer != null) {
+            player.getPersistentData().putInt(TeamOrganizerItem.TAG_TEAM_NUMBER,
+                    leaderPlayer.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER));
+            player.getPersistentData().putString(org.alku.life_contract.SoulContractItem.TAG_CONTRACT_MOD,
+                    leaderPlayer.getPersistentData().getString(org.alku.life_contract.SoulContractItem.TAG_CONTRACT_MOD));
+        }
         player.setGameMode(GameType.SURVIVAL);
         gameStartPlayerIds.add(player.getUUID());
         ContractEvents.syncData(player);

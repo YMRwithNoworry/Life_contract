@@ -38,13 +38,9 @@ public class ContractEvents {
 
         Player player = event.getEntity();
         
-        UUID leaderUUID = getLeaderUUID(player);
-        if (leaderUUID == null)
-            leaderUUID = player.getUUID();
+        int teamColor = getTeamColor(player);
 
-        ChatFormatting teamColor = getTeamColor(leaderUUID);
-
-        MutableComponent styledName = Component.literal("").withStyle(teamColor);
+        MutableComponent styledName = Component.literal("").withStyle(style -> style.withColor(teamColor));
         styledName = styledName.append(event.getDisplayname().copy());
         
         event.setDisplayname(styledName);
@@ -57,14 +53,10 @@ public class ContractEvents {
 
         Player player = event.getEntity();
         
-        UUID leaderUUID = getLeaderUUID(player);
-        if (leaderUUID == null)
-            leaderUUID = player.getUUID();
-
-        ChatFormatting teamColor = getTeamColor(leaderUUID);
+        int teamColor = getTeamColor(player);
         String effectiveMod = getEffectiveContractMod(player);
 
-        MutableComponent result = Component.literal("").withStyle(teamColor);
+        MutableComponent result = Component.literal("").withStyle(style -> style.withColor(teamColor));
         result = result.append(event.getDisplayName().copy());
 
         if (effectiveMod != null && !effectiveMod.isEmpty()) {
@@ -188,16 +180,23 @@ public class ContractEvents {
         return leader1.equals(leader2);
     }
 
-    public static ChatFormatting getTeamColor(UUID uuid) {
-        int hash = Math.abs(uuid.hashCode());
-        ChatFormatting[] colors = {
-            ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.YELLOW,
-            ChatFormatting.GREEN, ChatFormatting.AQUA, ChatFormatting.BLUE,
-            ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_RED,
-            ChatFormatting.DARK_GREEN, ChatFormatting.DARK_AQUA, ChatFormatting.DARK_BLUE,
-            ChatFormatting.DARK_PURPLE
-        };
-        return colors[hash % colors.length];
+    private static final int[] TEAM_COLORS = {
+            0xF05A5A, 0x55C97B, 0x5C8FF2, 0xF2B84B, 0xB66DE2, 0x43C7C3, 0xED72AD, 0x9AC84B,
+            0xE77A3D, 0x6C7CE8, 0xD0B43F, 0x43A6D8, 0xD95F83, 0x70B957, 0xA878E0, 0xDB8D46,
+            0x4EB59A, 0xE066D0, 0x7E9B4C, 0xD66550, 0x5A91C8, 0xC59441, 0x8A72CB, 0x4DAF68,
+            0xC96B9A, 0x7690DE, 0xB5A64A, 0x46A9A5, 0xD07860, 0x809D55, 0xA46FB4, 0x4F9CBE
+    };
+
+    public static int getTeamColor(Player player) {
+        CompoundTag data = player.getPersistentData();
+        if (data.contains(TeamOrganizerItem.TAG_TEAM_NUMBER)) {
+            int teamNumber = data.getInt(TeamOrganizerItem.TAG_TEAM_NUMBER);
+            if (teamNumber > 0) return TEAM_COLORS[(teamNumber - 1) % TEAM_COLORS.length];
+        }
+
+        UUID teamId = getLeaderUUID(player);
+        if (teamId == null) teamId = player.getUUID();
+        return TEAM_COLORS[Math.floorMod(teamId.hashCode(), TEAM_COLORS.length)];
     }
 
     public static String getEffectiveContractMod(Player player) {
