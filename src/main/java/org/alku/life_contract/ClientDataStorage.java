@@ -170,17 +170,4 @@ public class ClientDataStorage {
     public static double getBorderSize() { return borderSize; }
     public static List<PacketSyncEvents.PlayerPosData> getPlayerPositions() { return playerPositions; }
     
-    private static double chaosBalanceBonus = 0;
-    private static int chaosInfectedCount = 0;
-    private static int chaosNonInfectedCount = 0;
-    
-    public static void setChaosBalanceData(double bonus, int infected, int nonInfected) {
-        chaosBalanceBonus = bonus;
-        chaosInfectedCount = infected;
-        chaosNonInfectedCount = nonInfected;
-    }
-    
-    public static double getChaosBalanceBonus() { return chaosBalanceBonus; }
-    public static int getChaosInfectedCount() { return chaosInfectedCount; }
-    public static int getChaosNonInfectedCount() { return chaosNonInfectedCount; }
 }

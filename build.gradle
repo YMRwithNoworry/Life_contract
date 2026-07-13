@@ -139,9 +139,6 @@ repositories {
         url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
     }
     maven {
-        url = 'https://maven.theillusivec4.top/'
-    }
-    maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
     }
@@ -160,8 +157,6 @@ dependencies {
     runtimeOnly fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.4')
     
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+1.20.1")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+1.20.1")
     
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'

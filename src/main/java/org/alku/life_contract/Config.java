@@ -32,51 +32,6 @@ public class Config {
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
-    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ELITE_MOBS = BUILDER
-            .comment("List of elite mob entity IDs that can drop Spore Gland on death")
-            .defineListAllowEmpty("eliteMobs", List.of(
-                    "spore:knight",
-                    "spore:griefer",
-                    "spore:braiomil",
-                    "spore:leaper",
-                    "spore:slasher",
-                    "spore:spitter",
-                    "spore:howler",
-                    "spore:stalker",
-                    "spore:brute",
-                    "spore:scavenger",
-                    "spore:bloater",
-                    "spore:volatile",
-                    "spore:mephitic",
-                    "spore:protector",
-                    "spore:gargoyle",
-                    "spore:conductor",
-                    "spore:chemist",
-                    "spore:inebriater",
-                    "spore:naiad",
-                    "spore:nuckelavee",
-                    "spore:inquisitor",
-                    "spore:brot",
-                    "spore:grober",
-                    "spore:wendigo",
-                    "spore:ogre",
-                    "spore:hevoker",
-                    "spore:hvindicator",
-                    "spore:jagd",
-                    "spore:specter",
-                    "spore:vanguard",
-                    "spore:reaper",
-                    "spore:leviathan",
-                    "spore:hivetumor",
-                    "spore:howitzer",
-                    "spore:sieger",
-                    "spore:hohlfresser"
-            ), obj -> obj instanceof String);
-
-    private static final ForgeConfigSpec.DoubleValue SPORE_CHANCE = BUILDER
-            .comment("Chance (0.0-1.0) for spore infection when attacking with Spore Gland equipped")
-            .defineInRange("sporeChance", 0.3, 0.0, 1.0);
-
     private static final ForgeConfigSpec.IntValue INFECTION_DURATION = BUILDER
             .comment("Duration of slow infection effect in ticks (20 ticks = 1 second)")
             .defineInRange("infectionDuration", 100, 1, 6000);
@@ -87,8 +42,6 @@ public class Config {
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
-    public static Set<String> eliteMobs;
-    public static float sporeChance;
     public static int infectionDuration;
 
     private static boolean validateItemName(final Object obj) {
@@ -105,8 +58,6 @@ public class Config {
                 .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
                 .collect(Collectors.toSet());
 
-        eliteMobs = Set.copyOf(ELITE_MOBS.get());
-        sporeChance = SPORE_CHANCE.get().floatValue();
         infectionDuration = INFECTION_DURATION.get();
     }
 }

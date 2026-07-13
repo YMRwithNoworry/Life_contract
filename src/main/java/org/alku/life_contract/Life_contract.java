@@ -24,7 +24,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -57,11 +56,8 @@ public class Life_contract {
     public static final RegistryObject<Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
     public static final RegistryObject<Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
     public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
-    public static final RegistryObject<Item> SURVIVOR_EMBLEM = ITEMS.register("survivor_emblem", SurvivorEmblemItem::new);
-    public static final RegistryObject<Item> SPORE_GLAND = ITEMS.register("spore_gland", SporeGlandItem::new);
     public static final RegistryObject<Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
     public static final RegistryObject<Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
-    public static final RegistryObject<Item> CHAOS_BALANCE = ITEMS.register("chaos_balance", ChaosBalanceItem::new);
     public static final RegistryObject<Item> LIFE_TOPOLOGY = ITEMS.register("life_topology", LifeTopologyItem::new);
 
     public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
@@ -94,11 +90,8 @@ public class Life_contract {
                 output.accept(TEAM_ORGANIZER.get());
                 output.accept(FOLLOWER_WAND.get());
                 output.accept(CREATURE_EGG.get());
-                output.accept(SURVIVOR_EMBLEM.get());
-                output.accept(SPORE_GLAND.get());
                 output.accept(SPORE_BOMB.get());
                 output.accept(MEAT_PASTE.get());
-                output.accept(CHAOS_BALANCE.get());
                 output.accept(LIFE_TOPOLOGY.get());
             }).build());
 
@@ -119,13 +112,6 @@ public class Life_contract {
 
         MinecraftForge.EVENT_BUS.register(this);
         
-        modEventBus.addListener(this::onCommonSetup);
-    }
-    
-    private void onCommonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            CuriosIntegration.init();
-        });
     }
 
     @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)

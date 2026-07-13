@@ -17,7 +17,6 @@ import org.alku.life_contract.follower.PacketOpenFollowerWand;
 import org.alku.life_contract.follower.PacketSyncFollower;
 import org.alku.life_contract.follower.PacketSyncFollowerHunger;
 import org.alku.life_contract.events.PacketSyncEvents;
-import org.alku.life_contract.PacketSyncChaosBalance;
 
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
@@ -91,12 +90,6 @@ public class NetworkHandler {
                 PacketSyncEvents::encode,
                 PacketSyncEvents::new,
                 PacketSyncEvents::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSyncChaosBalance.class,
-                PacketSyncChaosBalance::encode,
-                PacketSyncChaosBalance::new,
-                PacketSyncChaosBalance::handle
         );
         CHANNEL.registerMessage(id++,
                 PacketSyncInfection.class,
