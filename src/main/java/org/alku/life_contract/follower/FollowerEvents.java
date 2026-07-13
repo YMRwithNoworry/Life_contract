@@ -440,26 +440,12 @@ public class FollowerEvents {
     }
 
     public static void registerFollower(Mob mob, UUID ownerUUID) {
-        UUID oldOwnerUUID = getOwnerUUID(mob);
         mob.getPersistentData().putUUID(TAG_FOLLOWER_OWNER_UUID, ownerUUID);
         updateFactionTag(mob, ownerUUID);
         mob.setPersistenceRequired();
         indexFollower(mob.getUUID(), ownerUUID);
         setupFollowerAI(mob, ownerUUID);
         syncFollowerToClients(mob, ownerUUID, true);
-        
-        if ((oldOwnerUUID == null || !oldOwnerUUID.equals(ownerUUID)) && mob.level() instanceof ServerLevel serverLevel) {
-            if (oldOwnerUUID != null) {
-                ServerPlayer oldOwner = serverLevel.getServer().getPlayerList().getPlayer(oldOwnerUUID);
-                if (oldOwner != null) {
-                    FollowerHungerSystem.onFollowerUnregistered(oldOwner);
-                }
-            }
-            net.minecraft.server.level.ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
-            if (owner != null) {
-                FollowerHungerSystem.onFollowerRegistered(owner, mob);
-            }
-        }
     }
 
     public static void unregisterFollower(Mob mob) {
@@ -471,13 +457,6 @@ public class FollowerEvents {
         mob.getPersistentData().remove(TAG_CONTRACT_ALLY);
         INHERITED_SUMMONS.remove(mob.getUUID());
         syncFollowerToClients(mob, null, false);
-        
-        if (ownerUUID != null && mob.level() instanceof ServerLevel serverLevel) {
-            net.minecraft.server.level.ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
-            if (owner != null) {
-                FollowerHungerSystem.onFollowerUnregistered(owner);
-            }
-        }
     }
 
     private static void syncFollowerToClients(Mob mob, UUID ownerUUID, boolean isRegister) {
@@ -553,7 +532,6 @@ public class FollowerEvents {
         PLAYER_ATTACK_TARGET_TIME.remove(playerUUID);
         PLAYER_ATTACKER_TIME.remove(playerUUID);
         PROTECTION_MESSAGE_COOLDOWN.remove(playerUUID);
-        FollowerHungerSystem.clearPlayerData(playerUUID);
     }
 
     private static void indexFollower(UUID mobUUID, UUID ownerUUID) {

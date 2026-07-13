@@ -50,19 +50,6 @@ public class ClientProxy {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void syncFollowerHunger(java.util.UUID playerUUID, int followerCount, float hungerMultiplier) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null) {
-            net.minecraft.world.entity.player.Player player = mc.level.getPlayerByUUID(playerUUID);
-            if (player != null) {
-                net.minecraft.nbt.CompoundTag data = player.getPersistentData();
-                data.putInt("FollowerCountClient", followerCount);
-                data.putFloat("FollowerHungerMultiplierClient", hungerMultiplier);
-            }
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
     public static void openReviveScreen(java.util.List<ReviveTeammateSystem.DeadTeammateInfo> deadTeammates) {
         ClientReviveData.setDeadTeammates(deadTeammates);
         Minecraft mc = Minecraft.getInstance();

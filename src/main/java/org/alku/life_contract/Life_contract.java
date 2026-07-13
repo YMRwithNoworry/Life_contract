@@ -32,9 +32,7 @@ import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 
-import org.alku.life_contract.follower.FollowerWandMenu;
 import org.alku.life_contract.follower.FollowerWandItem;
-import org.alku.life_contract.follower.FollowerWandScreen;
 import org.alku.life_contract.revive.ReviveTeammateMenu;
 import org.alku.life_contract.revive.ReviveTeammateScreen;
 import org.alku.life_contract.blocks.ModBlocks;
@@ -66,8 +64,6 @@ public class Life_contract {
 
     public static final RegistryObject<MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU = MENU_TYPES.register("team_inventory",
             () -> IForgeMenuType.create(TeamInventoryMenu::new));
-    public static final RegistryObject<MenuType<FollowerWandMenu>> FOLLOWER_WAND_MENU = MENU_TYPES.register("follower_wand",
-            () -> IForgeMenuType.create(FollowerWandMenu::new));
     public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
             () -> IForgeMenuType.create(ReviveTeammateMenu::new));
     public static final RegistryObject<MenuType<MutationMenu>> MUTATION_MENU = MENU_TYPES.register("mutation_tree",
@@ -128,7 +124,6 @@ public class Life_contract {
                             (minecraft, parent) -> org.alku.life_contract.client.LifeContractConfigScreen.create(parent)));
             event.enqueueWork(() -> {
                 net.minecraft.client.gui.screens.MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
-                net.minecraft.client.gui.screens.MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);
                 net.minecraft.client.gui.screens.MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
                 net.minecraft.client.gui.screens.MenuScreens.register(MUTATION_MENU.get(), MutationScreen::new);
             });
