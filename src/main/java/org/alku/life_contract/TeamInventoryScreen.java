@@ -1,19 +1,24 @@
 package org.alku.life_contract;
 
+import com.lowdragmc.lowdraglib2.gui.ui.ModularUI;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class TeamInventoryScreen extends AbstractContainerScreen<TeamInventoryMenu> {
 
-    private static final ResourceLocation CONTAINER_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
+    private final Inventory playerInventory;
+    private ModularUI modularUI;
 
     public TeamInventoryScreen(TeamInventoryMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageHeight = 222;
-        this.inventoryLabelY = this.imageHeight - 94;
+        this.playerInventory = playerInventory;
+        this.imageWidth = TeamInventoryUi.WIDTH;
+        this.imageHeight = TeamInventoryUi.HEIGHT;
     }
 
     @Override
@@ -24,22 +29,23 @@ public class TeamInventoryScreen extends AbstractContainerScreen<TeamInventoryMe
     }
 
     @Override
+    protected void init() {
+        super.init();
+
+        this.modularUI = TeamInventoryUi.create(this.menu, this.playerInventory.player);
+        this.modularUI.setDrawTooltips(false);
+        this.modularUI.setScreenAndInit(this);
+        this.addRenderableWidget(this.modularUI.getWidget());
+        this.setFocused(this.modularUI.getWidget());
+    }
+
+    @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        // LDLib2 renders the complete inventory surface through its ModularUI widget.
     }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
-        
-        guiGraphics.drawString(this.font, 
-            Component.translatable("container.life_contract.team_inventory"), 
-            8, 6, 4210752, false);
-        
-        guiGraphics.drawString(this.font, 
-            this.playerInventoryTitle, 
-            8, this.imageHeight - 96, 4210752, false);
+        // Labels belong to the LDLib2 element tree so they stay aligned with the custom layout.
     }
 }

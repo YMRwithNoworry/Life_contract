@@ -17,7 +17,8 @@
   "key.life_contract.open_team_inventory": "打开队伍背包",
   "key.life_contract.toggle_topology_map": "切换生灵拓扑地图",
   "container.life_contract.team_inventory": "队伍背包",
-  
+  "gui.life_contract.team_inventory.player_inventory": "个人背包",
+
   "hud.life_contract.title": "§e== 生灵契约 ==",
   "hud.life_contract.team_number": "§6队伍编号: §b%s",
   "hud.life_contract.contract_mod": "契约模组: §a%s",

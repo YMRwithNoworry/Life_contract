@@ -15,7 +15,9 @@
   "key.categories.life_contract": "Life Contract",
   "key.life_contract.open_team_inventory": "Open Team Inventory",
   "key.life_contract.toggle_topology_map": "Toggle Life Topology Map",
+  "container.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory": "Team Inventory",
+  "gui.life_contract.team_inventory.player_inventory": "Player Inventory",
   "gui.life_contract.follower_wand": "Follower Wand",
   "gui.life_contract.revive_teammate": "Revive Teammate"
 }
