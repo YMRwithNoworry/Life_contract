@@ -10,12 +10,14 @@ public final class LifeContractMixinPlugin implements IMixinConfigPlugin {
     private static final String XAERO_MIXIN = "org.alku.life_contract.mixin.XaeroMinimapRendererMixin";
     private static final String XAERO_RADAR_MIXIN = "org.alku.life_contract.mixin.XaeroRadarStateUpdaterMixin";
     private static final String ULTIMINE_MIXIN = "org.alku.life_contract.mixin.FTBUltimineMixin";
+    private static final String BORDER_WEAVER_MIXIN = "org.alku.life_contract.mixin.BorderWeaverEventHandlerMixin";
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (!XAERO_MIXIN.equals(mixinClassName)
                 && !XAERO_RADAR_MIXIN.equals(mixinClassName)
-                && !ULTIMINE_MIXIN.equals(mixinClassName)) {
+                && !ULTIMINE_MIXIN.equals(mixinClassName)
+                && !BORDER_WEAVER_MIXIN.equals(mixinClassName)) {
             return true;
         }
         try {

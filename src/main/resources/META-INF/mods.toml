@@ -61,7 +61,7 @@ versionRange="[1.0,)"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.life_contract]]
-modId="borderweaver"
+modId="border_weaver"
 mandatory=false
 versionRange="[1.0,)"
 ordering="AFTER"
