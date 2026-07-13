@@ -199,6 +199,41 @@ test {
     useJUnitPlatform()
 }
 
+def verifyMixinPackageLayout = tasks.register('verifyMixinPackageLayout') {
+    group = 'verification'
+    description = 'Rejects ordinary classes inside the package owned by the Mixin config.'
+
+    inputs.file('src/main/resources/life_contract.mixins.json')
+    inputs.dir('src/main/java')
+
+    doLast {
+        def mixinConfig = new groovy.json.JsonSlurper().parse(file('src/main/resources/life_contract.mixins.json'))
+        def mixinPackage = mixinConfig['package'] as String
+        def mixinSourceDirectory = file("src/main/java/${mixinPackage.replace('.', '/')}")
+        def allowedSourceNames = ['mixins', 'client', 'server'].collectMany { section ->
+            (mixinConfig[section] ?: []) as List
+        }.collect { mixinClassName ->
+            mixinClassName.tokenize('.').last() + '.java'
+        } as Set
+        def configPlugin = mixinConfig['plugin'] as String
+        if (configPlugin?.startsWith("${mixinPackage}.")) {
+            allowedSourceNames.add(configPlugin.tokenize('.').last() + '.java')
+        }
+        def ordinaryClasses = fileTree(mixinSourceDirectory) {
+            include '*.java'
+        }.files.collect { it.name }.findAll { !allowedSourceNames.contains(it) }.sort()
+
+        if (!ordinaryClasses.isEmpty()) {
+            throw new GradleException(
+                    "Ordinary classes cannot live in the configured Mixin package: ${ordinaryClasses.join(', ')}")
+        }
+    }
+}
+
+tasks.named('check').configure {
+    dependsOn verifyMixinPackageLayout
+}
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
