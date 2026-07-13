@@ -43,6 +43,12 @@ versionRange="[1.3.91.0]"
 ordering="AFTER"
 side="BOTH"
 [[dependencies.life_contract]]
+modId="phayriosisreborn"
+mandatory=false
+versionRange="[0.3.2.3]"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.life_contract]]
 modId="spore"
 mandatory=false
 versionRange="[1.0,)"

@@ -15,8 +15,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public final class ModPoolConfig {
+    private static final String PREVIOUS_PHAYRIOSIS_ID = "phayriosis_two";
+    private static final String PHAYRIOSIS_REBORN_ID = "phayriosisreborn";
     public static final List<String> DEFAULT_POOL = List.of(
-            "caerula_arbor", "spore", "phayriosis_two", "sculkhorde");
+            "caerula_arbor", "spore", PHAYRIOSIS_REBORN_ID, "sculkhorde");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path PATH = FMLPaths.CONFIGDIR.get().resolve("life_contract_pool.json");
     private static ConfigData data = new ConfigData();
@@ -37,6 +39,9 @@ public final class ModPoolConfig {
             } catch (IOException | RuntimeException ignored) {}
         }
         if (data.modPool == null) data.modPool = new ArrayList<>(DEFAULT_POOL);
+        data.modPool.replaceAll(modId -> PREVIOUS_PHAYRIOSIS_ID.equals(modId)
+                ? PHAYRIOSIS_REBORN_ID
+                : modId);
         data.modPool = new ArrayList<>(new LinkedHashSet<>(data.modPool));
         data.teamCount = Math.max(1, Math.min(32, data.teamCount));
         save();

@@ -26,12 +26,19 @@ def phayriosisLegacyArtifact = 'phayriosis'
 def phayriosisLegacyVersion = '1.3.91.0-forge-1.20.1'
 def phayriosisLegacyJar = file(findProperty('phayriosis_legacy_jar_path')
         ?: "D:/Downloads/${phayriosisLegacyArtifact}-${phayriosisLegacyVersion}.jar")
+def phayriosisRebornArtifact = 'phayriosisreborn-CLASH_OF_THE_TITANS'
+def phayriosisRebornVersion = '0.3.2.3-forge-1.20.1'
+def phayriosisRebornJar = file(findProperty('phayriosis_reborn_jar_path')
+        ?: "E:/GAME1/MC/pcl2-beta/.minecraft/versions/battle/mods/${phayriosisRebornArtifact}-${phayriosisRebornVersion}.jar")
 
 if (!ldlib2Jar.isFile()) {
     throw new GradleException("LDLib2 Forge jar not found: ${ldlib2Jar}. Set -Pldlib2_jar_path=<path-to-ldlib2-jar>.")
 }
 if (!phayriosisLegacyJar.isFile()) {
     throw new GradleException("Legacy Phayriosis jar not found: ${phayriosisLegacyJar}. Set -Pphayriosis_legacy_jar_path=<path-to-phayriosis-jar>.")
+}
+if (!phayriosisRebornJar.isFile()) {
+    throw new GradleException("Phayriosis Reborn jar not found: ${phayriosisRebornJar}. Set -Pphayriosis_reborn_jar_path=<path-to-phayriosisreborn-jar>.")
 }
 
 minecraft {
@@ -133,7 +140,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     flatDir {
         name = 'LocalModJars'
-        dirs ldlib2Jar.parentFile, phayriosisLegacyJar.parentFile
+        dirs ldlib2Jar.parentFile, phayriosisLegacyJar.parentFile, phayriosisRebornJar.parentFile
     }
     mavenCentral()
     maven {
@@ -161,6 +168,7 @@ dependencies {
     // Resolve the supplied production jar by coordinates so ForgeGradle remaps it for the named dev runtime.
     implementation fg.deobf("local.ldlib2:${ldlib2Artifact}:${ldlib2Version}")
     implementation fg.deobf("local.phayriosis:${phayriosisLegacyArtifact}:${phayriosisLegacyVersion}")
+    implementation fg.deobf("local.phayriosisreborn:${phayriosisRebornArtifact}:${phayriosisRebornVersion}")
     runtimeOnly fg.deobf('dev.architectury:architectury-forge:9.2.14')
     jarJar('org.jetbrains.kotlin:kotlin-stdlib:[2.1.20,2.2.0)') {
         jarJar.pin(it, '2.1.20')
