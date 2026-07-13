@@ -25,7 +25,6 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.alku.life_contract.Life_contract;
-import org.alku.life_contract.PlayerInfectionSystem;
 
 import java.util.List;
 
@@ -64,7 +63,6 @@ public class SporeBombItem extends Item {
         super.appendHoverText(stack, level, tooltip, flag);
         tooltip.add(Component.literal("§a孢子炸弹"));
         tooltip.add(Component.literal("§7投掷后产生孢子云爆炸"));
-        tooltip.add(Component.literal("§7感染范围内玩家15点感染值"));
         tooltip.add(Component.literal("§7命中者获得缓慢III和虚弱I"));
     }
     
@@ -101,10 +99,9 @@ public class SporeBombItem extends Item {
             
             for (Entity entity : serverLevel.getEntitiesOfClass(LivingEntity.class, affectedArea)) {
                 if (entity instanceof Player player) {
-                    PlayerInfectionSystem.addInfection(player, 15);
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2, false, true));
                     player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 0, false, true));
-                    player.sendSystemMessage(Component.literal("§2[孢子炸弹] §f你被孢子云感染了！"));
+                    player.sendSystemMessage(Component.literal("§2[孢子炸弹] §f你受到了孢子云影响！"));
                 }
             }
         }

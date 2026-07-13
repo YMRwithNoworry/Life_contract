@@ -90,12 +90,6 @@ public class NetworkHandler {
                 PacketSyncLifePoints::new,
                 PacketSyncLifePoints::handle
         );
-        CHANNEL.registerMessage(id++,
-                PacketSyncInfection.class,
-                PacketSyncInfection::encode,
-                PacketSyncInfection::new,
-                PacketSyncInfection::handle
-        );
     }
 
     public static void sendOpenTeamInventoryPacket() {

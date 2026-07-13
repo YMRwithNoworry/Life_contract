@@ -32,17 +32,12 @@ public class Config {
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
-    private static final ForgeConfigSpec.IntValue INFECTION_DURATION = BUILDER
-            .comment("Duration of slow infection effect in ticks (20 ticks = 1 second)")
-            .defineInRange("infectionDuration", 100, 1, 6000);
-
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
-    public static int infectionDuration;
 
     private static boolean validateItemName(final Object obj) {
         return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.parse(itemName));
@@ -58,6 +53,5 @@ public class Config {
                 .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
                 .collect(Collectors.toSet());
 
-        infectionDuration = INFECTION_DURATION.get();
     }
 }
