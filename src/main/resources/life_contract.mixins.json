@@ -6,6 +6,7 @@
   "refmap": "life_contract.refmap.json",
   "plugin": "org.alku.life_contract.mixin.LifeContractMixinPlugin",
   "mixins": [
+    "DedicatedServerSpawnProtectionMixin",
     "ServerPlayerGameModeMixin",
     "ServerGamePacketListenerImplMixin",
     "ItemStackCountMixin",
