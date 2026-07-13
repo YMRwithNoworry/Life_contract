@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -30,6 +31,8 @@ import java.util.UUID;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
+import java.lang.reflect.Field;
+import java.util.function.Predicate;
 
 import org.alku.life_contract.events.GameEventManager;
 
@@ -41,6 +44,49 @@ public class ContractCommands {
         public static void onRegisterCommands(RegisterCommandsEvent event) {
                 registerContractCommand(event);
                 registerContractHudCommand(event);
+                allowTeammateTeleportWithoutPermission(event);
+        }
+
+        private static void allowTeammateTeleportWithoutPermission(RegisterCommandsEvent event) {
+                com.mojang.brigadier.tree.CommandNode<net.minecraft.commands.CommandSourceStack> tp =
+                        event.getDispatcher().getRoot().getChild("tp");
+                if (tp == null) return;
+                try {
+                        Field requirement = com.mojang.brigadier.tree.CommandNode.class.getDeclaredField("requirement");
+                        requirement.setAccessible(true);
+                        requirement.set(tp, (Predicate<net.minecraft.commands.CommandSourceStack>) source ->
+                                source.hasPermission(2) || source.getEntity() instanceof ServerPlayer);
+                } catch (ReflectiveOperationException exception) {
+                        throw new IllegalStateException("Unable to expose /tp for teammate teleportation", exception);
+                }
+        }
+
+        @SubscribeEvent
+        public static void onTeleportCommand(CommandEvent event) {
+                net.minecraft.commands.CommandSourceStack source = event.getParseResults().getContext().getSource();
+                if (source.hasPermission(2) || !(source.getEntity() instanceof ServerPlayer player)) return;
+
+                String command = event.getParseResults().getReader().getString().trim();
+                String[] parts = command.split("\\s+");
+                if (parts.length != 2 || !(parts[0].equals("tp") || parts[0].equals("minecraft:tp"))) {
+                        denyTeleport(event, source, "普通玩家只能使用 /tp <队友名称>");
+                        return;
+                }
+
+                ServerPlayer target = player.getServer().getPlayerList().getPlayerByName(parts[1]);
+                if (target == null) {
+                        denyTeleport(event, source, "找不到在线玩家：" + parts[1]);
+                } else if (target == player) {
+                        denyTeleport(event, source, "你不能传送到自己身边");
+                } else if (!ContractEvents.isSameTeam(player, target)) {
+                        denyTeleport(event, source, "只能传送到同一队伍的玩家身边");
+                }
+        }
+
+        private static void denyTeleport(CommandEvent event,
+                net.minecraft.commands.CommandSourceStack source, String reason) {
+                event.setCanceled(true);
+                source.sendFailure(Component.literal("§c[生灵契约] " + reason));
         }
 
         private static void registerContractCommand(RegisterCommandsEvent event) {
