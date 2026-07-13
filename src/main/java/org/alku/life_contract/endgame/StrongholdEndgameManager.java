@@ -8,6 +8,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.StrongholdPieces;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -52,6 +54,9 @@ public final class StrongholdEndgameManager {
     private static final int STRONGHOLD_SEARCH_RADIUS_CHUNKS = 256;
     private static final double PORTAL_ACTIVATION_BORDER_SIZE = 50.0D;
     private static final double MINIMUM_BORDER_SIZE = 10.0D;
+    private static final double END_ISLAND_RADIUS = 100.0D;
+    private static final double END_BORDER_PADDING = 50.0D;
+    private static final double END_BORDER_SIZE = (END_ISLAND_RADIUS + END_BORDER_PADDING) * 2.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "distorted_enderman");
     private static final ResourceLocation DISTORTED_DRAGON_ID =
@@ -259,11 +264,31 @@ public final class StrongholdEndgameManager {
     @SubscribeEvent
     public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)
-                || !Level.END.equals(event.getTo())
-                || !GameEventManager.isGameActive()) {
+                || !Level.END.equals(event.getTo())) {
             return;
         }
-        initializeEndEncounter(player.serverLevel());
+        ServerLevel endLevel = player.serverLevel();
+        configureEndBorder(endLevel, player);
+        suppressVanillaDragonFight(endLevel);
+        initializeEndEncounter(endLevel);
+    }
+
+    private static void configureEndBorder(ServerLevel endLevel, ServerPlayer player) {
+        WorldBorder endBorder = endLevel.getWorldBorder();
+        endBorder.setCenter(0.0D, 0.0D);
+        endBorder.setSize(END_BORDER_SIZE);
+        player.connection.send(new ClientboundInitializeBorderPacket(endBorder));
+    }
+
+    private static void suppressVanillaDragonFight(ServerLevel endLevel) {
+        EndDragonFight dragonFight = endLevel.getDragonFight();
+        if (dragonFight == null) {
+            return;
+        }
+        for (ServerPlayer player : endLevel.getServer().getPlayerList().getPlayers()) {
+            dragonFight.removePlayer(player);
+        }
+        endLevel.setDragonFight(null);
     }
 
     @SubscribeEvent
@@ -283,8 +308,7 @@ public final class StrongholdEndgameManager {
         }
 
         if (entity instanceof EnderDragon
-                && Level.END.equals(event.getLevel().dimension())
-                && GameEventManager.isGameActive()) {
+                && Level.END.equals(event.getLevel().dimension())) {
             event.setCanceled(true);
         }
     }
@@ -293,6 +317,8 @@ public final class StrongholdEndgameManager {
         if (endEncounterInitialized || !Level.END.equals(endLevel.dimension())) {
             return;
         }
+
+        suppressVanillaDragonFight(endLevel);
 
         AABB islandArea = new AABB(
                 -1024.0D, endLevel.getMinBuildHeight(), -1024.0D,

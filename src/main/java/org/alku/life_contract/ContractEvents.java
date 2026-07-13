@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import org.alku.life_contract.border.BorderRespawnHandler;
 import org.alku.life_contract.events.GameEventManager;
 import org.alku.life_contract.follower.FollowerEvents;
 
@@ -144,6 +145,9 @@ public class ContractEvents {
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!event.getEntity().level().isClientSide) {
             SoulContractItem.applyStoredHealthSacrifice(event.getEntity());
+            if (!event.isEndConquered() && event.getEntity() instanceof ServerPlayer player) {
+                BorderRespawnHandler.ensureInsideBorder(player);
+            }
         }
         syncData(event.getEntity());
     }

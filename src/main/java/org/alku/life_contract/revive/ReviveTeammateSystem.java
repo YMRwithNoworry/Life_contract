@@ -18,6 +18,7 @@ import net.minecraftforge.network.PacketDistributor;
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
+import org.alku.life_contract.border.BorderRespawnHandler;
 
 import java.util.*;
 
@@ -164,6 +165,7 @@ public class ReviveTeammateSystem {
         } else {
             teammate.teleportTo(killer.getX(), killer.getY(), killer.getZ());
         }
+        BorderRespawnHandler.ensureInsideBorder(teammate);
         
         if (teammate.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(
