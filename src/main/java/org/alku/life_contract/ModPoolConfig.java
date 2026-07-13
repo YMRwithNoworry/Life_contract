@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public final class ModPoolConfig {
+    private static final String LEGACY_PHAYRIOSIS_ID = "phayriosis";
     private static final String PREVIOUS_PHAYRIOSIS_ID = "phayriosis_two";
     private static final String PHAYRIOSIS_REBORN_ID = "phayriosisreborn";
     public static final List<String> DEFAULT_POOL = List.of(
@@ -42,6 +43,7 @@ public final class ModPoolConfig {
         data.modPool.replaceAll(modId -> PREVIOUS_PHAYRIOSIS_ID.equals(modId)
                 ? PHAYRIOSIS_REBORN_ID
                 : modId);
+        data.modPool.removeIf(modId -> !isAssignableInfectionMod(modId));
         data.modPool = new ArrayList<>(new LinkedHashSet<>(data.modPool));
         data.teamCount = Math.max(1, Math.min(32, data.teamCount));
         save();
@@ -52,11 +54,29 @@ public final class ModPoolConfig {
         catch (IOException exception) { Life_contract.LOGGER.error("Unable to save infection mod pool", exception); }
     }
 
-    public static synchronized List<String> getModPool() { return List.copyOf(data.modPool); }
+    public static synchronized List<String> getModPool() {
+        return data.modPool.stream().filter(ModPoolConfig::isAssignableInfectionMod).toList();
+    }
+
     public static List<String> getLoadedModPool() { return getModPool().stream().filter(ModList.get()::isLoaded).toList(); }
     public static synchronized int getTeamCount() { return data.teamCount; }
     public static synchronized void setTeamCount(int count) { data.teamCount = Math.max(1, Math.min(32, count)); save(); }
-    public static synchronized void setModEnabled(String modId, boolean enabled) { if (enabled) { if (!data.modPool.contains(modId)) data.modPool.add(modId); } else data.modPool.remove(modId); save(); }
+
+    public static synchronized void setModEnabled(String modId, boolean enabled) {
+        if (!isAssignableInfectionMod(modId)) {
+            data.modPool.remove(modId);
+        } else if (enabled) {
+            if (!data.modPool.contains(modId)) data.modPool.add(modId);
+        } else {
+            data.modPool.remove(modId);
+        }
+        save();
+    }
+
+    public static boolean isAssignableInfectionMod(String modId) {
+        return modId != null && !LEGACY_PHAYRIOSIS_ID.equals(modId);
+    }
+
     public static void addMod(String modId) { setModEnabled(modId, true); }
     public static void removeMod(String modId) { setModEnabled(modId, false); }
     public static synchronized void clear() { data.modPool.clear(); save(); }

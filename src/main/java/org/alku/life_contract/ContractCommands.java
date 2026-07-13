@@ -179,6 +179,11 @@ public class ContractCommands {
                                 .then(Commands.argument("modid", StringArgumentType.string())
                                         .executes(context -> {
                                                 String modId = StringArgumentType.getString(context, "modid");
+                                                if (!ModPoolConfig.isAssignableInfectionMod(modId)) {
+                                                        context.getSource().sendFailure(Component.literal(
+                                                                "§c[生灵契约] 旧版 phayriosis 仅用于末地终局，不能加入随机感染模组池。"));
+                                                        return 0;
+                                                }
                                                 ModPoolConfig.addMod(modId);
                                                 context.getSource().sendSuccess(() -> Component
                                                         .literal("§a[生灵契约] §f已将 §e" + modId + " §f添加到随机池。"), true);

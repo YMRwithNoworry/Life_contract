@@ -73,5 +73,16 @@ requireText(endgame, 'ResourceLocation.fromNamespaceAndPath("phayriosis", "conve
 requireText(endgame, "dragonFight.removePlayer", "vanilla dragon boss bar cleanup");
 requireText(endgame, "endLevel.setDragonFight(null)", "vanilla dragon fight shutdown");
 requireText(endgame, "getEntitiesOfClass(EnderDragon.class", "vanilla dragon entity cleanup");
+requireText(endgame, "SpikeFeature.getSpikesForLevel", "seed-aware End spike lookup");
+requireText(endgame, "SpikeFeature.EndSpike::getHeight", "tallest End spike height");
+
+const levelTick = methodBody(endgame, "public static void onLevelTick");
+requireText(levelTick, "TickEvent.Phase.END", "post-movement flight ceiling enforcement");
+requireText(levelTick, "capConvertedDragonFlight", "converted dragon flight ceiling");
+
+const flightCap = methodBody(endgame, "private static void capConvertedDragonFlight");
+requireText(flightCap, "convertedDragonFlightCeiling", "calculated flight ceiling");
+requireText(flightCap, "dragon.setPos", "dragon position clamp");
+requireText(flightCap, "dragon.setDeltaMovement", "upward motion clamp");
 
 console.log("End encounter verification passed.");

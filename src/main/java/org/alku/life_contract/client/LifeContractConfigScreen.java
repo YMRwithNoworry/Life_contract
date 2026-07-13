@@ -25,6 +25,7 @@ public final class LifeContractConfigScreen {
         var pool = builder.getOrCreateCategory(Component.literal("感染模组池"));
         ModList.get().getMods().stream()
                 .filter(info -> !info.getModId().equals("minecraft") && !info.getModId().equals(Life_contract.MODID))
+                .filter(info -> ModPoolConfig.isAssignableInfectionMod(info.getModId()))
                 .sorted(Comparator.comparing(info -> info.getDisplayName().toLowerCase()))
                 .forEach(info -> pool.addEntry(entries.startBooleanToggle(
                                 Component.literal(info.getDisplayName() + " [" + info.getModId() + "]"),
