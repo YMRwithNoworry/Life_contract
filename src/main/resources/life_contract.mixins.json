@@ -4,9 +4,11 @@
   "package": "org.alku.life_contract.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "life_contract.refmap.json",
+  "plugin": "org.alku.life_contract.mixin.LifeContractMixinPlugin",
   "mixins": [
     "ServerPlayerGameModeMixin",
-    "ServerGamePacketListenerImplMixin"
+    "ServerGamePacketListenerImplMixin",
+    "XaeroMinimapRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 0

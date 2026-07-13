@@ -60,3 +60,9 @@ mandatory=false
 versionRange="[0.11.0,)"
 ordering="AFTER"
 side="BOTH"
+[[dependencies.life_contract]]
+modId="xaerominimap"
+mandatory=false
+versionRange="[26.2,)"
+ordering="AFTER"
+side="CLIENT"
