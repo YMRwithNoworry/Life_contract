@@ -20,7 +20,10 @@ import java.util.List;
 public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
-    private static final long BORDER_TRANSITION_TICKS = 60L;
+    private static final long BASE_BORDER_TRANSITION_TICKS = 60L;
+    private static final long BORDER_TRANSITION_DURATION_PERCENT = 130L;
+    private static final long BORDER_TRANSITION_TICKS =
+            BASE_BORDER_TRANSITION_TICKS * BORDER_TRANSITION_DURATION_PERCENT / 100L;
     
     public static class BorderData {
         private final ServerLevel level;
