@@ -1,6 +1,7 @@
 {
   "itemGroup.life_contract": "Life Contract",
   "item.life_contract.soul_contract": "Soul Contract",
+  "item.life_contract.soul_contract.desc": "Trade maximum health to ally one creature with your faction.",
   "item.life_contract.team_organizer": "Team Organizer",
   "item.life_contract.follower_wand": "Follower Wand",
   "item.life_contract.creature_egg": "Creature Egg",

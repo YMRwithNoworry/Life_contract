@@ -20,6 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import org.alku.life_contract.events.GameEventManager;
+import org.alku.life_contract.follower.FollowerEvents;
 
 import java.util.*;
 
@@ -65,6 +66,9 @@ public class ContractEvents {
 
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!event.getEntity().level().isClientSide) {
+            SoulContractItem.applyStoredHealthSacrifice(event.getEntity());
+        }
         syncData(event.getEntity());
         
         if (!event.getEntity().level().isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
@@ -120,6 +124,11 @@ public class ContractEvents {
         if (originalData.contains(SoulContractItem.TAG_CONTRACT_MOD)) {
             newData.putString(SoulContractItem.TAG_CONTRACT_MOD, originalData.getString(SoulContractItem.TAG_CONTRACT_MOD));
         }
+        if (originalData.contains(SoulContractItem.TAG_HEALTH_SACRIFICE)) {
+            newData.putDouble(SoulContractItem.TAG_HEALTH_SACRIFICE,
+                    originalData.getDouble(SoulContractItem.TAG_HEALTH_SACRIFICE));
+            SoulContractItem.applyStoredHealthSacrifice(newPlayer);
+        }
         if (originalData.hasUUID(TeamOrganizerItem.TAG_LEADER_UUID)) {
             newData.putUUID(TeamOrganizerItem.TAG_LEADER_UUID, originalData.getUUID(TeamOrganizerItem.TAG_LEADER_UUID));
         }
@@ -133,6 +142,9 @@ public class ContractEvents {
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!event.getEntity().level().isClientSide) {
+            SoulContractItem.applyStoredHealthSacrifice(event.getEntity());
+        }
         syncData(event.getEntity());
     }
 
@@ -290,23 +302,17 @@ public class ContractEvents {
             Entity attacker = source.getEntity();
             
             if (attacker instanceof LivingEntity livingAttacker) {
-                String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-                    .getKey(livingAttacker.getType()).getNamespace();
-                
                 recordAttackerMod(player, livingAttacker);
                 
-                if (contractMod.equals(attackerMod)) {
+                if (isContractFactionAlly(player, livingAttacker, contractMod)) {
                     event.setCanceled(true);
                 }
             }
             
             if (source.getDirectEntity() instanceof LivingEntity directAttacker) {
-                String directAttackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-                    .getKey(directAttacker.getType()).getNamespace();
-                
                 recordAttackerMod(player, directAttacker);
                 
-                if (contractMod.equals(directAttackerMod)) {
+                if (isContractFactionAlly(player, directAttacker, contractMod)) {
                     event.setCanceled(true);
                 }
             }
@@ -325,20 +331,14 @@ public class ContractEvents {
             Entity attacker = source.getEntity();
             
             if (attacker instanceof LivingEntity livingAttacker) {
-                String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-                    .getKey(livingAttacker.getType()).getNamespace();
-                
-                if (contractMod.equals(attackerMod)) {
+                if (isContractFactionAlly(player, livingAttacker, contractMod)) {
                     event.setCanceled(true);
                     return;
                 }
             }
             
             if (source.getDirectEntity() instanceof LivingEntity directAttacker) {
-                String directAttackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-                    .getKey(directAttacker.getType()).getNamespace();
-                
-                if (contractMod.equals(directAttackerMod)) {
+                if (isContractFactionAlly(player, directAttacker, contractMod)) {
                     event.setCanceled(true);
                 }
             }
@@ -355,10 +355,7 @@ public class ContractEvents {
             String contractMod = getEffectiveContractMod(player);
             if (contractMod == null || contractMod.isEmpty()) return;
             
-            String mobMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-                .getKey(mob.getType()).getNamespace();
-            
-            if (contractMod.equals(mobMod)) {
+            if (isContractFactionAlly(player, mob, contractMod)) {
                 event.setNewTarget(null);
             }
         }
@@ -393,10 +390,28 @@ public class ContractEvents {
     }
 
     private static void recordAttackerMod(Player player, LivingEntity attacker) {
-        String attackerMod = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES
-            .getKey(attacker.getType()).getNamespace();
-        LAST_ATTACKER_MOD.put(player.getUUID(), attackerMod);
+        if (attacker instanceof net.minecraft.world.entity.Mob mob
+                && FollowerEvents.getOwnerUUID(mob) != null
+                && !FollowerEvents.isAlliedWithPlayer(player, mob)) {
+            LAST_ATTACKER_MOD.remove(player.getUUID());
+        } else {
+            net.minecraft.resources.ResourceLocation attackerType =
+                    net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType());
+            if (attackerType != null) {
+                LAST_ATTACKER_MOD.put(player.getUUID(), attackerType.getNamespace());
+            }
+        }
         LAST_ATTACK_TIME.put(player.getUUID(), player.level().getGameTime());
+    }
+
+    private static boolean isContractFactionAlly(Player player, LivingEntity entity, String contractMod) {
+        if (entity instanceof net.minecraft.world.entity.Mob mob && FollowerEvents.getOwnerUUID(mob) != null) {
+            return FollowerEvents.isAlliedWithPlayer(player, mob);
+        }
+
+        net.minecraft.resources.ResourceLocation entityType =
+                net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        return entityType != null && contractMod.equals(entityType.getNamespace());
     }
 
     private static boolean isNegativeEffect(net.minecraft.world.effect.MobEffect effect) {

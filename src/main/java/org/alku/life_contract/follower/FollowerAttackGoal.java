@@ -1,6 +1,5 @@
 package org.alku.life_contract.follower;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -154,12 +153,15 @@ public class FollowerAttackGoal extends TargetGoal {
             return false;
         }
         if (target instanceof Player player) {
-            if (owner != null && ContractEvents.isSameTeam(owner, player)) {
-                return false;
-            }
-            return false;
+            return FollowerEvents.isContractAlly(mob)
+                    && owner != null
+                    && !ContractEvents.isSameTeam(owner, player);
         }
         if (target instanceof Mob targetMob) {
+            if (FollowerEvents.areMobsAllied(mob, targetMob)) {
+                return false;
+            }
+
             UUID targetOwner = FollowerEvents.getOwnerUUID(targetMob);
             if (targetOwner != null) {
                 if (targetOwner.equals(ownerUUID)) {

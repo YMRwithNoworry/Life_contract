@@ -2,6 +2,7 @@ package org.alku.life_contract.follower;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -10,6 +11,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -24,9 +28,12 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
+import org.alku.life_contract.TeamIronGolemSystem;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -54,6 +61,8 @@ public class FollowerEvents {
     private static final long MESSAGE_COOLDOWN_TICKS = 60;
     private static final String TAG_FOLLOWER_OWNER_UUID = "FollowerOwnerUUID";
     private static final String TAG_INHERIT_FOLLOWER_OWNER_UUID = "LifeContractInheritedFollowerOwnerUUID";
+    private static final String TAG_FACTION_UUID = "LifeContractFactionUUID";
+    private static final String TAG_CONTRACT_ALLY = "LifeContractSoulAlly";
     private static final double SUMMON_INHERIT_RADIUS = 12.0D;
     private static final Set<UUID> INHERITED_SUMMONS = new HashSet<>();
     private static final String[] OWNER_METHOD_NAMES = {
@@ -132,6 +141,9 @@ public class FollowerEvents {
         mob.targetSelector.removeAllGoals(goal -> true);
         
         mob.targetSelector.addGoal(1, new FollowerAttackGoal(mob, ownerUUID));
+        if (isContractAlly(mob) && mob instanceof PathfinderMob pathfinderMob) {
+            pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
+        }
         mob.goalSelector.addGoal(4, new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F));
     }
 
@@ -242,6 +254,7 @@ public class FollowerEvents {
 
     private static void registerFollowerWithoutHungerNotification(Mob mob, UUID ownerUUID) {
         mob.getPersistentData().putUUID(TAG_FOLLOWER_OWNER_UUID, ownerUUID);
+        updateFactionTag(mob, ownerUUID);
         mob.setPersistenceRequired();
         indexFollower(mob.getUUID(), ownerUUID);
         setupFollowerAI(mob, ownerUUID);
@@ -259,36 +272,38 @@ public class FollowerEvents {
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity().level().isClientSide()) return;
+
+        if (event.getEntity() instanceof Mob targetMob
+                && event.getSource().getEntity() instanceof Mob attackerMob
+                && areMobsAllied(attackerMob, targetMob)) {
+            event.setCanceled(true);
+            return;
+        }
         
         if (event.getSource().getEntity() instanceof Player player) {
             LivingEntity target = event.getEntity();
+            if (target instanceof Mob mob && isAlliedWithPlayer(player, mob)) {
+                event.setCanceled(true);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    showFollowerProtectionFeedback(serverPlayer, mob);
+                }
+                return;
+            }
+
             if (!(target instanceof Player)) {
                 PLAYER_ATTACK_TARGET.put(player.getUUID(), target);
                 PLAYER_ATTACK_TARGET_TIME.put(player.getUUID(), player.level().getGameTime());
             }
-            
-            if (target instanceof Mob mob) {
-                UUID ownerUUID = getOwnerUUID(mob);
-                if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
-                    event.setCanceled(true);
-                    
-                    if (player instanceof ServerPlayer serverPlayer) {
-                        showFollowerProtectionFeedback(serverPlayer, mob);
-                    }
-                }
-            }
         }
         
         if (event.getEntity() instanceof Player player && event.getSource().getEntity() instanceof LivingEntity attacker) {
+            if (attacker instanceof Mob mob && isAlliedWithPlayer(player, mob)) {
+                event.setCanceled(true);
+                return;
+            }
+
             PLAYER_ATTACKER.put(player.getUUID(), attacker);
             PLAYER_ATTACKER_TIME.put(player.getUUID(), player.level().getGameTime());
-            
-            if (attacker instanceof Mob mob) {
-                UUID ownerUUID = getOwnerUUID(mob);
-                if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
-                    event.setCanceled(true);
-                }
-            }
         }
     }
 
@@ -297,7 +312,7 @@ public class FollowerEvents {
         Long lastMessageTime = PROTECTION_MESSAGE_COOLDOWN.get(player.getUUID());
         
         if (lastMessageTime == null || currentTime - lastMessageTime >= MESSAGE_COOLDOWN_TICKS) {
-            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[跟随之杖] §c无法攻击你的跟随生物！"));
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[生灵契约] §c无法攻击己方生物！"));
             PROTECTION_MESSAGE_COOLDOWN.put(player.getUUID(), currentTime);
         }
         
@@ -349,22 +364,97 @@ public class FollowerEvents {
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
         if (event.getEntity() instanceof Mob mob && event.getNewTarget() instanceof Player player) {
-            UUID ownerUUID = getOwnerUUID(mob);
-            if (ownerUUID != null && player.getUUID().equals(ownerUUID)) {
+            if (isAlliedWithPlayer(player, mob)) {
                 event.setNewTarget(null);
             }
         }
     }
 
+    public static void registerContractAlly(Mob mob, UUID ownerUUID) {
+        mob.getPersistentData().putBoolean(TAG_CONTRACT_ALLY, true);
+        registerFollower(mob, ownerUUID);
+    }
+
+    public static boolean isContractAlly(Mob mob) {
+        return mob.getPersistentData().getBoolean(TAG_CONTRACT_ALLY);
+    }
+
+    public static boolean isAlliedWithPlayer(Player player, Mob mob) {
+        UUID ownerUUID = getOwnerUUID(mob);
+        if (ownerUUID != null) {
+            if (ownerUUID.equals(player.getUUID())) {
+                return true;
+            }
+
+            Player owner = player.level().getPlayerByUUID(ownerUUID);
+            if (owner != null) {
+                return ContractEvents.isSameTeam(player, owner);
+            }
+
+            if (mob.getPersistentData().hasUUID(TAG_FACTION_UUID)) {
+                return mob.getPersistentData().getUUID(TAG_FACTION_UUID).equals(getFactionId(player));
+            }
+            return false;
+        }
+
+        if (mob.getPersistentData().hasUUID(TAG_FACTION_UUID)
+                && mob.getPersistentData().getUUID(TAG_FACTION_UUID).equals(getFactionId(player))) {
+            return true;
+        }
+
+        if (mob instanceof IronGolem ironGolem && TeamIronGolemSystem.isSameTeam(ironGolem, player)) {
+            return true;
+        }
+
+        String factionMod = ContractEvents.getEffectiveContractMod(player);
+        ResourceLocation entityType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+        return factionMod != null && !factionMod.isEmpty()
+                && entityType != null && factionMod.equals(entityType.getNamespace());
+    }
+
+    public static boolean areMobsAllied(Mob first, Mob second) {
+        if (first == second) {
+            return true;
+        }
+
+        UUID firstOwnerUUID = getOwnerUUID(first);
+        UUID secondOwnerUUID = getOwnerUUID(second);
+        if (firstOwnerUUID != null && firstOwnerUUID.equals(secondOwnerUUID)) {
+            return true;
+        }
+
+        Player firstOwner = firstOwnerUUID == null ? null : first.level().getPlayerByUUID(firstOwnerUUID);
+        if (firstOwner != null && isAlliedWithPlayer(firstOwner, second)) {
+            return true;
+        }
+
+        Player secondOwner = secondOwnerUUID == null ? null : second.level().getPlayerByUUID(secondOwnerUUID);
+        if (secondOwner != null && isAlliedWithPlayer(secondOwner, first)) {
+            return true;
+        }
+
+        return first.getPersistentData().hasUUID(TAG_FACTION_UUID)
+                && second.getPersistentData().hasUUID(TAG_FACTION_UUID)
+                && first.getPersistentData().getUUID(TAG_FACTION_UUID)
+                        .equals(second.getPersistentData().getUUID(TAG_FACTION_UUID));
+    }
+
     public static void registerFollower(Mob mob, UUID ownerUUID) {
         UUID oldOwnerUUID = getOwnerUUID(mob);
         mob.getPersistentData().putUUID(TAG_FOLLOWER_OWNER_UUID, ownerUUID);
+        updateFactionTag(mob, ownerUUID);
         mob.setPersistenceRequired();
         indexFollower(mob.getUUID(), ownerUUID);
         setupFollowerAI(mob, ownerUUID);
         syncFollowerToClients(mob, ownerUUID, true);
         
         if ((oldOwnerUUID == null || !oldOwnerUUID.equals(ownerUUID)) && mob.level() instanceof ServerLevel serverLevel) {
+            if (oldOwnerUUID != null) {
+                ServerPlayer oldOwner = serverLevel.getServer().getPlayerList().getPlayer(oldOwnerUUID);
+                if (oldOwner != null) {
+                    FollowerHungerSystem.onFollowerUnregistered(oldOwner);
+                }
+            }
             net.minecraft.server.level.ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
             if (owner != null) {
                 FollowerHungerSystem.onFollowerRegistered(owner, mob);
@@ -377,6 +467,8 @@ public class FollowerEvents {
         FOLLOWER_OWNER_MAP.remove(mob.getUUID());
         unindexFollower(mob.getUUID(), ownerUUID);
         mob.getPersistentData().remove(TAG_FOLLOWER_OWNER_UUID);
+        mob.getPersistentData().remove(TAG_FACTION_UUID);
+        mob.getPersistentData().remove(TAG_CONTRACT_ALLY);
         INHERITED_SUMMONS.remove(mob.getUUID());
         syncFollowerToClients(mob, null, false);
         
@@ -409,6 +501,22 @@ public class FollowerEvents {
             FOLLOWER_OWNER_MAP.put(mob.getUUID(), ownerUUID);
         }
         return ownerUUID;
+    }
+
+    private static UUID getFactionId(Player player) {
+        UUID leaderUUID = ContractEvents.getLeaderUUID(player);
+        return leaderUUID != null ? leaderUUID : player.getUUID();
+    }
+
+    private static void updateFactionTag(Mob mob, UUID ownerUUID) {
+        if (!(mob.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
+        if (owner != null) {
+            mob.getPersistentData().putUUID(TAG_FACTION_UUID, getFactionId(owner));
+        }
     }
 
     public static void clearFollower(UUID mobUUID) {
