@@ -41,6 +41,8 @@ import org.alku.life_contract.blocks.ModBlocks;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 import org.alku.life_contract.items.SublimationItem;
+import org.alku.life_contract.mutation.MutationMenu;
+import org.alku.life_contract.mutation.MutationScreen;
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";
@@ -67,6 +69,8 @@ public class Life_contract {
             () -> IForgeMenuType.create(FollowerWandMenu::new));
     public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
             () -> IForgeMenuType.create(ReviveTeammateMenu::new));
+    public static final RegistryObject<MenuType<MutationMenu>> MUTATION_MENU = MENU_TYPES.register("mutation_tree",
+            () -> IForgeMenuType.create(MutationMenu::new));
 
     public static final RegistryObject<EntityType<TeamSentinel>> TEAM_SENTINEL = ENTITY_TYPES.register("team_sentinel",
             () -> EntityType.Builder.of(TeamSentinel::new, MobCategory.MISC)
@@ -121,6 +125,7 @@ public class Life_contract {
                 net.minecraft.client.gui.screens.MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
                 net.minecraft.client.gui.screens.MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);
                 net.minecraft.client.gui.screens.MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
+                net.minecraft.client.gui.screens.MenuScreens.register(MUTATION_MENU.get(), MutationScreen::new);
             });
         }
     }
@@ -138,6 +143,9 @@ public class Life_contract {
 
             while (KeyBindings.OPEN_TEAM_INVENTORY.consumeClick()) {
                 NetworkHandler.sendOpenTeamInventoryPacket();
+            }
+            while (KeyBindings.OPEN_MUTATION_TREE.consumeClick()) {
+                NetworkHandler.CHANNEL.sendToServer(new org.alku.life_contract.mutation.MutationPackets.Open());
             }
         }
     }

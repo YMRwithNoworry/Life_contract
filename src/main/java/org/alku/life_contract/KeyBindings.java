@@ -19,9 +19,12 @@ public class KeyBindings {
             GLFW.GLFW_KEY_B,
             CATEGORY
     );
+    public static final KeyMapping OPEN_MUTATION_TREE = new KeyMapping(
+            "key.life_contract.open_mutation_tree", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, CATEGORY);
 
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(OPEN_TEAM_INVENTORY);
+        event.register(OPEN_MUTATION_TREE);
     }
 }

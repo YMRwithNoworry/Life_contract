@@ -90,6 +90,14 @@ public class NetworkHandler {
                 PacketSyncLifePoints::new,
                 PacketSyncLifePoints::handle
         );
+        CHANNEL.registerMessage(id++, org.alku.life_contract.mutation.MutationPackets.Open.class,
+                org.alku.life_contract.mutation.MutationPackets.Open::encode,
+                org.alku.life_contract.mutation.MutationPackets.Open::new,
+                org.alku.life_contract.mutation.MutationPackets.Open::handle);
+        CHANNEL.registerMessage(id++, org.alku.life_contract.mutation.MutationPackets.Upgrade.class,
+                org.alku.life_contract.mutation.MutationPackets.Upgrade::encode,
+                org.alku.life_contract.mutation.MutationPackets.Upgrade::new,
+                org.alku.life_contract.mutation.MutationPackets.Upgrade::handle);
     }
 
     public static void sendOpenTeamInventoryPacket() {
