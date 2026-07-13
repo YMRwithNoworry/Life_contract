@@ -48,16 +48,13 @@ public class ContractEvents {
 
     @SubscribeEvent
     public static void onTabListFormat(PlayerEvent.TabListNameFormat event) {
-        if (event.getDisplayName() == null)
-            return;
-
         Player player = event.getEntity();
         
         int teamColor = getTeamColor(player);
         String effectiveMod = getEffectiveContractMod(player);
 
-        MutableComponent result = Component.literal("").withStyle(style -> style.withColor(teamColor));
-        result = result.append(event.getDisplayName().copy());
+        MutableComponent result = Component.literal(player.getGameProfile().getName())
+                .withStyle(style -> style.withColor(teamColor));
 
         if (effectiveMod != null && !effectiveMod.isEmpty()) {
             result.append(Component.literal(" [" + effectiveMod + "]").withStyle(ChatFormatting.GRAY));
