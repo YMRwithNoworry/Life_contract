@@ -66,7 +66,6 @@ public class TopologyMapHUD {
 
         drawFrame(guiGraphics);
         drawBorder(guiGraphics, view);
-        drawEvents(guiGraphics, view);
         drawPlayers(guiGraphics, mc, view);
     };
 
@@ -153,34 +152,6 @@ public class TopologyMapHUD {
         }
     }
 
-    private static void drawEvents(GuiGraphics guiGraphics, View view) {
-        List<int[]> bubbles = ClientDataStorage.getBubblePositions();
-        if (bubbles != null) {
-            int[] colors = {0xFFDCF8FF, 0xFF66FF88, 0xFF75A7FF, 0xFFFF8CE8, 0xFFFFE066};
-            for (int i = 0; i < bubbles.size(); i++) {
-                int[] bubble = bubbles.get(i);
-                if (bubble.length < 4) {
-                    continue;
-                }
-                int x = worldToMapX(bubble[0], view);
-                int z = worldToMapZ(bubble[2], view);
-                int radius = Math.max(2, (int) Math.round(bubble[3] / view.scale));
-                int color = colors[Math.floorMod(bubble.length >= 5 ? bubble[4] : i, colors.length)];
-                drawCircle(guiGraphics, x, z, radius, color);
-            }
-        }
-
-        UUID bountyUUID = ClientDataStorage.getBountyTargetUUID();
-        if (bountyUUID != null) {
-            int x = worldToMapX(ClientDataStorage.getBountyTargetX(), view);
-            int z = worldToMapZ(ClientDataStorage.getBountyTargetZ(), view);
-            if (insideMap(x, z)) {
-                guiGraphics.fill(x - 3, z - 3, x + 4, z + 4, 0xFFFFD12E);
-                guiGraphics.fill(x - 1, z - 1, x + 2, z + 2, 0xFF5A1600);
-            }
-        }
-    }
-
     private static void drawPlayers(GuiGraphics guiGraphics, Minecraft mc, View view) {
         UUID selfUUID = mc.player.getUUID();
         UUID selfLeader = null;
@@ -202,10 +173,6 @@ public class TopologyMapHUD {
             UUID playerLeader = player.leaderUUID != null ? player.leaderUUID : player.uuid;
             boolean teammate = selfLeader != null && selfLeader.equals(playerLeader);
             int color = self ? 0xFFFFFFFF : teammate ? 0xFF42D7FF : 0xFF9AA1A8;
-            if (ClientDataStorage.getBountyTargetUUID() != null && ClientDataStorage.getBountyTargetUUID().equals(player.uuid)) {
-                color = 0xFFFFD12E;
-            }
-
             drawPointer(guiGraphics, x, z, player.yaw, color);
         }
 

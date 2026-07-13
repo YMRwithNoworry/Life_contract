@@ -195,7 +195,7 @@ public class ContractCommands {
                                         }
                                         
                                         context.getSource().sendSuccess(() -> 
-                                                Component.literal("§a[游戏事件] §f游戏已开始！边界已收缩至你周围600x600区域。"), true);
+                                                Component.literal("§a[游戏] §f游戏已开始！边界已收缩至你周围600x600区域。"), true);
                                         for (ServerPlayer p : server != null ? server.getPlayerList().getPlayers() : java.util.Collections.<ServerPlayer>emptyList()) {
                                                 if (p.gameMode.getGameModeForPlayer() != net.minecraft.world.level.GameType.SURVIVAL
                                                         && p.gameMode.getGameModeForPlayer() != net.minecraft.world.level.GameType.ADVENTURE) continue;
@@ -224,7 +224,7 @@ public class ContractCommands {
                                 .executes(context -> {
                                         GameEventManager.stopGame();
                                         context.getSource().sendSuccess(() -> 
-                                                Component.literal("§c[游戏事件] §f游戏已停止。"), true);
+                                                Component.literal("§c[游戏] §f游戏已停止。"), true);
                                         return 1;
                                 }))
                         .then(Commands.literal("status")
@@ -236,113 +236,18 @@ public class ContractCommands {
                                         
                                         if (!active) {
                                                 context.getSource().sendSuccess(() -> 
-                                                        Component.literal("§7[游戏事件] §f游戏未开始。"), false);
+                                                        Component.literal("§7[游戏] §f游戏未开始。"), false);
                                         } else if (paused) {
                                                 context.getSource().sendSuccess(() -> 
-                                                        Component.literal("§e[游戏事件] §f游戏已暂停。已进行时间: §b" + formatTime(elapsed)), false);
+                                                        Component.literal("§e[游戏] §f游戏已暂停。已进行时间: §b" + formatTime(elapsed)), false);
                                         } else {
                                                 context.getSource().sendSuccess(() -> 
-                                                        Component.literal("§a[游戏事件] §f游戏进行中。已进行时间: §b" + formatTime(elapsed)), false);
+                                                        Component.literal("§a[游戏] §f游戏进行中。已进行时间: §b" + formatTime(elapsed)), false);
                                         }
                                         return 1;
-                                }))
-                        .then(Commands.literal("event")
-                                .requires(source -> source.hasPermission(2))
-                                .then(Commands.literal("trigger")
-                                        .then(Commands.argument("event_name", StringArgumentType.string())
-                                                .suggests((context, builder) -> {
-                                                        String remaining = builder.getRemaining().toLowerCase();
-                                                        String[] events = {"spore_surge", "bounty", "purification_rift", "endgame_overload", "spore_rain"};
-                                                        for (String event : events) {
-                                                                if (event.startsWith(remaining)) {
-                                                                        builder.suggest(event);
-                                                                }
-                                                        }
-                                                        return builder.buildFuture();
-                                                })
-                                                .executes(context -> {
-                                                        String eventName = StringArgumentType.getString(context, "event_name");
-                                                        return triggerEvent(context, eventName);
-                                                })))
-                                .then(Commands.literal("stop")
-                                        .then(Commands.argument("event_name", StringArgumentType.string())
-                                                .suggests((context, builder) -> {
-                                                        String remaining = builder.getRemaining().toLowerCase();
-                                                        String[] events = {"spore_surge", "bounty", "purification_rift", "endgame_overload", "spore_rain"};
-                                                        for (String event : events) {
-                                                                if (event.startsWith(remaining)) {
-                                                                        builder.suggest(event);
-                                                                }
-                                                        }
-                                                        return builder.buildFuture();
-                                                })
-                                                .executes(context -> {
-                                                        String eventName = StringArgumentType.getString(context, "event_name");
-                                                        return stopEvent(context, eventName);
-                                                })))));
+                                })));
         }
-        
-        private static int triggerEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
-                ServerLevel level = context.getSource().getLevel();
-                switch (eventName.toLowerCase()) {
-                        case "spore_surge":
-                                GameEventManager.forceTriggerSporeSurge(level);
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§c[游戏事件] §f已强制触发 §e孢潮推进 §f事件！"), true);
-                                return 1;
-                        case "bounty":
-                                GameEventManager.forceTriggerBountyHunt();
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§e[游戏事件] §f已强制触发 §e清道夫悬赏 §f事件！"), true);
-                                return 1;
-                        case "purification_rift":
-                                GameEventManager.forceTriggerPurificationRift(level);
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§b[游戏事件] §f已强制触发 §e净化裂隙 §f事件！"), true);
-                                return 1;
-                        case "endgame_overload":
-                                GameEventManager.forceTriggerEndgameOverload(level);
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§4[游戏事件] §f已强制触发 §e终局过载 §f事件！"), true);
-                                return 1;
-                        case "spore_rain":
-                                GameEventManager.forceTriggerSporeRain(level);
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§2[游戏事件] §f已强制触发 §e孢子雨 §f事件！"), true);
-                                return 1;
-                        default:
-                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
-                                return 0;
-                }
-        }
-        
-        private static int stopEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
-                switch (eventName.toLowerCase()) {
-                        case "spore_surge":
-                                GameEventManager.stopSporeSurge();
-                                return 1;
-                        case "bounty":
-                                GameEventManager.clearBounty();
-                                return 1;
-                        case "purification_rift":
-                                GameEventManager.stopPurificationRift();
-                                return 1;
-                        case "endgame_overload":
-                                GameEventManager.stopEndgameOverload();
-                                return 1;
-                        case "spore_rain":
-                                GameEventManager.stopSporeRain();
-                                return 1;
-                        default:
-                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
-                                context.getSource().sendSuccess(() -> 
-                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
-                                return 0;
-                }
-        }
-        
+
         private static String formatTime(long seconds) {
                 long minutes = seconds / 60;
                 long secs = seconds % 60;
