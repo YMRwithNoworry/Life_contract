@@ -8,6 +8,8 @@
   "mixins": [
     "ServerPlayerGameModeMixin",
     "ServerGamePacketListenerImplMixin",
+    "ItemStackCountMixin",
+    "FriendlyByteBufItemCountMixin",
     "XaeroMinimapRendererMixin"
   ],
   "injectors": {

@@ -40,6 +40,7 @@ import org.alku.life_contract.revive.ReviveTeammateScreen;
 import org.alku.life_contract.blocks.ModBlocks;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
+import org.alku.life_contract.items.SublimationItem;
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";
@@ -56,6 +57,7 @@ public class Life_contract {
     public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
     public static final RegistryObject<Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
     public static final RegistryObject<Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
+    public static final RegistryObject<Item> SUBLIMATION = ITEMS.register("sublimation", SublimationItem::new);
 
     public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
@@ -89,6 +91,7 @@ public class Life_contract {
                 output.accept(CREATURE_EGG.get());
                 output.accept(SPORE_BOMB.get());
                 output.accept(MEAT_PASTE.get());
+                output.accept(SUBLIMATION.get());
             }).build());
 
     public Life_contract() {
