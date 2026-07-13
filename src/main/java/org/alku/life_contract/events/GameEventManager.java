@@ -12,6 +12,8 @@ import net.minecraftforge.network.PacketDistributor;
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
+import org.alku.life_contract.ModPoolConfig;
+import org.alku.life_contract.SoulContractItem;
 import org.alku.life_contract.TeamOrganizerItem;
 import org.alku.life_contract.compat.CaerulaArborCompat;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Collections;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID)
 public final class GameEventManager {
@@ -36,7 +39,9 @@ public final class GameEventManager {
     private GameEventManager() {
     }
 
-    public static void startGame(ServerLevel level, double centerX, double centerZ) {
+    public static StartResult startGame(ServerLevel level, double centerX, double centerZ) {
+        StartResult allocation = assignRandomTeams(level);
+        if (!allocation.success()) return allocation;
         currentLevel = level;
         gameActive = true;
         gamePaused = false;
@@ -55,7 +60,40 @@ public final class GameEventManager {
         border.setCenter(centerX, centerZ);
         border.setSize(600.0);
         syncToAllClients();
+        return allocation;
     }
+
+    private static StartResult assignRandomTeams(ServerLevel level) {
+        List<ServerPlayer> players = new ArrayList<>(level.getServer().getPlayerList().getPlayers().stream()
+                .filter(player -> player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL
+                        || player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
+                .toList());
+        if (players.isEmpty()) return new StartResult(false, 0, 0, "没有可参与游戏的玩家");
+
+        List<String> pool = new ArrayList<>(ModPoolConfig.getLoadedModPool());
+        if (pool.isEmpty()) {
+            return new StartResult(false, players.size(), 0,
+                    "感染模组池中没有已加载模组，请在模组配置页面勾选至少一个模组");
+        }
+
+        Collections.shuffle(players);
+        Collections.shuffle(pool);
+        int teamCount = Math.min(players.size(), Math.min(ModPoolConfig.getTeamCount(), pool.size()));
+        for (int index = 0; index < players.size(); index++) {
+            ServerPlayer player = players.get(index);
+            ServerPlayer leader = players.get(index % teamCount);
+            String modId = pool.get(index % teamCount);
+            player.getPersistentData().putUUID(TeamOrganizerItem.TAG_LEADER_UUID, leader.getUUID());
+            player.getPersistentData().putString(TeamOrganizerItem.TAG_LEADER_NAME, leader.getName().getString());
+            player.getPersistentData().putInt(TeamOrganizerItem.TAG_TEAM_NUMBER, index % teamCount + 1);
+            player.getPersistentData().putString(SoulContractItem.TAG_CONTRACT_MOD, modId);
+            ContractEvents.syncData(player);
+        }
+        return new StartResult(true, players.size(), teamCount,
+                "已将 " + players.size() + " 名玩家随机分为 " + teamCount + " 队，并分配不同感染模组");
+    }
+
+    public record StartResult(boolean success, int players, int teams, String message) {}
 
     public static void pauseGame() {
         if (gameActive && !gamePaused && currentLevel != null) {

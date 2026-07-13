@@ -46,6 +46,7 @@ import org.alku.life_contract.mutation.MutationScreen;
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";
+    public static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
@@ -121,6 +122,10 @@ public class Life_contract {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
+                    net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,
+                    () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(
+                            (minecraft, parent) -> org.alku.life_contract.client.LifeContractConfigScreen.create(parent)));
             event.enqueueWork(() -> {
                 net.minecraft.client.gui.screens.MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
                 net.minecraft.client.gui.screens.MenuScreens.register(FOLLOWER_WAND_MENU.get(), FollowerWandScreen::new);

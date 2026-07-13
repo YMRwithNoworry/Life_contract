@@ -229,7 +229,12 @@ public class ContractCommands {
                                 .requires(source -> source.hasPermission(2))
                                 .executes(context -> {
                                         ServerPlayer player = context.getSource().getPlayerOrException();
-                                        GameEventManager.startGame(player.serverLevel(), player.getX(), player.getZ());
+                                        GameEventManager.StartResult result = GameEventManager.startGame(
+                                                player.serverLevel(), player.getX(), player.getZ());
+                                        if (!result.success()) {
+                                                context.getSource().sendFailure(Component.literal("§c[游戏] " + result.message()));
+                                                return 0;
+                                        }
                                         
                                         net.minecraft.server.MinecraftServer server = player.getServer();
                                         if (server != null) {
@@ -240,7 +245,8 @@ public class ContractCommands {
                                         }
                                         
                                         context.getSource().sendSuccess(() -> 
-                                                Component.literal("§a[游戏] §f游戏已开始！边界已收缩至你周围600x600区域。"), true);
+                                                Component.literal("§a[游戏] §f游戏已开始！" + result.message()
+                                                        + "，边界已收缩至你周围600x600区域。"), true);
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")

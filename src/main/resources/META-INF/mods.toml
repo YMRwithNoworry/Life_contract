@@ -66,3 +66,9 @@ mandatory=false
 versionRange="[26.2,)"
 ordering="AFTER"
 side="CLIENT"
+[[dependencies.life_contract]]
+modId="cloth_config"
+mandatory=true
+versionRange="[11.1,)"
+ordering="AFTER"
+side="CLIENT"
