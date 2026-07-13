@@ -11,7 +11,8 @@
     "ItemStackCountMixin",
     "FriendlyByteBufItemCountMixin",
     "FTBUltimineMixin",
-    "XaeroMinimapRendererMixin"
+    "XaeroMinimapRendererMixin",
+    "XaeroRadarStateUpdaterMixin"
   ],
   "injectors": {
     "defaultRequire": 0
