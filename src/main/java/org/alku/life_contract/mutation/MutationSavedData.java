@@ -16,7 +16,6 @@ public final class MutationSavedData extends SavedData {
         return server.overworld().getDataStorage().computeIfAbsent(MutationSavedData::load, MutationSavedData::new, NAME);
     }
     public TeamState state(UUID team) { return teams.computeIfAbsent(team, key -> new TeamState()); }
-    public void addPoint(UUID team) { state(team).points++; setDirty(); }
 
     public static MutationSavedData load(CompoundTag root) {
         MutationSavedData data = new MutationSavedData();
@@ -34,12 +33,11 @@ public final class MutationSavedData extends SavedData {
     }
 
     public static final class TeamState {
-        public int points;
         private final EnumMap<MutationNode, Integer> levels = new EnumMap<>(MutationNode.class);
         public int level(MutationNode node) { return levels.getOrDefault(node, 0); }
         public int totalLevels() { return levels.values().stream().mapToInt(Integer::intValue).sum(); }
         public void upgrade(MutationNode node) { levels.put(node, level(node) + 1); }
-        CompoundTag save() { CompoundTag tag = new CompoundTag(); tag.putInt("Points", points); levels.forEach((n,l)->tag.putInt(n.name(),l)); return tag; }
-        static TeamState load(CompoundTag tag) { TeamState s=new TeamState(); s.points=tag.getInt("Points"); for(MutationNode n:MutationNode.values()) { int l=tag.getInt(n.name()); if(l>0)s.levels.put(n,Math.min(l,n.maxLevel())); } return s; }
+        CompoundTag save() { CompoundTag tag = new CompoundTag(); levels.forEach((n,l)->tag.putInt(n.name(),l)); return tag; }
+        static TeamState load(CompoundTag tag) { TeamState s=new TeamState(); for(MutationNode n:MutationNode.values()) { int l=tag.getInt(n.name()); if(l>0)s.levels.put(n,Math.min(l,n.maxLevel())); } return s; }
     }
 }

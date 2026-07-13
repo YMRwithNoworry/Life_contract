@@ -21,7 +21,7 @@ public final class MutationScreen extends AbstractContainerScreen<MutationMenu> 
     protected void init() {
         super.init();
         modularUI = MutationUi.create(menu, playerInventory.player);
-        modularUI.setDrawTooltips(false);
+        modularUI.setDrawTooltips(true);
         modularUI.setScreenAndInit(this);
         addRenderableWidget(modularUI.getWidget());
         setFocused(modularUI.getWidget());
