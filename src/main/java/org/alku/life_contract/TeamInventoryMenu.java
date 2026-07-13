@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.alku.life_contract.items.SublimationItem;
 
 import java.util.UUID;
 
@@ -19,7 +20,16 @@ public class TeamInventoryMenu extends AbstractContainerMenu {
     private final UUID teamId;
 
     public TeamInventoryMenu(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
-        this(windowId, playerInventory, new SimpleContainer(CONTAINER_SIZE), null);
+        this(windowId, playerInventory, createClientContainer(), null);
+    }
+
+    private static SimpleContainer createClientContainer() {
+        return new SimpleContainer(CONTAINER_SIZE) {
+            @Override
+            public int getMaxStackSize() {
+                return SublimationItem.MAX_STACK_SIZE;
+            }
+        };
     }
 
     public TeamInventoryMenu(int windowId, Inventory playerInventory, Container container) {

@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.alku.life_contract.items.SublimationItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -166,6 +167,11 @@ public class TeamInventory implements Container {
     @Override
     public int getContainerSize() {
         return 54;
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return SublimationItem.MAX_STACK_SIZE;
     }
 
     @Override

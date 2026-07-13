@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public final class SublimationItem extends Item {
-    private static final int MAX_STACK_SIZE = 1024;
+    public static final int MAX_STACK_SIZE = 1024;
 
     public SublimationItem() {
         super(new Item.Properties());

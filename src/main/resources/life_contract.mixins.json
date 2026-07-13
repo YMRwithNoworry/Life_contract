@@ -13,6 +13,7 @@
     "ServerPlayerGameModeMixin",
     "ServerGamePacketListenerImplMixin",
     "PlayerExhaustionMixin",
+    "InventoryStackSizeMixin",
     "ItemStackCountMixin",
     "FriendlyByteBufItemCountMixin",
     "FTBUltimineMixin",
