@@ -28,15 +28,6 @@ public abstract class ServerPlayerGameModeMixin {
                                                           Direction direction,
                                                           int maxBuildHeight,
                                                           int sequence) {
-        if (level.getWorldBorder().isWithinBounds(pos)) {
-            return level.mayInteract(player, pos);
-        }
-
-        if (player instanceof ServerPlayer serverPlayer &&
-                level.getServer().isUnderSpawnProtection(level, pos, serverPlayer)) {
-            return false;
-        }
-
-        return true;
+        return BorderInteractionHelper.mayInteractIgnoringWorldBorder(level, player, pos);
     }
 }
