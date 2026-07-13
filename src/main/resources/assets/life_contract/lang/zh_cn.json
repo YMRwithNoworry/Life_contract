@@ -5,14 +5,12 @@
   "item.life_contract.creature_egg": "生物蛋",
   "item.life_contract.spore_bomb": "孢子炸弹",
   "item.life_contract.meat_paste": "肉泥",
-  "item.life_contract.life_topology": "生灵拓扑",
   "item.life_contract.soul_contract.desc": "§7将你的灵魂与某个物种连接。",
   
   "itemGroup.life_contract": "生灵契约模组",
   
   "key.categories.life_contract": "生灵契约",
   "key.life_contract.open_team_inventory": "打开队伍背包",
-  "key.life_contract.toggle_topology_map": "切换生灵拓扑地图",
   "container.life_contract.team_inventory": "队伍背包",
   "gui.life_contract.team_inventory.player_inventory": "个人背包",
 

@@ -1,7 +1,6 @@
 package org.alku.life_contract;
 
 import net.minecraft.core.BlockPos;
-import org.alku.life_contract.events.PacketSyncEvents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,11 +20,7 @@ public class ClientDataStorage {
     
     private static int healerCooldown = 0;
     
-    private static boolean gameActive = false;
-    private static double borderCenterX = 0;
-    private static double borderCenterZ = 0;
-    private static double borderSize = 0;
-    private static List<PacketSyncEvents.PlayerPosData> playerPositions = new ArrayList<>();
+    private static List<PacketSyncLifePoints.PlayerLifePoints> playerLifePoints = new ArrayList<>();
 
     public static class PlayerData {
         public String contractMod = "";
@@ -155,19 +150,10 @@ public class ClientDataStorage {
         }
     }
     
-    public static void setGameMapData(boolean gameActive, double borderCenterX, double borderCenterZ,
-                                      double borderSize, List<PacketSyncEvents.PlayerPosData> playerPositions) {
-        ClientDataStorage.gameActive = gameActive;
-        ClientDataStorage.borderCenterX = borderCenterX;
-        ClientDataStorage.borderCenterZ = borderCenterZ;
-        ClientDataStorage.borderSize = borderSize;
-        ClientDataStorage.playerPositions = playerPositions != null ? playerPositions : new ArrayList<>();
+    public static void setPlayerLifePoints(List<PacketSyncLifePoints.PlayerLifePoints> playerLifePoints) {
+        ClientDataStorage.playerLifePoints = playerLifePoints != null ? playerLifePoints : new ArrayList<>();
     }
-    
-    public static boolean isGameActive() { return gameActive; }
-    public static double getBorderCenterX() { return borderCenterX; }
-    public static double getBorderCenterZ() { return borderCenterZ; }
-    public static double getBorderSize() { return borderSize; }
-    public static List<PacketSyncEvents.PlayerPosData> getPlayerPositions() { return playerPositions; }
+
+    public static List<PacketSyncLifePoints.PlayerLifePoints> getPlayerLifePoints() { return playerLifePoints; }
     
 }

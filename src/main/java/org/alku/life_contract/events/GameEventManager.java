@@ -154,17 +154,12 @@ public final class GameEventManager {
     public static void syncToAllClients() {
         if (currentLevel == null) return;
 
-        List<PacketSyncEvents.PlayerPosData> positions = new ArrayList<>();
+        List<org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints> lifePoints = new ArrayList<>();
         for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
-            UUID leader = ContractEvents.getLeaderUUID(player);
-            positions.add(new PacketSyncEvents.PlayerPosData(
-                    player.getUUID(), player.getGameProfile().getName(), leader,
-                    (int) player.getX(), (int) player.getZ(), player.getYRot(),
-                    CaerulaArborCompat.getLifePoints(player)));
+            lifePoints.add(new org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints(
+                    player.getUUID(), CaerulaArborCompat.getLifePoints(player)));
         }
-
-        WorldBorder border = currentLevel.getWorldBorder();
-        NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new PacketSyncEvents(
-                gameActive, border.getCenterX(), border.getCenterZ(), border.getSize(), positions));
+        NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(),
+                new org.alku.life_contract.PacketSyncLifePoints(lifePoints));
     }
 }

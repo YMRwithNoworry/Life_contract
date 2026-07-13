@@ -20,16 +20,8 @@ public class KeyBindings {
             CATEGORY
     );
 
-    public static final KeyMapping TOGGLE_TOPOLOGY_MAP = new KeyMapping(
-            "key.life_contract.toggle_topology_map",
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_M,
-            CATEGORY
-    );
-
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(OPEN_TEAM_INVENTORY);
-        event.register(TOGGLE_TOPOLOGY_MAP);
     }
 }

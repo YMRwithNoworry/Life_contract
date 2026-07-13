@@ -16,7 +16,6 @@ import org.alku.life_contract.revive.PacketSyncDeadTeammates;
 import org.alku.life_contract.follower.PacketOpenFollowerWand;
 import org.alku.life_contract.follower.PacketSyncFollower;
 import org.alku.life_contract.follower.PacketSyncFollowerHunger;
-import org.alku.life_contract.events.PacketSyncEvents;
 
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
@@ -86,10 +85,10 @@ public class NetworkHandler {
                 PacketSyncTeamInventory::handle
         );
         CHANNEL.registerMessage(id++,
-                PacketSyncEvents.class,
-                PacketSyncEvents::encode,
-                PacketSyncEvents::new,
-                PacketSyncEvents::handle
+                PacketSyncLifePoints.class,
+                PacketSyncLifePoints::encode,
+                PacketSyncLifePoints::new,
+                PacketSyncLifePoints::handle
         );
         CHANNEL.registerMessage(id++,
                 PacketSyncInfection.class,

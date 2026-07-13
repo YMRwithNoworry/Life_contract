@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,7 +38,6 @@ import org.alku.life_contract.follower.FollowerWandScreen;
 import org.alku.life_contract.revive.ReviveTeammateMenu;
 import org.alku.life_contract.revive.ReviveTeammateScreen;
 import org.alku.life_contract.blocks.ModBlocks;
-import org.alku.life_contract.items.LifeTopologyItem;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 @Mod(Life_contract.MODID)
@@ -58,7 +56,6 @@ public class Life_contract {
     public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
     public static final RegistryObject<Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
     public static final RegistryObject<Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
-    public static final RegistryObject<Item> LIFE_TOPOLOGY = ITEMS.register("life_topology", LifeTopologyItem::new);
 
     public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
@@ -92,7 +89,6 @@ public class Life_contract {
                 output.accept(CREATURE_EGG.get());
                 output.accept(SPORE_BOMB.get());
                 output.accept(MEAT_PASTE.get());
-                output.accept(LIFE_TOPOLOGY.get());
             }).build());
 
     public Life_contract() {
@@ -139,9 +135,6 @@ public class Life_contract {
 
             while (KeyBindings.OPEN_TEAM_INVENTORY.consumeClick()) {
                 NetworkHandler.sendOpenTeamInventoryPacket();
-            }
-            while (KeyBindings.TOGGLE_TOPOLOGY_MAP.consumeClick()) {
-                org.alku.life_contract.events.TopologyMapHUD.onMKeyPressed();
             }
         }
     }

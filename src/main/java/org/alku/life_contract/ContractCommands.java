@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -196,15 +195,6 @@ public class ContractCommands {
                                         
                                         context.getSource().sendSuccess(() -> 
                                                 Component.literal("§a[游戏] §f游戏已开始！边界已收缩至你周围600x600区域。"), true);
-                                        for (ServerPlayer p : server != null ? server.getPlayerList().getPlayers() : java.util.Collections.<ServerPlayer>emptyList()) {
-                                                if (p.gameMode.getGameModeForPlayer() != net.minecraft.world.level.GameType.SURVIVAL
-                                                        && p.gameMode.getGameModeForPlayer() != net.minecraft.world.level.GameType.ADVENTURE) continue;
-                                                ItemStack topology = new ItemStack(Life_contract.LIFE_TOPOLOGY.get());
-                                                if (!p.getInventory().add(topology)) {
-                                                        p.drop(topology, false);
-                                                }
-                                                p.sendSystemMessage(Component.literal("§b[生灵拓扑] §f你获得了战术小地图。按 §eM §f关闭，双击 §eM §f切换视角。"));
-                                        }
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")

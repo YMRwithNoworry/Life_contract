@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.Life_contract;
-import org.alku.life_contract.events.PacketSyncEvents;
+import org.alku.life_contract.PacketSyncLifePoints;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class LifePointNameplateRenderer {
@@ -33,9 +33,9 @@ public class LifePointNameplateRenderer {
     }
 
     private static int getSyncedLifePoints(Player player) {
-        for (PacketSyncEvents.PlayerPosData data : ClientDataStorage.getPlayerPositions()) {
-            if (player.getUUID().equals(data.uuid)) {
-                return data.lifePoints;
+        for (PacketSyncLifePoints.PlayerLifePoints data : ClientDataStorage.getPlayerLifePoints()) {
+            if (player.getUUID().equals(data.uuid())) {
+                return data.lifePoints();
             }
         }
         return -1;
