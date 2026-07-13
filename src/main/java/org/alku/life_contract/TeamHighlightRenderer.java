@@ -7,7 +7,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -18,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class TeamHighlightRenderer {
+    private static final double GOLEM_RENDER_DISTANCE = 20.0D;
 
     public static boolean isHighlightEnabled = true;
 
@@ -38,18 +38,17 @@ public class TeamHighlightRenderer {
         MultiBufferSource bufferSource = mc.renderBuffers().bufferSource();
         float partialTick = mc.getFrameTime();
 
-        for (Entity entity : mc.level.entitiesForRendering()) {
-            if (entity instanceof Player target && entity != player) {
-                if (ContractEvents.isSameTeam(player, target)) {
-                    renderTeamHighlight(poseStack, bufferSource, target, partialTick);
-                }
+        for (Player target : mc.level.players()) {
+            if (target != player && ContractEvents.isSameTeam(player, target)) {
+                renderTeamHighlight(poseStack, bufferSource, target, partialTick);
             }
-            if (entity instanceof IronGolem golem) {
-                if (TeamIronGolemSystem.isTeamGolem(golem)) {
-                    renderGolemHealth(poseStack, bufferSource, golem, partialTick);
-                } else if (golem.getCustomName() != null && golem.getCustomName().getString().contains("队伍守卫")) {
-                    renderGolemHealth(poseStack, bufferSource, golem, partialTick);
-                }
+        }
+
+        AABB nearby = player.getBoundingBox().inflate(GOLEM_RENDER_DISTANCE);
+        for (IronGolem golem : mc.level.getEntitiesOfClass(IronGolem.class, nearby)) {
+            if (TeamIronGolemSystem.isTeamGolem(golem)
+                    || golem.getCustomName() != null && golem.getCustomName().getString().contains("队伍守卫")) {
+                renderGolemHealth(poseStack, bufferSource, golem, partialTick);
             }
         }
     }
@@ -91,8 +90,9 @@ public class TeamHighlightRenderer {
         double cameraY = mc.gameRenderer.getMainCamera().getPosition().y;
         double cameraZ = mc.gameRenderer.getMainCamera().getPosition().z;
 
-        double distance = player.distanceTo(golem);
-        if (distance > 20) return;
+        double distanceSqr = player.distanceToSqr(golem);
+        if (distanceSqr > GOLEM_RENDER_DISTANCE * GOLEM_RENDER_DISTANCE) return;
+        double distance = Math.sqrt(distanceSqr);
 
         poseStack.pushPose();
         poseStack.translate(-cameraX, -cameraY, -cameraZ);

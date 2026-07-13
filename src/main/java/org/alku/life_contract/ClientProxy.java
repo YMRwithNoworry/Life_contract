@@ -40,8 +40,8 @@ public class ClientProxy {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void registerFollower(java.util.UUID entityUUID, java.util.UUID ownerUUID) {
-        FollowerClientCache.registerFollower(entityUUID, ownerUUID);
+    public static void registerFollower(java.util.UUID entityUUID, int entityId, java.util.UUID ownerUUID) {
+        FollowerClientCache.registerFollower(entityUUID, entityId, ownerUUID);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -27,6 +27,8 @@ public class TeamInventory implements Container {
     private final NonNullList<ItemStack> items;
     private final UUID teamId;
     private int openCount = 0;
+    private int batchDepth = 0;
+    private boolean batchChanged = false;
     private TeamInventoryData parentData;
 
     public TeamInventory(UUID teamId) {
@@ -127,6 +129,10 @@ public class TeamInventory implements Container {
     }
 
     public void broadcastChanges() {
+        if (batchDepth > 0) {
+            batchChanged = true;
+            return;
+        }
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server == null) return;
         
@@ -141,6 +147,19 @@ public class TeamInventory implements Container {
                     }
                 }
             }
+        }
+    }
+
+    public void beginBatch() {
+        batchDepth++;
+    }
+
+    public void endBatch() {
+        if (batchDepth == 0) return;
+        batchDepth--;
+        if (batchDepth == 0 && batchChanged) {
+            batchChanged = false;
+            broadcastChanges();
         }
     }
 

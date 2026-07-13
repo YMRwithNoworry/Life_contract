@@ -5,30 +5,36 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-import org.alku.life_contract.ClientDataStorage;
-
+import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class PacketSyncFollower {
+    private static final UUID NO_OWNER = new UUID(0L, 0L);
+    private static Method registerFollowerMethod;
+    private static Method unregisterFollowerMethod;
     private final UUID entityUUID;
+    private final int entityId;
     private final UUID ownerUUID;
     private final boolean isRegister;
 
-    public PacketSyncFollower(UUID entityUUID, UUID ownerUUID, boolean isRegister) {
+    public PacketSyncFollower(UUID entityUUID, int entityId, UUID ownerUUID, boolean isRegister) {
         this.entityUUID = entityUUID;
-        this.ownerUUID = ownerUUID;
+        this.entityId = entityId;
+        this.ownerUUID = ownerUUID != null ? ownerUUID : NO_OWNER;
         this.isRegister = isRegister;
     }
 
     public PacketSyncFollower(FriendlyByteBuf buffer) {
         this.entityUUID = buffer.readUUID();
+        this.entityId = buffer.readVarInt();
         this.ownerUUID = buffer.readUUID();
         this.isRegister = buffer.readBoolean();
     }
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeUUID(entityUUID);
+        buffer.writeVarInt(entityId);
         buffer.writeUUID(ownerUUID);
         buffer.writeBoolean(isRegister);
     }
@@ -38,13 +44,10 @@ public class PacketSyncFollower {
         context.enqueueWork(() -> {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 try {
-                    Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
                     if (isRegister) {
-                        proxyClass.getMethod("registerFollower", UUID.class, UUID.class)
-                                .invoke(null, entityUUID, ownerUUID);
+                        getRegisterFollowerMethod().invoke(null, entityUUID, entityId, ownerUUID);
                     } else {
-                        proxyClass.getMethod("unregisterFollower", UUID.class)
-                                .invoke(null, entityUUID);
+                        getUnregisterFollowerMethod().invoke(null, entityUUID);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -52,5 +55,22 @@ public class PacketSyncFollower {
             });
         });
         context.setPacketHandled(true);
+    }
+
+    private static Method getRegisterFollowerMethod() throws ReflectiveOperationException {
+        if (registerFollowerMethod == null) {
+            Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
+            registerFollowerMethod = proxyClass.getMethod(
+                    "registerFollower", UUID.class, int.class, UUID.class);
+        }
+        return registerFollowerMethod;
+    }
+
+    private static Method getUnregisterFollowerMethod() throws ReflectiveOperationException {
+        if (unregisterFollowerMethod == null) {
+            Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
+            unregisterFollowerMethod = proxyClass.getMethod("unregisterFollower", UUID.class);
+        }
+        return unregisterFollowerMethod;
     }
 }

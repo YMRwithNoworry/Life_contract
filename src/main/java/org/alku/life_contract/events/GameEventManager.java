@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID)
 public final class GameEventManager {
@@ -35,6 +36,7 @@ public final class GameEventManager {
     private static long pausedTick;
     private static ServerLevel currentLevel;
     private static final Set<UUID> gameStartPlayerIds = new HashSet<>();
+    private static final Map<UUID, Integer> lastSyncedLifePoints = new LinkedHashMap<>();
 
     private GameEventManager() {
     }
@@ -48,6 +50,7 @@ public final class GameEventManager {
         gameStartTick = level.getGameTime();
         pausedTick = 0;
         gameStartPlayerIds.clear();
+        lastSyncedLifePoints.clear();
 
         for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
             if (player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL
@@ -118,6 +121,7 @@ public final class GameEventManager {
         gameStartTick = 0;
         pausedTick = 0;
         gameStartPlayerIds.clear();
+        lastSyncedLifePoints.clear();
         syncToAllClients();
         currentLevel = null;
     }
@@ -191,18 +195,28 @@ public final class GameEventManager {
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && gameActive && !gamePaused && currentLevel != null
                 && currentLevel.getGameTime() % 20 == 0) {
-            syncToAllClients();
+            syncToAllClients(false);
         }
     }
 
     public static void syncToAllClients() {
+        syncToAllClients(true);
+    }
+
+    private static void syncToAllClients(boolean force) {
         if (currentLevel == null) return;
 
-        List<org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints> lifePoints = new ArrayList<>();
+        Map<UUID, Integer> currentLifePoints = new LinkedHashMap<>();
         for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
-            lifePoints.add(new org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints(
-                    player.getUUID(), CaerulaArborCompat.getLifePoints(player)));
+            int points = CaerulaArborCompat.getLifePoints(player);
+            currentLifePoints.put(player.getUUID(), points);
         }
+        if (!force && currentLifePoints.equals(lastSyncedLifePoints)) return;
+        lastSyncedLifePoints.clear();
+        lastSyncedLifePoints.putAll(currentLifePoints);
+        List<org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints> lifePoints = new ArrayList<>(currentLifePoints.size());
+        currentLifePoints.forEach((uuid, points) -> lifePoints.add(
+                new org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints(uuid, points)));
         NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(),
                 new org.alku.life_contract.PacketSyncLifePoints(lifePoints));
     }

@@ -3,14 +3,15 @@ package org.alku.life_contract;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -46,23 +47,22 @@ public class FollowerGlowRenderer {
         double cameraY = mc.gameRenderer.getMainCamera().getPosition().y;
         double cameraZ = mc.gameRenderer.getMainCamera().getPosition().z;
 
-        for (Entity entity : mc.level.entitiesForRendering()) {
-            if (!(entity instanceof Mob)) {
-                continue;
-            }
-
-            Mob mob = (Mob) entity;
-            
-            if (!FollowerClientCache.isFollowerOf(mob.getUUID(), player.getUUID())) {
-                continue;
-            }
-
-            double distance = player.distanceTo(mob);
-            if (distance > RENDER_DISTANCE) {
+        for (int entityId : FollowerClientCache.getFollowerEntityIds(player.getUUID())) {
+            if (!(mc.level.getEntity(entityId) instanceof Mob mob)
+                    || !FollowerClientCache.isFollowerOf(mob.getUUID(), player.getUUID())
+                    || player.distanceToSqr(mob) > RENDER_DISTANCE * RENDER_DISTANCE) {
                 continue;
             }
 
             renderFollowerOutline(poseStack, bufferSource, mob, partialTick, cameraX, cameraY, cameraZ);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
+        if (!event.getLevel().isClientSide()) return;
+        if (event.getEntity() instanceof LocalPlayer) {
+            FollowerClientCache.clear();
         }
     }
 

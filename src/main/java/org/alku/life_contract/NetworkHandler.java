@@ -18,7 +18,7 @@ import org.alku.life_contract.follower.PacketSyncFollower;
 import org.alku.life_contract.follower.PacketSyncFollowerHunger;
 
 public class NetworkHandler {
-    private static final String PROTOCOL_VERSION = "1";
+    private static final String PROTOCOL_VERSION = "2";
 
     @SuppressWarnings("deprecation")
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(

@@ -129,26 +129,31 @@ public class TeamSmelter {
             return;
         }
 
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (stack.isEmpty()) {
-                continue;
-            }
+        inventory.beginBatch();
+        try {
+            for (int i = 0; i < inventory.getContainerSize(); i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (stack.isEmpty()) {
+                    continue;
+                }
 
-            Item smeltedItem = SMELTING_MAP.get(stack.getItem());
-            if (smeltedItem != null && smeltedItem != Items.AIR) {
-                int count = stack.getCount();
-                ItemStack result = new ItemStack(smeltedItem, count);
-                inventory.setItem(i, result);
-                continue;
-            }
+                Item smeltedItem = SMELTING_MAP.get(stack.getItem());
+                if (smeltedItem != null && smeltedItem != Items.AIR) {
+                    int count = stack.getCount();
+                    ItemStack result = new ItemStack(smeltedItem, count);
+                    inventory.setItem(i, result);
+                    continue;
+                }
 
-            Item cookedItem = COOKING_MAP.get(stack.getItem());
-            if (cookedItem != null && cookedItem != Items.AIR) {
-                int count = stack.getCount();
-                ItemStack result = new ItemStack(cookedItem, count);
-                inventory.setItem(i, result);
+                Item cookedItem = COOKING_MAP.get(stack.getItem());
+                if (cookedItem != null && cookedItem != Items.AIR) {
+                    int count = stack.getCount();
+                    ItemStack result = new ItemStack(cookedItem, count);
+                    inventory.setItem(i, result);
+                }
             }
+        } finally {
+            inventory.endBatch();
         }
     }
 
