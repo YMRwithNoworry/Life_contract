@@ -35,6 +35,7 @@ function forbidText(source, text, label) {
 }
 
 const contractEvents = read("src/main/java/org/alku/life_contract/ContractEvents.java");
+const gameEvents = read("src/main/java/org/alku/life_contract/events/GameEventManager.java");
 const respawnHandler = read("src/main/java/org/alku/life_contract/border/BorderRespawnHandler.java");
 const endgame = read("src/main/java/org/alku/life_contract/endgame/StrongholdEndgameManager.java");
 const teammateRevive = read("src/main/java/org/alku/life_contract/revive/ReviveTeammateSystem.java");
@@ -73,16 +74,30 @@ requireText(endgame, 'ResourceLocation.fromNamespaceAndPath("phayriosis", "conve
 requireText(endgame, "dragonFight.removePlayer", "vanilla dragon boss bar cleanup");
 requireText(endgame, "endLevel.setDragonFight(null)", "vanilla dragon fight shutdown");
 requireText(endgame, "getEntitiesOfClass(EnderDragon.class", "vanilla dragon entity cleanup");
-requireText(endgame, "SpikeFeature.getSpikesForLevel", "seed-aware End spike lookup");
-requireText(endgame, "SpikeFeature.EndSpike::getHeight", "tallest End spike height");
+requireText(endgame, "CONVERTED_DRAGON_MAX_Y = 105.0D", "fixed converted dragon ceiling");
+forbidText(endgame, "findHighestEndSpike", "converted dragon ceiling must not depend on End spikes");
 
 const levelTick = methodBody(endgame, "public static void onLevelTick");
 requireText(levelTick, "TickEvent.Phase.END", "post-movement flight ceiling enforcement");
 requireText(levelTick, "capConvertedDragonFlight", "converted dragon flight ceiling");
 
 const flightCap = methodBody(endgame, "private static void capConvertedDragonFlight");
-requireText(flightCap, "convertedDragonFlightCeiling", "calculated flight ceiling");
+requireText(flightCap, "CONVERTED_DRAGON_MAX_Y", "fixed flight ceiling");
 requireText(flightCap, "dragon.setPos", "dragon position clamp");
 requireText(flightCap, "dragon.setDeltaMovement", "upward motion clamp");
+
+const relocateParticipants = methodBody(gameEvents, "private static void relocateParticipantsInsideBorder");
+requireText(relocateParticipants, "buildSpawnPlatform", "spawn platform creation");
+const spawnPlatform = methodBody(gameEvents, "private static void buildSpawnPlatform");
+requireText(spawnPlatform, "offsetX = -2; offsetX <= 2", "five-block platform width");
+requireText(spawnPlatform, "offsetZ = -2; offsetZ <= 2", "five-block platform depth");
+requireText(spawnPlatform, "Blocks.COBBLESTONE", "cobblestone spawn platform");
+
+requireText(gameEvents, "INITIAL_DEBUFF_PROTECTION_SECONDS = 120L", "two-minute debuff protection");
+const debuffProtection = methodBody(gameEvents, "public static boolean hasInitialDebuffProtection");
+requireText(debuffProtection, "gameStartPlayerIds.contains", "debuff protection participant guard");
+const initialDebuffApplicable = methodBody(contractEvents, "public static void onInitialDebuffApplicable");
+requireText(initialDebuffApplicable, "MobEffectCategory.HARMFUL", "harmful effect detection");
+requireText(initialDebuffApplicable, "Event.Result.DENY", "harmful effect rejection");
 
 console.log("End encounter verification passed.");

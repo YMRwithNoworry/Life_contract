@@ -366,6 +366,19 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
+    public static void onInitialDebuffApplicable(
+            net.minecraftforge.event.entity.living.MobEffectEvent.Applicable event) {
+        if (event.getEntity().level().isClientSide()
+                || !(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)
+                || !org.alku.life_contract.events.GameEventManager.hasInitialDebuffProtection(player.getUUID())
+                || event.getEffectInstance().getEffect().getCategory()
+                != net.minecraft.world.effect.MobEffectCategory.HARMFUL) {
+            return;
+        }
+        event.setResult(net.minecraftforge.eventbus.api.Event.Result.DENY);
+    }
+
+    @SubscribeEvent
     public static void onContractMobEffectAdded(net.minecraftforge.event.entity.living.MobEffectEvent.Added event) {
         if (event.getEntity().level().isClientSide()) return;
         

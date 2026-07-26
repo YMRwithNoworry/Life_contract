@@ -35,7 +35,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.StrongholdPieces;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.SpikeFeature;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -61,6 +60,7 @@ public final class StrongholdEndgameManager {
     private static final double END_ISLAND_RADIUS = 100.0D;
     private static final double END_BORDER_PADDING = 50.0D;
     private static final double END_BORDER_SIZE = (END_ISLAND_RADIUS + END_BORDER_PADDING) * 2.0D;
+    private static final double CONVERTED_DRAGON_MAX_Y = 105.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "distorted_enderman");
     private static final ResourceLocation DISTORTED_DRAGON_ID =
@@ -90,7 +90,6 @@ public final class StrongholdEndgameManager {
     private static boolean portalActivated;
     private static boolean endEncounterInitialized;
     private static UUID convertedDragonUuid;
-    private static int convertedDragonFlightCeiling = Integer.MAX_VALUE;
 
     private StrongholdEndgameManager() {
     }
@@ -321,9 +320,8 @@ public final class StrongholdEndgameManager {
 
         if (DISTORTED_DRAGON_ID.equals(entityId)
                 && Level.END.equals(event.getLevel().dimension())
-                && event.getLevel() instanceof ServerLevel endLevel) {
+                && event.getLevel() instanceof ServerLevel) {
             convertedDragonUuid = entity.getUUID();
-            convertedDragonFlightCeiling = findHighestEndSpike(endLevel);
         }
     }
 
@@ -346,20 +344,13 @@ public final class StrongholdEndgameManager {
     }
 
     private static void capConvertedDragonFlight(Mob dragon) {
-        if (dragon.getY() > convertedDragonFlightCeiling) {
-            dragon.setPos(dragon.getX(), convertedDragonFlightCeiling, dragon.getZ());
+        if (dragon.getY() > CONVERTED_DRAGON_MAX_Y) {
+            dragon.setPos(dragon.getX(), CONVERTED_DRAGON_MAX_Y, dragon.getZ());
         }
         Vec3 movement = dragon.getDeltaMovement();
-        if (dragon.getY() >= convertedDragonFlightCeiling && movement.y > 0.0D) {
+        if (dragon.getY() >= CONVERTED_DRAGON_MAX_Y && movement.y > 0.0D) {
             dragon.setDeltaMovement(movement.x, 0.0D, movement.z);
         }
-    }
-
-    private static int findHighestEndSpike(ServerLevel endLevel) {
-        return SpikeFeature.getSpikesForLevel(endLevel).stream()
-                .mapToInt(SpikeFeature.EndSpike::getHeight)
-                .max()
-                .orElse(103);
     }
 
     private static void initializeEndEncounter(ServerLevel endLevel) {
@@ -377,10 +368,9 @@ public final class StrongholdEndgameManager {
                 mob -> mob.getPersistentData().getBoolean(END_ENCOUNTER_ENTITY_TAG))
                 .forEach(Entity::discard);
 
-        convertedDragonFlightCeiling = findHighestEndSpike(endLevel);
         BlockPos islandCenter = endLevel.getHeightmapPos(
                 Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.ZERO).above();
-        int dragonY = Math.min(convertedDragonFlightCeiling, Math.max(80, islandCenter.getY() + 30));
+        int dragonY = (int) Math.min(CONVERTED_DRAGON_MAX_Y, Math.max(80, islandCenter.getY() + 30));
         BlockPos dragonPos = new BlockPos(0, dragonY, 0);
         Mob dragon = spawnPhayriosisMob(endLevel, DISTORTED_DRAGON_ID, dragonPos, true);
         if (dragon == null) {
@@ -483,7 +473,6 @@ public final class StrongholdEndgameManager {
         portalActivated = false;
         endEncounterInitialized = false;
         convertedDragonUuid = null;
-        convertedDragonFlightCeiling = Integer.MAX_VALUE;
     }
 
     public record PreparationResult(boolean success, BlockPos portalCenter, String message) {

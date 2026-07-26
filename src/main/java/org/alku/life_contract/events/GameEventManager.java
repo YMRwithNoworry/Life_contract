@@ -9,7 +9,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Life_contract.MODID)
 public final class GameEventManager {
+    private static final long INITIAL_DEBUFF_PROTECTION_SECONDS = 120L;
     private static boolean gameActive;
     private static boolean gamePaused;
     private static long gameStartTick;
@@ -128,9 +131,20 @@ public final class GameEventManager {
                     new BlockPos(targetX, 0, targetZ)).above();
             int targetY = Math.max(level.getMinBuildHeight() + 2,
                     Math.min(level.getMaxBuildHeight() - 2, surface.getY()));
+            buildSpawnPlatform(level, targetX, targetY - 1, targetZ);
             player.teleportTo(level,
                     targetX + 0.5D, targetY, targetZ + 0.5D,
                     Collections.emptySet(), player.getYRot(), player.getXRot());
+        }
+    }
+
+    private static void buildSpawnPlatform(ServerLevel level, int centerX, int platformY, int centerZ) {
+        BlockPos.MutableBlockPos platformPos = new BlockPos.MutableBlockPos();
+        for (int offsetX = -2; offsetX <= 2; offsetX++) {
+            for (int offsetZ = -2; offsetZ <= 2; offsetZ++) {
+                platformPos.set(centerX + offsetX, platformY, centerZ + offsetZ);
+                level.setBlockAndUpdate(platformPos, Blocks.COBBLESTONE.defaultBlockState());
+            }
         }
     }
 
@@ -281,6 +295,11 @@ public final class GameEventManager {
         gamePlayerActive.put(playerId, player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR);
         gameTeamNumbers.putIfAbsent(teamId,
                 player.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER));
+        player.getActiveEffects().stream()
+                .filter(instance -> instance.getEffect().getCategory() == MobEffectCategory.HARMFUL)
+                .map(instance -> instance.getEffect())
+                .toList()
+                .forEach(player::removeEffect);
     }
 
     private static void checkLastTeamStanding() {
@@ -315,6 +334,12 @@ public final class GameEventManager {
 
     public static boolean isPlayerPartOfGame(UUID playerUUID) {
         return gameStartPlayerIds.contains(playerUUID);
+    }
+
+    public static boolean hasInitialDebuffProtection(UUID playerUUID) {
+        return gameActive
+                && gameStartPlayerIds.contains(playerUUID)
+                && getElapsedSeconds() < INITIAL_DEBUFF_PROTECTION_SECONDS;
     }
 
     public static long getElapsedSeconds() {
