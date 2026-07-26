@@ -57,10 +57,9 @@ public final class StrongholdEndgameManager {
     private static final int STRONGHOLD_SEARCH_RADIUS_CHUNKS = 256;
     private static final double PORTAL_ACTIVATION_BORDER_SIZE = 50.0D;
     private static final double MINIMUM_BORDER_SIZE = 10.0D;
-    private static final double END_ISLAND_RADIUS = 100.0D;
-    private static final double END_BORDER_PADDING = 50.0D;
-    private static final double END_BORDER_SIZE = (END_ISLAND_RADIUS + END_BORDER_PADDING) * 2.0D;
+    private static final double END_BORDER_SIZE = 500.0D;
     private static final double CONVERTED_DRAGON_MAX_Y = 105.0D;
+    private static final double CONVERTED_DRAGON_RESET_Y = 103.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "distorted_enderman");
     private static final ResourceLocation DISTORTED_DRAGON_ID =
@@ -344,11 +343,12 @@ public final class StrongholdEndgameManager {
     }
 
     private static void capConvertedDragonFlight(Mob dragon) {
-        if (dragon.getY() > CONVERTED_DRAGON_MAX_Y) {
-            dragon.setPos(dragon.getX(), CONVERTED_DRAGON_MAX_Y, dragon.getZ());
+        boolean exceededCeiling = dragon.getY() > CONVERTED_DRAGON_MAX_Y;
+        if (exceededCeiling) {
+            dragon.setPos(dragon.getX(), CONVERTED_DRAGON_RESET_Y, dragon.getZ());
         }
         Vec3 movement = dragon.getDeltaMovement();
-        if (dragon.getY() >= CONVERTED_DRAGON_MAX_Y && movement.y > 0.0D) {
+        if ((exceededCeiling || dragon.getY() >= CONVERTED_DRAGON_MAX_Y) && movement.y > 0.0D) {
             dragon.setDeltaMovement(movement.x, 0.0D, movement.z);
         }
     }
