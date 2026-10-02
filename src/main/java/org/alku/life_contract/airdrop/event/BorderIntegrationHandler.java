@@ -2,12 +2,8 @@ package org.alku.life_contract.airdrop.event;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.border.WorldBorder;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import org.alku.life_contract.airdrop.data.AirdropSavedData;
-import org.alku.life_contract.Life_contract;
 
-@EventBusSubscriber(modid = Life_contract.MODID)
 public class BorderIntegrationHandler {
 
     private static final double DEFAULT_BORDER_SIZE = 6.0E7D;
