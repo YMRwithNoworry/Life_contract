@@ -87,13 +87,13 @@ public class FollowerWandItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§d[跟随之杖]").withStyle(ChatFormatting.LIGHT_PURPLE));
         components.add(Component.literal("§e右键己方怪物 §7- 使其紧紧跟随你"));
         components.add(Component.literal("§eShift+右键空气 §7- 解除当前跟随"));
         components.add(Component.literal("§7同时只能有 §f1 §7只法杖随从，重新选择会替换旧目标"));
         components.add(Component.literal("§c绑定期间额外饥饿消耗为原版的 10%"));
-        super.appendHoverText(stack, level, components, flag);
+        super.appendHoverText(stack, context, components, flag);
     }
 
     @Override

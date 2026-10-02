@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import org.alku.life_contract.Life_contract;
 
@@ -32,7 +32,7 @@ public class EliminationHandler {
         try {
             String[] parts = mobId.split(":");
             ResourceLocation resourceId = ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]);
-            EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(resourceId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(resourceId);
             
             if (entityType == null) {
                 return;
@@ -69,7 +69,7 @@ public class EliminationHandler {
         try {
             String[] parts = mobId.split(":");
             ResourceLocation resourceId = ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]);
-            EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(resourceId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(resourceId);
             
             if (entityType == null) {
                 return;

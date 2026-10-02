@@ -1,13 +1,19 @@
 package org.alku.life_contract.revive;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.alku.life_contract.NetworkHandler;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketReviveTeammate {
+public class PacketReviveTeammate implements CustomPacketPayload {
+    public static final Type<PacketReviveTeammate> TYPE = NetworkHandler.type("revive_teammate");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketReviveTeammate> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> encode(packet, buffer), PacketReviveTeammate::decode);
 
     private final UUID teammateUUID;
 
@@ -23,13 +29,16 @@ public class PacketReviveTeammate {
         return new PacketReviveTeammate(buffer.readUUID());
     }
 
-    public static void handle(PacketReviveTeammate msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
-            if (player != null) {
-                ReviveTeammateSystem.reviveTeammate(player, msg.teammateUUID);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketReviveTeammate packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
+                ReviveTeammateSystem.reviveTeammate(player, packet.teammateUUID);
             }
         });
-        ctx.get().setPacketHandled(true);
     }
 }

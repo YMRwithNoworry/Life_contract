@@ -1,18 +1,19 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class ExtendedArmorRenderer {
 
     private static final ResourceLocation ARMOR_ICONS = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
@@ -20,8 +21,8 @@ public class ExtendedArmorRenderer {
     private static final int ICON_HEIGHT = 9;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onRenderGuiOverlayPost(RenderGuiOverlayEvent.Post event) {
-        if (event.getOverlay() != VanillaGuiOverlay.ARMOR_LEVEL.type()) {
+    public static void onRenderGuiLayerPost(RenderGuiLayerEvent.Post event) {
+        if (!event.getName().equals(VanillaGuiLayers.ARMOR_LEVEL)) {
             return;
         }
         

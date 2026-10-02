@@ -1,7 +1,8 @@
 package org.alku.life_contract;
 
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
@@ -193,7 +194,7 @@ public class FoodTypeRegistry {
             return FoodType.OTHER;
         }
         
-        ResourceLocation resourceLocation = ForgeRegistries.ITEMS.getKey(item);
+        ResourceLocation resourceLocation = BuiltInRegistries.ITEM.getKey(item);
         if (resourceLocation == null) {
             return FoodType.OTHER;
         }
@@ -230,7 +231,7 @@ public class FoodTypeRegistry {
     }
 
     public static boolean isValidFood(Item item) {
-        return item != null && item.isEdible();
+        return item != null && item.components().has(DataComponents.FOOD);
     }
 
     public static int getTotalFoodTypeCount() {

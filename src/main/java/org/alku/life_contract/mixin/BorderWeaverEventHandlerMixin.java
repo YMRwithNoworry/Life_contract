@@ -1,7 +1,7 @@
 package org.alku.life_contract.mixin;
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,8 +22,8 @@ public abstract class BorderWeaverEventHandlerMixin {
             require = 1
     )
     private static void lifeContract$suppressOverworldCountdownNoticeInEnd(
-            TickEvent.PlayerTickEvent event, CallbackInfo callback) {
-        if (Level.END.equals(event.player.level().dimension())) {
+            PlayerTickEvent.Post event, CallbackInfo callback) {
+        if (Level.END.equals(event.getEntity().level().dimension())) {
             callback.cancel();
         }
     }

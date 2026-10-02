@@ -20,7 +20,7 @@ const mixinPlugin = read(
 const borderWeaverMixin = read(
   "src/main/java/org/alku/life_contract/mixin/BorderWeaverEventHandlerMixin.java",
 );
-const modsToml = read("src/main/resources/META-INF/mods.toml");
+const neoforgeModsToml = read("src/main/resources/META-INF/neoforge.mods.toml");
 
 requireText(
   mixinConfig,
@@ -47,6 +47,6 @@ requireText(borderWeaverMixin, "ordinal = 1", "distance notice branch selection"
 requireText(borderWeaverMixin, "cancellable = true", "notice cancellation");
 requireText(borderWeaverMixin, "Level.END.equals", "End-only compatibility guard");
 requireText(borderWeaverMixin, "callback.cancel()", "End notice suppression");
-requireText(modsToml, 'modId="border_weaver"', "Border Weaver dependency id");
+requireText(neoforgeModsToml, 'modId="border_weaver"', "Border Weaver dependency id");
 
 console.log("End border notice verification passed.");

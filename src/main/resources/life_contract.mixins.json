@@ -2,8 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "org.alku.life_contract.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "life_contract.refmap.json",
+  "compatibilityLevel": "JAVA_21",
   "plugin": "org.alku.life_contract.mixin.LifeContractMixinPlugin",
   "mixins": [
     "BorderWeaverEventHandlerMixin",
@@ -16,7 +15,6 @@
     "PlayerExhaustionMixin",
     "InventoryStackSizeMixin",
     "ItemStackCountMixin",
-    "FriendlyByteBufItemCountMixin",
     "FTBUltimineMixin",
     "XaeroMinimapRendererMixin",
     "XaeroRadarStateUpdaterMixin"

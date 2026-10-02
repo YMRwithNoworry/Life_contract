@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -62,15 +62,15 @@ public class FollowOwnerGoal extends Goal {
     @Override
     public void start() {
         timeToRecalcPath = 0;
-        oldWaterCost = mob.getPathfindingMalus(BlockPathTypes.WATER);
-        mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        oldWaterCost = mob.getPathfindingMalus(PathType.WATER);
+        mob.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
     public void stop() {
         owner = null;
         mob.getNavigation().stop();
-        mob.setPathfindingMalus(BlockPathTypes.WATER, oldWaterCost);
+        mob.setPathfindingMalus(PathType.WATER, oldWaterCost);
     }
 
     @Override

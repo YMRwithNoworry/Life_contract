@@ -4,7 +4,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import org.alku.life_contract.follower.FollowerEvents;
@@ -47,7 +49,7 @@ public class CreatureEggItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         if (hasEntity(stack)) {
             String entityTypeKey = getEntityType(stack);
             String customName = getCustomName(stack);
@@ -57,7 +59,7 @@ public class CreatureEggItem extends Item {
             }
             
             if (entityTypeKey != null) {
-                net.minecraft.resources.ResourceLocation loc = new net.minecraft.resources.ResourceLocation(entityTypeKey);
+                net.minecraft.resources.ResourceLocation loc = net.minecraft.resources.ResourceLocation.parse(entityTypeKey);
                 String displayName = loc.getPath().replace("_", " ");
                 displayName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1);
                 components.add(Component.literal("§7类型: §f" + displayName));
@@ -76,7 +78,7 @@ public class CreatureEggItem extends Item {
             components.add(Component.literal("§c空的生物蛋").withStyle(ChatFormatting.RED));
             components.add(Component.literal("§7Shift+右键生物 §7- 捕获生物"));
         }
-        super.appendHoverText(stack, level, components, flag);
+        super.appendHoverText(stack, context, components, flag);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class CreatureEggItem extends Item {
             }
             String entityTypeKey = getEntityType(stack);
             if (entityTypeKey != null) {
-                net.minecraft.resources.ResourceLocation loc = new net.minecraft.resources.ResourceLocation(entityTypeKey);
+                net.minecraft.resources.ResourceLocation loc = net.minecraft.resources.ResourceLocation.parse(entityTypeKey);
                 String displayName = loc.getPath().replace("_", " ");
                 displayName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1);
                 return Component.literal("§d[生物蛋] §f" + displayName);
@@ -262,13 +264,13 @@ public class CreatureEggItem extends Item {
     }
 
     public static boolean hasEntity(ItemStack stack) {
-        return stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_ENTITY_TYPE);
+        return getItemData(stack).contains(TAG_ENTITY_TYPE);
     }
 
     public static boolean captureEntity(ItemStack stack, Mob mob) {
-        CompoundTag tag = stack.getOrCreateTag();
+        CompoundTag tag = getItemData(stack);
         
-        String entityTypeKey = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
+        String entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString();
         tag.putString(TAG_ENTITY_TYPE, entityTypeKey);
         
         CompoundTag entityData = new CompoundTag();
@@ -299,6 +301,7 @@ public class CreatureEggItem extends Item {
         
         tag.putFloat(TAG_CAPTURED_HEALTH, mob.getHealth());
         tag.putFloat(TAG_CAPTURED_MAX_HEALTH, mob.getMaxHealth());
+        setItemData(stack, tag);
         
         return true;
     }
@@ -307,8 +310,8 @@ public class CreatureEggItem extends Item {
         String entityTypeKey = getEntityType(stack);
         if (entityTypeKey == null) return false;
 
-        EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(
-            new net.minecraft.resources.ResourceLocation(entityTypeKey)
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(
+            net.minecraft.resources.ResourceLocation.parse(entityTypeKey)
         );
         if (entityType == null) {
             if (player != null) {
@@ -346,7 +349,7 @@ public class CreatureEggItem extends Item {
             float restoredHealth = capturedHealth > 0 ? Math.min(capturedHealth, restoredMaxHealth) : restoredMaxHealth;
             mob.setHealth(Math.max(1.0F, restoredHealth));
             
-            if (stack.hasTag() && stack.getTag() != null && stack.getTag().getBoolean(TAG_IS_WITHER_GACHA)) {
+            if (getItemData(stack).getBoolean(TAG_IS_WITHER_GACHA)) {
                 mob.addEffect(new net.minecraft.world.effect.MobEffectInstance(
                     net.minecraft.world.effect.MobEffects.WEAKNESS,
                     Integer.MAX_VALUE,
@@ -453,38 +456,40 @@ public class CreatureEggItem extends Item {
     }
 
     public static String getEntityType(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_ENTITY_TYPE)) {
-            return stack.getTag().getString(TAG_ENTITY_TYPE);
-        }
-        return null;
+        CompoundTag tag = getItemData(stack);
+        return tag.contains(TAG_ENTITY_TYPE) ? tag.getString(TAG_ENTITY_TYPE) : null;
     }
 
     public static CompoundTag getEntityData(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_ENTITY_DATA)) {
-            return stack.getTag().getCompound(TAG_ENTITY_DATA);
-        }
-        return new CompoundTag();
+        CompoundTag tag = getItemData(stack);
+        return tag.contains(TAG_ENTITY_DATA) ? tag.getCompound(TAG_ENTITY_DATA) : new CompoundTag();
     }
 
     public static String getCustomName(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_CUSTOM_NAME)) {
-            return stack.getTag().getString(TAG_CUSTOM_NAME);
-        }
-        return null;
+        CompoundTag tag = getItemData(stack);
+        return tag.contains(TAG_CUSTOM_NAME) ? tag.getString(TAG_CUSTOM_NAME) : null;
     }
 
     public static float getCapturedHealth(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_CAPTURED_HEALTH)) {
-            return stack.getTag().getFloat(TAG_CAPTURED_HEALTH);
-        }
-        return 0;
+        CompoundTag tag = getItemData(stack);
+        return tag.contains(TAG_CAPTURED_HEALTH) ? tag.getFloat(TAG_CAPTURED_HEALTH) : 0;
     }
 
     public static float getCapturedMaxHealth(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag() != null && stack.getTag().contains(TAG_CAPTURED_MAX_HEALTH)) {
-            return stack.getTag().getFloat(TAG_CAPTURED_MAX_HEALTH);
+        CompoundTag tag = getItemData(stack);
+        return tag.contains(TAG_CAPTURED_MAX_HEALTH) ? tag.getFloat(TAG_CAPTURED_MAX_HEALTH) : 0;
+    }
+
+    private static CompoundTag getItemData(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+    }
+
+    private static void setItemData(ItemStack stack, CompoundTag tag) {
+        if (tag.isEmpty()) {
+            stack.remove(DataComponents.CUSTOM_DATA);
+        } else {
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         }
-        return 0;
     }
 
     @Override

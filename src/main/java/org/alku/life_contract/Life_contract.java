@@ -1,158 +1,147 @@
 package org.alku.life_contract;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-
-import org.alku.life_contract.follower.FollowerWandItem;
-import org.alku.life_contract.revive.ReviveTeammateMenu;
-import org.alku.life_contract.revive.ReviveTeammateScreen;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.alku.life_contract.blocks.ModBlocks;
+import org.alku.life_contract.follower.FollowerWandItem;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 import org.alku.life_contract.items.SublimationItem;
 import org.alku.life_contract.mutation.MutationMenu;
 import org.alku.life_contract.mutation.MutationScreen;
+import org.alku.life_contract.revive.ReviveTeammateMenu;
+import org.alku.life_contract.revive.ReviveTeammateScreen;
+
 @Mod(Life_contract.MODID)
 public class Life_contract {
     public static final String MODID = "life_contract";
     public static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MODID);
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID);
-    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
+            DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS =
+            DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, MODID);
 
-    public static final RegistryObject<Item> SOUL_CONTRACT = ITEMS.register("soul_contract", SoulContractItem::new);
-    public static final RegistryObject<Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
-    public static final RegistryObject<Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
-    public static final RegistryObject<Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
-    public static final RegistryObject<Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
-    public static final RegistryObject<Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
-    public static final RegistryObject<Item> SUBLIMATION = ITEMS.register("sublimation", SublimationItem::new);
+    public static final DeferredHolder<Item, Item> SOUL_CONTRACT = ITEMS.register("soul_contract", SoulContractItem::new);
+    public static final DeferredHolder<Item, Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
+    public static final DeferredHolder<Item, Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
+    public static final DeferredHolder<Item, Item> CREATURE_EGG = ITEMS.register("creature_egg", CreatureEggItem::new);
+    public static final DeferredHolder<Item, Item> SPORE_BOMB = ITEMS.register("spore_bomb", SporeBombItem::new);
+    public static final DeferredHolder<Item, Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
+    public static final DeferredHolder<Item, Item> SUBLIMATION = ITEMS.register("sublimation", SublimationItem::new);
 
-    public static final RegistryObject<MobEffect> SLOW_INFECTION = MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> SLOW_INFECTION =
+            MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
-    public static final RegistryObject<MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU = MENU_TYPES.register("team_inventory",
-            () -> IForgeMenuType.create(TeamInventoryMenu::new));
-    public static final RegistryObject<MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU = MENU_TYPES.register("revive_teammate",
-            () -> IForgeMenuType.create(ReviveTeammateMenu::new));
-    public static final RegistryObject<MenuType<MutationMenu>> MUTATION_MENU = MENU_TYPES.register("mutation_tree",
-            () -> IForgeMenuType.create(MutationMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU =
+            MENU_TYPES.register("team_inventory", () -> IMenuTypeExtension.create(TeamInventoryMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ReviveTeammateMenu>> REVIVE_TEAMMATE_MENU =
+            MENU_TYPES.register("revive_teammate", () -> IMenuTypeExtension.create(ReviveTeammateMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<MutationMenu>> MUTATION_MENU =
+            MENU_TYPES.register("mutation_tree", () -> IMenuTypeExtension.create(MutationMenu::new));
 
-    public static final RegistryObject<EntityType<TeamSentinel>> TEAM_SENTINEL = ENTITY_TYPES.register("team_sentinel",
-            () -> EntityType.Builder.of(TeamSentinel::new, MobCategory.MISC)
+    public static final DeferredHolder<EntityType<?>, EntityType<TeamSentinel>> TEAM_SENTINEL =
+            ENTITY_TYPES.register("team_sentinel", () -> EntityType.Builder.of(TeamSentinel::new, MobCategory.MISC)
                     .sized(0.6F, 1.8F)
                     .clientTrackingRange(8)
                     .build("team_sentinel"));
-    
-    public static final RegistryObject<EntityType<FireTrailEntity>> FIRE_TRAIL = ENTITY_TYPES.register("fire_trail",
-            () -> EntityType.Builder.<FireTrailEntity>of(FireTrailEntity::new, MobCategory.MISC)
+
+    public static final DeferredHolder<EntityType<?>, EntityType<FireTrailEntity>> FIRE_TRAIL =
+            ENTITY_TYPES.register("fire_trail", () -> EntityType.Builder.<FireTrailEntity>of(FireTrailEntity::new, MobCategory.MISC)
                     .sized(0.0F, 0.0F)
                     .clientTrackingRange(8)
                     .updateInterval(1)
                     .build("fire_trail"));
 
-    public static final RegistryObject<CreativeModeTab> MOD_TAB = CREATIVE_TABS.register("life_contract_tab", () -> CreativeModeTab.builder()
-            .icon(() -> SOUL_CONTRACT.get().getDefaultInstance())
-            .title(Component.translatable("itemGroup.life_contract"))
-            .displayItems((parameters, output) -> {
-                output.accept(SOUL_CONTRACT.get());
-                output.accept(TEAM_ORGANIZER.get());
-                output.accept(FOLLOWER_WAND.get());
-                output.accept(CREATURE_EGG.get());
-                output.accept(SPORE_BOMB.get());
-                output.accept(MEAT_PASTE.get());
-                output.accept(SUBLIMATION.get());
-            }).build());
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MOD_TAB =
+            CREATIVE_TABS.register("life_contract_tab", () -> CreativeModeTab.builder()
+                    .icon(() -> SOUL_CONTRACT.get().getDefaultInstance())
+                    .title(Component.translatable("itemGroup.life_contract"))
+                    .displayItems((parameters, output) -> {
+                        output.accept(SOUL_CONTRACT.get());
+                        output.accept(TEAM_ORGANIZER.get());
+                        output.accept(FOLLOWER_WAND.get());
+                        output.accept(CREATURE_EGG.get());
+                        output.accept(SPORE_BOMB.get());
+                        output.accept(MEAT_PASTE.get());
+                        output.accept(SUBLIMATION.get());
+                    })
+                    .build());
 
-    public Life_contract() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    public Life_contract(IEventBus modEventBus, ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
         MOB_EFFECTS.register(modEventBus);
-        org.alku.life_contract.blocks.ModBlocks.BLOCKS.register(modEventBus);
-        org.alku.life_contract.blocks.ModBlocks.BLOCK_ITEMS.register(modEventBus);
-
-        NetworkHandler.register();
-
-        MinecraftForge.EVENT_BUS.register(this);
-        
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModBlocks.BLOCK_ITEMS.register(modEventBus);
+        modEventBus.addListener(NetworkHandler::registerPayloads);
+        modEventBus.addListener(ModEvents::onEntityAttributeCreation);
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            net.minecraftforge.fml.ModLoadingContext.get().registerExtensionPoint(
-                    net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory.class,
-                    () -> new net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory(
-                            (minecraft, parent) -> org.alku.life_contract.client.LifeContractConfigScreen.create(parent)));
-            event.enqueueWork(() -> {
-                net.minecraft.client.gui.screens.MenuScreens.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
-                net.minecraft.client.gui.screens.MenuScreens.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
-                net.minecraft.client.gui.screens.MenuScreens.register(MUTATION_MENU.get(), MutationScreen::new);
-            });
+            ModLoadingContext.get().registerExtensionPoint(
+                    net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
+                    () -> (container, parent) -> org.alku.life_contract.client.LifeContractConfigScreen.create(parent));
+        }
+
+        @SubscribeEvent
+        public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
+            event.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
+            event.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
+            event.register(MUTATION_MENU.get(), MutationScreen::new);
         }
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientEvents {
         @SubscribeEvent
-        public static void onClientTick(TickEvent.ClientTickEvent event) {
-            if (event.phase != TickEvent.Phase.END)
+        public static void onClientTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
+            if (net.minecraft.client.Minecraft.getInstance().player == null) {
                 return;
-
-            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
-            if (mc.player == null)
-                return;
+            }
 
             while (KeyBindings.OPEN_TEAM_INVENTORY.consumeClick()) {
                 NetworkHandler.sendOpenTeamInventoryPacket();
             }
             while (KeyBindings.OPEN_MUTATION_TREE.consumeClick()) {
-                NetworkHandler.CHANNEL.sendToServer(new org.alku.life_contract.mutation.MutationPackets.Open());
+                NetworkHandler.sendToServer(new org.alku.life_contract.mutation.MutationPackets.Open());
             }
         }
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class ModEvents {
-        @SubscribeEvent
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(TEAM_SENTINEL.get(), TeamSentinel.createAttributes().build());
         }

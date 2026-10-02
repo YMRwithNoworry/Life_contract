@@ -1,4 +1,5 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -9,15 +10,15 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import org.alku.life_contract.follower.FollowerClientCache;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class FollowerGlowRenderer {
 
     private static final float OUTLINE_R = 0.0f;
@@ -41,7 +42,7 @@ public class FollowerGlowRenderer {
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource bufferSource = mc.renderBuffers().bufferSource();
-        float partialTick = mc.getFrameTime();
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
         double cameraX = mc.gameRenderer.getMainCamera().getPosition().x;
         double cameraY = mc.gameRenderer.getMainCamera().getPosition().y;
@@ -97,40 +98,18 @@ public class FollowerGlowRenderer {
         float maxY = (float) aabb.maxY;
         float maxZ = (float) aabb.maxZ;
 
-        consumer.vertex(pose.pose(), minX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), minX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), maxX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), minX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), maxX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), minX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), maxX, minY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, minY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), minX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), minX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), maxX, maxY, minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), maxX, maxY, maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
+        float[][] vertices = {
+                {minX, minY, minZ}, {maxX, minY, minZ}, {minX, maxY, minZ}, {maxX, maxY, minZ},
+                {minX, minY, maxZ}, {maxX, minY, maxZ}, {minX, maxY, maxZ}, {maxX, maxY, maxZ},
+                {minX, minY, minZ}, {minX, maxY, minZ}, {maxX, minY, minZ}, {maxX, maxY, minZ},
+                {minX, minY, maxZ}, {minX, maxY, maxZ}, {maxX, minY, maxZ}, {maxX, maxY, maxZ},
+                {minX, minY, minZ}, {minX, minY, maxZ}, {maxX, minY, minZ}, {maxX, minY, maxZ},
+                {minX, maxY, minZ}, {minX, maxY, maxZ}, {maxX, maxY, minZ}, {maxX, maxY, maxZ}
+        };
+        for (float[] vertex : vertices) {
+            consumer.addVertex(pose.pose(), vertex[0], vertex[1], vertex[2])
+                    .setColor(r, g, b, a)
+                    .setNormal(pose, 1.0f, 0.0f, 0.0f);
+        }
     }
 }

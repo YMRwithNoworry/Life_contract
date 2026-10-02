@@ -1,12 +1,17 @@
 package org.alku.life_contract.revive;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.alku.life_contract.NetworkHandler;
 
-import java.util.function.Supplier;
-
-public class PacketSkipRevive {
+public class PacketSkipRevive implements CustomPacketPayload {
+    public static final Type<PacketSkipRevive> TYPE = NetworkHandler.type("skip_revive");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSkipRevive> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> encode(packet, buffer), PacketSkipRevive::decode);
 
     public PacketSkipRevive() {
     }
@@ -18,13 +23,16 @@ public class PacketSkipRevive {
         return new PacketSkipRevive();
     }
 
-    public static void handle(PacketSkipRevive msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
-            if (player != null) {
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSkipRevive packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
                 ReviveTeammateSystem.skipRevive(player);
             }
         });
-        ctx.get().setPacketHandled(true);
     }
 }

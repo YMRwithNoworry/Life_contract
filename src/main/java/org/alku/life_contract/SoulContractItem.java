@@ -1,6 +1,7 @@
 package org.alku.life_contract;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -22,14 +23,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class SoulContractItem extends Item {
     public static final String TAG_CONTRACT_MOD = "ContractMod";
     public static final String TAG_HEALTH_SACRIFICE = "LifeContractHealthSacrifice";
 
-    private static final UUID HEALTH_SACRIFICE_MODIFIER_ID = UUID.fromString("93c1fab8-8e68-4df0-aeb8-a50b3817f58c");
-    private static final String HEALTH_SACRIFICE_MODIFIER_NAME = "Life contract health sacrifice";
+    private static final ResourceLocation HEALTH_SACRIFICE_MODIFIER_ID =
+            ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "health_sacrifice");
     private static final double HEALTH_COST_FACTOR = 0.03D;
     private static final double MINIMUM_MAX_HEALTH = 1.0D;
 
@@ -101,9 +101,8 @@ public class SoulContractItem extends Item {
         if (sacrifice > 0.0D) {
             maxHealth.addPermanentModifier(new AttributeModifier(
                     HEALTH_SACRIFICE_MODIFIER_ID,
-                    HEALTH_SACRIFICE_MODIFIER_NAME,
                     -sacrifice,
-                    AttributeModifier.Operation.ADDITION));
+                    AttributeModifier.Operation.ADD_VALUE));
         }
 
         if (player.getHealth() > player.getMaxHealth()) {
@@ -112,13 +111,13 @@ public class SoulContractItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§d[生灵契约]").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
         components.add(Component.literal("§e右键非己方生物 §7- 使其与你的阵营结盟"));
         components.add(Component.literal("§7契约生物会跟随你，并攻击其他阵营"));
         components.add(Component.literal("§c代价: 永久失去目标当前生命值 3% 的生命上限"));
         components.add(Component.literal("§c一次性物品，使用后消失"));
-        super.appendHoverText(stack, level, components, flag);
+        super.appendHoverText(stack, context, components, flag);
     }
 
     @Override

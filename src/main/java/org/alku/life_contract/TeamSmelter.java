@@ -1,13 +1,14 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID)
+@EventBusSubscriber(modid = Life_contract.MODID)
 public class TeamSmelter {
 
     private static final Map<Item, Item> SMELTING_MAP = new HashMap<>();
@@ -83,17 +84,13 @@ public class TeamSmelter {
     }
 
     private static Item getItem(String modId, String name) {
-        Item item = ForgeRegistries.ITEMS.getValue(new net.minecraft.resources.ResourceLocation(modId + ":" + name));
+        Item item = BuiltInRegistries.ITEM.get(net.minecraft.resources.ResourceLocation.parse(modId + ":" + name));
         return item != null ? item : Items.AIR;
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) {
-            return;
-        }
-
-        net.minecraft.server.MinecraftServer server = net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+    public static void onServerTick(ServerTickEvent.Post event) {
+        net.minecraft.server.MinecraftServer server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if (server == null) {
             return;
         }

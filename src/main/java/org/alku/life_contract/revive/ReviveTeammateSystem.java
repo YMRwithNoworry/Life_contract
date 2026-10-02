@@ -1,4 +1,5 @@
 package org.alku.life_contract.revive;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -10,10 +11,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
@@ -22,7 +22,7 @@ import org.alku.life_contract.border.BorderRespawnHandler;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID)
+@EventBusSubscriber(modid = Life_contract.MODID)
 public class ReviveTeammateSystem {
 
     private static final String TAG_DEATH_TIME = "ReviveSystemDeathTime";
@@ -73,10 +73,7 @@ public class ReviveTeammateSystem {
         killer.sendSystemMessage(Component.literal("§a[复活] §f你击杀了敌对玩家！"));
         killer.sendSystemMessage(Component.literal("§e[复活] §f你有 §a" + deadTeammates.size() + " §f名死亡的队友可以复活。"));
         
-        NetworkHandler.CHANNEL.send(
-            PacketDistributor.PLAYER.with(() -> killer),
-            new PacketSyncDeadTeammates(deadTeammates)
-        );
+        NetworkHandler.sendToPlayer(killer, new PacketSyncDeadTeammates(deadTeammates));
     }
 
     public static List<DeadTeammateInfo> getDeadTeammatesInfo(ServerPlayer player) {

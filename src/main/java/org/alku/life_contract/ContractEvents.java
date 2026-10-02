@@ -1,4 +1,5 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -12,20 +13,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.alku.life_contract.border.BorderRespawnHandler;
 import org.alku.life_contract.events.GameEventManager;
 import org.alku.life_contract.follower.FollowerEvents;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID)
+@EventBusSubscriber(modid = Life_contract.MODID)
 public class ContractEvents {
 
     private static final Random RANDOM = new Random();
@@ -104,10 +104,7 @@ public class ContractEvents {
         
         for (ServerPlayer otherPlayer : newPlayer.getServer().getPlayerList().getPlayers()) {
             if (otherPlayer != newPlayer) {
-                NetworkHandler.CHANNEL.send(
-                    PacketDistributor.PLAYER.with(() -> newPlayer),
-                    new PacketSyncContract(otherPlayer)
-                );
+                NetworkHandler.sendToPlayer(newPlayer, new PacketSyncContract(otherPlayer));
             }
         }
     }
@@ -158,11 +155,8 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END)
-            return;
-
-        net.minecraft.server.MinecraftServer server = net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+    public static void onServerTick(ServerTickEvent.Post event) {
+        net.minecraft.server.MinecraftServer server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if (server == null)
             return;
     }
@@ -238,10 +232,7 @@ public class ContractEvents {
         if (player.level().isClientSide)
             return;
         
-        NetworkHandler.CHANNEL.send(
-            PacketDistributor.ALL.noArg(),
-            new PacketSyncContract(player)
-        );
+        NetworkHandler.sendToAllPlayers(new PacketSyncContract(player));
     }
 
     public static void propagateContractToTeam(Player player, String modId) {
@@ -263,7 +254,7 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
-    public static void onTeamFriendlyFire(LivingAttackEvent event) {
+    public static void onTeamFriendlyFire(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (!(event.getEntity() instanceof Player targetPlayer)) return;
@@ -279,7 +270,7 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
-    public static void onTeamFriendlyFireHurt(LivingHurtEvent event) {
+    public static void onTeamFriendlyFireHurt(LivingDamageEvent.Pre event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (!(event.getEntity() instanceof Player targetPlayer)) return;
@@ -289,13 +280,13 @@ public class ContractEvents {
         
         if (attacker instanceof Player attackerPlayer) {
             if (ContractEvents.isSameTeam(attackerPlayer, targetPlayer)) {
-                event.setCanceled(true);
+                event.setNewDamage(0);
             }
         }
     }
 
     @SubscribeEvent
-    public static void onContractLivingAttack(LivingAttackEvent event) {
+    public static void onContractLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getEntity() instanceof Player player) {
@@ -324,7 +315,7 @@ public class ContractEvents {
     }
 
     @SubscribeEvent
-    public static void onContractLivingHurt(LivingHurtEvent event) {
+    public static void onContractLivingHurt(LivingDamageEvent.Pre event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getEntity() instanceof Player player) {
@@ -336,50 +327,50 @@ public class ContractEvents {
             
             if (attacker instanceof LivingEntity livingAttacker) {
                 if (isContractFactionAlly(player, livingAttacker, contractMod)) {
-                    event.setCanceled(true);
+                    event.setNewDamage(0);
                     return;
                 }
             }
             
             if (source.getDirectEntity() instanceof LivingEntity directAttacker) {
                 if (isContractFactionAlly(player, directAttacker, contractMod)) {
-                    event.setCanceled(true);
+                    event.setNewDamage(0);
                 }
             }
         }
     }
 
     @SubscribeEvent
-    public static void onContractChangeTarget(net.minecraftforge.event.entity.living.LivingChangeTargetEvent event) {
+    public static void onContractChangeTarget(net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getEntity() instanceof net.minecraft.world.entity.Mob mob && 
-            event.getNewTarget() instanceof Player player) {
+            event.getNewAboutToBeSetTarget() instanceof Player player) {
             
             String contractMod = getEffectiveContractMod(player);
             if (contractMod == null || contractMod.isEmpty()) return;
             
             if (isContractFactionAlly(player, mob, contractMod)) {
-                event.setNewTarget(null);
+                event.setNewAboutToBeSetTarget(null);
             }
         }
     }
 
     @SubscribeEvent
     public static void onInitialDebuffApplicable(
-            net.minecraftforge.event.entity.living.MobEffectEvent.Applicable event) {
+            net.neoforged.neoforge.event.entity.living.MobEffectEvent.Applicable event) {
         if (event.getEntity().level().isClientSide()
                 || !(event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player)
                 || !org.alku.life_contract.events.GameEventManager.hasInitialDebuffProtection(player.getUUID())
-                || event.getEffectInstance().getEffect().getCategory()
+                || event.getEffectInstance().getEffect().value().getCategory()
                 != net.minecraft.world.effect.MobEffectCategory.HARMFUL) {
             return;
         }
-        event.setResult(net.minecraftforge.eventbus.api.Event.Result.DENY);
+        event.setResult(net.neoforged.neoforge.event.entity.living.MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
     }
 
     @SubscribeEvent
-    public static void onContractMobEffectAdded(net.minecraftforge.event.entity.living.MobEffectEvent.Added event) {
+    public static void onContractMobEffectAdded(net.neoforged.neoforge.event.entity.living.MobEffectEvent.Added event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getEntity() instanceof Player player) {
@@ -389,8 +380,8 @@ public class ContractEvents {
             net.minecraft.world.effect.MobEffectInstance effectInstance = event.getEffectInstance();
             if (effectInstance == null) return;
             
-            net.minecraft.world.effect.MobEffect effect = effectInstance.getEffect();
-            boolean isNegativeEffect = isNegativeEffect(effect);
+            net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect = effectInstance.getEffect();
+            boolean isNegativeEffect = isNegativeEffect(effect.value());
             
             if (!isNegativeEffect) return;
             
@@ -413,7 +404,7 @@ public class ContractEvents {
             LAST_ATTACKER_MOD.remove(player.getUUID());
         } else {
             net.minecraft.resources.ResourceLocation attackerType =
-                    net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType());
+                    net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(attacker.getType());
             if (attackerType != null) {
                 LAST_ATTACKER_MOD.put(player.getUUID(), attackerType.getNamespace());
             }
@@ -427,7 +418,7 @@ public class ContractEvents {
         }
 
         net.minecraft.resources.ResourceLocation entityType =
-                net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+                net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         return entityType != null && contractMod.equals(entityType.getNamespace());
     }
 

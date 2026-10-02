@@ -5,8 +5,8 @@
 ### *An Faction Confrontation and Profession System Mod for Minecraft*
 
 ![Version](https://img.shields.io/badge/Version-1.0-SNAPSHOT-blue)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-green)
-![Forge](https://img.shields.io/badge/Forge-Recommended-orange)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-green)
+![NeoForge](https://img.shields.io/badge/NeoForge-Recommended-orange)
 
 </div>
 

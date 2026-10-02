@@ -1,94 +1,78 @@
 package org.alku.life_contract;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.alku.life_contract.follower.PacketSyncFollower;
+import org.alku.life_contract.mutation.MutationPackets;
 import org.alku.life_contract.revive.PacketReviveTeammate;
 import org.alku.life_contract.revive.PacketSkipRevive;
 import org.alku.life_contract.revive.PacketSyncDeadTeammates;
-import org.alku.life_contract.follower.PacketSyncFollower;
 
-public class NetworkHandler {
-    private static final String PROTOCOL_VERSION = "3";
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
-    @SuppressWarnings("deprecation")
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+public final class NetworkHandler {
+    private static final String PROTOCOL_VERSION = "1";
 
-    public static void register() {
-        int id = 0;
-        CHANNEL.registerMessage(id++,
-                PacketSyncContract.class,
-                PacketSyncContract::encode,
-                PacketSyncContract::new,
-                PacketSyncContract::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketOpenTeamInventory.class,
-                PacketOpenTeamInventory::encode,
-                PacketOpenTeamInventory::new,
-                PacketOpenTeamInventory::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSyncFollower.class,
-                PacketSyncFollower::encode,
-                PacketSyncFollower::new,
-                PacketSyncFollower::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketReviveTeammate.class,
-                PacketReviveTeammate::encode,
-                PacketReviveTeammate::decode,
-                PacketReviveTeammate::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSkipRevive.class,
-                PacketSkipRevive::encode,
-                PacketSkipRevive::decode,
-                PacketSkipRevive::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSyncDeadTeammates.class,
-                PacketSyncDeadTeammates::encode,
-                PacketSyncDeadTeammates::decode,
-                PacketSyncDeadTeammates::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSyncTeamInventory.class,
-                PacketSyncTeamInventory::encode,
-                PacketSyncTeamInventory::new,
-                PacketSyncTeamInventory::handle
-        );
-        CHANNEL.registerMessage(id++,
-                PacketSyncLifePoints.class,
-                PacketSyncLifePoints::encode,
-                PacketSyncLifePoints::new,
-                PacketSyncLifePoints::handle
-        );
-        CHANNEL.registerMessage(id++, org.alku.life_contract.mutation.MutationPackets.Open.class,
-                org.alku.life_contract.mutation.MutationPackets.Open::encode,
-                org.alku.life_contract.mutation.MutationPackets.Open::new,
-                org.alku.life_contract.mutation.MutationPackets.Open::handle);
-        CHANNEL.registerMessage(id++, org.alku.life_contract.mutation.MutationPackets.Upgrade.class,
-                org.alku.life_contract.mutation.MutationPackets.Upgrade::encode,
-                org.alku.life_contract.mutation.MutationPackets.Upgrade::new,
-                org.alku.life_contract.mutation.MutationPackets.Upgrade::handle);
+    private NetworkHandler() {
+    }
+
+    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> type(String path) {
+        return new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, path));
+    }
+
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, T> codec(
+            BiConsumer<RegistryFriendlyByteBuf, T> encoder,
+            Function<RegistryFriendlyByteBuf, T> decoder) {
+        return StreamCodec.of((buffer, value) -> encoder.accept(buffer, value), buffer -> decoder.apply(buffer));
+    }
+
+    public static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar payloads = event.registrar(PROTOCOL_VERSION);
+        payloads.playToClient(PacketSyncContract.TYPE, PacketSyncContract.STREAM_CODEC, PacketSyncContract::handle);
+        payloads.playToServer(PacketOpenTeamInventory.TYPE, PacketOpenTeamInventory.STREAM_CODEC, PacketOpenTeamInventory::handle);
+        payloads.playToClient(PacketSyncFollower.TYPE, PacketSyncFollower.STREAM_CODEC, PacketSyncFollower::handle);
+        payloads.playToServer(PacketReviveTeammate.TYPE, PacketReviveTeammate.STREAM_CODEC, PacketReviveTeammate::handle);
+        payloads.playToServer(PacketSkipRevive.TYPE, PacketSkipRevive.STREAM_CODEC, PacketSkipRevive::handle);
+        payloads.playToClient(PacketSyncDeadTeammates.TYPE, PacketSyncDeadTeammates.STREAM_CODEC, PacketSyncDeadTeammates::handle);
+        payloads.playToClient(PacketSyncTeamInventory.TYPE, PacketSyncTeamInventory.STREAM_CODEC, PacketSyncTeamInventory::handle);
+        payloads.playToClient(PacketSyncLifePoints.TYPE, PacketSyncLifePoints.STREAM_CODEC, PacketSyncLifePoints::handle);
+        payloads.playToServer(MutationPackets.Open.TYPE, MutationPackets.Open.STREAM_CODEC, MutationPackets.Open::handle);
+        payloads.playToServer(MutationPackets.Upgrade.TYPE, MutationPackets.Upgrade.STREAM_CODEC, MutationPackets.Upgrade::handle);
+    }
+
+    public static void sendToServer(CustomPacketPayload payload) {
+        PacketDistributor.sendToServer(payload);
+    }
+
+    public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+        PacketDistributor.sendToPlayer(player, payload);
+    }
+
+    public static void sendToAllPlayers(CustomPacketPayload payload) {
+        PacketDistributor.sendToAllPlayers(payload);
+    }
+
+    public static void sendToTrackingEntity(Entity entity, CustomPacketPayload payload) {
+        PacketDistributor.sendToPlayersTrackingEntity(entity, payload);
     }
 
     public static void sendOpenTeamInventoryPacket() {
-        CHANNEL.sendToServer(new PacketOpenTeamInventory());
+        sendToServer(new PacketOpenTeamInventory());
     }
 
     public static void sendReviveTeammatePacket(java.util.UUID teammateUUID) {
-        CHANNEL.sendToServer(new PacketReviveTeammate(teammateUUID));
+        sendToServer(new PacketReviveTeammate(teammateUUID));
     }
 
     public static void sendSkipRevivePacket() {
-        CHANNEL.sendToServer(new PacketSkipRevive());
+        sendToServer(new PacketSkipRevive());
     }
 }

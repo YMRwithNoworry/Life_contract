@@ -84,7 +84,7 @@ public class ReviveTeammateScreen extends AbstractContainerScreen<ReviveTeammate
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         
         int startX = this.leftPos + 8;
@@ -116,13 +116,13 @@ public class ReviveTeammateScreen extends AbstractContainerScreen<ReviveTeammate
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         int maxScroll = Math.max(0, this.menu.getDeadTeammates().size() - VISIBLE_ROWS);
-        int newScroll = (int) Math.max(0, Math.min(maxScroll, scrollOffset - delta));
+        int newScroll = (int) Math.max(0, Math.min(maxScroll, scrollOffset - deltaY));
         if (newScroll != scrollOffset) {
             scrollOffset = newScroll;
             this.init();
         }
-        return super.mouseScrolled(mouseX, mouseY, delta);
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 }

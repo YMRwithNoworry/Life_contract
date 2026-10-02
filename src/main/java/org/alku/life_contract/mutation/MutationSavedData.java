@@ -1,6 +1,7 @@
 package org.alku.life_contract.mutation;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import java.util.EnumMap;
@@ -10,14 +11,16 @@ import java.util.UUID;
 
 public final class MutationSavedData extends SavedData {
     private static final String NAME = "life_contract_mutations";
+    private static final SavedData.Factory<MutationSavedData> FACTORY = new SavedData.Factory<>(
+            MutationSavedData::new, MutationSavedData::load, null);
     private final Map<UUID, TeamState> teams = new HashMap<>();
 
     public static MutationSavedData get(MinecraftServer server) {
-        return server.overworld().getDataStorage().computeIfAbsent(MutationSavedData::load, MutationSavedData::new, NAME);
+        return server.overworld().getDataStorage().computeIfAbsent(FACTORY, NAME);
     }
     public TeamState state(UUID team) { return teams.computeIfAbsent(team, key -> new TeamState()); }
 
-    public static MutationSavedData load(CompoundTag root) {
+    public static MutationSavedData load(CompoundTag root, HolderLookup.Provider registries) {
         MutationSavedData data = new MutationSavedData();
         CompoundTag teamsTag = root.getCompound("Teams");
         for (String key : teamsTag.getAllKeys()) {
@@ -26,7 +29,7 @@ public final class MutationSavedData extends SavedData {
         }
         return data;
     }
-    @Override public CompoundTag save(CompoundTag root) {
+    @Override public CompoundTag save(CompoundTag root, HolderLookup.Provider registries) {
         CompoundTag teamsTag = new CompoundTag();
         teams.forEach((id, state) -> teamsTag.put(id.toString(), state.save()));
         root.put("Teams", teamsTag); return root;

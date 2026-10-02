@@ -1,4 +1,5 @@
 package org.alku.life_contract.events;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -13,10 +14,9 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID)
+@EventBusSubscriber(modid = Life_contract.MODID)
 public final class GameEventManager {
     private static final long INITIAL_DEBUFF_PROTECTION_SECONDS = 120L;
     private static boolean gameActive;
@@ -296,7 +296,7 @@ public final class GameEventManager {
         gameTeamNumbers.putIfAbsent(teamId,
                 player.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER));
         player.getActiveEffects().stream()
-                .filter(instance -> instance.getEffect().getCategory() == MobEffectCategory.HARMFUL)
+                .filter(instance -> instance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                 .map(instance -> instance.getEffect())
                 .toList()
                 .forEach(player::removeEffect);
@@ -396,8 +396,8 @@ public final class GameEventManager {
     }
 
     @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !gameActive || currentLevel == null) {
+    public static void onServerTick(ServerTickEvent.Post event) {
+        if (!gameActive || currentLevel == null) {
             return;
         }
 
@@ -429,7 +429,6 @@ public final class GameEventManager {
         List<org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints> lifePoints = new ArrayList<>(currentLifePoints.size());
         currentLifePoints.forEach((uuid, points) -> lifePoints.add(
                 new org.alku.life_contract.PacketSyncLifePoints.PlayerLifePoints(uuid, points)));
-        NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(),
-                new org.alku.life_contract.PacketSyncLifePoints(lifePoints));
+        NetworkHandler.sendToAllPlayers(new org.alku.life_contract.PacketSyncLifePoints(lifePoints));
     }
 }

@@ -1,4 +1,5 @@
 package org.alku.life_contract.follower;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,18 +18,17 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
@@ -47,7 +47,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class FollowerEvents {
 
     private static final Map<UUID, UUID> FOLLOWER_OWNER_MAP = new HashMap<>();
@@ -91,7 +91,7 @@ public class FollowerEvents {
     };
 
     @SubscribeEvent
-    public static void onMobFinalizeSpawn(MobSpawnEvent.FinalizeSpawn event) {
+    public static void onMobFinalizeSpawn(FinalizeSpawnEvent event) {
         if (event.getLevel().isClientSide() || event.getSpawnType() != MobSpawnType.MOB_SUMMONED) {
             return;
         }
@@ -270,7 +270,7 @@ public class FollowerEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingAttack(LivingAttackEvent event) {
+    public static void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
 
         if (event.getEntity() instanceof Mob targetMob
@@ -363,9 +363,9 @@ public class FollowerEvents {
 
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
-        if (event.getEntity() instanceof Mob mob && event.getNewTarget() instanceof Player player) {
+        if (event.getEntity() instanceof Mob mob && event.getNewAboutToBeSetTarget() instanceof Player player) {
             if (isAlliedWithPlayer(player, mob)) {
-                event.setNewTarget(null);
+                event.setNewAboutToBeSetTarget(null);
             }
         }
     }
@@ -407,7 +407,7 @@ public class FollowerEvents {
         }
 
         String factionMod = ContractEvents.getEffectiveContractMod(player);
-        ResourceLocation entityType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType());
+        ResourceLocation entityType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         return factionMod != null && !factionMod.isEmpty()
                 && entityType != null && factionMod.equals(entityType.getNamespace());
     }
@@ -462,12 +462,12 @@ public class FollowerEvents {
     private static void syncFollowerToClients(Mob mob, UUID ownerUUID, boolean isRegister) {
         if (mob.level() instanceof ServerLevel serverLevel) {
             PacketSyncFollower packet = new PacketSyncFollower(mob.getUUID(), mob.getId(), ownerUUID, isRegister);
-            NetworkHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> mob), packet);
+            NetworkHandler.sendToTrackingEntity(mob, packet);
             
             if (ownerUUID != null) {
                 ServerPlayer owner = serverLevel.getServer().getPlayerList().getPlayer(ownerUUID);
                 if (owner != null) {
-                    NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> owner), packet);
+                    NetworkHandler.sendToPlayer(owner, packet);
                 }
             }
         }
@@ -558,7 +558,7 @@ public class FollowerEvents {
             Entity entity = level.getEntity(followerId);
             if (entity instanceof Mob mob) {
                 PacketSyncFollower packet = new PacketSyncFollower(mob.getUUID(), mob.getId(), player.getUUID(), true);
-                NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), packet);
+                NetworkHandler.sendToPlayer(player, packet);
             }
         }
     }

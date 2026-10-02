@@ -1,4 +1,5 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -9,12 +10,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import org.alku.life_contract.follower.FollowerEvents;
 
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID)
+@EventBusSubscriber(modid = Life_contract.MODID)
 public class TeamIronGolemSystem {
 
     public static final String TAG_TEAM_NUMBER = "LifeContractTeamNumber";
@@ -62,7 +63,7 @@ public class TeamIronGolemSystem {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onLivingAttack(LivingAttackEvent event) {
+    public static void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getSource().getEntity() instanceof IronGolem golem) {
@@ -85,9 +86,9 @@ public class TeamIronGolemSystem {
         if (event.getEntity().level().isClientSide()) return;
         
         if (event.getEntity() instanceof IronGolem golem) {
-            LivingEntity target = event.getNewTarget();
+            LivingEntity target = event.getNewAboutToBeSetTarget();
             if (target != null && isSameTeam(golem, target)) {
-                event.setNewTarget(null);
+                event.setNewAboutToBeSetTarget(null);
             }
         }
     }

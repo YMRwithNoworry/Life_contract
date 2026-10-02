@@ -2,15 +2,19 @@ package org.alku.life_contract;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketSyncContract {
+public class PacketSyncContract implements CustomPacketPayload {
+    public static final Type<PacketSyncContract> TYPE = NetworkHandler.type("sync_contract");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncContract> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), PacketSyncContract::new);
+
     private final UUID playerUUID;
     private final String playerName;
     private final String contractMod;
@@ -61,21 +65,22 @@ public class PacketSyncContract {
         buffer.writeUtf(profession);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSyncContract packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                try {
-                    Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
-                    proxyClass.getMethod("syncContractData", UUID.class, String.class, String.class, 
-                            String.class, UUID.class, int.class, String.class)
-                            .invoke(null, playerUUID, playerName, contractMod, leaderName, 
-                                    hasLeader ? leaderUUID : null, teamNumber, profession);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            try {
+                Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
+                proxyClass.getMethod("syncContractData", UUID.class, String.class, String.class,
+                        String.class, UUID.class, int.class, String.class)
+                        .invoke(null, packet.playerUUID, packet.playerName, packet.contractMod, packet.leaderName,
+                                packet.hasLeader ? packet.leaderUUID : null, packet.teamNumber, packet.profession);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-        context.setPacketHandled(true);
     }
 }

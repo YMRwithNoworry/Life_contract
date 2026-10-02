@@ -1,11 +1,18 @@
 package org.alku.life_contract.mutation;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkHooks;
 
-import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.NetworkHandler;
 
 public final class MutationPackets {
     private MutationPackets() {
@@ -14,17 +21,14 @@ public final class MutationPackets {
     public static void open(ServerPlayer player) {
         MutationSavedData.TeamState state = MutationService.state(player);
         int availableMp = MutationService.availableMp(player);
-        NetworkHooks.openScreen(player, new net.minecraft.world.MenuProvider() {
+        player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.literal("阵营异变树");
             }
 
             @Override
-            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(
-                    int id,
-                    net.minecraft.world.entity.player.Inventory inventory,
-                    net.minecraft.world.entity.player.Player menuPlayer) {
+            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player menuPlayer) {
                 return new MutationMenu(id, inventory, state, availableMp);
             }
         }, buffer -> {
@@ -36,7 +40,11 @@ public final class MutationPackets {
         });
     }
 
-    public static final class Open {
+    public static final class Open implements CustomPacketPayload {
+        public static final Type<Open> TYPE = NetworkHandler.type("mutation_open");
+        public static final StreamCodec<RegistryFriendlyByteBuf, Open> STREAM_CODEC =
+                NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), Open::new);
+
         public Open() {
         }
 
@@ -46,18 +54,25 @@ public final class MutationPackets {
         public void encode(FriendlyByteBuf buffer) {
         }
 
-        public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+
+        public static void handle(Open packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                if (context.getSender() != null) {
-                    open(context.getSender());
+                if (context.player() instanceof ServerPlayer player) {
+                    open(player);
                 }
             });
-            context.setPacketHandled(true);
         }
     }
 
-    public static final class Upgrade {
+    public static final class Upgrade implements CustomPacketPayload {
+        public static final Type<Upgrade> TYPE = NetworkHandler.type("mutation_upgrade");
+        public static final StreamCodec<RegistryFriendlyByteBuf, Upgrade> STREAM_CODEC =
+                NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), Upgrade::new);
+
         private final MutationNode node;
 
         public Upgrade(MutationNode node) {
@@ -65,23 +80,28 @@ public final class MutationPackets {
         }
 
         public Upgrade(FriendlyByteBuf buffer) {
-            node = MutationNode.values()[buffer.readVarInt()];
+            int ordinal = buffer.readVarInt();
+            node = ordinal >= 0 && ordinal < MutationNode.values().length
+                    ? MutationNode.values()[ordinal]
+                    : MutationNode.BLADE;
         }
 
         public void encode(FriendlyByteBuf buffer) {
             buffer.writeVarInt(node.ordinal());
         }
 
-        public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-            NetworkEvent.Context context = contextSupplier.get();
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+
+        public static void handle(Upgrade packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                ServerPlayer player = context.getSender();
-                if (player != null) {
-                    player.sendSystemMessage(Component.literal("§6[异变] §f" + MutationService.upgrade(player, node)));
+                if (context.player() instanceof ServerPlayer player) {
+                    player.sendSystemMessage(Component.literal("§6[异变] §f" + MutationService.upgrade(player, packet.node)));
                     open(player);
                 }
             });
-            context.setPacketHandled(true);
         }
     }
 }

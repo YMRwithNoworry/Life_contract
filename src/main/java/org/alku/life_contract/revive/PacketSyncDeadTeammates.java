@@ -1,17 +1,21 @@
 package org.alku.life_contract.revive;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.alku.life_contract.NetworkHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketSyncDeadTeammates {
+public class PacketSyncDeadTeammates implements CustomPacketPayload {
+    public static final Type<PacketSyncDeadTeammates> TYPE = NetworkHandler.type("sync_dead_teammates");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncDeadTeammates> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> encode(packet, buffer), PacketSyncDeadTeammates::decode);
 
     private final List<ReviveTeammateSystem.DeadTeammateInfo> deadTeammates;
 
@@ -50,19 +54,21 @@ public class PacketSyncDeadTeammates {
         return new PacketSyncDeadTeammates(deadTeammates);
     }
 
-    public static void handle(PacketSyncDeadTeammates msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                try {
-                    Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
-                    java.lang.reflect.Method method = proxyClass.getMethod("openReviveScreen", java.util.List.class);
-                    method.invoke(null, msg.deadTeammates);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSyncDeadTeammates packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            try {
+                Class<?> proxyClass = Class.forName("org.alku.life_contract.ClientProxy");
+                java.lang.reflect.Method method = proxyClass.getMethod("openReviveScreen", java.util.List.class);
+                method.invoke(null, packet.deadTeammates);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-        ctx.get().setPacketHandled(true);
     }
 
     public List<ReviveTeammateSystem.DeadTeammateInfo> getDeadTeammates() {

@@ -74,9 +74,9 @@ public class TeamOrganizerItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§e右键玩家§7: 拉人入队（共享契约）"));
         components.add(Component.literal("§cShift+右键玩家§7: 踢人/离队"));
-        super.appendHoverText(stack, level, components, flag);
+        super.appendHoverText(stack, context, components, flag);
     }
 }

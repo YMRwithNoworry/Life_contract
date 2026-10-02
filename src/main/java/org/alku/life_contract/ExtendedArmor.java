@@ -1,14 +1,15 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class ExtendedArmor {
 
     public static final double VANILLA_ARMOR_CAP = 30.0;
@@ -49,7 +50,7 @@ public class ExtendedArmor {
     }
 
     @SubscribeEvent
-    public static void onLivingHurt(LivingHurtEvent event) {
+    public static void onLivingHurt(LivingDamageEvent.Pre event) {
         if (event.getEntity().level().isClientSide) {
             return;
         }
@@ -78,10 +79,10 @@ public class ExtendedArmor {
             return;
         }
         
-        float originalDamage = event.getAmount();
+        float originalDamage = event.getNewDamage();
         float reducedDamage = (float) (originalDamage * (1.0 - extendedReduction));
         
-        event.setAmount(reducedDamage);
+        event.setNewDamage(reducedDamage);
     }
 
     @OnlyIn(Dist.CLIENT)

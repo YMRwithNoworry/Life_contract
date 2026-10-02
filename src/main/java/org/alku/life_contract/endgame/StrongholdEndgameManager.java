@@ -1,4 +1,5 @@
 package org.alku.life_contract.endgame;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -38,13 +39,13 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.events.GameEventManager;
 
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public final class StrongholdEndgameManager {
     private static final int STRONGHOLD_SEARCH_RADIUS_CHUNKS = 256;
     private static final double PORTAL_ACTIVATION_BORDER_SIZE = 50.0D;
@@ -302,7 +303,7 @@ public final class StrongholdEndgameManager {
         }
 
         Entity entity = event.getEntity();
-        ResourceLocation entityId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         if (entity instanceof LivingEntity
                 && entityId != null
                 && "phayriosis".equals(entityId.getNamespace())
@@ -325,9 +326,8 @@ public final class StrongholdEndgameManager {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase != TickEvent.Phase.END
-                || !(event.level instanceof ServerLevel endLevel)
+    public static void onLevelTick(LevelTickEvent.Post event) {
+        if (!(event.getLevel() instanceof ServerLevel endLevel)
                 || !Level.END.equals(endLevel.dimension())
                 || convertedDragonUuid == null) {
             return;
@@ -335,7 +335,7 @@ public final class StrongholdEndgameManager {
 
         Entity entity = endLevel.getEntity(convertedDragonUuid);
         if (!(entity instanceof Mob dragon)
-                || !DISTORTED_DRAGON_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()))) {
+                || !DISTORTED_DRAGON_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()))) {
             convertedDragonUuid = null;
             return;
         }
@@ -401,7 +401,7 @@ public final class StrongholdEndgameManager {
 
     private static Mob spawnPhayriosisMob(ServerLevel level, ResourceLocation entityId,
                                           BlockPos spawnPos, boolean boss) {
-        EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityId);
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(entityId);
         if (entityType == null) {
             Life_contract.LOGGER.error("Missing required legacy Phayriosis entity type {}", entityId);
             return null;
@@ -416,7 +416,7 @@ public final class StrongholdEndgameManager {
         mob.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D,
                 level.random.nextFloat() * 360.0F, 0.0F);
         mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
-                MobSpawnType.EVENT, null, null);
+                MobSpawnType.EVENT, null);
         mob.getPersistentData().putBoolean(END_ENCOUNTER_ENTITY_TAG, true);
         if (boss) {
             mob.getPersistentData().putBoolean(END_BOSS_TAG, true);
@@ -431,7 +431,7 @@ public final class StrongholdEndgameManager {
     @SubscribeEvent
     public static void onDragonDeath(LivingDeathEvent event) {
         if (event.getEntity().level().isClientSide()
-                || !DISTORTED_DRAGON_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(event.getEntity().getType()))
+                || !DISTORTED_DRAGON_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType()))
                 || !event.getEntity().getPersistentData().getBoolean(END_BOSS_TAG)
                 || !GameEventManager.isGameActive()) {
             return;

@@ -2,6 +2,7 @@ package org.alku.life_contract.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -47,10 +48,9 @@ public final class XaeroBorderOverlayRenderer {
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Matrix4f matrix = graphics.pose().last().pose();
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         for (int i = 0; i < 4; i++) addClippedLine(buffer, matrix, corners[i], corners[(i + 1) % 4], context);
-        Tesselator.getInstance().end();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.disableBlend();
         graphics.disableScissor();
     }
@@ -78,7 +78,7 @@ public final class XaeroBorderOverlayRenderer {
     }
 
     private static void vertex(BufferBuilder buffer, Matrix4f matrix, double x, double y) {
-        buffer.vertex(matrix, (float) x, (float) y, 200.0F).color(COLOR).endVertex();
+        buffer.addVertex(matrix, (float) x, (float) y, 200.0F).setColor(COLOR);
     }
 
     private static Point[] clip(Point a, Point b, double left, double top, double right, double bottom) {

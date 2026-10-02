@@ -1,6 +1,7 @@
 package org.alku.life_contract;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.alku.life_contract.items.SublimationItem;
 
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class TeamInventory implements Container {
         }
         
         DimensionDataStorage storage = server.overworld().getDataStorage();
-        TeamInventoryData data = storage.computeIfAbsent(TeamInventoryData::load, TeamInventoryData::new, DATA_NAME);
+        TeamInventoryData data = storage.computeIfAbsent(TeamInventoryData.FACTORY, DATA_NAME);
         
         TeamInventory inv = data.getInventory(teamId);
         inv.parentData = data;
@@ -75,7 +76,7 @@ public class TeamInventory implements Container {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null) {
             DimensionDataStorage storage = server.overworld().getDataStorage();
-            TeamInventoryData data = storage.get(TeamInventoryData::load, DATA_NAME);
+            TeamInventoryData data = storage.get(TeamInventoryData.FACTORY, DATA_NAME);
             if (data != null) {
                 TeamInventory inv = data.getInventory(teamId);
                 if (inv != null) {
@@ -101,27 +102,26 @@ public class TeamInventory implements Container {
         CLIENT_CACHE.clear();
     }
 
-    public static TeamInventory load(UUID teamId, CompoundTag tag) {
+    public static TeamInventory load(UUID teamId, CompoundTag tag, HolderLookup.Provider registries) {
         NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
         ListTag listTag = tag.getList("Items", Tag.TAG_COMPOUND);
         for (int i = 0; i < listTag.size(); i++) {
             CompoundTag itemTag = listTag.getCompound(i);
             int slot = itemTag.getByte("Slot") & 255;
             if (slot >= 0 && slot < items.size()) {
-                items.set(slot, ItemStack.of(itemTag));
+                items.set(slot, ItemStack.parse(registries, itemTag).orElse(ItemStack.EMPTY));
             }
         }
         return new TeamInventory(teamId, items);
     }
 
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag listTag = new ListTag();
         for (int i = 0; i < items.size(); i++) {
             ItemStack stack = items.get(i);
             if (!stack.isEmpty()) {
-                CompoundTag itemTag = new CompoundTag();
+                CompoundTag itemTag = (CompoundTag) stack.save(registries);
                 itemTag.putByte("Slot", (byte) i);
-                stack.save(itemTag);
                 listTag.add(itemTag);
             }
         }
@@ -264,17 +264,19 @@ public class TeamInventory implements Container {
     }
 
     public static class TeamInventoryData extends SavedData {
+        public static final Factory<TeamInventoryData> FACTORY = new Factory<>(
+                TeamInventoryData::new, TeamInventoryData::load, null);
         private final Map<UUID, TeamInventory> inventories = new HashMap<>();
 
         public TeamInventoryData() {}
 
-        public static TeamInventoryData load(CompoundTag tag) {
+        public static TeamInventoryData load(CompoundTag tag, HolderLookup.Provider registries) {
             TeamInventoryData data = new TeamInventoryData();
             ListTag listTag = tag.getList("Teams", Tag.TAG_COMPOUND);
             for (int i = 0; i < listTag.size(); i++) {
                 CompoundTag teamTag = listTag.getCompound(i);
                 UUID teamId = teamTag.getUUID("TeamId");
-                TeamInventory inv = TeamInventory.load(teamId, teamTag);
+                TeamInventory inv = TeamInventory.load(teamId, teamTag, registries);
                 inv.parentData = data;
                 data.inventories.put(teamId, inv);
             }
@@ -282,12 +284,12 @@ public class TeamInventory implements Container {
         }
 
         @Override
-        public CompoundTag save(CompoundTag tag) {
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
             ListTag listTag = new ListTag();
             for (Map.Entry<UUID, TeamInventory> entry : inventories.entrySet()) {
                 CompoundTag teamTag = new CompoundTag();
                 teamTag.putUUID("TeamId", entry.getKey());
-                entry.getValue().save(teamTag);
+                entry.getValue().save(teamTag, registries);
                 listTag.add(teamTag);
             }
             tag.put("Teams", listTag);

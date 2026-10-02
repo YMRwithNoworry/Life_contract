@@ -1,16 +1,18 @@
 package org.alku.life_contract;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketSyncTeamInventory {
+public class PacketSyncTeamInventory implements CustomPacketPayload {
+    public static final Type<PacketSyncTeamInventory> TYPE = NetworkHandler.type("sync_team_inventory");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncTeamInventory> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), PacketSyncTeamInventory::new);
 
     private final UUID teamId;
     private final NonNullList<ItemStack> items;
@@ -20,30 +22,29 @@ public class PacketSyncTeamInventory {
         this.items = items;
     }
 
-    public PacketSyncTeamInventory(FriendlyByteBuf buffer) {
+    public PacketSyncTeamInventory(RegistryFriendlyByteBuf buffer) {
         this.teamId = buffer.readUUID();
         int size = buffer.readInt();
         this.items = NonNullList.withSize(size, ItemStack.EMPTY);
         for (int i = 0; i < size; i++) {
-            this.items.set(i, buffer.readItem());
+            this.items.set(i, ItemStack.OPTIONAL_STREAM_CODEC.decode(buffer));
         }
     }
 
-    public void encode(FriendlyByteBuf buffer) {
+    public void encode(RegistryFriendlyByteBuf buffer) {
         buffer.writeUUID(teamId);
         buffer.writeInt(items.size());
         for (ItemStack stack : items) {
-            buffer.writeItem(stack);
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, stack);
         }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                TeamInventory.setClientInventory(teamId, items);
-            });
-        });
-        context.setPacketHandled(true);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSyncTeamInventory packet, IPayloadContext context) {
+        context.enqueueWork(() -> TeamInventory.setClientInventory(packet.teamId, packet.items));
     }
 }

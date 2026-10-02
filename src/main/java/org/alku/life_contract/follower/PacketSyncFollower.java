@@ -1,15 +1,20 @@
 package org.alku.life_contract.follower;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.alku.life_contract.NetworkHandler;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketSyncFollower {
+public class PacketSyncFollower implements CustomPacketPayload {
+    public static final Type<PacketSyncFollower> TYPE = NetworkHandler.type("sync_follower");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncFollower> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), PacketSyncFollower::new);
+
     private static final UUID NO_OWNER = new UUID(0L, 0L);
     private static Method registerFollowerMethod;
     private static Method unregisterFollowerMethod;
@@ -39,22 +44,23 @@ public class PacketSyncFollower {
         buffer.writeBoolean(isRegister);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSyncFollower packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                try {
-                    if (isRegister) {
-                        getRegisterFollowerMethod().invoke(null, entityUUID, entityId, ownerUUID);
-                    } else {
-                        getUnregisterFollowerMethod().invoke(null, entityUUID);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                if (packet.isRegister) {
+                    getRegisterFollowerMethod().invoke(null, packet.entityUUID, packet.entityId, packet.ownerUUID);
+                } else {
+                    getUnregisterFollowerMethod().invoke(null, packet.entityUUID);
                 }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
-        context.setPacketHandled(true);
     }
 
     private static Method getRegisterFollowerMethod() throws ReflectiveOperationException {

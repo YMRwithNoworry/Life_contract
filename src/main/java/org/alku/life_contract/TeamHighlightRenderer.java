@@ -1,4 +1,5 @@
 package org.alku.life_contract;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -10,12 +11,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class TeamHighlightRenderer {
     private static final double GOLEM_RENDER_DISTANCE = 20.0D;
 
@@ -36,7 +37,7 @@ public class TeamHighlightRenderer {
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource bufferSource = mc.renderBuffers().bufferSource();
-        float partialTick = mc.getFrameTime();
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
 
         for (Player target : mc.level.players()) {
             if (target != player && ContractEvents.isSameTeam(player, target)) {
@@ -124,40 +125,20 @@ public class TeamHighlightRenderer {
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.lines());
         PoseStack.Pose pose = poseStack.last();
 
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 1.0f, 0.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 1.0f, 0.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.minY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.minX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.minZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
-        consumer.vertex(pose.pose(), (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ).color(r, g, b, a).normal(pose.normal(), 0.0f, 0.0f, 1.0f).endVertex();
+        float x1 = (float) aabb.minX, y1 = (float) aabb.minY, z1 = (float) aabb.minZ;
+        float x2 = (float) aabb.maxX, y2 = (float) aabb.maxY, z2 = (float) aabb.maxZ;
+        float[][] vertices = {
+                {x1, y1, z1}, {x2, y1, z1}, {x1, y2, z1}, {x2, y2, z1},
+                {x1, y1, z2}, {x2, y1, z2}, {x1, y2, z2}, {x2, y2, z2},
+                {x1, y1, z1}, {x1, y2, z1}, {x2, y1, z1}, {x2, y2, z1},
+                {x1, y1, z2}, {x1, y2, z2}, {x2, y1, z2}, {x2, y2, z2},
+                {x1, y1, z1}, {x1, y1, z2}, {x2, y1, z1}, {x2, y1, z2},
+                {x1, y2, z1}, {x1, y2, z2}, {x2, y2, z1}, {x2, y2, z2}
+        };
+        for (float[] vertex : vertices) {
+            consumer.addVertex(pose.pose(), vertex[0], vertex[1], vertex[2])
+                    .setColor(r, g, b, a)
+                    .setNormal(pose, 1.0f, 0.0f, 0.0f);
+        }
     }
 }

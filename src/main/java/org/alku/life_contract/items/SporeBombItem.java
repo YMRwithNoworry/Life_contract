@@ -1,4 +1,5 @@
 package org.alku.life_contract.items;
+import net.neoforged.fml.common.EventBusSubscriber;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -21,9 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.alku.life_contract.Life_contract;
 
 import java.util.List;
@@ -59,14 +60,14 @@ public class SporeBombItem extends Item {
     }
     
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, level, tooltip, flag);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
         tooltip.add(Component.literal("§a孢子炸弹"));
         tooltip.add(Component.literal("§7投掷后产生孢子云爆炸"));
         tooltip.add(Component.literal("§7命中者获得缓慢III和虚弱I"));
     }
     
-    @Mod.EventBusSubscriber(modid = Life_contract.MODID)
+    @EventBusSubscriber(modid = Life_contract.MODID)
     public static class SporeBombHandler {
         
         @SubscribeEvent

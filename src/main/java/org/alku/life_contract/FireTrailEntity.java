@@ -87,11 +87,11 @@ public class FireTrailEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(DATA_RADIUS, 1.0f);
-        this.entityData.define(DATA_DAMAGE, 1.0f);
-        this.entityData.define(DATA_DURATION, 100);
-        this.entityData.define(DATA_TICK_COUNT, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_RADIUS, 1.0f);
+        builder.define(DATA_DAMAGE, 1.0f);
+        builder.define(DATA_DURATION, 100);
+        builder.define(DATA_TICK_COUNT, 0);
     }
 
     @Override
@@ -234,7 +234,7 @@ public class FireTrailEntity extends Entity {
         
         for (LivingEntity entity : entities) {
             entity.hurt(this.level().damageSources().inFire(), damage);
-            entity.setSecondsOnFire(2);
+            entity.setRemainingFireTicks(40);
         }
     }
 

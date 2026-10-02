@@ -1,16 +1,20 @@
 package org.alku.life_contract;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class PacketSyncLifePoints {
+public class PacketSyncLifePoints implements CustomPacketPayload {
+    public static final Type<PacketSyncLifePoints> TYPE = NetworkHandler.type("sync_life_points");
+    public static final StreamCodec<RegistryFriendlyByteBuf, PacketSyncLifePoints> STREAM_CODEC =
+            NetworkHandler.codec((buffer, packet) -> packet.encode(buffer), PacketSyncLifePoints::new);
+
     private final List<PlayerLifePoints> players;
 
     public record PlayerLifePoints(UUID uuid, int lifePoints) {
@@ -36,10 +40,12 @@ public class PacketSyncLifePoints {
         }
     }
 
-    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientDataStorage.setPlayerLifePoints(players)));
-        context.setPacketHandled(true);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(PacketSyncLifePoints packet, IPayloadContext context) {
+        context.enqueueWork(() -> ClientDataStorage.setPlayerLifePoints(packet.players));
     }
 }
