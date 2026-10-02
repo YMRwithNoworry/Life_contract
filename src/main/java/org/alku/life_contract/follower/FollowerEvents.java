@@ -63,6 +63,8 @@ public class FollowerEvents {
     private static final String TAG_INHERIT_FOLLOWER_OWNER_UUID = "LifeContractInheritedFollowerOwnerUUID";
     private static final String TAG_FACTION_UUID = "LifeContractFactionUUID";
     private static final String TAG_CONTRACT_ALLY = "LifeContractSoulAlly";
+    private static final String TAG_CONTRACT_OWNER_UUID = "LifeContractModAllyOwnerUUID";
+    private static final String TAG_CONTRACT_MOD_ID = "LifeContractModAllyModId";
     private static final double SUMMON_INHERIT_RADIUS = 12.0D;
     private static final Set<UUID> INHERITED_SUMMONS = new HashSet<>();
     private static final String[] OWNER_METHOD_NAMES = {
@@ -110,6 +112,20 @@ public class FollowerEvents {
         Entity entity = event.getEntity();
         if (entity instanceof Mob mob) {
             CompoundTag tag = mob.getPersistentData();
+            if (tag.getBoolean(TAG_CONTRACT_ALLY) && tag.hasUUID(TAG_CONTRACT_OWNER_UUID)) {
+                setupContractAllyAI(mob, tag.getUUID(TAG_CONTRACT_OWNER_UUID));
+            } else if (event.getLevel() instanceof ServerLevel serverLevel) {
+                ResourceLocation typeKey = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+                if (typeKey != null) {
+                    for (ServerPlayer player : serverLevel.getServer().getPlayerList().getPlayers()) {
+                        String contractMod = ContractEvents.getEffectiveContractMod(player);
+                        if (typeKey.getNamespace().equals(contractMod)) {
+                            registerContractModAlly(mob, player.getUUID(), contractMod);
+                            break;
+                        }
+                    }
+                }
+            }
             if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
                 registerFollowerWithoutHungerNotification(mob, tag.getUUID(TAG_FOLLOWER_OWNER_UUID));
                 return;
@@ -145,6 +161,16 @@ public class FollowerEvents {
             pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
         }
         mob.goalSelector.addGoal(4, new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F));
+    }
+
+    private static void setupContractAllyAI(Mob mob, UUID ownerUUID) {
+        mob.targetSelector.removeAllGoals(goal -> true);
+        mob.setTarget(null);
+        mob.targetSelector.addGoal(1, new FollowerAttackGoal(mob, ownerUUID));
+        if (mob instanceof PathfinderMob pathfinderMob) {
+            pathfinderMob.goalSelector.removeAllGoals(goal -> goal instanceof MeleeAttackGoal);
+            pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
+        }
     }
 
     private static UUID findSummonedFollowerOwner(Mob mob) {
@@ -341,7 +367,8 @@ public class FollowerEvents {
         if (attackTime == null) return null;
         
         LivingEntity target = PLAYER_ATTACK_TARGET.get(playerUUID);
-        if (target == null || !target.isAlive()) {
+        if (target == null || !target.isAlive()
+                || target.level().getGameTime() - attackTime > TARGET_EXPIRE_TIME) {
             PLAYER_ATTACK_TARGET.remove(playerUUID);
             PLAYER_ATTACK_TARGET_TIME.remove(playerUUID);
             return null;
@@ -352,7 +379,9 @@ public class FollowerEvents {
 
     public static LivingEntity getPlayerAttacker(UUID playerUUID) {
         LivingEntity attacker = PLAYER_ATTACKER.get(playerUUID);
-        if (attacker == null || !attacker.isAlive()) {
+        Long attackTime = PLAYER_ATTACKER_TIME.get(playerUUID);
+        if (attacker == null || !attacker.isAlive() || attackTime == null
+                || attacker.level().getGameTime() - attackTime > TARGET_EXPIRE_TIME) {
             PLAYER_ATTACKER.remove(playerUUID);
             PLAYER_ATTACKER_TIME.remove(playerUUID);
             return null;
@@ -375,11 +404,43 @@ public class FollowerEvents {
         registerFollower(mob, ownerUUID);
     }
 
+    public static void registerContractModAllies(Player owner, String modId) {
+        if (!(owner.level() instanceof ServerLevel serverLevel)) return;
+        for (ServerLevel level : serverLevel.getServer().getAllLevels()) {
+            for (Entity entity : level.getAllEntities()) {
+                if (entity instanceof Mob mob) {
+                    ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+                    if (key != null && modId.equals(key.getNamespace())) {
+                        registerContractModAlly(mob, owner.getUUID(), modId);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void registerContractModAlly(Mob mob, UUID ownerUUID, String modId) {
+        CompoundTag data = mob.getPersistentData();
+        data.putBoolean(TAG_CONTRACT_ALLY, true);
+        data.putUUID(TAG_CONTRACT_OWNER_UUID, ownerUUID);
+        data.putString(TAG_CONTRACT_MOD_ID, modId);
+        mob.setPersistenceRequired();
+        setupContractAllyAI(mob, ownerUUID);
+    }
+
     public static boolean isContractAlly(Mob mob) {
         return mob.getPersistentData().getBoolean(TAG_CONTRACT_ALLY);
     }
 
     public static boolean isAlliedWithPlayer(Player player, Mob mob) {
+        CompoundTag data = mob.getPersistentData();
+        if (data.getBoolean(TAG_CONTRACT_ALLY) && data.hasUUID(TAG_CONTRACT_OWNER_UUID)) {
+            UUID contractOwnerUUID = data.getUUID(TAG_CONTRACT_OWNER_UUID);
+            if (contractOwnerUUID.equals(player.getUUID())) return true;
+            Player contractOwner = player.level().getPlayerByUUID(contractOwnerUUID);
+            if (contractOwner != null && ContractEvents.isSameTeam(player, contractOwner)) return true;
+            String contractedMod = ContractEvents.getEffectiveContractMod(player);
+            if (contractedMod != null && contractedMod.equals(data.getString(TAG_CONTRACT_MOD_ID))) return true;
+        }
         UUID ownerUUID = getOwnerUUID(mob);
         if (ownerUUID != null) {
             if (ownerUUID.equals(player.getUUID())) {
@@ -419,6 +480,9 @@ public class FollowerEvents {
 
         UUID firstOwnerUUID = getOwnerUUID(first);
         UUID secondOwnerUUID = getOwnerUUID(second);
+        if (isContractAlly(first) && isContractAlly(second)
+                && first.getPersistentData().getString(TAG_CONTRACT_MOD_ID)
+                        .equals(second.getPersistentData().getString(TAG_CONTRACT_MOD_ID))) return true;
         if (firstOwnerUUID != null && firstOwnerUUID.equals(secondOwnerUUID)) {
             return true;
         }
@@ -511,6 +575,10 @@ public class FollowerEvents {
         Player player = event.getEntity();
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         
+        String contractMod = ContractEvents.getEffectiveContractMod(player);
+        if (contractMod != null && !contractMod.isEmpty()) {
+            registerContractModAllies(player, contractMod);
+        }
         syncOwnedFollowers(serverPlayer);
     }
 

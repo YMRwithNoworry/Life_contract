@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -48,8 +49,15 @@ public class SoulContractItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        if (FollowerEvents.isAlliedWithPlayer(player, mob)) {
-            player.sendSystemMessage(Component.literal("§c[生灵契约] 该生物已经属于你的阵营！"));
+        ResourceLocation entityType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        if (entityType == null || entityType.getNamespace().equals("minecraft")) {
+            player.sendSystemMessage(Component.literal("§c[生灵契约] 请选择其他模组添加的生物！"));
+            return InteractionResult.FAIL;
+        }
+
+        String modId = entityType.getNamespace();
+        if (modId.equals(ContractEvents.getEffectiveContractMod(player))) {
+            player.sendSystemMessage(Component.literal("§c[生灵契约] 你已经与该模组的生物结盟！"));
             return InteractionResult.FAIL;
         }
 
@@ -60,11 +68,13 @@ public class SoulContractItem extends Item {
         }
 
         addHealthSacrifice(player, healthCost);
-        FollowerEvents.registerContractAlly(mob, player.getUUID());
+        player.getPersistentData().putString(TAG_CONTRACT_MOD, modId);
+        ContractEvents.propagateContractToTeam(player, modId);
+        FollowerEvents.registerContractModAllies(player, modId);
 
         String entityName = target.hasCustomName() ? target.getCustomName().getString() : target.getName().getString();
         String formattedCost = String.format(Locale.ROOT, "%.2f", healthCost);
-        player.sendSystemMessage(Component.literal("§a[生灵契约] §e" + entityName + " §f已与你的阵营结盟！"));
+        player.sendSystemMessage(Component.literal("§a[生灵契约] §e" + entityName + " §f所属模组的所有生物都已与你结盟！"));
         player.sendSystemMessage(Component.literal("§c生命上限永久减少 " + formattedCost + " 点§7（目标当前生命值的 3%）"));
 
         if (player.level() instanceof ServerLevel serverLevel) {
@@ -113,8 +123,8 @@ public class SoulContractItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§d[生灵契约]").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE));
-        components.add(Component.literal("§e右键非己方生物 §7- 使其与你的阵营结盟"));
-        components.add(Component.literal("§7契约生物会跟随你，并攻击其他阵营"));
+        components.add(Component.literal("§e右键模组生物 §7- 使该模组所有生物与你结盟"));
+        components.add(Component.literal("§7盟友只会攻击你攻击的敌人"));
         components.add(Component.literal("§c代价: 永久失去目标当前生命值 3% 的生命上限"));
         components.add(Component.literal("§c一次性物品，使用后消失"));
         super.appendHoverText(stack, context, components, flag);

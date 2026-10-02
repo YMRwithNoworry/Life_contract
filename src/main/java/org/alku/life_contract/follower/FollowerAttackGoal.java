@@ -21,10 +21,6 @@ public class FollowerAttackGoal extends TargetGoal {
     private Player owner;
     private LivingEntity target;
     private int lastAttackTime;
-    private int lastSearchTime;
-    private static final double PASSIVE_SEARCH_RANGE = 16.0D;
-    private static final double ACTIVE_SEARCH_RANGE = 24.0D;
-    private static final int SEARCH_COOLDOWN = 40;
 
     public FollowerAttackGoal(Mob mob, UUID ownerUUID) {
         super(mob, false, true);
@@ -54,12 +50,6 @@ public class FollowerAttackGoal extends TargetGoal {
             return true;
         }
 
-        LivingEntity nearbyEnemy = findNearbyEnemy(ACTIVE_SEARCH_RANGE);
-        if (nearbyEnemy != null) {
-            this.target = nearbyEnemy;
-            return true;
-        }
-
         return false;
     }
 
@@ -84,7 +74,6 @@ public class FollowerAttackGoal extends TargetGoal {
     public void start() {
         mob.setTarget(target);
         lastAttackTime = mob.tickCount;
-        lastSearchTime = mob.tickCount;
     }
 
     @Override
@@ -110,39 +99,7 @@ public class FollowerAttackGoal extends TargetGoal {
                     lastAttackTime = mob.tickCount;
                 }
             }
-
-            if (mob.tickCount - lastSearchTime > SEARCH_COOLDOWN) {
-                LivingEntity nearbyEnemy = findNearbyEnemy(PASSIVE_SEARCH_RANGE);
-                if (nearbyEnemy != null && nearbyEnemy != target) {
-                    this.target = nearbyEnemy;
-                    mob.setTarget(target);
-                }
-                lastSearchTime = mob.tickCount;
-            }
         }
-    }
-
-    private LivingEntity findNearbyEnemy(double range) {
-        Level level = mob.level();
-        AABB searchBox = mob.getBoundingBox().inflate(range);
-        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, searchBox);
-        
-        LivingEntity nearestEnemy = null;
-        double nearestDistance = Double.MAX_VALUE;
-        
-        for (LivingEntity entity : entities) {
-            if (!canAttack(entity)) {
-                continue;
-            }
-            
-            double distance = mob.distanceToSqr(entity);
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestEnemy = entity;
-            }
-        }
-        
-        return nearestEnemy;
     }
 
     private boolean canAttack(LivingEntity target) {
