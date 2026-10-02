@@ -9,7 +9,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -22,7 +21,6 @@ import org.alku.life_contract.airdrop.item.DisposableFlareGunItem;
 import org.alku.life_contract.airdrop.item.FlareGunItem;
 import org.alku.life_contract.airdrop.item.RangeLimiterItem;
 import org.alku.life_contract.airdrop.item.SignalDecoyItem;
-import org.alku.life_contract.airdrop.network.NetworkHandler;
 import org.slf4j.Logger;
 import org.alku.life_contract.Life_contract;
 
@@ -70,6 +68,5 @@ public final class Airdrop {
         ITEMS.register(modEventBus);
         ENTITIES.register(modEventBus);
         TABS.register(modEventBus);
-        modEventBus.addListener((RegisterPayloadHandlersEvent event) -> NetworkHandler.register(event));
     }
 }
