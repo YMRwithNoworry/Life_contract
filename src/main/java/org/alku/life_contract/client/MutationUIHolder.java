@@ -27,15 +27,20 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
 
     @Override
     public ModularUI createUI(Player player) {
-        ServerPlayer serverPlayer = (ServerPlayer) player;
-        var initialState = MutationService.state(serverPlayer);
+        var initialState = player instanceof ServerPlayer serverPlayer
+                ? MutationService.state(serverPlayer)
+                : null;
+        int initialMp = player instanceof ServerPlayer serverPlayer
+                ? MutationService.availableMp(serverPlayer)
+                : 0;
+        int initialTotalLevels = initialState == null ? 0 : initialState.totalLevels();
         UIElement root = new UIElement();
         root.getLayout().width(450).paddingAll(12).gapAll(8);
         root.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.mutations.title"));
         Label balance = new Label().setValue(Component.translatable("gui.life_contract.mutations.balance",
-                MutationService.availableMp(serverPlayer), initialState.totalLevels()));
+                initialMp, initialTotalLevels));
         UIElement columns = new UIElement();
         columns.getLayout().flexDirection(FlexDirection.ROW).gapAll(8);
 
@@ -48,8 +53,9 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
                 if (node.tier != tier) continue;
                 Button upgrade = new Button();
                 upgrade.getLayout().width(136).height(38);
-                upgrade.setText(buttonText(node, initialState.level(node)));
-                Label effect = new Label().setValue(effectText(node, initialState.level(node)));
+                int initialLevel = initialState == null ? 0 : initialState.level(node);
+                upgrade.setText(buttonText(node, initialLevel));
+                Label effect = new Label().setValue(effectText(node, initialLevel));
                 effect.getLayout().width(136).height(42);
                 upgrade.setOnServerClick(event -> {
                     if (!(owner instanceof ServerPlayer clicker)) return;
