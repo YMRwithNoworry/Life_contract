@@ -115,12 +115,11 @@ public class FollowerEvents {
             if (!tag.getBoolean(TAG_CONTRACT_ALLY) && event.getLevel() instanceof ServerLevel serverLevel) {
                 ResourceLocation typeKey = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
                 if (typeKey != null) {
-                    for (ServerPlayer player : serverLevel.getServer().getPlayerList().getPlayers()) {
-                        String contractMod = ContractEvents.getEffectiveContractMod(player);
-                        if (typeKey.getNamespace().equals(contractMod)) {
-                            registerContractModAlly(mob, player.getUUID(), contractMod);
-                            break;
-                        }
+                    // 每个 tick 最多遍历一次玩家列表，避免每次刷怪都全量扫描
+                    ServerPlayer owner = ContractEvents.findPlayerForContractMod(
+                            serverLevel.getServer(), typeKey.getNamespace());
+                    if (owner != null) {
+                        registerContractModAlly(mob, owner.getUUID(), typeKey.getNamespace());
                     }
                 }
             }

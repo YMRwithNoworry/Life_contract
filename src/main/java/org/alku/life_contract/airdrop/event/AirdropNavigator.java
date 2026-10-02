@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -89,13 +90,54 @@ public class AirdropNavigator {
         }
     }
 
-    public static void updateNavigation(ServerLevel level) {
-        AABB searchBox = new AABB(
-                level.getWorldBorder().getMinX(), -64, level.getWorldBorder().getMinZ(),
-                level.getWorldBorder().getMaxX(), 320, level.getWorldBorder().getMaxZ());
+    /**
+     * 已加载的空投实体按维度登记，避免每次导航都做“整个世界边界”级别的实体扫描
+     * （600×600 边界 ≈ 1300 个区块，每次扫描要遍历数万个实体分区，是服务端 TPS 的主要开销）。
+     */
+    private static final Map<ResourceLocation, Set<UUID>> TRACKED_AIRDROPS = new ConcurrentHashMap<>();
 
-        List<AirdropEntity> activeAirdrops = level.getEntitiesOfClass(AirdropEntity.class, searchBox,
-                airdrop -> airdrop.isAlive() && !airdrop.isClaimed());
+    public static void trackAirdrop(Level level, Entity entity) {
+        if (!(entity instanceof AirdropEntity)) return;
+        TRACKED_AIRDROPS
+                .computeIfAbsent(level.dimension().location(), key -> ConcurrentHashMap.newKeySet())
+                .add(entity.getUUID());
+    }
+
+    public static void untrackAirdrop(Level level, Entity entity) {
+        Set<UUID> tracked = TRACKED_AIRDROPS.get(level.dimension().location());
+        if (tracked == null) return;
+        tracked.remove(entity.getUUID());
+        if (tracked.isEmpty()) {
+            TRACKED_AIRDROPS.remove(level.dimension().location());
+        }
+    }
+
+    private static List<AirdropEntity> getActiveAirdrops(ServerLevel level) {
+        Set<UUID> tracked = TRACKED_AIRDROPS.get(level.dimension().location());
+        if (tracked == null || tracked.isEmpty()) {
+            return List.of();
+        }
+
+        List<AirdropEntity> active = new ArrayList<>(tracked.size());
+        for (UUID id : tracked) {
+            Entity entity = level.getEntity(id);
+            if (entity == null) {
+                // 区块卸载后实体不再可用，顺手清理登记
+                tracked.remove(id);
+                continue;
+            }
+            if (entity instanceof AirdropEntity airdrop && airdrop.isAlive() && !airdrop.isClaimed()) {
+                active.add(airdrop);
+            }
+        }
+        if (tracked.isEmpty()) {
+            TRACKED_AIRDROPS.remove(level.dimension().location());
+        }
+        return active;
+    }
+
+    public static void updateNavigation(ServerLevel level) {
+        List<AirdropEntity> activeAirdrops = getActiveAirdrops(level);
 
         List<DecoySignal> activeDecoys = getActiveDecoySignals(level);
 
@@ -123,9 +165,12 @@ public class AirdropNavigator {
                 double distance = Math.sqrt(nearestAirdrop.distanceToSqr(player));
                 String direction = getDirectionToAirdrop(player, nearestAirdrop);
 
-                Component actionBarMsg = Component.literal(
-                        String.format("§6§l[空投导航] §e%.0fm §b%s", distance, direction));
-                player.sendSystemMessage(actionBarMsg, true);
+                // 动作栏每 10 tick 提示一次即可，避免每 5 tick 刷一条消息
+                if (level.getGameTime() % 10L == 0L) {
+                    Component actionBarMsg = Component.literal(
+                            String.format("§6§l[空投导航] §e%.0fm §b%s", distance, direction));
+                    player.sendSystemMessage(actionBarMsg, true);
+                }
 
                 if (isParticlesEnabled(player)) {
                     Vec3 targetPos = nearestAirdrop.position();

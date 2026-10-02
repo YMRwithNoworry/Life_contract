@@ -47,6 +47,21 @@ public class CommonEvents {
         }
     }
 
+    /** 登记/注销已加载的空投，导航时无需再扫描整个世界边界。 */
+    @SubscribeEvent
+    public static void onEntityJoinLevel(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
+            AirdropNavigator.trackAirdrop(event.getLevel(), event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityLeaveLevel(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
+            AirdropNavigator.untrackAirdrop(event.getLevel(), event.getEntity());
+        }
+    }
+
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
         if (event.getLevel().isClientSide())

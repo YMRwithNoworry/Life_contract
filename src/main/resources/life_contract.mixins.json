@@ -7,9 +7,6 @@
   "mixins": [
     "BorderWeaverEventHandlerMixin",
     "DedicatedServerSpawnProtectionMixin",
-    "DimensionTypeHeightMixin",
-    "NoiseGeneratorSettingsMixin",
-    "StrongholdStructureMixin",
     "ServerPlayerGameModeMixin",
     "ServerGamePacketListenerImplMixin",
     "PlayerExhaustionMixin",

@@ -403,7 +403,8 @@ public final class WorldEventManager {
         tickSafeBubbles(currentTick);
         tickBountyGlow();
 
-        if (currentTick % 4L == 0L) {
+        // 同步只在可见状态变化时发包，这里放缓检查频率即可
+        if (currentTick % 10L == 0L) {
             syncToClients();
         }
     }
@@ -697,11 +698,14 @@ public final class WorldEventManager {
                 continue;
             }
 
-            AABB bounds = bubble.getBounds();
-            for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, bounds)) {
-                if (!isActiveGamePlayer(player)) continue;
-                refreshBubbleEffect(player, MobEffects.REGENERATION, 1);
-                refreshBubbleEffect(player, MobEffects.SATURATION, 2);
+            // 泡内效果每 10 tick 补一次即可（效果持续 60 tick），不必每 tick 做实体查询
+            if (currentTick % 10L == 0L) {
+                AABB bounds = bubble.getBounds();
+                for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, bounds)) {
+                    if (!isActiveGamePlayer(player)) continue;
+                    refreshBubbleEffect(player, MobEffects.REGENERATION, 1);
+                    refreshBubbleEffect(player, MobEffects.SATURATION, 2);
+                }
             }
 
             if (currentTick % BUBBLE_OUTLINE_INTERVAL_TICKS == 0L) {
@@ -820,7 +824,8 @@ public final class WorldEventManager {
             }
         }
 
-        if (currentTick % 2L == 0L) {
+        // 粒子每 10 tick 铺一次就够了，原来每 2 tick 会让每个在线玩家产生十几条粒子包
+        if (currentTick % 10L == 0L) {
             spawnSporeRainParticles();
         }
     }

@@ -96,7 +96,8 @@ public class TeamSmelter {
         }
 
         int tickCount = server.getTickCount();
-        if (tickCount % 20 != 0) {
+        // 每 2 秒处理一次即可，全队背包遍历本身不便宜
+        if (tickCount % 40 != 0) {
             return;
         }
 
@@ -118,10 +119,8 @@ public class TeamSmelter {
     }
 
     private static void processTeamInventory(ServerPlayer player, UUID leaderUUID) {
+        // 只为已经存在的队伍背包做熔炼，避免每秒给每支队伍凭空创建背包数据
         TeamInventory inventory = TeamInventory.getByTeamId(leaderUUID);
-        if (inventory == null) {
-            inventory = TeamInventory.getOrCreate(player);
-        }
         if (inventory == null) {
             return;
         }

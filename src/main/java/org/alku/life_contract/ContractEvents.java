@@ -239,6 +239,38 @@ public class ContractEvents {
         NetworkHandler.sendToAllPlayers(new PacketSyncContract(player));
     }
 
+    /** 契约模组 -> 持有该契约的玩家，按服务器 tick 缓存。 */
+    private static final java.util.Map<String, ServerPlayer> CONTRACT_MOD_OWNERS = new java.util.HashMap<>();
+    private static long contractModOwnersTick = Long.MIN_VALUE;
+
+    /**
+     * 查找持有指定契约模组的玩家。
+     * <p>
+     * 生物生成与伤害结算都会调用它，原实现每次都遍历玩家列表并逐个解析契约模组，
+     * 在刷怪密集（感染生物、刷怪塔）时会占到大量服务端耗时；这里改成每个 tick 最多重建一次。
+     */
+    public static ServerPlayer findPlayerForContractMod(net.minecraft.server.MinecraftServer server, String modId) {
+        if (server == null || modId == null || modId.isEmpty()) {
+            return null;
+        }
+
+        long tick = server.getTickCount();
+        if (tick != contractModOwnersTick) {
+            contractModOwnersTick = tick;
+            CONTRACT_MOD_OWNERS.clear();
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+                String contractMod = getEffectiveContractMod(player);
+                if (contractMod != null && !contractMod.isEmpty()) {
+                    CONTRACT_MOD_OWNERS.putIfAbsent(contractMod, player);
+                }
+            }
+        }
+
+        ServerPlayer owner = CONTRACT_MOD_OWNERS.get(modId);
+        // 缓存里的玩家可能已离线，做一次校验
+        return owner != null && !owner.hasDisconnected() ? owner : null;
+    }
+
     public static void propagateContractToTeam(Player player, String modId) {
         if (player.level().isClientSide)
             return;
