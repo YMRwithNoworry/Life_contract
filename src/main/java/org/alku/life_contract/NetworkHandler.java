@@ -44,6 +44,11 @@ public final class NetworkHandler {
         payloads.playToClient(PacketSyncDeadTeammates.TYPE, PacketSyncDeadTeammates.STREAM_CODEC, PacketSyncDeadTeammates::handle);
         payloads.playToClient(PacketSyncTeamInventory.TYPE, PacketSyncTeamInventory.STREAM_CODEC, PacketSyncTeamInventory::handle);
         payloads.playToClient(PacketSyncLifePoints.TYPE, PacketSyncLifePoints.STREAM_CODEC, PacketSyncLifePoints::handle);
+        payloads.playToClient(
+                org.alku.life_contract.border.BorderStatusPayload.TYPE,
+                org.alku.life_contract.border.BorderStatusPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> org.alku.life_contract.client.BorderStatusHUD.update(payload)));
         payloads.playToServer(MutationPackets.Open.TYPE, MutationPackets.Open.STREAM_CODEC, MutationPackets.Open::handle);
         payloads.playToServer(MutationPackets.Upgrade.TYPE, MutationPackets.Upgrade.STREAM_CODEC, MutationPackets.Upgrade::handle);
         payloads.playToClient(

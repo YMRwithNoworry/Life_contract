@@ -25,8 +25,8 @@ public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
     private static final ServerBossEvent shrinkBossBar = new ServerBossEvent(
-            Component.literal("边界收缩倒计时: 10:00"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
-    private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 10 * 60;
+            Component.literal("边界收缩倒计时: 3:00"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
+    private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 3 * 60;
     private static final double GAME_BORDER_SHRINK_PERCENTAGE = 10.0D;
     
     public static class BorderData {
@@ -218,6 +218,12 @@ public class BorderManager {
             shrinkTask = null;
         }
         shrinkBossBar.removeAllPlayers();
+        if (currentBorder != null) {
+            for (ServerPlayer player : currentBorder.getLevel().players()) {
+                org.alku.life_contract.NetworkHandler.sendToPlayer(player,
+                        new BorderStatusPayload(false, true, "", 0));
+            }
+        }
     }
     
     public static void resetBorder() {
@@ -234,6 +240,37 @@ public class BorderManager {
     public static ShrinkTask getShrinkTask() { return shrinkTask; }
     public static boolean hasBorder() { return currentBorder != null; }
     public static boolean isShrinking() { return shrinkTask != null && shrinkTask.isRunning(); }
+
+    private static void syncPlayerBorderStatus(ServerPlayer player) {
+        if (!isPlayerInBorderLevel(player)) {
+            org.alku.life_contract.NetworkHandler.sendToPlayer(player,
+                    new BorderStatusPayload(false, true, "", 0));
+            return;
+        }
+
+        BorderData border = currentBorder;
+        double halfSize = Math.max(10.0D, border.getCurrentSize() * (1.0D - shrinkTask.getShrinkPercentage() / 100.0D)) / 2.0D;
+        double minX = border.getCenterX() - halfSize;
+        double maxX = border.getCenterX() + halfSize;
+        double minZ = border.getCenterZ() - halfSize;
+        double maxZ = border.getCenterZ() + halfSize;
+        double targetX = Math.max(minX, Math.min(maxX, player.getX()));
+        double targetZ = Math.max(minZ, Math.min(maxZ, player.getZ()));
+        double dx = targetX - player.getX();
+        double dz = targetZ - player.getZ();
+        boolean inside = dx == 0.0D && dz == 0.0D;
+        org.alku.life_contract.NetworkHandler.sendToPlayer(player,
+                new BorderStatusPayload(true, inside, inside ? "" : directionTo(dx, dz),
+                        inside ? 0 : (int) Math.ceil(Math.hypot(dx, dz))));
+    }
+
+    private static String directionTo(double dx, double dz) {
+        String horizontal = dx < 0 ? "西" : dx > 0 ? "东" : "";
+        String vertical = dz < 0 ? "北" : dz > 0 ? "南" : "";
+        if (horizontal.isEmpty()) return vertical;
+        if (vertical.isEmpty()) return horizontal;
+        return horizontal + vertical;
+    }
 
     private static void updateShrinkBossBar(long currentTick) {
         if (shrinkTask == null || !shrinkTask.isRunning()) return;
@@ -261,6 +298,9 @@ public class BorderManager {
         shrinkTask.tick(currentTick);
         if (shrinkTask != null && shrinkTask.isRunning() && currentTick % 20 == 0) {
             updateShrinkBossBar(currentTick);
+            for (ServerPlayer player : currentBorder.getLevel().getServer().getPlayerList().getPlayers()) {
+                syncPlayerBorderStatus(player);
+            }
         }
     }
 
@@ -268,6 +308,7 @@ public class BorderManager {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && isPlayerInBorderLevel(player)) {
             shrinkBossBar.addPlayer(player);
+            syncPlayerBorderStatus(player);
         }
     }
 
@@ -278,8 +319,10 @@ public class BorderManager {
             shrinkBossBar.removePlayer(player);
         } else if (player.serverLevel() == currentBorder.getLevel()) {
             shrinkBossBar.addPlayer(player);
+            syncPlayerBorderStatus(player);
         } else {
             shrinkBossBar.removePlayer(player);
+            syncPlayerBorderStatus(player);
         }
     }
 
