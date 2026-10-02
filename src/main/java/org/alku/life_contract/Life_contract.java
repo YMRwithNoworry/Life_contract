@@ -21,6 +21,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -28,6 +29,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.alku.life_contract.blocks.ModBlocks;
 import org.alku.life_contract.follower.FollowerWandItem;
 import org.alku.life_contract.follower.WandEggUIHolder;
+import org.alku.life_contract.airdrop.Airdrop;
+import org.alku.life_contract.airdrop.command.AirdropCommand;
+import org.alku.life_contract.airdrop.entity.AirdropRenderer;
 import org.alku.life_contract.client.UpgradeHubUIHolder;
 import org.alku.life_contract.client.SublimationShopUIHolder;
 import org.alku.life_contract.items.MeatPasteItem;
@@ -103,6 +107,7 @@ public class Life_contract {
         PlayerUIMenuType.register(WandEggUIHolder.UI_ID, WandEggUIHolder::new);
         PlayerUIMenuType.register(UpgradeHubUIHolder.UI_ID, UpgradeHubUIHolder::new);
         PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
+        Airdrop.register(modEventBus);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
@@ -129,6 +134,11 @@ public class Life_contract {
             event.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
             event.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
             event.register(MUTATION_MENU.get(), MutationScreen::new);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+            event.registerEntityRenderer(Airdrop.AIRDROP_ENTITY.get(), AirdropRenderer::new);
         }
     }
 

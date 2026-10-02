@@ -46,6 +46,11 @@ public final class NetworkHandler {
         payloads.playToClient(PacketSyncLifePoints.TYPE, PacketSyncLifePoints.STREAM_CODEC, PacketSyncLifePoints::handle);
         payloads.playToServer(MutationPackets.Open.TYPE, MutationPackets.Open.STREAM_CODEC, MutationPackets.Open::handle);
         payloads.playToServer(MutationPackets.Upgrade.TYPE, MutationPackets.Upgrade.STREAM_CODEC, MutationPackets.Upgrade::handle);
+        payloads.playToClient(
+                org.alku.life_contract.airdrop.network.AirdropPayload.TYPE,
+                org.alku.life_contract.airdrop.network.AirdropPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> org.alku.life_contract.airdrop.network.AirdropTrackClientHandler.setTarget(payload)));
     }
 
     public static void sendToServer(CustomPacketPayload payload) {

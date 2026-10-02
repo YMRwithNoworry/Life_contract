@@ -1,4 +1,9 @@
 {
+  "item.life_contract.flare_gun": "Infinite Flare Gun",
+  "item.life_contract.disposable_flare_gun": "Disposable Flare Gun",
+  "item.life_contract.signal_decoy": "Signal Decoy",
+  "item.life_contract.range_limiter": "Airdrop Range Limiter",
+  "entity.life_contract.airdrop": "Airdrop Crate",
   "itemGroup.life_contract": "Life Contract",
   "item.life_contract.soul_contract": "Soul Contract",
   "item.life_contract.soul_contract.desc": "Trade maximum health to ally one creature with your faction.",
@@ -15,5 +20,6 @@
   "container.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory.player_inventory": "Player Inventory",
-  "gui.life_contract.revive_teammate": "Revive Teammate"
+  "gui.life_contract.revive_teammate": "Revive Teammate",
+  "itemGroup.life_contract.airdrop_tab": "Airdrop"
 }

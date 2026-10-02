@@ -69,6 +69,8 @@ dependencies {
     implementation 'me.shedaniel.cloth:cloth-config-neoforge:15.0.140'
     compileOnly 'com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.41'
     runtimeOnly 'com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.41'
+    compileOnly 'maven.modrinth:gzevkJbM:mc1.21.1-2.2.7-neoforge'
+    runtimeOnly 'maven.modrinth:gzevkJbM:mc1.21.1-2.2.7-neoforge'
     compileOnly 'maven.modrinth:xaeros-minimap:Q1tuMQBB'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'

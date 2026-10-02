@@ -34,6 +34,13 @@ ordering="AFTER"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
+modId="photon"
+type="required"
+versionRange="[2.2.7,3)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
 modId="cloth_config"
 type="required"
 versionRange="[15,)"

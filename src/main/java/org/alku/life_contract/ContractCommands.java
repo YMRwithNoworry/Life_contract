@@ -43,6 +43,7 @@ public class ContractCommands {
 
         @SubscribeEvent
         public static void onRegisterCommands(RegisterCommandsEvent event) {
+                org.alku.life_contract.airdrop.command.AirdropCommand.register(event.getDispatcher());
                 registerContractCommand(event);
                 registerContractHudCommand(event);
                 allowTeammateTeleportWithoutPermission(event);

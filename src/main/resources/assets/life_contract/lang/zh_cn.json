@@ -1,4 +1,9 @@
 {
+  "item.life_contract.flare_gun": "无限信号枪",
+  "item.life_contract.disposable_flare_gun": "一次性信号枪",
+  "item.life_contract.signal_decoy": "信号伪装器",
+  "item.life_contract.range_limiter": "空投范围限定器",
+  "entity.life_contract.airdrop": "空投箱",
   "item.life_contract.soul_contract": "生灵契约",
   "item.life_contract.team_organizer": "组队器",
   "item.life_contract.follower_wand": "跟随之杖",
@@ -7,9 +12,8 @@
   "item.life_contract.meat_paste": "肉泥",
   "item.life_contract.sublimation": "升华",
   "item.life_contract.soul_contract.desc": "§7以生命上限为代价，使一只生物与你的阵营结盟。",
-  
   "itemGroup.life_contract": "生灵契约模组",
-  
+  "itemGroup.life_contract.airdrop_tab": "空投",
   "key.categories.life_contract": "生灵契约",
   "key.life_contract.open_team_inventory": "打开队伍背包",
   "key.life_contract.open_mutation_tree": "打开阵营异变树",
@@ -18,13 +22,11 @@
   "gui.life_contract.follower_wand.title": "跟随之杖 · 收服仓库",
   "gui.life_contract.follower_wand.player_inventory": "个人背包",
   "player_ui.life_contract.follower_wand": "跟随之杖 · 收服仓库",
-
   "hud.life_contract.title": "§e== 生灵契约 ==",
   "hud.life_contract.team_number": "§6队伍编号: §b%s",
   "hud.life_contract.contract_mod": "契约模组: §a%s",
   "hud.life_contract.contract_mod_none": "契约模组: §7无",
   "hud.life_contract.teammates": "§6队友:",
-  
   "command.life_contract.prefix": "§a[生灵契约] §f",
   "command.life_contract.hud_toggle": "HUD显示已%s",
   "command.life_contract.highlight_toggle": "队友高光显示已%s",
@@ -45,11 +47,8 @@
   "command.life_contract.tp_success": "已传送到队友 §e%s §f身边。",
   "command.life_contract.tp_notify": "§a[生灵契约] §f队友 §e%s §f传送到了你身边。",
   "command.life_contract.admin_list": "§e== 生灵契约 管理面板 ==",
-  
   "entity.life_contract.team_sentinel": "队伍守卫",
-  
   "effect.life_contract.slow_infection": "缓慢感染",
-  
   "message.life_contract.enabled": "开启",
   "message.life_contract.disabled": "关闭"
 }
