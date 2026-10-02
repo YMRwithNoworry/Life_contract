@@ -15,6 +15,7 @@
     "PlayerExhaustionMixin",
     "InventoryStackSizeMixin",
     "ItemStackCountMixin",
+    "ItemStackNetworkCountMixin",
     "FTBUltimineMixin",
     "XaeroMinimapRendererMixin",
     "XaeroRadarStateUpdaterMixin"
