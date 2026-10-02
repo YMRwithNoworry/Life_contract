@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    { "tag": "life_contract:meat_paste_ingredients" },
+    { "tag": "life_contract:meat_paste_ingredients" },
+    { "tag": "life_contract:meat_paste_ingredients" },
+    { "tag": "life_contract:meat_paste_ingredients" }
+  ],
+  "result": {
+    "id": "life_contract:meat_paste",
+    "count": 1
+  }
+}
