@@ -248,12 +248,16 @@ public class BorderManager {
             return;
         }
 
-        BorderData border = currentBorder;
-        double halfSize = Math.max(10.0D, border.getCurrentSize() * (1.0D - shrinkTask.getShrinkPercentage() / 100.0D)) / 2.0D;
-        double minX = border.getCenterX() - halfSize;
-        double maxX = border.getCenterX() + halfSize;
-        double minZ = border.getCenterZ() - halfSize;
-        double maxZ = border.getCenterZ() + halfSize;
+        net.minecraft.world.level.border.WorldBorder worldBorder = currentBorder.getLevel().getWorldBorder();
+        double predictedSize = Math.max(10.0D,
+                worldBorder.getSize() * (1.0D - shrinkTask.getShrinkPercentage() / 100.0D));
+        double halfSize = predictedSize / 2.0D;
+        double centerX = worldBorder.getCenterX();
+        double centerZ = worldBorder.getCenterZ();
+        double minX = centerX - halfSize;
+        double maxX = centerX + halfSize;
+        double minZ = centerZ - halfSize;
+        double maxZ = centerZ + halfSize;
         double targetX = Math.max(minX, Math.min(maxX, player.getX()));
         double targetZ = Math.max(minZ, Math.min(maxZ, player.getZ()));
         double dx = targetX - player.getX();
