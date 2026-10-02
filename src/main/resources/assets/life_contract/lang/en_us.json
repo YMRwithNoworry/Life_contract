@@ -20,6 +20,7 @@
   "container.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory.player_inventory": "Player Inventory",
+  "gui.life_contract.team_inventory.smelting_hint": "Food and ores are cooked automatically",
   "gui.life_contract.revive_teammate": "Revive Teammate",
   "gui.life_contract.upgrade_hub.title": "Life Contract",
   "gui.life_contract.upgrade_hub.shop": "Sublimation Shop",

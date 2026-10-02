@@ -35,6 +35,7 @@ import org.alku.life_contract.airdrop.entity.AirdropRenderer;
 import org.alku.life_contract.client.UpgradeHubUIHolder;
 import org.alku.life_contract.client.MutationUIHolder;
 import org.alku.life_contract.client.SublimationShopUIHolder;
+import org.alku.life_contract.client.TeamInventoryUIHolder;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 import org.alku.life_contract.items.SublimationItem;
@@ -108,6 +109,7 @@ public class Life_contract {
         PlayerUIMenuType.register(WandEggUIHolder.UI_ID, WandEggUIHolder::new);
         PlayerUIMenuType.register(UpgradeHubUIHolder.UI_ID, UpgradeHubUIHolder::new);
         PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
+        PlayerUIMenuType.register(TeamInventoryUIHolder.UI_ID, TeamInventoryUIHolder::new);
         PlayerUIMenuType.register(MutationUIHolder.UI_ID, MutationUIHolder::new);
         Airdrop.register(modEventBus);
 
@@ -133,7 +135,6 @@ public class Life_contract {
 
         @SubscribeEvent
         public static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
-            event.register(TEAM_INVENTORY_MENU.get(), TeamInventoryScreen::new);
             event.register(REVIVE_TEAMMATE_MENU.get(), ReviveTeammateScreen::new);
             event.register(MUTATION_MENU.get(), MutationScreen::new);
         }

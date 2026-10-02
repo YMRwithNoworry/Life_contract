@@ -15,15 +15,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.alku.life_contract.items.SublimationItem;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class TeamInventory implements Container {
+public class TeamInventory implements Container, IItemHandlerModifiable {
 
     private static final String DATA_NAME = Life_contract.MODID + "_team_inventory";
+    public static final int ROWS = 20;
+    public static final int COLUMNS = 9;
+    public static final int SIZE = ROWS * COLUMNS;
     private static final Map<UUID, TeamInventory> CLIENT_CACHE = new HashMap<>();
     
     private final NonNullList<ItemStack> items;
@@ -35,7 +39,7 @@ public class TeamInventory implements Container {
 
     public TeamInventory(UUID teamId) {
         this.teamId = teamId;
-        this.items = NonNullList.withSize(54, ItemStack.EMPTY);
+        this.items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
     }
 
     public TeamInventory(UUID teamId, NonNullList<ItemStack> items) {
@@ -103,7 +107,7 @@ public class TeamInventory implements Container {
     }
 
     public static TeamInventory load(UUID teamId, CompoundTag tag, HolderLookup.Provider registries) {
-        NonNullList<ItemStack> items = NonNullList.withSize(54, ItemStack.EMPTY);
+        NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         ListTag listTag = tag.getList("Items", Tag.TAG_COMPOUND);
         for (int i = 0; i < listTag.size(); i++) {
             CompoundTag itemTag = listTag.getCompound(i);
@@ -166,7 +170,63 @@ public class TeamInventory implements Container {
 
     @Override
     public int getContainerSize() {
-        return 54;
+        return SIZE;
+    }
+
+    @Override
+    public int getSlots() {
+        return SIZE;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return getItem(slot);
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (stack.isEmpty() || !isItemValid(slot, stack)) return stack;
+        ItemStack existing = getItem(slot);
+        int limit = Math.min(getMaxStackSize(), stack.getMaxStackSize());
+        if (!existing.isEmpty() && !ItemStack.isSameItemSameComponents(existing, stack)) return stack;
+        int room = limit - (existing.isEmpty() ? 0 : existing.getCount());
+        if (room <= 0) return stack;
+        int inserted = Math.min(room, stack.getCount());
+        if (!simulate) {
+            ItemStack updated = existing.isEmpty() ? stack.copy() : existing.copy();
+            if (existing.isEmpty()) updated.setCount(inserted);
+            else updated.grow(inserted);
+            setItem(slot, updated);
+        }
+        if (inserted == stack.getCount()) return ItemStack.EMPTY;
+        ItemStack remainder = stack.copy();
+        remainder.shrink(inserted);
+        return remainder;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack existing = getItem(slot);
+        if (amount <= 0 || existing.isEmpty()) return ItemStack.EMPTY;
+        int extracted = Math.min(amount, existing.getCount());
+        ItemStack result = existing.copyWithCount(extracted);
+        if (!simulate) removeItem(slot, extracted);
+        return result;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return getMaxStackSize();
+    }
+
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slot >= 0 && slot < SIZE;
+    }
+
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        setItem(slot, stack);
     }
 
     @Override
@@ -241,8 +301,11 @@ public class TeamInventory implements Container {
 
     @Override
     public void clearContent() {
-        items.clear();
+        for (int slot = 0; slot < items.size(); slot++) {
+            items.set(slot, ItemStack.EMPTY);
+        }
         setChanged();
+        broadcastChanges();
     }
 
     public UUID getTeamId() {

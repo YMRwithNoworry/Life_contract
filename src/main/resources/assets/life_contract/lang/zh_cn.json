@@ -19,6 +19,7 @@
   "key.life_contract.open_mutation_tree": "打开阵营异变树",
   "container.life_contract.team_inventory": "队伍背包",
   "gui.life_contract.team_inventory.player_inventory": "个人背包",
+  "gui.life_contract.team_inventory.smelting_hint": "熟食与矿物放入后自动烧制",
   "gui.life_contract.follower_wand.title": "跟随之杖 · 收服仓库",
   "gui.life_contract.follower_wand.player_inventory": "个人背包",
   "player_ui.life_contract.follower_wand": "跟随之杖 · 收服仓库",
