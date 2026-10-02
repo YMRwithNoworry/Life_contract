@@ -122,6 +122,7 @@ public class Life_contract {
         ModBlocks.BLOCK_ITEMS.register(modEventBus);
         modEventBus.addListener(NetworkHandler::registerPayloads);
         modEventBus.addListener(ModEvents::onEntityAttributeCreation);
+        modEventBus.addListener(ModEvents::onEntityAttributeModification);
     }
 
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
@@ -163,8 +164,18 @@ public class Life_contract {
     }
 
     public static class ModEvents {
+        /** 玩家最大生命上限：原版 20 -> 40。 */
+        public static final double PLAYER_MAX_HEALTH = 40.0D;
+
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(TEAM_SENTINEL.get(), TeamSentinel.createAttributes().build());
+        }
+
+        public static void onEntityAttributeModification(
+                net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent event) {
+            event.add(EntityType.PLAYER,
+                    net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH,
+                    PLAYER_MAX_HEALTH);
         }
     }
 }

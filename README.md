@@ -48,6 +48,8 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Faction Immunity**: Contracted mobs will not attack you.
 * **Effect Immunity**: Negative potion effects from contracted mobs are negated.
 * **Teammate Protection**: Players cannot damage their own teammates.
+* **Player Health**: Player max health is raised to `40` (vanilla `20`).
+* **Gun Damage**: Bullets from TaCZ-style gun mods deal only `20%` of their damage to players; other non-player damage is reduced to `40%`.
 * **Aggro Transfer**: Contracted mobs automatically target hostile factions.
 
 ---
