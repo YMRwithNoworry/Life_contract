@@ -14,7 +14,9 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import org.alku.life_contract.ContractEvents;
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
 @EventBusSubscriber(modid = Life_contract.MODID)
 public final class GameEventManager {
     private static final long INITIAL_DEBUFF_PROTECTION_SECONDS = 120L;
+    private static final long GAME_START_DAMAGE_PROTECTION_SECONDS = 10L;
     private static boolean gameActive;
     private static boolean gamePaused;
     private static long gameStartTick;
@@ -128,9 +131,23 @@ public final class GameEventManager {
             int targetY = Math.max(level.getMinBuildHeight() + 2,
                     Math.min(level.getMaxBuildHeight() - 2, surface.getY()));
             buildSpawnPlatform(level, targetX, targetY - 1, targetZ);
+            clearSpawnSpace(level, targetX, targetY, targetZ);
             player.teleportTo(level,
                     targetX + 0.5D, targetY, targetZ + 0.5D,
                     Collections.emptySet(), player.getYRot(), player.getXRot());
+            player.setDeltaMovement(Vec3.ZERO);
+            player.fallDistance = 0.0F;
+            player.clearFire();
+        }
+    }
+
+    private static void clearSpawnSpace(ServerLevel level, int x, int y, int z) {
+        BlockPos.MutableBlockPos position = new BlockPos.MutableBlockPos();
+        for (int offsetY = 0; offsetY < 3 && y + offsetY < level.getMaxBuildHeight(); offsetY++) {
+            position.set(x, y + offsetY, z);
+            if (!level.getBlockState(position).isAir()) {
+                level.setBlockAndUpdate(position, Blocks.AIR.defaultBlockState());
+            }
         }
     }
 
@@ -337,6 +354,16 @@ public final class GameEventManager {
         return gameActive
                 && gameStartPlayerIds.contains(playerUUID)
                 && getElapsedSeconds() < INITIAL_DEBUFF_PROTECTION_SECONDS;
+    }
+
+    @SubscribeEvent
+    public static void onGameStartDamageProtection(LivingIncomingDamageEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player
+                && gameActive
+                && gameStartPlayerIds.contains(player.getUUID())
+                && getElapsedSeconds() < GAME_START_DAMAGE_PROTECTION_SECONDS) {
+            event.setCanceled(true);
+        }
     }
 
     public static long getElapsedSeconds() {
