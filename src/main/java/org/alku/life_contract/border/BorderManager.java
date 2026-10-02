@@ -5,10 +5,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
@@ -21,6 +24,8 @@ import java.util.List;
 public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
+    private static final ServerBossEvent shrinkBossBar = new ServerBossEvent(
+            Component.literal("边界收缩倒计时: 10:00"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
     private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 10 * 60;
     private static final double GAME_BORDER_SHRINK_PERCENTAGE = 10.0D;
     
@@ -128,7 +133,7 @@ public class BorderManager {
             long elapsedSeconds = elapsedTicks / 20;
             
             if (totalDurationSeconds > 0 && elapsedSeconds >= totalDurationSeconds) {
-                running = false;
+                stopShrink();
                 return;
             }
             
@@ -160,6 +165,11 @@ public class BorderManager {
         public double getShrinkPercentage() { return shrinkPercentage; }
         public int getTotalDurationSeconds() { return totalDurationSeconds; }
         public BorderData getBorder() { return border; }
+
+        public int getSecondsUntilNextShrink(long currentTick) {
+            long elapsedTicks = Math.max(0, currentTick - lastShrinkTick);
+            return (int) Math.max(0, intervalSeconds - elapsedTicks / 20);
+        }
     }
     
     public static boolean createBorder(ServerPlayer centerPlayer, double size) {
@@ -169,18 +179,13 @@ public class BorderManager {
         double centerX = centerPlayer.getX();
         double centerZ = centerPlayer.getZ();
         
-        currentBorder = new BorderData(level, centerX, centerZ, size);
-        currentBorder.applyToLevel();
-        
-        shrinkTask = null;
-        
-        return true;
+        return createBorder(level, centerX, centerZ, size);
     }
     
     public static boolean createBorder(ServerLevel level, double centerX, double centerZ, double size) {
+        stopShrink();
         currentBorder = new BorderData(level, centerX, centerZ, size);
         currentBorder.applyToLevel();
-        shrinkTask = null;
         return true;
     }
 
@@ -199,6 +204,10 @@ public class BorderManager {
         
         shrinkTask = new ShrinkTask(currentBorder, intervalSeconds, shrinkPercentage, totalDurationSeconds);
         shrinkTask.start(currentBorder.getLevel().getGameTime());
+        for (ServerPlayer player : currentBorder.getLevel().players()) {
+            shrinkBossBar.addPlayer(player);
+        }
+        updateShrinkBossBar(currentBorder.getLevel().getGameTime());
         
         return true;
     }
@@ -208,6 +217,7 @@ public class BorderManager {
             shrinkTask.stop();
             shrinkTask = null;
         }
+        shrinkBossBar.removeAllPlayers();
     }
     
     public static void resetBorder() {
@@ -224,6 +234,16 @@ public class BorderManager {
     public static ShrinkTask getShrinkTask() { return shrinkTask; }
     public static boolean hasBorder() { return currentBorder != null; }
     public static boolean isShrinking() { return shrinkTask != null && shrinkTask.isRunning(); }
+
+    private static void updateShrinkBossBar(long currentTick) {
+        if (shrinkTask == null || !shrinkTask.isRunning()) return;
+        int remaining = shrinkTask.getSecondsUntilNextShrink(currentTick);
+        int minutes = remaining / 60;
+        int seconds = remaining % 60;
+        shrinkBossBar.setName(Component.literal(String.format("边界收缩倒计时: %d:%02d", minutes, seconds)));
+        shrinkBossBar.setProgress(shrinkTask.getIntervalSeconds() <= 0 ? 0.0F
+                : (float) remaining / shrinkTask.getIntervalSeconds());
+    }
     
     private static void broadcastMessage(Component message) {
         if (currentBorder == null) return;
@@ -236,7 +256,34 @@ public class BorderManager {
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
         if (shrinkTask == null || !shrinkTask.isRunning()) return;
-        
-        shrinkTask.tick(currentBorder.getLevel().getGameTime());
+
+        long currentTick = currentBorder.getLevel().getGameTime();
+        shrinkTask.tick(currentTick);
+        if (shrinkTask != null && shrinkTask.isRunning() && currentTick % 20 == 0) {
+            updateShrinkBossBar(currentTick);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && isPlayerInBorderLevel(player)) {
+            shrinkBossBar.addPlayer(player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (currentBorder == null || !isShrinking()) {
+            shrinkBossBar.removePlayer(player);
+        } else if (player.serverLevel() == currentBorder.getLevel()) {
+            shrinkBossBar.addPlayer(player);
+        } else {
+            shrinkBossBar.removePlayer(player);
+        }
+    }
+
+    private static boolean isPlayerInBorderLevel(ServerPlayer player) {
+        return currentBorder != null && isShrinking() && player.serverLevel() == currentBorder.getLevel();
     }
 }
