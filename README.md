@@ -38,6 +38,13 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 | ⚔️ **Faction Rivalry** | Mobs from different contract factions will automatically attack each other. |
 | 💀 **Elimination** | When all team members enter Spectator Mode, that faction's mobs will stop spawning. |
 
+### Lives
+
+* Every participant starts a match with `5` lives (`/contract game start` resets them all).
+* Each death costs one life; the remaining count is shown on the player's nameplate as `LP: N`.
+* Dying on your **last life** puts you straight into Spectator mode, and respawning never brings an eliminated player back.
+* A teammate revived by the revive system returns in Survival with at least `1` life.
+
 ### Team Structure
 
 * **Leader**: Holds the contract, determines the faction, and owns the team ID.

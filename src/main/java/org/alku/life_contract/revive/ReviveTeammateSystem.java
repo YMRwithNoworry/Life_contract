@@ -155,6 +155,8 @@ public class ReviveTeammateSystem {
         
         teammate.setHealth(teammate.getMaxHealth());
         teammate.removeAllEffects();
+        // 复活后回到生存模式，并至少保留 1 条命（命数耗尽的玩家也能被队友拉回来）
+        org.alku.life_contract.PlayerLivesSystem.reviveAsSurvivor(teammate);
         
         if (teammate.level() != killer.level()) {
             teammate.teleportTo(killer.getServer().getLevel(killer.level().dimension()),

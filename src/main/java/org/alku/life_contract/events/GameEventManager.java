@@ -26,7 +26,6 @@ import org.alku.life_contract.ModPoolConfig;
 import org.alku.life_contract.SoulContractItem;
 import org.alku.life_contract.TeamOrganizerItem;
 import org.alku.life_contract.border.BorderManager;
-import org.alku.life_contract.compat.CaerulaArborCompat;
 import org.alku.life_contract.endgame.StrongholdEndgameManager;
 
 import java.util.ArrayList;
@@ -235,6 +234,12 @@ public final class GameEventManager {
         gamePaused = false;
         gameStartTick = 0;
         pausedTick = 0;
+        for (ServerPlayer player : gameStartPlayerIds.stream()
+                .map(uuid -> currentLevel != null ? currentLevel.getServer().getPlayerList().getPlayer(uuid) : null)
+                .filter(java.util.Objects::nonNull)
+                .toList()) {
+            org.alku.life_contract.PlayerLivesSystem.clearLives(player);
+        }
         gameStartPlayerIds.clear();
         gamePlayerTeams.clear();
         gamePlayerNames.clear();
@@ -305,6 +310,8 @@ public final class GameEventManager {
         if (teamId == null) {
             teamId = playerId;
         }
+        // 参赛（含中途入队）玩家的命数统一重置为默认 5 条
+        org.alku.life_contract.PlayerLivesSystem.resetLives(player);
         gameStartPlayerIds.add(playerId);
         gamePlayerTeams.put(playerId, teamId);
         gamePlayerNames.put(playerId, player.getName().getString());
@@ -446,7 +453,8 @@ public final class GameEventManager {
 
         Map<UUID, Integer> currentLifePoints = new LinkedHashMap<>();
         for (ServerPlayer player : currentLevel.getServer().getPlayerList().getPlayers()) {
-            int points = CaerulaArborCompat.getLifePoints(player);
+            // 对局中的玩家显示本模组的命数，其余玩家仍显示 caerula_arbor 的数值
+            int points = org.alku.life_contract.PlayerLivesSystem.getLivesForDisplay(player);
             currentLifePoints.put(player.getUUID(), points);
         }
         if (!force && currentLifePoints.equals(lastSyncedLifePoints)) return;
