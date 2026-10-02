@@ -100,19 +100,15 @@ public final class GameEventManager {
         }
         initialTeamCount = new HashSet<>(gamePlayerTeams.values()).size();
 
-        BlockPos portalCenter = portal.portalCenter();
-        BorderManager.createBorder(
-                gameLevel,
-                portalCenter.getX() + 0.5D,
-                portalCenter.getZ() + 0.5D,
-                600.0D);
-        relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, portalCenter);
+        BlockPos playerCenter = BlockPos.containing(centerX, 0.0D, centerZ);
+        BorderManager.startGameBorder(gameLevel, centerX, centerZ);
+        relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, playerCenter);
         syncToAllClients();
         return new StartResult(
                 true,
                 allocation.players(),
                 allocation.teams(),
-                allocation.message() + "；" + portal.message() + "；参赛玩家已迁入边界内");
+                allocation.message() + "；" + portal.message() + "；边界已以发起玩家为中心设置为半径500，参赛玩家已迁入边界内");
     }
 
     private static void relocateParticipantsInsideBorder(ServerLevel level, double previousCenterX,
@@ -228,6 +224,7 @@ public final class GameEventManager {
         gameTeamNumbers.clear();
         initialTeamCount = 0;
         lastSyncedLifePoints.clear();
+        BorderManager.stopShrink();
         syncToAllClients();
         StrongholdEndgameManager.clearSession();
         currentLevel = null;

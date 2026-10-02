@@ -10,11 +10,20 @@ public final class BorderInteractionHelper {
     }
 
     public static boolean mayInteractIgnoringWorldBorder(ServerLevel level, Player player, BlockPos pos) {
-        if (level.getWorldBorder().isWithinBounds(pos)) {
+        if (!mayIgnoreWorldBorder(level, pos)) {
             return level.mayInteract(player, pos);
         }
 
         return !(player instanceof ServerPlayer serverPlayer)
                 || !level.getServer().isUnderSpawnProtection(level, pos, serverPlayer);
     }
+
+    public static boolean mayIgnoreWorldBorder(ServerLevel level, BlockPos pos) {
+        BorderManager.BorderData border = BorderManager.getCurrentBorder();
+        return org.alku.life_contract.events.GameEventManager.isGameActive()
+                && border != null
+                && border.getLevel() == level
+                && !level.getWorldBorder().isWithinBounds(pos);
+    }
+
 }

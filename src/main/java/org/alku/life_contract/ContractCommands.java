@@ -242,17 +242,9 @@ public class ContractCommands {
                                                 return 0;
                                         }
                                         
-                                        net.minecraft.server.MinecraftServer server = player.getServer();
-                                        if (server != null) {
-                                                server.getCommands().performPrefixedCommand(
-                                                        server.createCommandSourceStack(),
-                                                        "bw_auto_start 60 0.8 45 20"
-                                                );
-                                        }
-                                        
                                         context.getSource().sendSuccess(() ->
                                                 Component.literal("§a[游戏] §f游戏已开始！" + result.message()
-                                                        + "，边界已以末地要塞传送门为中心设置为600x600。"), true);
+                                                        + "；边界每10分钟立即缩小0.8%。"), true);
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")

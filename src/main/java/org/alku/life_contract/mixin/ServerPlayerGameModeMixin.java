@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.world.entity.player.Player;
 import org.alku.life_contract.border.BorderInteractionHelper;
@@ -14,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPlayerGameMode.class)
 public abstract class ServerPlayerGameModeMixin {
+
 
     @Redirect(
         method = "handleBlockBreakAction",

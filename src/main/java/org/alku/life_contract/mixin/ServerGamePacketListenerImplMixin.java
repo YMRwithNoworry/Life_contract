@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
 
+
     @Redirect(
         method = "handleUseItemOn",
         at = @At(

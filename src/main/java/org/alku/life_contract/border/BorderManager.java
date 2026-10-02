@@ -21,10 +21,8 @@ import java.util.List;
 public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
-    private static final long BASE_BORDER_TRANSITION_TICKS = 60L;
-    private static final long BORDER_TRANSITION_DURATION_PERCENT = 130L;
-    private static final long BORDER_TRANSITION_TICKS =
-            BASE_BORDER_TRANSITION_TICKS * BORDER_TRANSITION_DURATION_PERCENT / 100L;
+    private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 10 * 60;
+    private static final double GAME_BORDER_SHRINK_PERCENTAGE = 0.8D;
     
     public static class BorderData {
         private final ServerLevel level;
@@ -88,9 +86,7 @@ public class BorderManager {
         }
 
         public void transitionSize(double newSize, long durationTicks) {
-            this.currentSize = Math.max(10, newSize);
-            net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
-            worldBorder.lerpSizeBetween(worldBorder.getSize(), currentSize, Math.max(1L, durationTicks * 50L));
+            updateSize(newSize);
         }
         
         public void applyToLevel() {
@@ -131,7 +127,7 @@ public class BorderManager {
             long elapsedTicks = currentTick - startTick;
             long elapsedSeconds = elapsedTicks / 20;
             
-            if (elapsedSeconds >= totalDurationSeconds) {
+            if (totalDurationSeconds > 0 && elapsedSeconds >= totalDurationSeconds) {
                 running = false;
                 return;
             }
@@ -147,7 +143,7 @@ public class BorderManager {
             double currentSize = border.getCurrentSize();
             double newSize = currentSize * (1 - shrinkPercentage / 100.0);
             border.setTargetSize(newSize);
-            border.transitionSize(newSize, BORDER_TRANSITION_TICKS);
+            border.updateSize(newSize);
             shrinkCount++;
             
             broadcastMessage(Component.literal("§c[边界] §f边界已缩小！当前大小: §e" + 
@@ -186,6 +182,13 @@ public class BorderManager {
         currentBorder.applyToLevel();
         shrinkTask = null;
         return true;
+    }
+
+    public static boolean startGameBorder(ServerLevel level, double centerX, double centerZ) {
+        if (!createBorder(level, centerX, centerZ, 1000.0D)) {
+            return false;
+        }
+        return startShrink(GAME_BORDER_SHRINK_INTERVAL_SECONDS, GAME_BORDER_SHRINK_PERCENTAGE, 0);
     }
     
     public static boolean startShrink(int intervalSeconds, double shrinkPercentage, int totalDurationSeconds) {
