@@ -112,9 +112,7 @@ public class FollowerEvents {
         Entity entity = event.getEntity();
         if (entity instanceof Mob mob) {
             CompoundTag tag = mob.getPersistentData();
-            if (tag.getBoolean(TAG_CONTRACT_ALLY) && tag.hasUUID(TAG_CONTRACT_OWNER_UUID)) {
-                setupContractAllyAI(mob, tag.getUUID(TAG_CONTRACT_OWNER_UUID));
-            } else if (event.getLevel() instanceof ServerLevel serverLevel) {
+            if (!tag.getBoolean(TAG_CONTRACT_ALLY) && event.getLevel() instanceof ServerLevel serverLevel) {
                 ResourceLocation typeKey = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
                 if (typeKey != null) {
                     for (ServerPlayer player : serverLevel.getServer().getPlayerList().getPlayers()) {
@@ -132,7 +130,6 @@ public class FollowerEvents {
                 clearFollower(mob.getUUID());
                 tag.remove(TAG_FOLLOWER_OWNER_UUID);
                 tag.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
-                setupContractAllyAI(mob, tag.getUUID(TAG_CONTRACT_OWNER_UUID));
                 return;
             }
             if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
@@ -170,16 +167,6 @@ public class FollowerEvents {
             pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
         }
         mob.goalSelector.addGoal(4, new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F));
-    }
-
-    private static void setupContractAllyAI(Mob mob, UUID ownerUUID) {
-        mob.targetSelector.removeAllGoals(goal -> true);
-        mob.setTarget(null);
-        mob.targetSelector.addGoal(1, new FollowerAttackGoal(mob, ownerUUID));
-        if (mob instanceof PathfinderMob pathfinderMob) {
-            pathfinderMob.goalSelector.removeAllGoals(goal -> goal instanceof MeleeAttackGoal);
-            pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
-        }
     }
 
     private static UUID findSummonedFollowerOwner(Mob mob) {
@@ -433,13 +420,15 @@ public class FollowerEvents {
         data.putUUID(TAG_CONTRACT_OWNER_UUID, ownerUUID);
         data.putString(TAG_CONTRACT_MOD_ID, modId);
         mob.setPersistenceRequired();
+        if (mob.getTarget() instanceof Player target && isAlliedWithPlayer(target, mob)) {
+            mob.setTarget(null);
+        }
         if (!data.getBoolean(WandFollowerSystem.TAG_WAND_TAMED)
                 && !data.hasUUID(WandFollowerSystem.TAG_WAND_OWNER_UUID)) {
             clearFollower(mob.getUUID());
             data.remove(TAG_FOLLOWER_OWNER_UUID);
             data.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
         }
-        setupContractAllyAI(mob, ownerUUID);
     }
 
     public static boolean isContractAlly(Mob mob) {
