@@ -136,6 +136,10 @@ public class ContractEvents {
         if (originalData.contains(TeamOrganizerItem.TAG_TEAM_NUMBER)) {
             newData.putInt(TeamOrganizerItem.TAG_TEAM_NUMBER, originalData.getInt(TeamOrganizerItem.TAG_TEAM_NUMBER));
         }
+        if (originalData.contains(org.alku.life_contract.follower.WandEggStorage.DATA_KEY)) {
+            newData.put(org.alku.life_contract.follower.WandEggStorage.DATA_KEY,
+                    originalData.getCompound(org.alku.life_contract.follower.WandEggStorage.DATA_KEY).copy());
+        }
     }
 
     @SubscribeEvent

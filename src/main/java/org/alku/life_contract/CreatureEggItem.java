@@ -268,6 +268,10 @@ public class CreatureEggItem extends Item {
     }
 
     public static boolean captureEntity(ItemStack stack, Mob mob) {
+        return captureEntity(stack, mob, false);
+    }
+
+    public static boolean captureEntity(ItemStack stack, Mob mob, boolean capturedByWand) {
         CompoundTag tag = getItemData(stack);
         
         String entityTypeKey = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString();
@@ -301,6 +305,7 @@ public class CreatureEggItem extends Item {
         
         tag.putFloat(TAG_CAPTURED_HEALTH, mob.getHealth());
         tag.putFloat(TAG_CAPTURED_MAX_HEALTH, mob.getMaxHealth());
+        tag.putBoolean("CapturedByFollowerWand", capturedByWand);
         setItemData(stack, tag);
         
         return true;
@@ -309,6 +314,7 @@ public class CreatureEggItem extends Item {
     public static boolean spawnEntity(ItemStack stack, ServerLevel level, @Nullable Player player, BlockPos pos) {
         String entityTypeKey = getEntityType(stack);
         if (entityTypeKey == null) return false;
+        boolean capturedByWand = getItemData(stack).getBoolean("CapturedByFollowerWand");
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(
             net.minecraft.resources.ResourceLocation.parse(entityTypeKey)
@@ -333,6 +339,9 @@ public class CreatureEggItem extends Item {
             mob.setYHeadRot(yaw);
             mob.setYBodyRot(yaw);
             mob.setPersistenceRequired();
+            if (capturedByWand) {
+                mob.getPersistentData().putBoolean("LifeContractWandCapturedFollower", true);
+            }
             
             String customName = getCustomName(stack);
             if (customName != null) {
@@ -371,7 +380,7 @@ public class CreatureEggItem extends Item {
                 return false;
             }
 
-            if (player != null) {
+            if (player != null && capturedByWand) {
                 FollowerEvents.registerFollower(mob, player.getUUID());
             }
             

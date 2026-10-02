@@ -24,7 +24,8 @@ import java.util.UUID;
 @EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public final class WandFollowerSystem {
     public static final String TAG_BOUND_FOLLOWER_UUID = "LifeContractWandFollowerUUID";
-    private static final String TAG_WAND_OWNER_UUID = "LifeContractWandOwnerUUID";
+    public static final String TAG_WAND_OWNER_UUID = "LifeContractWandOwnerUUID";
+    public static final String TAG_WAND_TAMED = "LifeContractWandCapturedFollower";
 
     private static final Map<UUID, Goal> ACTIVE_FOLLOW_GOALS = new HashMap<>();
     private static final Map<UUID, UUID> ACTIVE_OWNER_FOLLOWERS = new HashMap<>();
@@ -84,6 +85,16 @@ public final class WandFollowerSystem {
         ACTIVE_OWNER_FOLLOWERS.remove(player.getUUID());
         playerData.remove(TAG_BOUND_FOLLOWER_UUID);
         return true;
+    }
+
+    public static void onCapturedByWand(Mob mob) {
+        UUID previousOwnerUUID = getWandOwnerUUID(mob);
+        if (previousOwnerUUID == null) return;
+        removeFollowGoal(mob);
+        if (mob.getServer() != null) {
+            clearPreviousOwnerBinding(mob.getServer(), previousOwnerUUID, mob.getUUID());
+        }
+        mob.getPersistentData().remove(TAG_WAND_OWNER_UUID);
     }
 
     private static UUID getWandOwnerUUID(Mob mob) {

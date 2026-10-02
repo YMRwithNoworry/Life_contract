@@ -12,13 +12,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import com.lowdragmc.lowdraglib2.gui.factory.PlayerUIMenuType;
 
 import java.util.List;
 
@@ -33,26 +33,28 @@ public class FollowerWandItem extends Item {
             return InteractionResult.SUCCESS;
         }
 
-        if (!(player instanceof ServerPlayer serverPlayer) || !(target instanceof Mob mob)
-                || mob.getType().getCategory() != MobCategory.MONSTER) {
-            player.sendSystemMessage(Component.literal("§c[跟随之杖] 只能选择怪物！"));
-            return InteractionResult.FAIL;
-        }
+        if (!(target instanceof Mob mob)) return InteractionResult.PASS;
+
+        if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.SUCCESS;
 
         if (!FollowerEvents.isAlliedWithPlayer(player, mob)) {
             player.sendSystemMessage(Component.literal("§c[跟随之杖] 只能选择自己阵营的怪物！"));
             return InteractionResult.FAIL;
         }
 
-        if (WandFollowerSystem.isBoundFollower(player, mob)) {
-            player.sendSystemMessage(Component.literal("§e[跟随之杖] 该怪物已经在紧紧跟随你。"));
-            return InteractionResult.SUCCESS;
+        WandEggStorage storage = WandEggStorage.getOrCreate(serverPlayer);
+        if (!storage.hasSpace()) {
+            player.sendSystemMessage(Component.literal("§c[跟随之杖] 收服仓库已满！请先取出生物蛋。"));
+            return InteractionResult.FAIL;
         }
-
-        WandFollowerSystem.bind(serverPlayer, mob);
+        WandFollowerSystem.onCapturedByWand(mob);
+        if (!storage.capture(mob)) {
+            player.sendSystemMessage(Component.literal("§c[跟随之杖] 无法保存该生物。"));
+            return InteractionResult.FAIL;
+        }
+        mob.discard();
         String mobName = mob.hasCustomName() ? mob.getCustomName().getString() : mob.getName().getString();
-        player.sendSystemMessage(Component.literal("§a[跟随之杖] §e" + mobName + " §f开始紧紧跟随你。"));
-        player.displayClientMessage(Component.literal("§e额外饥饿消耗: §c+10%"), true);
+        player.sendSystemMessage(Component.literal("§a[跟随之杖] §e" + mobName + " §f已收服并存入生物蛋仓库。"));
 
         if (player.level() instanceof ServerLevel serverLevel) {
             serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
@@ -71,17 +73,9 @@ public class FollowerWandItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!player.isShiftKeyDown()) {
-            return InteractionResultHolder.pass(stack);
-        }
-
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            if (WandFollowerSystem.releaseCurrent(serverPlayer)) {
-                player.sendSystemMessage(Component.literal("§e[跟随之杖] 已解除当前怪物的跟随。"));
-                player.displayClientMessage(Component.literal("§a额外饥饿消耗已停止"), true);
-            } else {
-                player.sendSystemMessage(Component.literal("§7[跟随之杖] 当前没有法杖随从。"));
-            }
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer
+                && !PlayerUIMenuType.openUI(serverPlayer, WandEggUIHolder.UI_ID)) {
+            player.sendSystemMessage(Component.literal("§c[跟随之杖] 无法打开收服仓库。"));
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
@@ -89,10 +83,9 @@ public class FollowerWandItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag flag) {
         components.add(Component.literal("§d[跟随之杖]").withStyle(ChatFormatting.LIGHT_PURPLE));
-        components.add(Component.literal("§e右键己方怪物 §7- 使其紧紧跟随你"));
-        components.add(Component.literal("§eShift+右键空气 §7- 解除当前跟随"));
-        components.add(Component.literal("§7同时只能有 §f1 §7只法杖随从，重新选择会替换旧目标"));
-        components.add(Component.literal("§c绑定期间额外饥饿消耗为原版的 10%"));
+        components.add(Component.literal("§e右键盟友生物 §7- 收服并存入生物蛋"));
+        components.add(Component.literal("§e右键空气 §7- 打开 20 格生物蛋仓库"));
+        components.add(Component.literal("§7生物蛋释放后，收服的生物会跟随你"));
         super.appendHoverText(stack, context, components, flag);
     }
 

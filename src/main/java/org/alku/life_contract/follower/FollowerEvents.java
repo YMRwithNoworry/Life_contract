@@ -126,6 +126,15 @@ public class FollowerEvents {
                     }
                 }
             }
+            if (isContractAlly(mob)
+                    && !tag.getBoolean(WandFollowerSystem.TAG_WAND_TAMED)
+                    && !tag.hasUUID(WandFollowerSystem.TAG_WAND_OWNER_UUID)) {
+                clearFollower(mob.getUUID());
+                tag.remove(TAG_FOLLOWER_OWNER_UUID);
+                tag.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
+                setupContractAllyAI(mob, tag.getUUID(TAG_CONTRACT_OWNER_UUID));
+                return;
+            }
             if (tag.contains(TAG_FOLLOWER_OWNER_UUID)) {
                 registerFollowerWithoutHungerNotification(mob, tag.getUUID(TAG_FOLLOWER_OWNER_UUID));
                 return;
@@ -424,6 +433,12 @@ public class FollowerEvents {
         data.putUUID(TAG_CONTRACT_OWNER_UUID, ownerUUID);
         data.putString(TAG_CONTRACT_MOD_ID, modId);
         mob.setPersistenceRequired();
+        if (!data.getBoolean(WandFollowerSystem.TAG_WAND_TAMED)
+                && !data.hasUUID(WandFollowerSystem.TAG_WAND_OWNER_UUID)) {
+            clearFollower(mob.getUUID());
+            data.remove(TAG_FOLLOWER_OWNER_UUID);
+            data.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
+        }
         setupContractAllyAI(mob, ownerUUID);
     }
 

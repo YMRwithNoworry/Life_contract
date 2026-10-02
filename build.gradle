@@ -60,12 +60,15 @@ repositories {
     mavenCentral()
     maven { url = 'https://maven.shedaniel.me/' }
     maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.firstdark.dev/snapshots' }
     maven { url = 'https://maven.ftb.dev/releases' }
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 }
 
 dependencies {
     implementation 'me.shedaniel.cloth:cloth-config-neoforge:15.0.140'
+    compileOnly 'com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.41'
+    runtimeOnly 'com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.2.41'
     compileOnly 'maven.modrinth:xaeros-minimap:Q1tuMQBB'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'

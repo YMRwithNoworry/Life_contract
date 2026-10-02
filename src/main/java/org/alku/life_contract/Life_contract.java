@@ -9,6 +9,8 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
+import com.lowdragmc.lowdraglib2.gui.factory.PlayerUIMenuType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,6 +27,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.alku.life_contract.blocks.ModBlocks;
 import org.alku.life_contract.follower.FollowerWandItem;
+import org.alku.life_contract.follower.WandEggUIHolder;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 import org.alku.life_contract.items.SublimationItem;
@@ -95,6 +98,7 @@ public class Life_contract {
 
     public Life_contract(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        PlayerUIMenuType.register(WandEggUIHolder.UI_ID, WandEggUIHolder::new);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);
