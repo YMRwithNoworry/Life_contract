@@ -28,6 +28,7 @@ public class BorderManager {
             Component.literal("边界收缩倒计时: 3:00"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
     private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 3 * 60;
     private static final double GAME_BORDER_SHRINK_PERCENTAGE = 10.0D;
+    private static final long GAME_BORDER_SHRINK_DURATION_TICKS = 30L * 20L;
     
     public static class BorderData {
         private final ServerLevel level;
@@ -49,7 +50,7 @@ public class BorderManager {
         public ServerLevel getLevel() { return level; }
         public double getCenterX() { return centerX; }
         public double getCenterZ() { return centerZ; }
-        public double getCurrentSize() { return currentSize; }
+        public double getCurrentSize() { return level.getWorldBorder().getSize(); }
         public double getInitialSize() { return initialSize; }
         
         public void setTargetSize(double targetSize) {
@@ -59,7 +60,7 @@ public class BorderManager {
         public double getTargetSize() { return targetSize; }
         
         public AABB getBounds() {
-            double halfSize = currentSize / 2;
+            double halfSize = getCurrentSize() / 2;
             return new AABB(
                 centerX - halfSize, level.getMinBuildHeight(), centerZ - halfSize,
                 centerX + halfSize, level.getMaxBuildHeight(), centerZ + halfSize
@@ -67,13 +68,13 @@ public class BorderManager {
         }
         
         public boolean isInside(Vec3 pos) {
-            double halfSize = currentSize / 2;
+            double halfSize = getCurrentSize() / 2;
             return pos.x >= centerX - halfSize && pos.x <= centerX + halfSize &&
                    pos.z >= centerZ - halfSize && pos.z <= centerZ + halfSize;
         }
         
         public boolean isInside(BlockPos pos) {
-            double halfSize = currentSize / 2;
+            double halfSize = getCurrentSize() / 2;
             return pos.getX() >= centerX - halfSize && pos.getX() <= centerX + halfSize &&
                    pos.getZ() >= centerZ - halfSize && pos.getZ() <= centerZ + halfSize;
         }
@@ -91,7 +92,10 @@ public class BorderManager {
         }
 
         public void transitionSize(double newSize, long durationTicks) {
-            updateSize(newSize);
+            double boundedTargetSize = Math.max(10.0D, newSize);
+            this.targetSize = boundedTargetSize;
+            net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
+            worldBorder.lerpSizeBetween(worldBorder.getSize(), boundedTargetSize, durationTicks);
         }
         
         public void applyToLevel() {
@@ -147,11 +151,10 @@ public class BorderManager {
         private void performShrink() {
             double currentSize = border.getCurrentSize();
             double newSize = currentSize * (1 - shrinkPercentage / 100.0);
-            border.setTargetSize(newSize);
-            border.updateSize(newSize);
+            border.transitionSize(newSize, GAME_BORDER_SHRINK_DURATION_TICKS);
             shrinkCount++;
             
-            broadcastMessage(Component.literal("§c[边界] §f边界已缩小！当前大小: §e" + 
+            broadcastMessage(Component.literal("§c[边界] §f开始收缩，30 秒后缩至: §e" +
                 String.format("%.1f", newSize) + " §f格"));
         }
         
@@ -250,7 +253,7 @@ public class BorderManager {
 
         net.minecraft.world.level.border.WorldBorder worldBorder = currentBorder.getLevel().getWorldBorder();
         double predictedSize = Math.max(10.0D,
-                worldBorder.getSize() * (1.0D - shrinkTask.getShrinkPercentage() / 100.0D));
+                currentBorder.getTargetSize() * (1.0D - shrinkTask.getShrinkPercentage() / 100.0D));
         double halfSize = predictedSize / 2.0D;
         double centerX = worldBorder.getCenterX();
         double centerZ = worldBorder.getCenterZ();
