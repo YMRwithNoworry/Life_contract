@@ -23,8 +23,7 @@ public final class AirdropPhotonEffects {
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
-        if (!(entity instanceof AirdropEntity airdrop) || !entity.level().isClientSide || !entity.isAlive()
-                || !airdrop.isLanded()) {
+        if (!(entity instanceof AirdropEntity) || !entity.level().isClientSide || !entity.isAlive()) {
             return;
         }
 
