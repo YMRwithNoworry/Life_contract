@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -42,12 +44,12 @@ public final class ContractHUD {
         }
 
         int x = 10;
-        int y = mc.getWindow().getGuiScaledHeight() / 2 - 20;
+        int y = 10;
         int color = 0xFFFFFF;
 
         UUID myUUID = player.getUUID();
         ClientDataStorage.PlayerData myData = ClientDataStorage.get(myUUID);
-        String selfMod = myData != null ? myData.contractMod
+        String selfMod = myData != null && !myData.contractMod.isBlank() ? myData.contractMod
                 : player.getPersistentData().getString(SoulContractItem.TAG_CONTRACT_MOD);
         UUID leaderUUID = myData != null ? myData.leaderUUID
                 : (player.getPersistentData().hasUUID(TeamOrganizerItem.TAG_LEADER_UUID)
@@ -57,14 +59,19 @@ public final class ContractHUD {
                         ? player.getPersistentData().getInt(TeamOrganizerItem.TAG_TEAM_NUMBER) : -1);
         UUID myTeamUUID = leaderUUID != null ? leaderUUID : myUUID;
 
-        guiGraphics.drawString(mc.font, "§e== 生灵契约 ==", x, y, color);
-        y += 10;
+        guiGraphics.drawString(mc.font,
+                Component.translatable("hud.life_contract.title").withStyle(ChatFormatting.YELLOW), x, y, color);
+        y += 12;
         if (teamNumber != -1) {
             guiGraphics.drawString(mc.font, "§6队伍编号: §b" + teamNumber, x, y, color);
             y += 10;
         }
-        guiGraphics.drawString(mc.font, selfMod.isEmpty() ? "契约模组: §7无" : "契约模组: §a" + selfMod,
-                x, y, color);
+        Component contractLine = selfMod.isEmpty()
+                ? Component.translatable("hud.life_contract.contract_mod_none").withStyle(ChatFormatting.GRAY)
+                : Component.translatable("hud.life_contract.contract_mod")
+                        .withStyle(ChatFormatting.GOLD)
+                        .append(Component.literal(selfMod).withStyle(ChatFormatting.GREEN));
+        guiGraphics.drawString(mc.font, contractLine, x, y, color);
         y += 15;
 
         List<ClientDataStorage.PlayerData> teamMembers = new ArrayList<>();

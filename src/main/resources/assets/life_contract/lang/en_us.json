@@ -21,5 +21,8 @@
   "gui.life_contract.team_inventory": "Team Inventory",
   "gui.life_contract.team_inventory.player_inventory": "Player Inventory",
   "gui.life_contract.revive_teammate": "Revive Teammate",
+  "hud.life_contract.title": "§e== Life Contract ==",
+  "hud.life_contract.contract_mod": "Contract mod: ",
+  "hud.life_contract.contract_mod_none": "Contract mod: None",
   "itemGroup.life_contract.airdrop_tab": "Airdrop"
 }
