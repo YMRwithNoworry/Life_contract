@@ -22,7 +22,7 @@ public class BorderManager {
     private static BorderData currentBorder = null;
     private static ShrinkTask shrinkTask = null;
     private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 10 * 60;
-    private static final double GAME_BORDER_SHRINK_PERCENTAGE = 0.8D;
+    private static final double GAME_BORDER_SHRINK_PERCENTAGE = 10.0D;
     
     public static class BorderData {
         private final ServerLevel level;

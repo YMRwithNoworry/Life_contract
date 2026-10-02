@@ -245,7 +245,7 @@ public class ContractCommands {
                                         
                                         context.getSource().sendSuccess(() ->
                                                 Component.literal("§a[游戏] §f游戏已开始！" + result.message()
-                                                        + "；边界每10分钟立即缩小0.8%。"), true);
+                                                        + "；边界每10分钟立即缩小10%。"), true);
                                         return 1;
                                 }))
                         .then(Commands.literal("pause")
