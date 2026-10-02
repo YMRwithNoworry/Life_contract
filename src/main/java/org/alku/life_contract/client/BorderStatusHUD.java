@@ -36,6 +36,10 @@ public final class BorderStatusHUD {
         distance = payload.distance();
     }
 
+    public static boolean isBorderStatusActive() {
+        return active;
+    }
+
     private static void render(GuiGraphics graphics, net.minecraft.client.DeltaTracker partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!active || minecraft.player == null || minecraft.options.hideGui) return;

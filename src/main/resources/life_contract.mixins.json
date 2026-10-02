@@ -20,6 +20,9 @@
     "XaeroMinimapRendererMixin",
     "XaeroRadarStateUpdaterMixin"
   ],
+  "client": [
+    "MultiPlayerGameModeBorderMixin"
+  ],
   "injectors": {
     "defaultRequire": 0
   }

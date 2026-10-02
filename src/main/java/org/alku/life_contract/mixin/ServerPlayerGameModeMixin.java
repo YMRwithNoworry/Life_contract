@@ -21,7 +21,7 @@ public abstract class ServerPlayerGameModeMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/server/level/ServerLevel;mayInteract(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;)Z"
         ),
-        require = 0
+        require = 1
     )
     private boolean lifeContract$allowMiningOutsideBorder(ServerLevel level, Player player, BlockPos pos,
                                                           BlockPos packetPos,
