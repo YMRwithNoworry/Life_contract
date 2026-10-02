@@ -28,6 +28,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.alku.life_contract.blocks.ModBlocks;
 import org.alku.life_contract.follower.FollowerWandItem;
 import org.alku.life_contract.follower.WandEggUIHolder;
+import org.alku.life_contract.client.UpgradeHubUIHolder;
+import org.alku.life_contract.client.SublimationShopUIHolder;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
 import org.alku.life_contract.items.SublimationItem;
@@ -99,6 +101,8 @@ public class Life_contract {
     public Life_contract(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         PlayerUIMenuType.register(WandEggUIHolder.UI_ID, WandEggUIHolder::new);
+        PlayerUIMenuType.register(UpgradeHubUIHolder.UI_ID, UpgradeHubUIHolder::new);
+        PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
 
         ITEMS.register(modEventBus);
         CREATIVE_TABS.register(modEventBus);

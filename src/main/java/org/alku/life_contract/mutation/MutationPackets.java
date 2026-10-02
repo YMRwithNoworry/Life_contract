@@ -13,6 +13,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
+import org.alku.life_contract.client.UpgradeHubUIHolder;
+import com.lowdragmc.lowdraglib2.gui.factory.PlayerUIMenuType;
 
 public final class MutationPackets {
     private MutationPackets() {
@@ -62,7 +64,7 @@ public final class MutationPackets {
         public static void handle(Open packet, IPayloadContext context) {
             context.enqueueWork(() -> {
                 if (context.player() instanceof ServerPlayer player) {
-                    open(player);
+                    PlayerUIMenuType.openUI(player, UpgradeHubUIHolder.UI_ID);
                 }
             });
         }
