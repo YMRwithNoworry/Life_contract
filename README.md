@@ -131,6 +131,9 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 
 ## 🧱 Blocks & Mechanics
 
+### Mob Drops
+* Every mob death drops `1` Sublimation, and has a `50%` chance to drop `1` Gunpowder on top (player deaths do not trigger it).
+
 ### Mineral Generator
 * **Types**: Iron, Gold, Diamond, Emerald.
 * **Control**: Admins can set the generation interval and toggle them globally.
