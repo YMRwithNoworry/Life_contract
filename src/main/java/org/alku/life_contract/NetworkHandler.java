@@ -50,6 +50,11 @@ public final class NetworkHandler {
                 (payload, context) -> context.enqueueWork(
                         () -> org.alku.life_contract.client.BorderStatusHUD.update(payload)));
         payloads.playToClient(
+                PacketSyncWaypoints.TYPE,
+                PacketSyncWaypoints.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> org.alku.life_contract.client.EventHUD.updateWaypoints(payload)));
+        payloads.playToClient(
                 org.alku.life_contract.events.EventSyncPayload.TYPE,
                 org.alku.life_contract.events.EventSyncPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(

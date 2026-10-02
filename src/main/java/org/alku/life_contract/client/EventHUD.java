@@ -37,6 +37,14 @@ public final class EventHUD {
     private EventHUD() {
     }
 
+    /** 接收到关键坐标同步包时刷新左侧 HUD 的坐标显示。 */
+    public static void updateWaypoints(org.alku.life_contract.PacketSyncWaypoints payload) {
+        ClientDataStorage.setWaypoints(
+                payload.active(),
+                payload.portalX(), payload.portalY(), payload.portalZ(), payload.portalActivated(),
+                payload.borderCenterX(), payload.borderCenterZ());
+    }
+
     /** 接收到服务端事件同步包时刷新客户端事件状态。 */
     public static void update(EventSyncPayload payload) {
         ClientDataStorage.setEventData(

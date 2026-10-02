@@ -265,6 +265,8 @@ public final class StrongholdEndgameManager {
         }
 
         portalActivated = true;
+        // 传送门状态变了，刷新 HUD 上的坐标显示
+        org.alku.life_contract.WaypointSync.broadcast();
         activeLevel.playSound(null, portalCenter, SoundEvents.END_PORTAL_SPAWN,
                 SoundSource.BLOCKS, 1.5F, 1.0F);
         activeLevel.getServer().getPlayerList().broadcastSystemMessage(

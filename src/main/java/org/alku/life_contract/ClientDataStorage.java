@@ -35,6 +35,15 @@ public class ClientDataStorage {
     private static boolean sporeRainActive = false;
     private static int sporeRainRemaining = 0;
 
+    // ===== 本局关键坐标（由 PacketSyncWaypoints 同步）=====
+    private static boolean waypointsActive = false;
+    private static int portalX = 0;
+    private static int portalY = 0;
+    private static int portalZ = 0;
+    private static boolean portalActivated = false;
+    private static int borderCenterX = 0;
+    private static int borderCenterZ = 0;
+
     public static class PlayerData {
         public String contractMod = "";
         public String leaderName = "";
@@ -221,5 +230,30 @@ public class ClientDataStorage {
     public static boolean isSporeRainActive() { return sporeRainActive; }
 
     public static int getSporeRainRemaining() { return sporeRainRemaining; }
+
+    public static void setWaypoints(boolean active, int portalX, int portalY, int portalZ,
+                                    boolean portalActivated, int borderCenterX, int borderCenterZ) {
+        ClientDataStorage.waypointsActive = active;
+        ClientDataStorage.portalX = portalX;
+        ClientDataStorage.portalY = portalY;
+        ClientDataStorage.portalZ = portalZ;
+        ClientDataStorage.portalActivated = portalActivated;
+        ClientDataStorage.borderCenterX = borderCenterX;
+        ClientDataStorage.borderCenterZ = borderCenterZ;
+    }
+
+    public static boolean hasWaypoints() { return waypointsActive; }
+
+    public static int getPortalX() { return portalX; }
+
+    public static int getPortalY() { return portalY; }
+
+    public static int getPortalZ() { return portalZ; }
+
+    public static boolean isPortalActivated() { return portalActivated; }
+
+    public static int getBorderCenterX() { return borderCenterX; }
+
+    public static int getBorderCenterZ() { return borderCenterZ; }
 
 }

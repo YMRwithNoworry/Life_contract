@@ -68,6 +68,11 @@ public final class ContractHUD {
         if (!teamMembers.isEmpty()) {
             contentHeight += 10 + teamMembers.size() * 10;
         }
+        boolean showWaypoints = ClientDataStorage.hasWaypoints();
+        if (showWaypoints) {
+            // 标题 + 末地传送门 + 边界中心
+            contentHeight += 12 + 20;
+        }
         int x = 10;
         int y = Math.max(4, (guiGraphics.guiHeight() - contentHeight) / 2);
         int color = 0xFFFFFF;
@@ -97,6 +102,31 @@ public final class ContractHUD {
                         self ? 0x00FF00 : 0xAAAAAA);
                 y += 10;
             }
+        }
+
+        if (showWaypoints) {
+            guiGraphics.drawString(mc.font, "§6坐标:", x, y, color);
+            y += 12;
+
+            int portalX = ClientDataStorage.getPortalX();
+            int portalY = ClientDataStorage.getPortalY();
+            int portalZ = ClientDataStorage.getPortalZ();
+            // 传送门在主世界，跨维度时距离没有意义，就不显示
+            String distanceText = "";
+            if (net.minecraft.world.level.Level.OVERWORLD.equals(player.level().dimension())) {
+                int portalDistance = (int) Math.round(Math.sqrt(
+                        player.distanceToSqr(portalX + 0.5D, portalY + 0.5D, portalZ + 0.5D)));
+                distanceText = " §7(" + portalDistance + "格)";
+            }
+            guiGraphics.drawString(mc.font, "§7末地传送门: §b" + portalX + " " + portalY + " " + portalZ
+                    + distanceText + " "
+                    + (ClientDataStorage.isPortalActivated() ? "§a已开启" : "§e未开启"), x, y, color);
+            y += 10;
+
+            guiGraphics.drawString(mc.font, "§7边界中心: §b"
+                    + ClientDataStorage.getBorderCenterX() + " " + ClientDataStorage.getBorderCenterZ(),
+                    x, y, color);
+            y += 10;
         }
     }
 }

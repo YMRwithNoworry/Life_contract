@@ -106,6 +106,7 @@ public final class GameEventManager {
         BorderManager.startGameBorder(gameLevel, centerX, centerZ);
         relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, playerCenter);
         WorldEventManager.startGame(gameLevel, gameStartPlayerIds.size());
+        org.alku.life_contract.WaypointSync.broadcast();
         syncToAllClients();
         return new StartResult(
                 true,
@@ -249,6 +250,7 @@ public final class GameEventManager {
         lastSyncedLifePoints.clear();
         BorderManager.stopShrink();
         WorldEventManager.reset();
+        org.alku.life_contract.WaypointSync.clear();
         syncToAllClients();
         StrongholdEndgameManager.clearSession();
         currentLevel = null;
