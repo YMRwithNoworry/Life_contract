@@ -6,14 +6,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.client.UpgradeHubUIHolder;
+import org.alku.life_contract.client.MutationUIHolder;
 import com.lowdragmc.lowdraglib2.gui.factory.PlayerUIMenuType;
 
 public final class MutationPackets {
@@ -21,25 +18,7 @@ public final class MutationPackets {
     }
 
     public static void open(ServerPlayer player) {
-        MutationSavedData.TeamState state = MutationService.state(player);
-        int availableMp = MutationService.availableMp(player);
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.literal("阵营异变树");
-            }
-
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory inventory, Player menuPlayer) {
-                return new MutationMenu(id, inventory, state, availableMp);
-            }
-        }, buffer -> {
-            buffer.writeVarInt(availableMp);
-            buffer.writeVarInt(state.totalLevels());
-            for (MutationNode node : MutationNode.values()) {
-                buffer.writeVarInt(state.level(node));
-            }
-        });
+        PlayerUIMenuType.openUI(player, MutationUIHolder.UI_ID);
     }
 
     public static final class Open implements CustomPacketPayload {
@@ -101,7 +80,6 @@ public final class MutationPackets {
             context.enqueueWork(() -> {
                 if (context.player() instanceof ServerPlayer player) {
                     player.sendSystemMessage(Component.literal("§6[异变] §f" + MutationService.upgrade(player, packet.node)));
-                    open(player);
                 }
             });
         }

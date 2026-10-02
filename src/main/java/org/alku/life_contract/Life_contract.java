@@ -33,6 +33,7 @@ import org.alku.life_contract.airdrop.Airdrop;
 import org.alku.life_contract.airdrop.command.AirdropCommand;
 import org.alku.life_contract.airdrop.entity.AirdropRenderer;
 import org.alku.life_contract.client.UpgradeHubUIHolder;
+import org.alku.life_contract.client.MutationUIHolder;
 import org.alku.life_contract.client.SublimationShopUIHolder;
 import org.alku.life_contract.items.MeatPasteItem;
 import org.alku.life_contract.items.SporeBombItem;
@@ -107,6 +108,7 @@ public class Life_contract {
         PlayerUIMenuType.register(WandEggUIHolder.UI_ID, WandEggUIHolder::new);
         PlayerUIMenuType.register(UpgradeHubUIHolder.UI_ID, UpgradeHubUIHolder::new);
         PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
+        PlayerUIMenuType.register(MutationUIHolder.UI_ID, MutationUIHolder::new);
         Airdrop.register(modEventBus);
 
         ITEMS.register(modEventBus);
