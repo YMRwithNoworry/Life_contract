@@ -106,6 +106,7 @@ public final class GameEventManager {
         BlockPos playerCenter = BlockPos.containing(centerX, 0.0D, centerZ);
         BorderManager.startGameBorder(gameLevel, centerX, centerZ);
         relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, playerCenter);
+        WorldEventManager.startGame(gameLevel, gameStartPlayerIds.size());
         syncToAllClients();
         return new StartResult(
                 true,
@@ -242,6 +243,7 @@ public final class GameEventManager {
         initialTeamCount = 0;
         lastSyncedLifePoints.clear();
         BorderManager.stopShrink();
+        WorldEventManager.reset();
         syncToAllClients();
         StrongholdEndgameManager.clearSession();
         currentLevel = null;

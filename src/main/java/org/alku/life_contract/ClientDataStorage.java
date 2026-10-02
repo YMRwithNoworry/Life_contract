@@ -22,6 +22,19 @@ public class ClientDataStorage {
     
     private static List<PacketSyncLifePoints.PlayerLifePoints> playerLifePoints = new ArrayList<>();
 
+    // ===== 游戏事件状态（由 EventSyncPayload 同步）=====
+    private static boolean gameActive = false;
+    private static boolean sporeSurgeActive = false;
+    private static int sporeSurgeRemaining = 0;
+    private static boolean purificationRiftActive = false;
+    private static int safeBubbleRemaining = 0;
+    private static final List<int[]> bubblePositions = new ArrayList<>();
+    private static boolean bountyActive = false;
+    private static String bountyTargetName = "";
+    private static boolean endgameOverloadActive = false;
+    private static boolean sporeRainActive = false;
+    private static int sporeRainRemaining = 0;
+
     public static class PlayerData {
         public String contractMod = "";
         public String leaderName = "";
@@ -155,5 +168,58 @@ public class ClientDataStorage {
     }
 
     public static List<PacketSyncLifePoints.PlayerLifePoints> getPlayerLifePoints() { return playerLifePoints; }
-    
+
+    /**
+     * 接收服务端的事件同步包，刷新事件 HUD 与安全气泡渲染所需的数据。
+     */
+    public static void setEventData(boolean gameActive, boolean sporeSurgeActive, int sporeSurgeRemaining,
+                                    boolean purificationRiftActive, int safeBubbleRemaining,
+                                    List<?> bubbles,
+                                    boolean bountyActive, String bountyTargetName, boolean endgameOverloadActive,
+                                    boolean sporeRainActive, int sporeRainRemaining) {
+        ClientDataStorage.gameActive = gameActive;
+        ClientDataStorage.sporeSurgeActive = sporeSurgeActive;
+        ClientDataStorage.sporeSurgeRemaining = sporeSurgeRemaining;
+        ClientDataStorage.purificationRiftActive = purificationRiftActive;
+        ClientDataStorage.safeBubbleRemaining = safeBubbleRemaining;
+
+        ClientDataStorage.bubblePositions.clear();
+        if (bubbles != null) {
+            for (Object entry : bubbles) {
+                if (entry instanceof org.alku.life_contract.events.EventSyncPayload.Bubble bubble) {
+                    ClientDataStorage.bubblePositions.add(new int[]{
+                            bubble.x(), bubble.y(), bubble.z(), (int) bubble.radius(), bubble.colorIndex()});
+                }
+            }
+        }
+
+        ClientDataStorage.bountyActive = bountyActive;
+        ClientDataStorage.bountyTargetName = bountyTargetName != null ? bountyTargetName : "";
+        ClientDataStorage.endgameOverloadActive = endgameOverloadActive;
+        ClientDataStorage.sporeRainActive = sporeRainActive;
+        ClientDataStorage.sporeRainRemaining = sporeRainRemaining;
+    }
+
+    public static boolean isGameActive() { return gameActive; }
+
+    public static boolean isSporeSurgeActive() { return sporeSurgeActive; }
+
+    public static int getSporeSurgeRemaining() { return sporeSurgeRemaining; }
+
+    public static boolean isPurificationRiftActive() { return purificationRiftActive; }
+
+    public static int getSafeBubbleRemaining() { return safeBubbleRemaining; }
+
+    public static List<int[]> getBubblePositions() { return bubblePositions; }
+
+    public static boolean isBountyActive() { return bountyActive; }
+
+    public static String getBountyTargetName() { return bountyTargetName; }
+
+    public static boolean isEndgameOverloadActive() { return endgameOverloadActive; }
+
+    public static boolean isSporeRainActive() { return sporeRainActive; }
+
+    public static int getSporeRainRemaining() { return sporeRainRemaining; }
+
 }

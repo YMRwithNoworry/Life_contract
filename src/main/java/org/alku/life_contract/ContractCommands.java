@@ -303,7 +303,91 @@ public class ContractCommands {
                                                         Component.literal("§a[游戏] §f游戏进行中。已进行时间: §b" + formatTime(elapsed)), false);
                                         }
                                         return 1;
-                                })));
+                                }))
+                        .then(Commands.literal("event")
+                                .requires(source -> source.hasPermission(2))
+                                .then(Commands.literal("trigger")
+                                        .then(Commands.argument("event_name", StringArgumentType.string())
+                                                .suggests(ContractCommands::suggestEventNames)
+                                                .executes(context -> triggerEvent(context,
+                                                        StringArgumentType.getString(context, "event_name")))))
+                                .then(Commands.literal("stop")
+                                        .then(Commands.argument("event_name", StringArgumentType.string())
+                                                .suggests(ContractCommands::suggestEventNames)
+                                                .executes(context -> stopEvent(context,
+                                                        StringArgumentType.getString(context, "event_name")))))));
+        }
+
+        private static CompletableFuture<Suggestions> suggestEventNames(CommandContext<net.minecraft.commands.CommandSourceStack> context,
+                                                                        SuggestionsBuilder builder) {
+                String remaining = builder.getRemaining().toLowerCase();
+                for (String event : org.alku.life_contract.events.WorldEventManager.eventNames()) {
+                        if (event.startsWith(remaining)) {
+                                builder.suggest(event);
+                        }
+                }
+                return builder.buildFuture();
+        }
+
+        private static int triggerEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
+                ServerLevel level = context.getSource().getLevel();
+                switch (eventName.toLowerCase()) {
+                        case "spore_surge" -> {
+                                org.alku.life_contract.events.WorldEventManager.forceTriggerSporeSurge(level);
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§c[游戏事件] §f已强制触发 §e孢潮推进§f。"), true);
+                                return 1;
+                        }
+                        case "bounty" -> {
+                                org.alku.life_contract.events.WorldEventManager.forceTriggerBountyHunt();
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§e[游戏事件] §f已强制触发 §e清道夫悬赏§f。"), true);
+                                return 1;
+                        }
+                        case "purification_rift" -> {
+                                org.alku.life_contract.events.WorldEventManager.forceTriggerPurificationRift(level);
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§b[游戏事件] §f已强制触发 §e净化裂隙§f。"), true);
+                                return 1;
+                        }
+                        case "endgame_overload" -> {
+                                org.alku.life_contract.events.WorldEventManager.forceTriggerEndgameOverload(level);
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§4[游戏事件] §f已强制触发 §e终局过载§f。"), true);
+                                return 1;
+                        }
+                        case "spore_rain" -> {
+                                org.alku.life_contract.events.WorldEventManager.forceTriggerSporeRain(level);
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§2[游戏事件] §f已强制触发 §e孢子雨§f。"), true);
+                                return 1;
+                        }
+                        default -> {
+                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                return 0;
+                        }
+                }
+        }
+
+        private static int stopEvent(CommandContext<net.minecraft.commands.CommandSourceStack> context, String eventName) {
+                switch (eventName.toLowerCase()) {
+                        case "spore_surge" -> org.alku.life_contract.events.WorldEventManager.stopSporeSurge();
+                        case "bounty" -> org.alku.life_contract.events.WorldEventManager.clearBounty();
+                        case "purification_rift" -> org.alku.life_contract.events.WorldEventManager.stopPurificationRift();
+                        case "endgame_overload" -> org.alku.life_contract.events.WorldEventManager.stopEndgameOverload();
+                        case "spore_rain" -> org.alku.life_contract.events.WorldEventManager.stopSporeRain();
+                        default -> {
+                                context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
+                                context.getSource().sendSuccess(() ->
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                return 0;
+                        }
+                }
+                context.getSource().sendSuccess(() ->
+                        Component.literal("§a[游戏事件] §f已停止 §e" + eventName + "§f。"), true);
+                return 1;
         }
 
         private static String formatTime(long seconds) {

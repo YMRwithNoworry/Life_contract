@@ -49,6 +49,11 @@ public final class NetworkHandler {
                 org.alku.life_contract.border.BorderStatusPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(
                         () -> org.alku.life_contract.client.BorderStatusHUD.update(payload)));
+        payloads.playToClient(
+                org.alku.life_contract.events.EventSyncPayload.TYPE,
+                org.alku.life_contract.events.EventSyncPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> org.alku.life_contract.client.EventHUD.update(payload)));
         payloads.playToServer(MutationPackets.Open.TYPE, MutationPackets.Open.STREAM_CODEC, MutationPackets.Open::handle);
         payloads.playToServer(MutationPackets.Upgrade.TYPE, MutationPackets.Upgrade.STREAM_CODEC, MutationPackets.Upgrade::handle);
         payloads.playToClient(
