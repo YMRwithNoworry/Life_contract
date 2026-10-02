@@ -50,14 +50,14 @@ public final class AirdropPhotonEffects {
         smoke.config.setLooping(true);
         smoke.config.setDuration(40);
         smoke.config.setMaxParticles(72);
-        smoke.config.setStartLifetime(NumberFunction.constant(160));
+        smoke.config.setStartLifetime(NumberFunction.constant(240));
         smoke.config.setStartSpeed(NumberFunction.constant(0.08F));
         smoke.config.setStartSize(new NumberFunction3(1.7F, 1.7F, 1.7F));
         smoke.config.setStartColor(NumberFunction.color(0xFFFF2028));
         smoke.config.velocityOverLifetime.setEnable(true);
         smoke.config.velocityOverLifetime.setSpace(
                 com.lowdragmc.photon.client.gameobject.emitter.data.ValueSpace.World);
-        smoke.config.velocityOverLifetime.setLinear(new NumberFunction3(0.0F, 1.2F, 0.0F));
+        smoke.config.velocityOverLifetime.setLinear(new NumberFunction3(0.0F, 2.0F, 0.0F));
         smoke.config.emission.setEmissionRate(NumberFunction.constant(0.4F));
         smoke.config.renderer.getMaterials().getFirst().setCull(false);
         smoke.config.renderer.getMaterials().getFirst().setDepthMask(false);
