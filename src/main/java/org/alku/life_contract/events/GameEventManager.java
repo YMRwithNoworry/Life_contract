@@ -254,17 +254,23 @@ public final class GameEventManager {
         currentLevel = null;
     }
 
-    public static boolean declareDragonWinner(ServerPlayer winner) {
+    /** 终局 Boss 被击杀：击杀者所属队伍直接获胜。 */
+    public static boolean declareDragonWinner(ServerPlayer winner, net.minecraft.resources.ResourceLocation bossId) {
         if (!gameActive || currentLevel == null || winner.getServer() == null
                 || !gameStartPlayerIds.contains(winner.getUUID())) {
             return false;
         }
 
+        String bossName = bossId != null
+                && "spore".equals(bossId.getNamespace())
+                && "verfalldrache".equals(bossId.getPath())
+                ? "朽翼魔 Verfalldrache"
+                : "诡异末影龙";
         UUID teamId = gamePlayerTeams.get(winner.getUUID());
         return declareTeamWinner(
                 teamId,
-                "§e" + winner.getName().getString() + " §f击杀了诡异末影龙",
-                "§e" + winner.getName().getString() + " §f击杀了诡异末影龙");
+                "§e" + winner.getName().getString() + " §f击杀了终局 Boss §d" + bossName,
+                "§e" + winner.getName().getString() + " §f击杀了 §d" + bossName);
     }
 
     private static boolean declareLastStandingTeam(UUID teamId) {

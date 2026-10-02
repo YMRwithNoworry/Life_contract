@@ -59,14 +59,18 @@ public final class StrongholdEndgameManager {
     private static final double PORTAL_ACTIVATION_BORDER_SIZE = 50.0D;
     private static final double MINIMUM_BORDER_SIZE = 10.0D;
     private static final double END_BORDER_SIZE = 500.0D;
-    private static final double CONVERTED_DRAGON_MAX_Y = 105.0D;
-    private static final double CONVERTED_DRAGON_RESET_Y = 103.0D;
+    private static final double END_BOSS_MAX_Y = 105.0D;
+    private static final double END_BOSS_RESET_Y = 103.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "distorted_enderman");
-    private static final ResourceLocation DISTORTED_DRAGON_ID =
+    /** 末地终局 Boss：真菌感染：孢子 的朽翼魔（Verfalldrache）。 */
+    private static final ResourceLocation END_BOSS_ID =
+            ResourceLocation.fromNamespaceAndPath("spore", "verfalldrache");
+    /** 未加载 spore 时退回的旧版终局 Boss，保证终局始终有可击杀的目标。 */
+    private static final ResourceLocation LEGACY_END_BOSS_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "converted_dragon");
     private static final String END_ENCOUNTER_ENTITY_TAG = "LifeContractEndEncounterEntity";
-    private static final String END_BOSS_TAG = "LifeContractDistortedDragon";
+    private static final String END_BOSS_TAG = "LifeContractEndBoss";
 
     private static final List<LocalPortalPos> FRAME_LOCAL_POSITIONS = List.of(
             new LocalPortalPos(4, 3, 8),
@@ -89,7 +93,9 @@ public final class StrongholdEndgameManager {
     private static int missingFrameIndex = -1;
     private static boolean portalActivated;
     private static boolean endEncounterInitialized;
-    private static UUID convertedDragonUuid;
+    private static UUID endBossUuid;
+    /** 本次对局实际生成的 Boss 实体 ID，用于提示文案。 */
+    private static ResourceLocation activeEndBossId;
 
     private StrongholdEndgameManager() {
     }
@@ -318,10 +324,11 @@ public final class StrongholdEndgameManager {
             return;
         }
 
-        if (DISTORTED_DRAGON_ID.equals(entityId)
+        if (isEndBossEntity(entity)
                 && Level.END.equals(event.getLevel().dimension())
                 && event.getLevel() instanceof ServerLevel) {
-            convertedDragonUuid = entity.getUUID();
+            endBossUuid = entity.getUUID();
+            activeEndBossId = entityId;
         }
     }
 
@@ -329,26 +336,30 @@ public final class StrongholdEndgameManager {
     public static void onLevelTick(LevelTickEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel endLevel)
                 || !Level.END.equals(endLevel.dimension())
-                || convertedDragonUuid == null) {
+                || endBossUuid == null) {
             return;
         }
 
-        Entity entity = endLevel.getEntity(convertedDragonUuid);
-        if (!(entity instanceof Mob dragon)
-                || !DISTORTED_DRAGON_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()))) {
-            convertedDragonUuid = null;
+        Entity entity = endLevel.getEntity(endBossUuid);
+        if (!(entity instanceof LivingEntity dragon) || !isEndBossEntity(entity)) {
+            endBossUuid = null;
             return;
         }
-        capConvertedDragonFlight(dragon);
+        capEndBossFlight(dragon);
     }
 
-    private static void capConvertedDragonFlight(Mob dragon) {
-        boolean exceededCeiling = dragon.getY() > CONVERTED_DRAGON_MAX_Y;
+    /** 只按生成时打上的标记识别终局 Boss，spore 与旧版回退生物都适用。 */
+    private static boolean isEndBossEntity(Entity entity) {
+        return entity != null && entity.getPersistentData().getBoolean(END_BOSS_TAG);
+    }
+
+    private static void capEndBossFlight(LivingEntity dragon) {
+        boolean exceededCeiling = dragon.getY() > END_BOSS_MAX_Y;
         if (exceededCeiling) {
-            dragon.setPos(dragon.getX(), CONVERTED_DRAGON_RESET_Y, dragon.getZ());
+            dragon.setPos(dragon.getX(), END_BOSS_RESET_Y, dragon.getZ());
         }
         Vec3 movement = dragon.getDeltaMovement();
-        if ((exceededCeiling || dragon.getY() >= CONVERTED_DRAGON_MAX_Y) && movement.y > 0.0D) {
+        if ((exceededCeiling || dragon.getY() >= END_BOSS_MAX_Y) && movement.y > 0.0D) {
             dragon.setDeltaMovement(movement.x, 0.0D, movement.z);
         }
     }
@@ -364,20 +375,29 @@ public final class StrongholdEndgameManager {
                 -1024.0D, endLevel.getMinBuildHeight(), -1024.0D,
                 1024.0D, endLevel.getMaxBuildHeight(), 1024.0D);
         endLevel.getEntitiesOfClass(EnderDragon.class, islandArea).forEach(Entity::discard);
-        endLevel.getEntitiesOfClass(Mob.class, islandArea,
+        endLevel.getEntitiesOfClass(LivingEntity.class, islandArea,
                 mob -> mob.getPersistentData().getBoolean(END_ENCOUNTER_ENTITY_TAG))
                 .forEach(Entity::discard);
 
-        BlockPos islandCenter = endLevel.getHeightmapPos(
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.ZERO).above();
-        int dragonY = (int) Math.min(CONVERTED_DRAGON_MAX_Y, Math.max(80, islandCenter.getY() + 30));
-        BlockPos dragonPos = new BlockPos(0, dragonY, 0);
-        Mob dragon = spawnPhayriosisMob(endLevel, DISTORTED_DRAGON_ID, dragonPos, true);
-        if (dragon == null) {
-            Life_contract.LOGGER.error("Unable to spawn the legacy Phayriosis distorted dragon in The End");
+        ResourceLocation bossId = resolveEndBossId();
+        if (bossId == null) {
+            Life_contract.LOGGER.error(
+                    "Unable to spawn any End boss: neither {} nor {} is available",
+                    END_BOSS_ID, LEGACY_END_BOSS_ID);
             return;
         }
-        convertedDragonUuid = dragon.getUUID();
+
+        BlockPos islandCenter = endLevel.getHeightmapPos(
+                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.ZERO).above();
+        int dragonY = (int) Math.min(END_BOSS_MAX_Y, Math.max(80, islandCenter.getY() + 30));
+        BlockPos dragonPos = new BlockPos(0, dragonY, 0);
+        LivingEntity dragon = spawnEncounterMob(endLevel, bossId, dragonPos, true);
+        if (dragon == null) {
+            Life_contract.LOGGER.error("Unable to spawn the End boss {} in The End", bossId);
+            return;
+        }
+        endBossUuid = dragon.getUUID();
+        activeEndBossId = bossId;
 
         List<BlockPos> endermanColumns = List.of(
                 new BlockPos(-5, 0, 0),
@@ -387,60 +407,87 @@ public final class StrongholdEndgameManager {
         for (BlockPos column : endermanColumns) {
             BlockPos spawnPos = endLevel.getHeightmapPos(
                     Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column).above();
-            if (spawnPhayriosisMob(endLevel, DISTORTED_ENDERMAN_ID, spawnPos, false) != null) {
+            if (spawnEncounterMob(endLevel, DISTORTED_ENDERMAN_ID, spawnPos, false) != null) {
                 spawnedEndermen++;
             }
         }
 
         endEncounterInitialized = true;
         endLevel.getServer().getPlayerList().broadcastSystemMessage(
-                Component.literal("§5[终局] §f诡异末影龙已取代原版末影龙，末地主岛中央出现了 §d"
-                        + spawnedEndermen + " §f只诡异末影人！"),
+                Component.literal("§5[终局] §f原版末影龙已被 §d" + bossDisplayName(bossId)
+                        + " §f取代，末地主岛中央还出现了 §d" + spawnedEndermen + " §f只诡异末影人！"
+                        + "§f击杀它即可为你的队伍赢下这局比赛。"),
                 false);
     }
 
-    private static Mob spawnPhayriosisMob(ServerLevel level, ResourceLocation entityId,
-                                          BlockPos spawnPos, boolean boss) {
+    /** 优先使用 spore 的朽翼魔，缺失时退回旧版 Phayriosis 龙。 */
+    private static ResourceLocation resolveEndBossId() {
+        if (hasEntityType(END_BOSS_ID)) {
+            return END_BOSS_ID;
+        }
+        Life_contract.LOGGER.warn("End boss {} is unavailable, falling back to {}",
+                END_BOSS_ID, LEGACY_END_BOSS_ID);
+        return hasEntityType(LEGACY_END_BOSS_ID) ? LEGACY_END_BOSS_ID : null;
+    }
+
+    private static boolean hasEntityType(ResourceLocation entityId) {
+        return BuiltInRegistries.ENTITY_TYPE.get(entityId) != null;
+    }
+
+    private static String bossDisplayName(ResourceLocation entityId) {
+        return END_BOSS_ID.equals(entityId) ? "朽翼魔 Verfalldrache" : "诡异末影龙";
+    }
+
+    /** 生成终局生物：spore 的 Boss 不一定是原版 Mob，这里只要求是 LivingEntity。 */
+    private static LivingEntity spawnEncounterMob(ServerLevel level, ResourceLocation entityId,
+                                                  BlockPos spawnPos, boolean boss) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(entityId);
         if (entityType == null) {
-            Life_contract.LOGGER.error("Missing required legacy Phayriosis entity type {}", entityId);
+            Life_contract.LOGGER.error("Missing end encounter entity type {}", entityId);
             return null;
         }
 
         Entity created = entityType.create(level);
-        if (!(created instanceof Mob mob)) {
-            Life_contract.LOGGER.error("Legacy Phayriosis entity type {} did not create a mob", entityId);
+        if (!(created instanceof LivingEntity living)) {
+            Life_contract.LOGGER.error("End encounter entity type {} did not create a living entity", entityId);
             return null;
         }
 
-        mob.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D,
+        living.moveTo(spawnPos.getX() + 0.5D, spawnPos.getY(), spawnPos.getZ() + 0.5D,
                 level.random.nextFloat() * 360.0F, 0.0F);
-        mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
-                MobSpawnType.EVENT, null);
-        mob.getPersistentData().putBoolean(END_ENCOUNTER_ENTITY_TAG, true);
-        if (boss) {
-            mob.getPersistentData().putBoolean(END_BOSS_TAG, true);
+        if (living instanceof Mob mob) {
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
+                    MobSpawnType.EVENT, null);
         }
-        if (!level.addFreshEntity(mob)) {
-            mob.discard();
+        living.getPersistentData().putBoolean(END_ENCOUNTER_ENTITY_TAG, true);
+        if (boss) {
+            living.getPersistentData().putBoolean(END_BOSS_TAG, true);
+        }
+        if (!level.addFreshEntity(living)) {
+            living.discard();
             return null;
         }
-        return mob;
+        return living;
     }
 
     @SubscribeEvent
     public static void onDragonDeath(LivingDeathEvent event) {
         if (event.getEntity().level().isClientSide()
-                || !DISTORTED_DRAGON_ID.equals(BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType()))
-                || !event.getEntity().getPersistentData().getBoolean(END_BOSS_TAG)
+                || !isEndBossEntity(event.getEntity())
                 || !GameEventManager.isGameActive()) {
             return;
         }
 
+        // 击杀归属：最后一下的玩家，或最后一击来源的玩家（环境伤害不计）
         ServerPlayer killer = resolvePlayerKiller(event, event.getEntity());
-        if (killer != null) {
-            GameEventManager.declareDragonWinner(killer);
+        if (killer == null) {
+            Life_contract.LOGGER.info("End boss died without a player kill credit; match continues");
+            return;
         }
+
+        ResourceLocation entityId = BuiltInRegistries.ENTITY_TYPE.getKey(event.getEntity().getType());
+        GameEventManager.declareDragonWinner(killer,
+                activeEndBossId != null ? activeEndBossId : entityId);
     }
 
     private static ServerPlayer resolvePlayerKiller(LivingDeathEvent event, LivingEntity victim) {
@@ -472,7 +519,8 @@ public final class StrongholdEndgameManager {
         missingFrameIndex = -1;
         portalActivated = false;
         endEncounterInitialized = false;
-        convertedDragonUuid = null;
+        endBossUuid = null;
+        activeEndBossId = null;
     }
 
     public record PreparationResult(boolean success, BlockPos portalCenter, String message) {
