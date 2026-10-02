@@ -148,6 +148,8 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 
 The HUD displays the current team ID, active contract mod, current profession, and a list of online teammates.
 
+When you are outside the predicted safe zone, an arrow appears at the bottom of the screen. It rotates with your view and always points to the direction you should walk, next to the remaining distance and the coarse compass direction.
+
 ---
 
 <div align="center">

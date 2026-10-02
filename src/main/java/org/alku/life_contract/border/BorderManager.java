@@ -223,8 +223,7 @@ public class BorderManager {
         shrinkBossBar.removeAllPlayers();
         if (currentBorder != null) {
             for (ServerPlayer player : currentBorder.getLevel().players()) {
-                org.alku.life_contract.NetworkHandler.sendToPlayer(player,
-                        new BorderStatusPayload(false, true, "", 0));
+                org.alku.life_contract.NetworkHandler.sendToPlayer(player, BorderStatusPayload.INACTIVE);
             }
         }
     }
@@ -246,8 +245,7 @@ public class BorderManager {
 
     private static void syncPlayerBorderStatus(ServerPlayer player) {
         if (!isPlayerInBorderLevel(player)) {
-            org.alku.life_contract.NetworkHandler.sendToPlayer(player,
-                    new BorderStatusPayload(false, true, "", 0));
+            org.alku.life_contract.NetworkHandler.sendToPlayer(player, BorderStatusPayload.INACTIVE);
             return;
         }
 
@@ -265,10 +263,18 @@ public class BorderManager {
         double targetZ = Math.max(minZ, Math.min(maxZ, player.getZ()));
         double dx = targetX - player.getX();
         double dz = targetZ - player.getZ();
+        double distance = Math.hypot(dx, dz);
         boolean inside = dx == 0.0D && dz == 0.0D;
+        // 归一化方向向量，客户端据此绘制随视角旋转的指向箭头
+        float dirX = 0.0F;
+        float dirZ = 0.0F;
+        if (!inside && distance > 1.0E-4D) {
+            dirX = (float) (dx / distance);
+            dirZ = (float) (dz / distance);
+        }
         org.alku.life_contract.NetworkHandler.sendToPlayer(player,
                 new BorderStatusPayload(true, inside, inside ? "" : directionTo(dx, dz),
-                        inside ? 0 : (int) Math.ceil(Math.hypot(dx, dz))));
+                        inside ? 0 : (int) Math.ceil(distance), dirX, dirZ));
     }
 
     private static String directionTo(double dx, double dz) {
