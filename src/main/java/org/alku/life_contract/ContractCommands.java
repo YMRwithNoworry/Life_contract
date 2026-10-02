@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.CommandEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
@@ -179,6 +180,7 @@ public class ContractCommands {
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("add")
                                 .then(Commands.argument("modid", StringArgumentType.string())
+                                        .suggests((context, builder) -> suggestPoolMods(builder, true))
                                         .executes(context -> {
                                                 String modId = StringArgumentType.getString(context, "modid");
                                                 if (!ModPoolConfig.isAssignableInfectionMod(modId)) {
@@ -193,6 +195,7 @@ public class ContractCommands {
                                         })))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("modid", StringArgumentType.string())
+                                        .suggests((context, builder) -> suggestPoolMods(builder, false))
                                         .executes(context -> {
                                                 String modId = StringArgumentType.getString(context, "modid");
                                                 ModPoolConfig.removeMod(modId);
@@ -216,6 +219,20 @@ public class ContractCommands {
                 registerGameCommands(contract);
 
                 event.getDispatcher().register(contract);
+        }
+
+        private static CompletableFuture<Suggestions> suggestPoolMods(SuggestionsBuilder builder, boolean adding) {
+                String query = builder.getRemaining().toLowerCase(java.util.Locale.ROOT);
+                for (var mod : ModList.get().getMods()) {
+                        String modId = mod.getModId();
+                        String displayName = mod.getDisplayName();
+                        if (adding && !ModPoolConfig.isAssignableInfectionMod(modId)) continue;
+                        if (modId.toLowerCase(java.util.Locale.ROOT).contains(query)
+                                        || displayName.toLowerCase(java.util.Locale.ROOT).contains(query)) {
+                                builder.suggest(modId, Component.literal(displayName + " [" + modId + "]"));
+                        }
+                }
+                return builder.buildFuture();
         }
         
         private static void registerGameCommands(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
