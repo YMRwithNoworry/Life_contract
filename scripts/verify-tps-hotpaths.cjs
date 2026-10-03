@@ -56,7 +56,7 @@ forbidText(smelter, "inventory = TeamInventory.getOrCreate(player);", "smelter m
 // 4) 事件系统热路径降频
 requireText(events, "if (currentTick % 10L == 0L) {\n            syncToClients();", "event sync cadence");
 requireText(events, "if (currentTick % 10L == 0L) {\n                AABB bounds = bubble.getBounds();", "bubble query cadence");
-requireText(events, "if (currentTick % 10L == 0L) {\n            spawnSporeRainParticles();", "particle cadence");
+
 
 // 5) 契约阵营的“自然刷怪”不再被设为永不消失（否则生物只增不减）
 const allyBlock = followers.slice(followers.indexOf("private static void registerContractModAlly"),
@@ -161,16 +161,12 @@ if (overlay.indexOf("if (!anyVisible)") > overlay.indexOf("graphics.enableScisso
     throw new Error("overlay: early return must happen before render state setup");
 }
 
-// 17) 孢子雨：暴露计时按 5 tick 结算（等价），粒子跳过已躲雨的玩家
+// 17) 孢子雨事件已移除：WorldEventManager 里不应该再有它的热路径
 const worldEvents = read("src/main/java/org/alku/life_contract/events/WorldEventManager.java");
-requireText(worldEvents, "SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS = 5", "spore rain accounting interval");
-requireText(worldEvents, "if (currentTick % SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS == 0L) {", "spore rain tick gate");
-requireText(worldEvents, "SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS, Integer::sum", "spore rain exposure step");
-requireText(worldEvents,
-        "(SPORE_RAIN_RECOVERY_TICKS / 4) * SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS", "spore rain recovery step");
-const particleSection = worldEvents.slice(worldEvents.indexOf("spawnSporeRainParticles() {"));
-if (!particleSection.includes("if (!isExposedToRain(player)) continue;")) {
-    throw new Error("spore rain particles: sheltered players must be skipped");
+for (const removed of ["sporeRain", "SPORE_RAIN", "孢子雨", "isExposedToRain"]) {
+    if (worldEvents.includes(removed)) {
+        throw new Error("spore rain event should be gone, found: " + removed);
+    }
 }
 
 // 18) 卡顿看门狗：TPS 持续偏低时自动写日志，平时只做一次取模判断

@@ -33,8 +33,6 @@ public class ClientDataStorage {
     private static boolean bountyActive = false;
     private static String bountyTargetName = "";
     private static boolean endgameOverloadActive = false;
-    private static boolean sporeRainActive = false;
-    private static int sporeRainRemaining = 0;
 
     // ===== 本局关键坐标（由 PacketSyncWaypoints 同步）=====
     private static boolean waypointsActive = false;
@@ -206,8 +204,7 @@ public class ClientDataStorage {
     public static void setEventData(boolean gameActive, boolean sporeSurgeActive, int sporeSurgeRemaining,
                                     boolean purificationRiftActive, int safeBubbleRemaining,
                                     List<?> bubbles,
-                                    boolean bountyActive, String bountyTargetName, boolean endgameOverloadActive,
-                                    boolean sporeRainActive, int sporeRainRemaining) {
+                                    boolean bountyActive, String bountyTargetName, boolean endgameOverloadActive) {
         ClientDataStorage.gameActive = gameActive;
         ClientDataStorage.sporeSurgeActive = sporeSurgeActive;
         ClientDataStorage.sporeSurgeRemaining = sporeSurgeRemaining;
@@ -227,8 +224,6 @@ public class ClientDataStorage {
         ClientDataStorage.bountyActive = bountyActive;
         ClientDataStorage.bountyTargetName = bountyTargetName != null ? bountyTargetName : "";
         ClientDataStorage.endgameOverloadActive = endgameOverloadActive;
-        ClientDataStorage.sporeRainActive = sporeRainActive;
-        ClientDataStorage.sporeRainRemaining = sporeRainRemaining;
     }
 
     public static boolean isGameActive() { return gameActive; }
@@ -248,10 +243,6 @@ public class ClientDataStorage {
     public static String getBountyTargetName() { return bountyTargetName; }
 
     public static boolean isEndgameOverloadActive() { return endgameOverloadActive; }
-
-    public static boolean isSporeRainActive() { return sporeRainActive; }
-
-    public static int getSporeRainRemaining() { return sporeRainRemaining; }
 
     public static void setWaypoints(boolean active, int portalX, int portalY, int portalZ,
                                     boolean portalActivated, int borderCenterX, int borderCenterZ) {

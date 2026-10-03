@@ -16,8 +16,7 @@ public record EventSyncPayload(boolean gameActive,
                                boolean sporeSurgeActive, int sporeSurgeRemaining,
                                boolean purificationRiftActive, int safeBubbleRemaining, List<Bubble> bubbles,
                                boolean bountyActive, String bountyTargetName,
-                               boolean endgameOverloadActive,
-                               boolean sporeRainActive, int sporeRainRemaining)
+                               boolean endgameOverloadActive)
         implements CustomPacketPayload {
 
     /** 安全气泡的客户端数据：坐标、半径与配色索引。 */
@@ -38,9 +37,7 @@ public record EventSyncPayload(boolean gameActive,
                 readBubbles(buffer),
                 buffer.readBoolean(),
                 buffer.readUtf(32),
-                buffer.readBoolean(),
-                buffer.readBoolean(),
-                buffer.readVarInt());
+                buffer.readBoolean());
     }
 
     private static List<Bubble> readBubbles(FriendlyByteBuf buffer) {
@@ -73,8 +70,6 @@ public record EventSyncPayload(boolean gameActive,
         buffer.writeBoolean(bountyActive);
         buffer.writeUtf(bountyTargetName, 32);
         buffer.writeBoolean(endgameOverloadActive);
-        buffer.writeBoolean(sporeRainActive);
-        buffer.writeVarInt(sporeRainRemaining);
     }
 
     @Override

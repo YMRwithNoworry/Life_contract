@@ -72,7 +72,6 @@
   "command.life_contract.tp_notify": "§a[生灵契约] §f队友 §e%s §f传送到了你身边。",
   "command.life_contract.admin_list": "§e== 生灵契约 管理面板 ==",
   "entity.life_contract.team_sentinel": "队伍守卫",
-  "effect.life_contract.slow_infection": "缓慢感染",
   "message.life_contract.enabled": "开启",
   "message.life_contract.disabled": "关闭",
   "tooltip.life_contract.accessory.tier": "品阶 %s",

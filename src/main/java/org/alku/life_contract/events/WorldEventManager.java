@@ -51,8 +51,7 @@ import java.util.UUID;
  *     <li>孢潮推进：第 5 分钟起在圈内随机位置生成感染精英</li>
  *     <li>清道夫悬赏：每淘汰 2 人，标记全场 K/D 最高者，击杀它可永久提升生命上限</li>
  *     <li>净化裂隙：第 9 分钟生成 3 个安全气泡，泡内玩家持续获得生命回复与饱和</li>
- *     <li>终局过载：剩 3 人时全体感染升级为 2 级，缩圈伤害 +100%</li>
- *     <li>孢子雨：随机事件，暴露在天幕下的玩家感染值上升，躲进遮蔽处才会恢复</li>
+ *     <li>终局过载：剩 3 人时缩圈伤害 +100%</li>
  * </ul>
  * 事件随对局进行，暂停游戏时同步暂停。
  */
@@ -72,23 +71,12 @@ public final class WorldEventManager {
     private static final double SAFE_BUBBLE_RADIUS = 15.0D;
     private static final int SAFE_BUBBLE_DURATION_SECONDS = 60;
 
-    private static final int SPORE_RAIN_DURATION_SECONDS = 60;
-    private static final int SPORE_RAIN_EXPOSURE_TICKS_PER_STAGE = 200;
-    private static final int SPORE_RAIN_MAX_STAGE = 2;
-    private static final int SPORE_RAIN_EFFECT_REFRESH_TICKS = 100;
-    private static final int SPORE_RAIN_RECOVERY_TICKS = 200;
-    /** 暴露计时结算间隔：一次结算补上这么多 tick，等价于逐 tick 结算。 */
-    private static final int SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS = 5;
-
     private static final int RANDOM_EVENT_CHECK_INTERVAL = 300;
     private static final int RANDOM_EVENT_MIN_INTERVAL = 300;
     private static final double RANDOM_EVENT_CHANCE = 0.3D;
 
     /** 缩圈伤害倍率：终局过载下 2.0 表示 +100%。 */
     private static final double ENDGAME_BORDER_DAMAGE_MULTIPLIER = 2.0D;
-    private static final int ENDGAME_INFECTION_AMPLIFIER = 1;
-    private static final int ENDGAME_INFECTION_REFRESH_TICKS = 1200;
-    private static final int ENDGAME_INFECTION_DURATION_TICKS = 24000;
 
     private static final int BOUNTY_GLOW_DURATION_TICKS = 120;
     private static final int BOUNTY_GLOW_REFRESH_MARGIN_TICKS = 60;
@@ -103,7 +91,7 @@ public final class WorldEventManager {
     };
 
     private static final String[] EVENT_NAMES = {
-        "spore_surge", "bounty", "purification_rift", "endgame_overload", "spore_rain"
+        "spore_surge", "bounty", "purification_rift", "endgame_overload"
     };
 
     private static final Random RANDOM = new Random();
@@ -123,11 +111,6 @@ public final class WorldEventManager {
 
     private static boolean endgameOverloadActive;
     private static boolean endgameOverloadStopped;
-    private static long lastOverloadRefreshTick;
-
-    private static boolean sporeRainActive;
-    private static long sporeRainStartTick;
-    private static final Map<UUID, Integer> sporeRainExposureTicks = new HashMap<>();
 
     private static UUID bountyTarget;
     private static int bountyKillReward;
@@ -198,11 +181,6 @@ public final class WorldEventManager {
 
         endgameOverloadActive = false;
         endgameOverloadStopped = false;
-        lastOverloadRefreshTick = 0L;
-
-        sporeRainActive = false;
-        sporeRainStartTick = 0L;
-        sporeRainExposureTicks.clear();
 
         clearBountySilently();
         playerStats.clear();
@@ -225,10 +203,7 @@ public final class WorldEventManager {
         purificationRiftStopped = false;
         endgameOverloadActive = false;
         endgameOverloadStopped = false;
-        sporeRainActive = false;
-        sporeRainStartTick = 0L;
         safeBubbles.clear();
-        sporeRainExposureTicks.clear();
         clearBountySilently();
         playerStats.clear();
         totalEliminations = 0;
@@ -270,16 +245,6 @@ public final class WorldEventManager {
 
     public static boolean isEndgameOverloadActive() {
         return endgameOverloadActive;
-    }
-
-    public static boolean isSporeRainActive() {
-        return sporeRainActive;
-    }
-
-    public static int getSporeRainRemainingSeconds() {
-        if (!sporeRainActive || level == null || sporeRainStartTick <= 0L) return 0;
-        long elapsed = (level.getGameTime() - sporeRainStartTick) / 20L;
-        return (int) Math.max(0, SPORE_RAIN_DURATION_SECONDS - elapsed);
     }
 
     public static boolean isBountyActive() {
@@ -332,13 +297,6 @@ public final class WorldEventManager {
         syncToClients();
     }
 
-    public static void forceTriggerSporeRain(ServerLevel targetLevel) {
-        level = targetLevel;
-        startSporeRain(targetLevel.getGameTime());
-        broadcast(Component.literal("§2[孢子雨] §f孢子雨事件已强制触发！"));
-        syncToClients();
-    }
-
     public static void stopSporeSurge() {
         sporeSurgeActive = false;
         sporeSurgeStartTick = 0L;
@@ -369,14 +327,6 @@ public final class WorldEventManager {
         syncToClients();
     }
 
-    public static void stopSporeRain() {
-        sporeRainActive = false;
-        sporeRainStartTick = 0L;
-        sporeRainExposureTicks.clear();
-        broadcast(Component.literal("§a[游戏事件] §f孢子雨已停止。"));
-        syncToClients();
-    }
-
     public static String[] eventNames() {
         return EVENT_NAMES.clone();
     }
@@ -401,15 +351,6 @@ public final class WorldEventManager {
         if (active) {
             if (!GameEventManager.isGameActive() || GameEventManager.isGamePaused()) return;
             tickScheduledEvents(currentTick, GameEventManager.getElapsedSeconds());
-        }
-
-        if (endgameOverloadActive && currentTick - lastOverloadRefreshTick >= ENDGAME_INFECTION_REFRESH_TICKS) {
-            lastOverloadRefreshTick = currentTick;
-            applyEndgameInfection();
-        }
-
-        if (sporeRainActive) {
-            tickSporeRain(currentTick);
         }
 
         tickSafeBubbles(currentTick);
@@ -460,13 +401,6 @@ public final class WorldEventManager {
             purificationRiftActive = false;
         }
 
-        if (sporeRainActive && sporeRainStartTick > 0L
-                && (currentTick - sporeRainStartTick) / 20L >= SPORE_RAIN_DURATION_SECONDS) {
-            sporeRainActive = false;
-            sporeRainStartTick = 0L;
-            sporeRainExposureTicks.clear();
-            broadcast(Component.literal("§2[孢子雨] §f孢子雨已停止！"));
-        }
     }
 
     private static void tryTriggerRandomEvent(long currentTick) {
@@ -476,7 +410,6 @@ public final class WorldEventManager {
         if (!sporeSurgeActive && !sporeSurgeStopped) available.add("spore_surge");
         if (!purificationRiftActive && !purificationRiftStopped) available.add("purification_rift");
         if (bountyTarget == null) available.add("bounty");
-        if (!sporeRainActive) available.add("spore_rain");
         if (available.isEmpty()) return;
 
         String selected = available.get(RANDOM.nextInt(available.size()));
@@ -494,10 +427,6 @@ public final class WorldEventManager {
             case "bounty" -> {
                 triggerBountyHunt();
                 broadcast(Component.literal("§e[随机事件] §f清道夫悬赏已经发布！"));
-            }
-            case "spore_rain" -> {
-                startSporeRain(currentTick);
-                broadcast(Component.literal("§2[随机事件] §f孢子雨降临！快找遮蔽物！"));
             }
             default -> {
             }
@@ -772,16 +701,7 @@ public final class WorldEventManager {
 
     private static void triggerEndgameOverload() {
         endgameOverloadActive = true;
-        lastOverloadRefreshTick = level.getGameTime();
-        broadcast(Component.literal("§4[终局过载] §f只剩 3 人！全体感染升至 2 级，缩圈伤害 +100%！"));
-        applyEndgameInfection();
-    }
-
-    private static void applyEndgameInfection() {
-        for (ServerPlayer player : getSurvivalPlayers()) {
-            player.addEffect(new MobEffectInstance(Life_contract.SLOW_INFECTION,
-                ENDGAME_INFECTION_DURATION_TICKS, ENDGAME_INFECTION_AMPLIFIER, false, true));
-        }
+        broadcast(Component.literal("§4[终局过载] §f只剩 3 人！缩圈伤害 +100%！"));
     }
 
     /** 终局过载期间，世界边界造成的伤害翻倍。 */
@@ -792,78 +712,6 @@ public final class WorldEventManager {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!GameEventManager.isPlayerPartOfGame(player.getUUID())) return;
         event.setAmount(event.getAmount() * (float) ENDGAME_BORDER_DAMAGE_MULTIPLIER);
-    }
-
-    // ==================== 孢子雨 ====================
-
-    private static void startSporeRain(long currentTick) {
-        sporeRainActive = true;
-        sporeRainStartTick = currentTick;
-        sporeRainExposureTicks.clear();
-        broadcast(Component.literal("§2[孢子雨] §f孢子雨降临！暴露在天空下会持续被感染，快找遮蔽物！"));
-    }
-
-    private static void tickSporeRain(long currentTick) {
-        // 暴露结算每 5 tick 做一次、一次补 5，与逐 tick 结算完全等价（效果刷新点仍是 100 的倍数），
-        // 但省掉 4/5 的高度图查询：孢子雨期间每个在线玩家每 tick 都要查一次。
-        if (currentTick % SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS == 0L) {
-            for (ServerPlayer player : level.getPlayers(p -> true)) {
-                if (player.isCreative() || player.isSpectator()) continue;
-
-                UUID playerId = player.getUUID();
-                if (isExposedToRain(player)) {
-                    int exposure = sporeRainExposureTicks.merge(playerId,
-                            SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS, Integer::sum);
-                    int stage = Math.min(SPORE_RAIN_MAX_STAGE, exposure / SPORE_RAIN_EXPOSURE_TICKS_PER_STAGE);
-                    if (stage > 0 && exposure % SPORE_RAIN_EFFECT_REFRESH_TICKS == 0) {
-                        player.addEffect(new MobEffectInstance(Life_contract.SLOW_INFECTION,
-                            SPORE_RAIN_EFFECT_REFRESH_TICKS + 40, stage - 1, false, true));
-                    }
-                    if (currentTick % 200L == 0L) {
-                        player.sendSystemMessage(Component.literal("§2[孢子雨] §f你正暴露在孢子雨中，感染正在加深！"));
-                    }
-                } else {
-                    int exposure = sporeRainExposureTicks.getOrDefault(playerId, 0);
-                    if (exposure > 0) {
-                        int reduced = Math.max(0,
-                                exposure - (SPORE_RAIN_RECOVERY_TICKS / 4) * SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS);
-                        if (reduced == 0) {
-                            sporeRainExposureTicks.remove(playerId);
-                        } else {
-                            sporeRainExposureTicks.put(playerId, reduced);
-                        }
-                    }
-                }
-            }
-        }
-
-        // 粒子每 10 tick 铺一次就够了，原来每 2 tick 会让每个在线玩家产生十几条粒子包
-        if (currentTick % 10L == 0L) {
-            spawnSporeRainParticles();
-        }
-    }
-
-    private static boolean isExposedToRain(ServerPlayer player) {
-        return level.canSeeSky(player.blockPosition());
-    }
-
-    private static void spawnSporeRainParticles() {
-        for (ServerPlayer player : level.getPlayers(p -> true)) {
-            if (player.isCreative() || player.isSpectator()) continue;
-            // 躲在遮蔽物下的玩家看不到头顶的雨粒子（粒子生成在玩家上方 8~13 格，会被屋顶挡住），
-            // 而孢子雨的提示恰恰是让玩家进屋躲雨，所以这类玩家直接跳过，省下整包粒子。
-            if (!isExposedToRain(player)) continue;
-            for (int i = 0; i < 5; i++) {
-                double x = player.getX() + (RANDOM.nextDouble() - 0.5D) * 20.0D;
-                double z = player.getZ() + (RANDOM.nextDouble() - 0.5D) * 20.0D;
-                double y = player.getY() + 8.0D + RANDOM.nextDouble() * 5.0D;
-
-                level.sendParticles(ParticleTypes.CRIMSON_SPORE, x, y, z, 3, 0.5D, 0.0D, 0.5D, 0.02D);
-                level.sendParticles(ParticleTypes.WARPED_SPORE, x + RANDOM.nextDouble(), y, z + RANDOM.nextDouble(),
-                    3, 0.5D, 0.0D, 0.5D, 0.02D);
-                level.sendParticles(ParticleTypes.SPORE_BLOSSOM_AIR, x, y - 2.0D, z, 2, 0.3D, 0.0D, 0.3D, 0.01D);
-            }
-        }
     }
 
     // ==================== 工具方法 ====================
@@ -899,8 +747,7 @@ public final class WorldEventManager {
         String signature = GameEventManager.isGameActive() + "|" + isSporeSurgeActive() + "|"
                 + getSporeSurgeRemainingSeconds() + "|" + isPurificationRiftActive() + "|"
                 + getSafeBubbleRemainingSeconds() + "|" + bubbles.size() + "|" + isBountyActive() + "|"
-                + getBountyTargetName() + "|" + isEndgameOverloadActive() + "|" + isSporeRainActive() + "|"
-                + getSporeRainRemainingSeconds();
+                + getBountyTargetName() + "|" + isEndgameOverloadActive();
         if (signature.equals(lastSyncSignature)) return;
         lastSyncSignature = signature;
 
@@ -913,8 +760,6 @@ public final class WorldEventManager {
             bubbles,
             isBountyActive(),
             getBountyTargetName(),
-            isEndgameOverloadActive(),
-            isSporeRainActive(),
-            getSporeRainRemainingSeconds()));
+            isEndgameOverloadActive()));
     }
 }

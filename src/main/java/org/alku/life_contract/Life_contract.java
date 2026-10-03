@@ -3,7 +3,6 @@ package org.alku.life_contract;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
@@ -55,9 +54,6 @@ public class Life_contract {
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MODID);
-    public static final DeferredRegister<MobEffect> MOB_EFFECTS =
-            DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, MODID);
-
     public static final DeferredHolder<Item, Item> SOUL_CONTRACT = ITEMS.register("soul_contract", SoulContractItem::new);
     public static final DeferredHolder<Item, Item> TEAM_ORGANIZER = ITEMS.register("team_organizer", TeamOrganizerItem::new);
     public static final DeferredHolder<Item, Item> FOLLOWER_WAND = ITEMS.register("follower_wand", FollowerWandItem::new);
@@ -78,9 +74,6 @@ public class Life_contract {
                     () -> new org.alku.life_contract.accessory.AccessoryItem(definition)));
         }
     }
-
-    public static final DeferredHolder<MobEffect, MobEffect> SLOW_INFECTION =
-            MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<TeamInventoryMenu>> TEAM_INVENTORY_MENU =
             MENU_TYPES.register("team_inventory", () -> IMenuTypeExtension.create(TeamInventoryMenu::new));
@@ -137,7 +130,6 @@ public class Life_contract {
         CREATIVE_TABS.register(modEventBus);
         MENU_TYPES.register(modEventBus);
         ENTITY_TYPES.register(modEventBus);
-        MOB_EFFECTS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlocks.BLOCK_ITEMS.register(modEventBus);
         modEventBus.addListener(NetworkHandler::registerPayloads);

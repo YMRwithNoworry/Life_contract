@@ -53,9 +53,15 @@ requireText(manager, "AttributeModifier.Operation.ADD_VALUE", "bounty max health
 requireText(manager, "refreshBubbleEffect(player, MobEffects.REGENERATION, 1)", "bubble regeneration");
 requireText(manager, "refreshBubbleEffect(player, MobEffects.SATURATION, 2)", "bubble saturation");
 
-// 孢子雨：暴露在天空下才感染，进遮蔽处会恢复
-requireText(manager, "canSeeSky(player.blockPosition())", "spore rain sky exposure");
-requireText(manager, "sporeRainExposureTicks.merge", "spore rain exposure tracking");
+// 孢子雨事件与「缓慢感染」效果已经移除，别被加回来
+for (const removed of ["sporeRain", "SPORE_RAIN", "孢子雨", "SLOW_INFECTION", "slow_infection"]) {
+  for (const [name, source] of [["WorldEventManager", manager], ["EventSyncPayload", payload],
+                                ["EventHUD", hud], ["ClientDataStorage", client]]) {
+    if (source.includes(removed)) {
+      throw new Error(name + " still references the removed feature: " + removed);
+    }
+  }
+}
 
 // 同步与 UI 接线
 requireText(payload, 'NetworkHandler.type("event_status")', "event payload id");
@@ -66,8 +72,6 @@ requireText(client, "setEventData(", "client event data setter");
 requireText(client, "getBubblePositions()", "client bubble positions");
 requireText(bubbles, "RenderLevelStageEvent", "safe bubble world rendering");
 requireText(bubbles, "ClientDataStorage.isPurificationRiftActive()", "bubble render gate");
-requireText(hud, "sporeRainActive", "spore rain HUD state");
-requireText(hud, "0x33FFD45A", "spore rain screen tint");
 
 // 对局生命周期挂接
 requireText(events, "WorldEventManager.startGame(gameLevel", "event manager start hook");
@@ -76,6 +80,6 @@ requireText(events, "WorldEventManager.reset()", "event manager reset hook");
 // 管理指令
 requireText(commands, 'Commands.literal("event")', "event command root");
 requireText(commands, "WorldEventManager.forceTriggerSporeSurge(level)", "force trigger command");
-requireText(commands, "WorldEventManager.stopSporeRain()", "stop event command");
+requireText(commands, "WorldEventManager.stopPurificationRift()", "stop event command");
 
 console.log("World event verification passed.");

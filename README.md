@@ -190,8 +190,7 @@ Events run automatically alongside a match and pause together with it. The event
 | **Spore Surge** | Minute 5 | Spawns `12–23` infection-mod elites at random spots inside the border for `45` seconds (falls back to buffed vanilla elites when Fungal Infection: Spore is absent). |
 | **Scavenger Bounty** | Every `2` eliminations | The highest K/D player is marked with a glowing outline; whoever kills them permanently gains their max health plus `+2`. |
 | **Purification Rift** | Minute 9 | Spawns `3` safe bubbles of `15` blocks radius for `60` seconds; players inside keep Regeneration II and Saturation III. |
-| **Endgame Overload** | `3` players left | Every player's infection is forced to level `2` and world-border damage is increased by `100%`. |
-| **Spore Rain** | Random | Lasts `60` seconds; players under open sky build up infection and only recover in shelter. A yellow tint covers the screen while exposed. |
+| **Endgame Overload** | `3` players left | World-border damage is increased by `100%` until the match ends. |
 
 * Random draws trigger with a `30%` chance between the fixed schedule points.
 * Safe bubbles render as coloured spheres in the world, visible from far away.
@@ -209,7 +208,7 @@ Events run automatically alongside a match and pause together with it. The event
 * `/contract team split <count>`: Automatically divide players into teams.
 * `/contract spawn_shop`: Spawn the shop villager.
 * `/contract toggle_mineral <on|off>`: Global switch for all mineral generators.
-* `/contract event trigger <event>`: Force-trigger a game event (`spore_surge`, `bounty`, `purification_rift`, `endgame_overload`, `spore_rain`).
+* `/contract event trigger <event>`: Force-trigger a game event (`spore_surge`, `bounty`, `purification_rift`, `endgame_overload`).
 * `/contract event stop <event>`: Stop a running game event.
 * `/contract perf`: Print server TPS, entity spawn/despawn rates, per-dimension entity counts, the composition of loaded entities (total / never-despawn / tagged by this mod), and the mod's internal index sizes (run twice to get a sample).
 * `/contract perf on|off`: Toggle per-section timing of the mod's hot paths (off by default and zero-cost while off). While on, `/contract perf` also ranks entity types by net growth, which points at whatever is piling up. `/contract perf reset` clears the counters.

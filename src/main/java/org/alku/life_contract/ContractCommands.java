@@ -357,16 +357,10 @@ public class ContractCommands {
                                         Component.literal("§4[游戏事件] §f已强制触发 §e终局过载§f。"), true);
                                 return 1;
                         }
-                        case "spore_rain" -> {
-                                org.alku.life_contract.events.WorldEventManager.forceTriggerSporeRain(level);
-                                context.getSource().sendSuccess(() ->
-                                        Component.literal("§2[游戏事件] §f已强制触发 §e孢子雨§f。"), true);
-                                return 1;
-                        }
                         default -> {
                                 context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
                                 context.getSource().sendSuccess(() ->
-                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload"), false);
                                 return 0;
                         }
                 }
@@ -378,11 +372,10 @@ public class ContractCommands {
                         case "bounty" -> org.alku.life_contract.events.WorldEventManager.clearBounty();
                         case "purification_rift" -> org.alku.life_contract.events.WorldEventManager.stopPurificationRift();
                         case "endgame_overload" -> org.alku.life_contract.events.WorldEventManager.stopEndgameOverload();
-                        case "spore_rain" -> org.alku.life_contract.events.WorldEventManager.stopSporeRain();
                         default -> {
                                 context.getSource().sendFailure(Component.literal("§c未知事件: " + eventName));
                                 context.getSource().sendSuccess(() ->
-                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload, spore_rain"), false);
+                                        Component.literal("§7可用事件: spore_surge, bounty, purification_rift, endgame_overload"), false);
                                 return 0;
                         }
                 }

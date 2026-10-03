@@ -194,8 +194,7 @@ public final class PerfDiagnostics {
                 + " | 标记: " + MutationCombatEvents.debugSummary());
         lines.add("命数: " + trackedLives + " 名在线玩家"
                 + " | 安全气泡: " + WorldEventManager.getSafeBubbles().size()
-                + " | 悬赏: " + (WorldEventManager.isBountyActive() ? "有" : "无")
-                + " | 孢子雨: " + (WorldEventManager.isSporeRainActive() ? "开" : "关"));
+                + " | 悬赏: " + (WorldEventManager.isBountyActive() ? "有" : "无"));
         return lines;
     }
 

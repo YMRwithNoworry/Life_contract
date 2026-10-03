@@ -17,14 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 游戏事件 HUD：屏幕右上角列出进行中的事件、剩余时间与安全气泡坐标，
- * 并在孢子雨期间为暴露在天空下的玩家叠加一层黄色色调。
+ * 游戏事件 HUD：屏幕右上角列出进行中的事件、剩余时间与安全气泡坐标。
  */
 @EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public final class EventHUD {
 
-    private static final ResourceLocation TINT_LAYER_ID =
-            ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "event_spore_rain_tint");
     private static final ResourceLocation STATUS_LAYER_ID =
             ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "event_status");
 
@@ -65,25 +62,12 @@ public final class EventHUD {
                 payload.bubbles(),
                 payload.bountyActive(),
                 payload.bountyTargetName(),
-                payload.endgameOverloadActive(),
-                payload.sporeRainActive(),
-                payload.sporeRainRemaining());
+                payload.endgameOverloadActive());
     }
 
     @SubscribeEvent
     public static void registerLayers(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, TINT_LAYER_ID, EventHUD::renderSporeRainTint);
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, STATUS_LAYER_ID, EventHUD::renderEventStatus);
-    }
-
-    private static void renderSporeRainTint(GuiGraphics graphics, DeltaTracker partialTick) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null || minecraft.level == null) return;
-        if (minecraft.options.hideGui) return;
-        if (!ClientDataStorage.isSporeRainActive()) return;
-        if (!minecraft.level.canSeeSky(minecraft.player.blockPosition())) return;
-
-        graphics.fill(0, 0, graphics.guiWidth(), graphics.guiHeight(), 0x33FFD45A);
     }
 
     private static void renderEventStatus(GuiGraphics graphics, DeltaTracker partialTick) {
@@ -155,12 +139,6 @@ public final class EventHUD {
         if (ClientDataStorage.isEndgameOverloadActive()) {
             hasAnyEvent = true;
             addEvent(lines, minecraft, "§4[终局过载]", "  §f状态: §c永久");
-        }
-
-        if (ClientDataStorage.isSporeRainActive()) {
-            hasAnyEvent = true;
-            addEvent(lines, minecraft, "§2[孢子雨]",
-                    "  §f剩余: §e" + ClientDataStorage.getSporeRainRemaining() + "秒");
         }
 
         if (!hasAnyEvent) {
