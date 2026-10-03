@@ -47,13 +47,52 @@ public class AccessoryItem extends Item {
         tooltip.add(Component.translatable("tooltip.life_contract.accessory.tier", definition.tier())
                 .withStyle(ChatFormatting.DARK_GRAY));
 
-        if (!definition.effects().isEmpty() || definition.consume() != null) {
+        if (definition.hasFaction()) {
+            tooltip.add(Component.translatable("tooltip.life_contract.accessory.faction",
+                            Component.translatable("faction.life_contract." + definition.faction().id()))
+                    .withStyle(definition.faction().color()));
+        }
+
+        if (!definition.effects().isEmpty() || !definition.consume().isEmpty()) {
             tooltip.add(Component.translatable(definition.effectKey()).withStyle(ChatFormatting.GRAY));
+        }
+
+        AccessoryCharge charge = definition.charge();
+        if (!charge.isEmpty()) {
+            if (charge.decayTicks() > 0) {
+                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge",
+                                charge.max(), String.format("%.0f", charge.decayTicks() / 20.0D))
+                        .withStyle(ChatFormatting.YELLOW));
+            } else {
+                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge_no_decay", charge.max())
+                        .withStyle(ChatFormatting.YELLOW));
+            }
+            if (charge.loseOnHurt() > 0) {
+                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge_hurt", charge.loseOnHurt())
+                        .withStyle(ChatFormatting.DARK_RED));
+            }
+        }
+
+        AccessoryActive active = definition.active();
+        if (!active.isEmpty()) {
+            tooltip.add(Component.translatable("tooltip.life_contract.accessory.active",
+                            Component.translatable("active.life_contract." + active.kind().name()),
+                            String.format("%.0f", active.cooldownTicks() / 20.0D))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        if (definition.hasDrawback()) {
+            tooltip.add(Component.translatable("tooltip.life_contract.accessory.drawback")
+                    .withStyle(ChatFormatting.DARK_RED));
         }
 
         if (definition.isEquippable()) {
             tooltip.add(Component.translatable("tooltip.life_contract.accessory.equip_rule")
                     .withStyle(ChatFormatting.DARK_GRAY));
+            if (definition.hasFaction()) {
+                tooltip.add(Component.translatable("tooltip.life_contract.accessory.resonance_hint")
+                        .withStyle(ChatFormatting.DARK_GRAY));
+            }
         } else if (definition.isConsumable()) {
             tooltip.add(Component.translatable("tooltip.life_contract.accessory.use_hint")
                     .withStyle(ChatFormatting.DARK_GRAY));
@@ -69,7 +108,7 @@ public class AccessoryItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!definition.isConsumable() || definition.consume() == null) {
+        if (!definition.isConsumable() || definition.consume().isEmpty()) {
             return InteractionResultHolder.pass(stack);
         }
         if (level.isClientSide()) {

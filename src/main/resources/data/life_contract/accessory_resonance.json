@@ -1,0 +1,106 @@
+[
+  {
+    "faction": "crimson",
+    "name_zh": "绯红共鸣",
+    "name_en": "Crimson Resonance",
+    "desc2_zh": "吸血 +5%",
+    "desc2_en": "Lifesteal +5%",
+    "effects2": [
+      { "type": "LIFESTEAL_PERCENT", "value": 5 }
+    ],
+    "desc3_zh": "吸血 +10%，攻击伤害 +2，最大生命 -4",
+    "desc3_en": "Lifesteal +10%, Attack Damage +2, Max Health -4",
+    "effects3": [
+      { "type": "LIFESTEAL_PERCENT", "value": 10 },
+      { "type": "ATTACK_DAMAGE", "value": 2 },
+      { "type": "MAX_HEALTH", "value": -4 }
+    ]
+  },
+  {
+    "faction": "azure",
+    "name_zh": "蔚蓝共鸣",
+    "name_en": "Azure Resonance",
+    "desc2_zh": "护甲 +3，水下呼吸 I",
+    "desc2_en": "Armor +3, Water Breathing I",
+    "effects2": [
+      { "type": "ARMOR", "value": 3 },
+      { "type": "WATER_BREATHING", "value": 1 }
+    ],
+    "desc3_zh": "护甲 +6，伤害减免 +10%；水中：移动速度 +10%",
+    "desc3_en": "Armor +6, Damage Reduction +10%; In water: Movement Speed +10%",
+    "effects3": [
+      { "type": "ARMOR", "value": 6 },
+      { "type": "DAMAGE_REDUCTION_PERCENT", "value": 10 },
+      { "type": "MOVEMENT_SPEED_PERCENT", "value": 10, "when": "in_water" }
+    ]
+  },
+  {
+    "faction": "amethyst",
+    "name_zh": "紫晶共鸣",
+    "name_en": "Amethyst Resonance",
+    "desc2_zh": "幸运 +3",
+    "desc2_en": "Luck +3",
+    "effects2": [
+      { "type": "LUCK", "value": 3 }
+    ],
+    "desc3_zh": "幸运 +6，升华掉落 +25%",
+    "desc3_en": "Luck +6, Sublimation Drops +25%",
+    "effects3": [
+      { "type": "LUCK", "value": 6 },
+      { "type": "SUBLIMATION_PERCENT", "value": 25 }
+    ]
+  },
+  {
+    "faction": "obsidian",
+    "name_zh": "黑曜共鸣",
+    "name_en": "Obsidian Resonance",
+    "desc2_zh": "夜晚：移动速度 +8%",
+    "desc2_en": "Night: Movement Speed +8%",
+    "effects2": [
+      { "type": "MOVEMENT_SPEED_PERCENT", "value": 8, "when": "night" }
+    ],
+    "desc3_zh": "夜晚：攻击伤害 +3，移动速度 +10%，夜视 I；白天：移动速度 -5%",
+    "desc3_en": "Night: Attack Damage +3, Movement Speed +10%, Night Vision I; Day: Movement Speed -5%",
+    "effects3": [
+      { "type": "ATTACK_DAMAGE", "value": 3, "when": "night" },
+      { "type": "MOVEMENT_SPEED_PERCENT", "value": 10, "when": "night" },
+      { "type": "NIGHT_VISION", "value": 1 },
+      { "type": "MOVEMENT_SPEED_PERCENT", "value": -5, "when": "day" }
+    ]
+  },
+  {
+    "faction": "verdant",
+    "name_zh": "苍翠共鸣",
+    "name_en": "Verdant Resonance",
+    "desc2_zh": "最大生命 +4",
+    "desc2_en": "Max Health +4",
+    "effects2": [
+      { "type": "MAX_HEALTH", "value": 4 }
+    ],
+    "desc3_zh": "最大生命 +8，再生 I；饥饿 ≤6：饱和 I",
+    "desc3_en": "Max Health +8, Regeneration I; Hunger<=6: Saturation I",
+    "effects3": [
+      { "type": "MAX_HEALTH", "value": 8 },
+      { "type": "REGENERATION", "value": 1 },
+      { "type": "SATURATION", "value": 1, "when": "hungry" }
+    ]
+  },
+  {
+    "faction": "gilded",
+    "name_zh": "鎏金共鸣",
+    "name_en": "Gilded Resonance",
+    "desc2_zh": "幸运 +2，升华掉落 +15%",
+    "desc2_en": "Luck +2, Sublimation Drops +15%",
+    "effects2": [
+      { "type": "LUCK", "value": 2 },
+      { "type": "SUBLIMATION_PERCENT", "value": 15 }
+    ],
+    "desc3_zh": "幸运 +5，升华掉落 +35%，最大生命 -4",
+    "desc3_en": "Luck +5, Sublimation Drops +35%, Max Health -4",
+    "effects3": [
+      { "type": "LUCK", "value": 5 },
+      { "type": "SUBLIMATION_PERCENT", "value": 35 },
+      { "type": "MAX_HEALTH", "value": -4 }
+    ]
+  }
+]

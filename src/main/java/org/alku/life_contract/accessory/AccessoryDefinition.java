@@ -10,13 +10,16 @@ public record AccessoryDefinition(
         String id,
         String texture,
         AccessoryCategory category,
+        AccessoryFaction faction,
         int tier,
         String nameZh,
         String nameEn,
         String effectZh,
         String effectEn,
         List<AccessoryEffect> effects,
-        AccessoryEffect consume,
+        AccessoryCharge charge,
+        AccessoryActive active,
+        List<AccessoryEffect> consume,
         int price,
         List<String> recipeIngredients,
         int recipeSublimation) {
@@ -47,20 +50,35 @@ public record AccessoryDefinition(
         return category == AccessoryCategory.MATERIAL;
     }
 
-    /** 单条效果的数值（同类型多条时累加）。 */
+    public boolean hasFaction() {
+        return faction != AccessoryFaction.NONE;
+    }
+
+    /** 常驻效果的数值合计（不含情境效果）。 */
     public double total(AccessoryEffectType type) {
         double sum = 0.0D;
         for (AccessoryEffect effect : effects) {
-            if (effect.type() == type) {
+            if (effect.type() == type && effect.isAlways()) {
                 sum += effect.value();
             }
         }
         return sum;
     }
 
+    /** 任意条件下是否存在该类型效果（用于 tooltip 判断是否展示）。 */
     public boolean has(AccessoryEffectType type) {
         for (AccessoryEffect effect : effects) {
             if (effect.type() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** 是否带明确的负面代价。 */
+    public boolean hasDrawback() {
+        for (AccessoryEffect effect : effects) {
+            if (effect.value() < 0.0D) {
                 return true;
             }
         }

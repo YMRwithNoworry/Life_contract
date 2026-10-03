@@ -39,6 +39,10 @@ public enum AccessoryEffectType {
     JUMP_BOOST(Kind.EFFECT, null, null, false, MobEffects.JUMP),
     HASTE(Kind.EFFECT, null, null, false, MobEffects.DIG_SPEED),
     RESISTANCE(Kind.EFFECT, null, null, false, MobEffects.DAMAGE_RESISTANCE),
+    /** 迅捷（仅用于消耗品/主动技，value = 秒数）。 */
+    SPEED(Kind.EFFECT, null, null, false, MobEffects.MOVEMENT_SPEED),
+    /** 力量（仅用于消耗品/主动技，value = 秒数）。 */
+    STRENGTH(Kind.EFFECT, null, null, false, MobEffects.DAMAGE_BOOST),
     HEAL(Kind.HEAL, null, null, false, null),
     FEED(Kind.FEED, null, null, false, null),
     XP(Kind.EXPERIENCE, null, null, false, null);

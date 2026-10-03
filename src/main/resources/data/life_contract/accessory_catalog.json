@@ -3,18 +3,23 @@
     "id": "ruby_pendant",
     "texture": "01_ruby_pendant",
     "category": "pendant",
+    "faction": "crimson",
     "tier": 2,
     "name_zh": "红宝石坠",
     "name_en": "Ruby Pendant",
-    "effect_zh": "最大生命 +4",
-    "effect_en": "Max Health +4",
+    "effect_zh": "最大生命 +4；生命 ≤35%：护甲 +4",
+    "effect_en": "Max Health +4; HP<=35%: Armor +4",
     "effects": [
       {
         "type": "MAX_HEALTH",
         "value": 4
+      },
+      {
+        "type": "ARMOR",
+        "value": 4,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -28,18 +33,28 @@
     "id": "sapphire_crystal_pendant",
     "texture": "02_sapphire_crystal_pendant",
     "category": "pendant",
+    "faction": "azure",
     "tier": 3,
     "name_zh": "蓝晶坠",
     "name_en": "Sapphire Crystal Pendant",
-    "effect_zh": "护甲 +3",
-    "effect_en": "Armor +3",
+    "effect_zh": "护甲 +3；水中：水下呼吸 I，移动速度 +10%",
+    "effect_en": "Armor +3; In water: Water Breathing I, Movement Speed +10%",
     "effects": [
       {
         "type": "ARMOR",
         "value": 3
+      },
+      {
+        "type": "WATER_BREATHING",
+        "value": 1,
+        "when": "in_water"
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 10,
+        "when": "in_water"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -54,18 +69,23 @@
     "id": "amethyst_star_pendant",
     "texture": "03_amethyst_star_pendant",
     "category": "pendant",
+    "faction": "amethyst",
     "tier": 3,
     "name_zh": "紫晶星辰坠",
     "name_en": "Amethyst Star Pendant",
-    "effect_zh": "幸运 +3",
-    "effect_en": "Luck +3",
+    "effect_zh": "幸运 +3；夜晚：幸运 +4",
+    "effect_en": "Luck +3; Night: Luck +4",
     "effects": [
       {
         "type": "LUCK",
         "value": 3
+      },
+      {
+        "type": "LUCK",
+        "value": 4,
+        "when": "night"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -79,18 +99,23 @@
     "id": "bone_fang_pendant",
     "texture": "04_bone_fang_pendant",
     "category": "pendant",
+    "faction": "verdant",
     "tier": 1,
     "name_zh": "骨牙坠",
     "name_en": "Bone Fang Pendant",
-    "effect_zh": "击退抗性 +0.05",
-    "effect_en": "Knockback Resistance +0.05",
+    "effect_zh": "击退抗性 +0.05；被围时：护甲 +3",
+    "effect_en": "Knockback Resistance +0.05; Outnumbered: Armor +3",
     "effects": [
       {
         "type": "KNOCKBACK_RESISTANCE",
         "value": 0.05
+      },
+      {
+        "type": "ARMOR",
+        "value": 3,
+        "when": "outnumbered"
       }
     ],
-    "consume": null,
     "price": 60,
     "recipe": {
       "sublimation": 0,
@@ -104,18 +129,23 @@
     "id": "crimson_eye_pendant",
     "texture": "05_crimson_eye_pendant",
     "category": "pendant",
+    "faction": "crimson",
     "tier": 3,
     "name_zh": "赤瞳坠",
     "name_en": "Crimson Eye Pendant",
-    "effect_zh": "吸血 6%",
-    "effect_en": "Lifesteal 6%",
+    "effect_zh": "吸血 +6%；生命 ≤35%：吸血 +8%",
+    "effect_en": "Lifesteal +6%; HP<=35%: Lifesteal +8%",
     "effects": [
       {
         "type": "LIFESTEAL_PERCENT",
         "value": 6
+      },
+      {
+        "type": "LIFESTEAL_PERCENT",
+        "value": 8,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -129,18 +159,23 @@
     "id": "azure_shard_pendant",
     "texture": "06_azure_shard_pendant",
     "category": "pendant",
+    "faction": "azure",
     "tier": 2,
     "name_zh": "碧蓝碎片坠",
     "name_en": "Azure Shard Pendant",
-    "effect_zh": "移动速度 +4%",
-    "effect_en": "Movement Speed +4%",
+    "effect_zh": "移动速度 +4%；疾跑：移动速度 +6%",
+    "effect_en": "Movement Speed +4%; Sprinting: Movement Speed +6%",
     "effects": [
       {
         "type": "MOVEMENT_SPEED_PERCENT",
         "value": 4
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 6,
+        "when": "sprinting"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -154,18 +189,23 @@
     "id": "violet_cross_pendant",
     "texture": "07_violet_cross_pendant",
     "category": "pendant",
+    "faction": "amethyst",
     "tier": 2,
     "name_zh": "紫十字坠",
     "name_en": "Violet Cross Pendant",
-    "effect_zh": "伤害减免 5%",
-    "effect_en": "Damage Reduction 5%",
+    "effect_zh": "伤害减免 +5%；本队生命 ≤2：伤害减免 +10%",
+    "effect_en": "Damage Reduction +5%; Team lives<=2: Damage Reduction +10%",
     "effects": [
       {
         "type": "DAMAGE_REDUCTION_PERCENT",
         "value": 5
+      },
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 10,
+        "when": "low_lives"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -179,11 +219,12 @@
     "id": "golden_gem_pendant",
     "texture": "08_golden_gem_pendant",
     "category": "pendant",
+    "faction": "gilded",
     "tier": 4,
     "name_zh": "黄金宝石坠",
     "name_en": "Golden Gem Pendant",
-    "effect_zh": "幸运 +4，再生 I",
-    "effect_en": "Luck +4, Regeneration I",
+    "effect_zh": "幸运 +4，再生 I；满血：升华掉落 +20%",
+    "effect_en": "Luck +4, Regeneration I; Full HP: Sublimation Drops +20%",
     "effects": [
       {
         "type": "LUCK",
@@ -192,9 +233,13 @@
       {
         "type": "REGENERATION",
         "value": 1
+      },
+      {
+        "type": "SUBLIMATION_PERCENT",
+        "value": 20,
+        "when": "full_health"
       }
     ],
-    "consume": null,
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -209,22 +254,38 @@
     "id": "blood_crystal_pendant",
     "texture": "09_blood_crystal_pendant",
     "category": "pendant",
+    "faction": "crimson",
     "tier": 4,
     "name_zh": "血晶坠",
     "name_en": "Blood Crystal Pendant",
-    "effect_zh": "吸血 8%，最大生命 +8",
-    "effect_en": "Lifesteal 8%, Max Health +8",
+    "effect_zh": "吸血 +8%，最大生命 -4；生命 ≤35%：攻击伤害 +3；击杀充能（最多 10 层）：每层攻击伤害 +0.4",
+    "effect_en": "Lifesteal +8%, Max Health -4; HP<=35%: Attack Damage +3; Kill charge (max 10): each stack: Attack Damage +0.4",
     "effects": [
       {
         "type": "LIFESTEAL_PERCENT",
         "value": 8
       },
       {
+        "type": "ATTACK_DAMAGE",
+        "value": 3,
+        "when": "low_health"
+      },
+      {
         "type": "MAX_HEALTH",
-        "value": 8
+        "value": -4
       }
     ],
-    "consume": null,
+    "charge": {
+      "max": 10,
+      "per_stack": [
+        {
+          "type": "ATTACK_DAMAGE",
+          "value": 0.4
+        }
+      ],
+      "decay_ticks": 1800,
+      "lose_on_hurt": 4
+    },
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -239,11 +300,12 @@
     "id": "obsidian_drop_pendant",
     "texture": "10_obsidian_drop_pendant",
     "category": "pendant",
+    "faction": "obsidian",
     "tier": 5,
     "name_zh": "黑曜石坠",
     "name_en": "Obsidian Drop Pendant",
-    "effect_zh": "护甲 +6，伤害减免 15%",
-    "effect_en": "Armor +6, Damage Reduction 15%",
+    "effect_zh": "护甲 +6，伤害减免 +15%；夜晚：夜视 I，移动速度 +10%；白天：移动速度 -8%；主动技【护盾】",
+    "effect_en": "Armor +6, Damage Reduction +15%; Night: Night Vision I, Movement Speed +10%; Day: Movement Speed -8%; Active [Ward]",
     "effects": [
       {
         "type": "ARMOR",
@@ -252,9 +314,29 @@
       {
         "type": "DAMAGE_REDUCTION_PERCENT",
         "value": 15
+      },
+      {
+        "type": "NIGHT_VISION",
+        "value": 1,
+        "when": "night"
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 10,
+        "when": "night"
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": -8,
+        "when": "day"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "WARD",
+      "value": 8,
+      "duration": 200,
+      "cooldown": 2400
+    },
     "price": 500,
     "recipe": {
       "sublimation": 20,
@@ -270,18 +352,23 @@
     "id": "ruby_ring",
     "texture": "11_ruby_ring",
     "category": "ring",
+    "faction": "crimson",
     "tier": 3,
     "name_zh": "红宝石戒",
     "name_en": "Ruby Ring",
-    "effect_zh": "攻击伤害 +1.5",
-    "effect_en": "Attack Damage +1.5",
+    "effect_zh": "攻击伤害 +1.5；击杀后 10 秒内：攻击伤害 +2",
+    "effect_en": "Attack Damage +1.5; After a kill: Attack Damage +2",
     "effects": [
       {
         "type": "ATTACK_DAMAGE",
         "value": 1.5
+      },
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 2,
+        "when": "recent_kill"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -295,18 +382,23 @@
     "id": "silver_sapphire_ring",
     "texture": "12_silver_sapphire_ring",
     "category": "ring",
+    "faction": "azure",
     "tier": 2,
     "name_zh": "银蓝宝石戒",
     "name_en": "Silver Sapphire Ring",
-    "effect_zh": "护甲韧性 +2",
-    "effect_en": "Armor Toughness +2",
+    "effect_zh": "护甲韧性 +2；水中：护甲韧性 +3",
+    "effect_en": "Armor Toughness +2; In water: Armor Toughness +3",
     "effects": [
       {
         "type": "ARMOR_TOUGHNESS",
         "value": 2
+      },
+      {
+        "type": "ARMOR_TOUGHNESS",
+        "value": 3,
+        "when": "in_water"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -320,22 +412,23 @@
     "id": "thorn_amethyst_ring",
     "texture": "13_thorn_amethyst_ring",
     "category": "ring",
+    "faction": "amethyst",
     "tier": 3,
     "name_zh": "荆棘紫晶戒",
     "name_en": "Thorn Amethyst Ring",
-    "effect_zh": "攻击速度 +0.15，急迫 I",
-    "effect_en": "Attack Speed +0.15, Haste I",
+    "effect_zh": "攻击速度 +0.15；被围时：攻击伤害 +2",
+    "effect_en": "Attack Speed +0.15; Outnumbered: Attack Damage +2",
     "effects": [
       {
         "type": "ATTACK_SPEED",
         "value": 0.15
       },
       {
-        "type": "HASTE",
-        "value": 1
+        "type": "ATTACK_DAMAGE",
+        "value": 2,
+        "when": "outnumbered"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -349,18 +442,28 @@
     "id": "golden_ruby_ring",
     "texture": "14_golden_ruby_ring",
     "category": "ring",
+    "faction": "gilded",
     "tier": 4,
     "name_zh": "金红宝石戒",
     "name_en": "Golden Ruby Ring",
-    "effect_zh": "攻击伤害 +2",
-    "effect_en": "Attack Damage +2",
+    "effect_zh": "攻击伤害 +2；满血：攻击伤害 +2；生命 ≤70%：护甲 -2",
+    "effect_en": "Attack Damage +2; Full HP: Attack Damage +2; HP<=70%: Armor -2",
     "effects": [
       {
         "type": "ATTACK_DAMAGE",
         "value": 2
+      },
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 2,
+        "when": "full_health"
+      },
+      {
+        "type": "ARMOR",
+        "value": -2,
+        "when": "hurt"
       }
     ],
-    "consume": null,
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -375,18 +478,23 @@
     "id": "emerald_ring",
     "texture": "15_emerald_ring",
     "category": "ring",
+    "faction": "verdant",
     "tier": 3,
     "name_zh": "绿宝石戒",
     "name_en": "Emerald Ring",
-    "effect_zh": "移动速度 +6%",
-    "effect_en": "Movement Speed +6%",
+    "effect_zh": "移动速度 +6%；饥饿 ≤6：饱和 I",
+    "effect_en": "Movement Speed +6%; Hunger<=6: Saturation I",
     "effects": [
       {
         "type": "MOVEMENT_SPEED_PERCENT",
         "value": 6
+      },
+      {
+        "type": "SATURATION",
+        "value": 1,
+        "when": "hungry"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -400,18 +508,23 @@
     "id": "mithril_sapphire_ring",
     "texture": "16_mithril_sapphire_ring",
     "category": "ring",
+    "faction": "azure",
     "tier": 3,
     "name_zh": "秘银蓝晶戒",
     "name_en": "Mithril Sapphire Ring",
-    "effect_zh": "击退抗性 +0.15",
-    "effect_en": "Knockback Resistance +0.15",
+    "effect_zh": "击退抗性 +0.15；生命 ≤35%：击退抗性 +0.2",
+    "effect_en": "Knockback Resistance +0.15; HP<=35%: Knockback Resistance +0.2",
     "effects": [
       {
         "type": "KNOCKBACK_RESISTANCE",
         "value": 0.15
+      },
+      {
+        "type": "KNOCKBACK_RESISTANCE",
+        "value": 0.2,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -425,18 +538,29 @@
     "id": "amethyst_ring",
     "texture": "17_amethyst_ring",
     "category": "ring",
+    "faction": "amethyst",
     "tier": 2,
     "name_zh": "紫水晶戒",
     "name_en": "Amethyst Ring",
-    "effect_zh": "幸运 +2",
-    "effect_en": "Luck +2",
+    "effect_zh": "幸运 +2；击杀充能（最多 6 层）：每层幸运 +0.5",
+    "effect_en": "Luck +2; Kill charge (max 6): each stack: Luck +0.5",
     "effects": [
       {
         "type": "LUCK",
         "value": 2
       }
     ],
-    "consume": null,
+    "charge": {
+      "max": 6,
+      "per_stack": [
+        {
+          "type": "LUCK",
+          "value": 0.5
+        }
+      ],
+      "decay_ticks": 1800,
+      "lose_on_hurt": 2
+    },
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -450,18 +574,23 @@
     "id": "silver_ring",
     "texture": "18_silver_ring",
     "category": "ring",
+    "faction": "gilded",
     "tier": 1,
     "name_zh": "银戒",
     "name_en": "Silver Ring",
-    "effect_zh": "护甲 +1",
-    "effect_en": "Armor +1",
+    "effect_zh": "护甲 +1；夜晚：幸运 +1",
+    "effect_en": "Armor +1; Night: Luck +1",
     "effects": [
       {
         "type": "ARMOR",
         "value": 1
+      },
+      {
+        "type": "LUCK",
+        "value": 1,
+        "when": "night"
       }
     ],
-    "consume": null,
     "price": 60,
     "recipe": {
       "sublimation": 0,
@@ -475,18 +604,23 @@
     "id": "black_iron_ring",
     "texture": "19_black_iron_ring",
     "category": "ring",
+    "faction": "obsidian",
     "tier": 3,
     "name_zh": "黑铁戒",
     "name_en": "Black Iron Ring",
-    "effect_zh": "护甲韧性 +3",
-    "effect_en": "Armor Toughness +3",
+    "effect_zh": "护甲韧性 +3；地下：护甲 +3",
+    "effect_en": "Armor Toughness +3; Underground: Armor +3",
     "effects": [
       {
         "type": "ARMOR_TOUGHNESS",
         "value": 3
+      },
+      {
+        "type": "ARMOR",
+        "value": 3,
+        "when": "underground"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -500,11 +634,12 @@
     "id": "golden_pearl_ring",
     "texture": "20_golden_pearl_ring",
     "category": "ring",
+    "faction": "gilded",
     "tier": 4,
     "name_zh": "金珍珠戒",
     "name_en": "Golden Pearl Ring",
-    "effect_zh": "最大生命 +8，生命恢复 I",
-    "effect_en": "Max Health +8, Regeneration I",
+    "effect_zh": "最大生命 +8，再生 I；本队生命 ≤2：抗性提升 I",
+    "effect_en": "Max Health +8, Regeneration I; Team lives<=2: Resistance I",
     "effects": [
       {
         "type": "MAX_HEALTH",
@@ -513,9 +648,13 @@
       {
         "type": "REGENERATION",
         "value": 1
+      },
+      {
+        "type": "RESISTANCE",
+        "value": 1,
+        "when": "low_lives"
       }
     ],
-    "consume": null,
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -530,22 +669,29 @@
     "id": "cross_sword_charm",
     "texture": "21_cross_sword_charm",
     "category": "charm",
+    "faction": "obsidian",
     "tier": 3,
     "name_zh": "十字剑符",
     "name_en": "Cross Sword Charm",
-    "effect_zh": "攻击伤害 +1.5，急迫 I",
-    "effect_en": "Attack Damage +1.5, Haste I",
+    "effect_zh": "攻击伤害 +1.5；击杀充能（最多 8 层）：每层攻击伤害 +0.35",
+    "effect_en": "Attack Damage +1.5; Kill charge (max 8): each stack: Attack Damage +0.35",
     "effects": [
       {
         "type": "ATTACK_DAMAGE",
         "value": 1.5
-      },
-      {
-        "type": "HASTE",
-        "value": 1
       }
     ],
-    "consume": null,
+    "charge": {
+      "max": 8,
+      "per_stack": [
+        {
+          "type": "ATTACK_DAMAGE",
+          "value": 0.35
+        }
+      ],
+      "decay_ticks": 1200,
+      "lose_on_hurt": 3
+    },
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -560,11 +706,12 @@
     "id": "crimson_lantern_charm",
     "texture": "22_crimson_lantern_charm",
     "category": "charm",
+    "faction": "crimson",
     "tier": 3,
     "name_zh": "绯红灯笼符",
     "name_en": "Crimson Lantern Charm",
-    "effect_zh": "夜视 I，抗火 I",
-    "effect_en": "Night Vision I, Fire Resistance I",
+    "effect_zh": "夜视 I；地下：抗火 I，幸运 +2",
+    "effect_en": "Night Vision I; Underground: Fire Resistance I, Luck +2",
     "effects": [
       {
         "type": "NIGHT_VISION",
@@ -572,10 +719,15 @@
       },
       {
         "type": "FIRE_RESISTANCE",
-        "value": 1
+        "value": 1,
+        "when": "underground"
+      },
+      {
+        "type": "LUCK",
+        "value": 2,
+        "when": "underground"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -589,22 +741,28 @@
     "id": "sapphire_teardrop_charm",
     "texture": "23_sapphire_teardrop_charm",
     "category": "charm",
+    "faction": "azure",
     "tier": 3,
     "name_zh": "蓝宝石泪符",
     "name_en": "Sapphire Teardrop Charm",
-    "effect_zh": "水下呼吸 I，最大生命 +6",
-    "effect_en": "Water Breathing I, Max Health +6",
+    "effect_zh": "最大生命 +6；水中：水下呼吸 I，再生 I",
+    "effect_en": "Max Health +6; In water: Water Breathing I, Regeneration I",
     "effects": [
-      {
-        "type": "WATER_BREATHING",
-        "value": 1
-      },
       {
         "type": "MAX_HEALTH",
         "value": 6
+      },
+      {
+        "type": "WATER_BREATHING",
+        "value": 1,
+        "when": "in_water"
+      },
+      {
+        "type": "REGENERATION",
+        "value": 1,
+        "when": "in_water"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -619,11 +777,12 @@
     "id": "amethyst_shuriken",
     "texture": "24_amethyst_shuriken",
     "category": "charm",
+    "faction": "amethyst",
     "tier": 3,
     "name_zh": "紫晶手里剑",
     "name_en": "Amethyst Shuriken",
-    "effect_zh": "攻击速度 +0.15，跳跃提升 I",
-    "effect_en": "Attack Speed +0.15, Jump Boost I",
+    "effect_zh": "攻击速度 +0.15；疾跑：跳跃提升 I，攻击伤害 +1",
+    "effect_en": "Attack Speed +0.15; Sprinting: Jump Boost I, Attack Damage +1",
     "effects": [
       {
         "type": "ATTACK_SPEED",
@@ -631,10 +790,15 @@
       },
       {
         "type": "JUMP_BOOST",
-        "value": 1
+        "value": 1,
+        "when": "sprinting"
+      },
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 1,
+        "when": "sprinting"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -648,11 +812,12 @@
     "id": "bat_charm",
     "texture": "25_bat_charm",
     "category": "charm",
+    "faction": "obsidian",
     "tier": 3,
     "name_zh": "蝙蝠符",
     "name_en": "Bat Charm",
-    "effect_zh": "夜视 I，移动速度 +6%",
-    "effect_en": "Night Vision I, Movement Speed +6%",
+    "effect_zh": "夜视 I；夜晚：移动速度 +10%，幸运 +2",
+    "effect_en": "Night Vision I; Night: Movement Speed +10%, Luck +2",
     "effects": [
       {
         "type": "NIGHT_VISION",
@@ -660,10 +825,15 @@
       },
       {
         "type": "MOVEMENT_SPEED_PERCENT",
-        "value": 6
+        "value": 10,
+        "when": "night"
+      },
+      {
+        "type": "LUCK",
+        "value": 2,
+        "when": "night"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -677,18 +847,23 @@
     "id": "bone_feather_charm",
     "texture": "26_bone_feather_charm",
     "category": "charm",
+    "faction": "verdant",
     "tier": 2,
     "name_zh": "骨羽符",
     "name_en": "Bone Feather Charm",
-    "effect_zh": "击退抗性 +0.1",
-    "effect_en": "Knockback Resistance +0.1",
+    "effect_zh": "击退抗性 +0.1；生命 ≤35%：移动速度 +12%",
+    "effect_en": "Knockback Resistance +0.1; HP<=35%: Movement Speed +12%",
     "effects": [
       {
         "type": "KNOCKBACK_RESISTANCE",
         "value": 0.1
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 12,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -702,18 +877,23 @@
     "id": "amethyst_butterfly",
     "texture": "27_amethyst_butterfly",
     "category": "charm",
+    "faction": "amethyst",
     "tier": 1,
     "name_zh": "紫晶蝴蝶",
     "name_en": "Amethyst Butterfly",
-    "effect_zh": "幸运 +1",
-    "effect_en": "Luck +1",
+    "effect_zh": "幸运 +1；白天：移动速度 +5%",
+    "effect_en": "Luck +1; Day: Movement Speed +5%",
     "effects": [
       {
         "type": "LUCK",
         "value": 1
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 5,
+        "when": "day"
       }
     ],
-    "consume": null,
     "price": 60,
     "recipe": {
       "sublimation": 0,
@@ -727,18 +907,23 @@
     "id": "black_cat_charm",
     "texture": "28_black_cat_charm",
     "category": "charm",
+    "faction": "obsidian",
     "tier": 1,
     "name_zh": "黑猫符",
     "name_en": "Black Cat Charm",
-    "effect_zh": "移动速度 +2%",
-    "effect_en": "Movement Speed +2%",
+    "effect_zh": "移动速度 +2%；光照 ≤7：幸运 +2",
+    "effect_en": "Movement Speed +2%; Light<=7: Luck +2",
     "effects": [
       {
         "type": "MOVEMENT_SPEED_PERCENT",
         "value": 2
+      },
+      {
+        "type": "LUCK",
+        "value": 2,
+        "when": "low_light"
       }
     ],
-    "consume": null,
     "price": 60,
     "recipe": {
       "sublimation": 0,
@@ -752,11 +937,12 @@
     "id": "cursed_tome_charm",
     "texture": "29_cursed_tome_charm",
     "category": "charm",
+    "faction": "obsidian",
     "tier": 4,
     "name_zh": "诅咒魔典符",
     "name_en": "Cursed Tome Charm",
-    "effect_zh": "吸血 8%，伤害减免 12%",
-    "effect_en": "Lifesteal 8%, Damage Reduction 12%",
+    "effect_zh": "吸血 +8%，最大生命 -6；生命 ≤35%：伤害减免 +15%；主动技【净化】",
+    "effect_en": "Lifesteal +8%, Max Health -6; HP<=35%: Damage Reduction +15%; Active [Purge]",
     "effects": [
       {
         "type": "LIFESTEAL_PERCENT",
@@ -764,10 +950,20 @@
       },
       {
         "type": "DAMAGE_REDUCTION_PERCENT",
-        "value": 12
+        "value": 15,
+        "when": "low_health"
+      },
+      {
+        "type": "MAX_HEALTH",
+        "value": -6
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "PURGE",
+      "value": 1,
+      "duration": 120,
+      "cooldown": 3000
+    },
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -782,11 +978,12 @@
     "id": "compass_watch_charm",
     "texture": "30_compass_watch_charm",
     "category": "charm",
+    "faction": "gilded",
     "tier": 3,
     "name_zh": "罗盘怀表符",
     "name_en": "Compass Watch Charm",
-    "effect_zh": "移动速度 +6%，急迫 I",
-    "effect_en": "Movement Speed +6%, Haste I",
+    "effect_zh": "移动速度 +6%，急迫 I；靠近边界时：移动速度 +8%",
+    "effect_en": "Movement Speed +6%, Haste I; Near the border: Movement Speed +8%",
     "effects": [
       {
         "type": "MOVEMENT_SPEED_PERCENT",
@@ -795,9 +992,13 @@
       {
         "type": "HASTE",
         "value": 1
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 8,
+        "when": "near_border"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -812,11 +1013,12 @@
     "id": "blood_crown",
     "texture": "31_blood_crown",
     "category": "crown",
+    "faction": "crimson",
     "tier": 4,
     "name_zh": "血之王冠",
     "name_en": "Blood Crown",
-    "effect_zh": "最大生命 +8，抗性提升 I",
-    "effect_en": "Max Health +8, Resistance I",
+    "effect_zh": "最大生命 +8；生命 ≤35%：抗性提升 I，吸血 +6%",
+    "effect_en": "Max Health +8; HP<=35%: Resistance I, Lifesteal +6%",
     "effects": [
       {
         "type": "MAX_HEALTH",
@@ -824,10 +1026,15 @@
       },
       {
         "type": "RESISTANCE",
-        "value": 1
+        "value": 1,
+        "when": "low_health"
+      },
+      {
+        "type": "LIFESTEAL_PERCENT",
+        "value": 6,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -842,11 +1049,12 @@
     "id": "frost_crown",
     "texture": "32_frost_crown",
     "category": "crown",
+    "faction": "azure",
     "tier": 3,
     "name_zh": "霜之王冠",
     "name_en": "Frost Crown",
-    "effect_zh": "护甲 +3，抗火 I",
-    "effect_en": "Armor +3, Fire Resistance I",
+    "effect_zh": "护甲 +3，抗火 I；水中：伤害减免 +10%",
+    "effect_en": "Armor +3, Fire Resistance I; In water: Damage Reduction +10%",
     "effects": [
       {
         "type": "ARMOR",
@@ -855,9 +1063,13 @@
       {
         "type": "FIRE_RESISTANCE",
         "value": 1
+      },
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 10,
+        "when": "in_water"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 12,
@@ -872,22 +1084,29 @@
     "id": "amethyst_crown",
     "texture": "33_amethyst_crown",
     "category": "crown",
+    "faction": "amethyst",
     "tier": 4,
     "name_zh": "紫晶王冠",
     "name_en": "Amethyst Crown",
-    "effect_zh": "幸运 +4，饱和 I",
-    "effect_en": "Luck +4, Saturation I",
+    "effect_zh": "幸运 +4；满血：升华掉落 +25%；主动技【集结】",
+    "effect_en": "Luck +4; Full HP: Sublimation Drops +25%; Active [Rally]",
     "effects": [
       {
         "type": "LUCK",
         "value": 4
       },
       {
-        "type": "SATURATION",
-        "value": 1
+        "type": "SUBLIMATION_PERCENT",
+        "value": 25,
+        "when": "full_health"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "RALLY",
+      "value": 2,
+      "duration": 200,
+      "cooldown": 2400
+    },
     "price": 320,
     "recipe": {
       "sublimation": 16,
@@ -902,22 +1121,23 @@
     "id": "bone_crown",
     "texture": "34_bone_crown",
     "category": "crown",
+    "faction": "verdant",
     "tier": 2,
     "name_zh": "白骨王冠",
     "name_en": "Bone Crown",
-    "effect_zh": "击退抗性 +0.1，护甲韧性 +2",
-    "effect_en": "Knockback Resistance +0.1, Armor Toughness +2",
+    "effect_zh": "护甲韧性 +2；地下：击退抗性 +0.15",
+    "effect_en": "Armor Toughness +2; Underground: Knockback Resistance +0.15",
     "effects": [
-      {
-        "type": "KNOCKBACK_RESISTANCE",
-        "value": 0.1
-      },
       {
         "type": "ARMOR_TOUGHNESS",
         "value": 2
+      },
+      {
+        "type": "KNOCKBACK_RESISTANCE",
+        "value": 0.15,
+        "when": "underground"
       }
     ],
-    "consume": null,
     "price": 120,
     "recipe": {
       "sublimation": 8,
@@ -932,11 +1152,12 @@
     "id": "obsidian_gold_crown",
     "texture": "35_obsidian_gold_crown",
     "category": "crown",
+    "faction": "obsidian",
     "tier": 5,
     "name_zh": "黑曜金王冠",
     "name_en": "Obsidian Gold Crown",
-    "effect_zh": "护甲 +6，伤害减免 15%",
-    "effect_en": "Armor +6, Damage Reduction 15%",
+    "effect_zh": "护甲 +6，伤害减免 +15%，移动速度 -6%；被围时：护甲 +4；主动技【护盾】",
+    "effect_en": "Armor +6, Damage Reduction +15%, Movement Speed -6%; Outnumbered: Armor +4; Active [Ward]",
     "effects": [
       {
         "type": "ARMOR",
@@ -945,9 +1166,23 @@
       {
         "type": "DAMAGE_REDUCTION_PERCENT",
         "value": 15
+      },
+      {
+        "type": "ARMOR",
+        "value": 4,
+        "when": "outnumbered"
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": -6
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "WARD",
+      "value": 10,
+      "duration": 200,
+      "cooldown": 2400
+    },
     "price": 500,
     "recipe": {
       "sublimation": 20,
@@ -963,11 +1198,12 @@
     "id": "golden_crown",
     "texture": "36_golden_crown",
     "category": "crown",
+    "faction": "gilded",
     "tier": 5,
     "name_zh": "黄金王冠",
     "name_en": "Golden Crown",
-    "effect_zh": "幸运 +6，升华掉落 +30%",
-    "effect_en": "Luck +6, Sublimation Drops +30%",
+    "effect_zh": "幸运 +6，升华掉落 +30%，护甲 -3；满血：幸运 +4",
+    "effect_en": "Luck +6, Sublimation Drops +30%, Armor -3; Full HP: Luck +4",
     "effects": [
       {
         "type": "LUCK",
@@ -976,9 +1212,17 @@
       {
         "type": "SUBLIMATION_PERCENT",
         "value": 30
+      },
+      {
+        "type": "LUCK",
+        "value": 4,
+        "when": "full_health"
+      },
+      {
+        "type": "ARMOR",
+        "value": -3
       }
     ],
-    "consume": null,
     "price": 500,
     "recipe": {
       "sublimation": 10,
@@ -993,11 +1237,12 @@
     "id": "silver_crown",
     "texture": "37_silver_crown",
     "category": "crown",
+    "faction": "gilded",
     "tier": 3,
     "name_zh": "白银王冠",
     "name_en": "Silver Crown",
-    "effect_zh": "护甲韧性 +3，幸运 +3",
-    "effect_en": "Armor Toughness +3, Luck +3",
+    "effect_zh": "护甲韧性 +3，幸运 +3；夜晚：夜视 I",
+    "effect_en": "Armor Toughness +3, Luck +3; Night: Night Vision I",
     "effects": [
       {
         "type": "ARMOR_TOUGHNESS",
@@ -1006,9 +1251,13 @@
       {
         "type": "LUCK",
         "value": 3
+      },
+      {
+        "type": "NIGHT_VISION",
+        "value": 1,
+        "when": "night"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 6,
@@ -1023,11 +1272,12 @@
     "id": "crimson_white_crown",
     "texture": "38_crimson_white_crown",
     "category": "crown",
+    "faction": "crimson",
     "tier": 4,
     "name_zh": "绯白王冠",
     "name_en": "Crimson White Crown",
-    "effect_zh": "最大生命 +8，吸血 8%",
-    "effect_en": "Max Health +8, Lifesteal 8%",
+    "effect_zh": "最大生命 +8，吸血 +8%；本队生命 ≤2：抗性提升 I；主动技【治疗】",
+    "effect_en": "Max Health +8, Lifesteal +8%; Team lives<=2: Resistance I; Active [Mend]",
     "effects": [
       {
         "type": "MAX_HEALTH",
@@ -1036,9 +1286,19 @@
       {
         "type": "LIFESTEAL_PERCENT",
         "value": 8
+      },
+      {
+        "type": "RESISTANCE",
+        "value": 1,
+        "when": "low_lives"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "MEND",
+      "value": 10,
+      "duration": 100,
+      "cooldown": 2400
+    },
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1053,11 +1313,12 @@
     "id": "shadow_crown",
     "texture": "39_shadow_crown",
     "category": "crown",
+    "faction": "obsidian",
     "tier": 5,
     "name_zh": "暗影王冠",
     "name_en": "Shadow Crown",
-    "effect_zh": "攻击伤害 +3，夜视",
-    "effect_en": "Attack Damage +3, Night Vision",
+    "effect_zh": "攻击伤害 +3，夜视 I；夜晚：攻击伤害 +3，移动速度 +10%；白天：护甲 -4；主动技【标记】",
+    "effect_en": "Attack Damage +3, Night Vision I; Night: Attack Damage +3, Movement Speed +10%; Day: Armor -4; Active [Mark]",
     "effects": [
       {
         "type": "ATTACK_DAMAGE",
@@ -1066,9 +1327,29 @@
       {
         "type": "NIGHT_VISION",
         "value": 1
+      },
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 3,
+        "when": "night"
+      },
+      {
+        "type": "MOVEMENT_SPEED_PERCENT",
+        "value": 10,
+        "when": "night"
+      },
+      {
+        "type": "ARMOR",
+        "value": -4,
+        "when": "day"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "MARK",
+      "value": 2,
+      "duration": 200,
+      "cooldown": 2000
+    },
     "price": 500,
     "recipe": {
       "sublimation": 12,
@@ -1083,11 +1364,12 @@
     "id": "ice_crown",
     "texture": "40_ice_crown",
     "category": "crown",
+    "faction": "azure",
     "tier": 4,
     "name_zh": "寒冰王冠",
     "name_en": "Ice Crown",
-    "effect_zh": "受到伤害 -12%，抗性提升 II",
-    "effect_en": "Damage Taken -12%, Resistance II",
+    "effect_zh": "伤害减免 +12%；水中：抗性提升 I；着火：抗火 I",
+    "effect_en": "Damage Reduction +12%; In water: Resistance I; On fire: Fire Resistance I",
     "effects": [
       {
         "type": "DAMAGE_REDUCTION_PERCENT",
@@ -1095,10 +1377,15 @@
       },
       {
         "type": "RESISTANCE",
-        "value": 2
+        "value": 1,
+        "when": "in_water"
+      },
+      {
+        "type": "FIRE_RESISTANCE",
+        "value": 1,
+        "when": "burning"
       }
     ],
-    "consume": null,
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1116,13 +1403,19 @@
     "tier": 3,
     "name_zh": "红色药水",
     "name_en": "Red Potion",
-    "effect_zh": "饮用后恢复 14 点生命",
-    "effect_en": "Restores 14 Health when drunk",
+    "effect_zh": "立即回复 14 点生命，并获得 20 秒抗性提升 I",
+    "effect_en": "Heal 14 HP and gain Resistance I for 20s",
     "effects": [],
-    "consume": {
-      "type": "HEAL",
-      "value": 14
-    },
+    "consume": [
+      {
+        "type": "HEAL",
+        "value": 14
+      },
+      {
+        "type": "RESISTANCE",
+        "value": 20
+      }
+    ],
     "price": 50,
     "recipe": {
       "sublimation": 2,
@@ -1140,13 +1433,19 @@
     "tier": 3,
     "name_zh": "蓝色药水",
     "name_en": "Blue Potion",
-    "effect_zh": "饮用后获得 60 秒夜视",
-    "effect_en": "Night Vision for 60s when drunk",
+    "effect_zh": "获得 120 秒夜视 I 与水下呼吸 I",
+    "effect_en": "Night Vision I and Water Breathing I for 120s",
     "effects": [],
-    "consume": {
-      "type": "NIGHT_VISION",
-      "value": 60
-    },
+    "consume": [
+      {
+        "type": "NIGHT_VISION",
+        "value": 120
+      },
+      {
+        "type": "WATER_BREATHING",
+        "value": 120
+      }
+    ],
     "price": 50,
     "recipe": {
       "sublimation": 2,
@@ -1164,13 +1463,19 @@
     "tier": 4,
     "name_zh": "紫色药水",
     "name_en": "Purple Potion",
-    "effect_zh": "饮用后获得 10 级经验",
-    "effect_en": "Grants 10 XP Levels when drunk",
+    "effect_zh": "获得 10 级经验，以及 30 秒迅捷 I",
+    "effect_en": "Gain 10 XP levels and Speed I for 30s",
     "effects": [],
-    "consume": {
-      "type": "XP",
-      "value": 10
-    },
+    "consume": [
+      {
+        "type": "XP",
+        "value": 10
+      },
+      {
+        "type": "SPEED",
+        "value": 30
+      }
+    ],
     "price": 70,
     "recipe": {
       "sublimation": 4,
@@ -1185,11 +1490,12 @@
     "id": "emerald_lantern",
     "texture": "44_emerald_lantern",
     "category": "charm",
+    "faction": "verdant",
     "tier": 3,
     "name_zh": "翠玉灯笼",
     "name_en": "Emerald Lantern",
-    "effect_zh": "幸运 +3，夜视",
-    "effect_en": "Luck +3, Night Vision",
+    "effect_zh": "幸运 +3，夜视 I；地下：再生 I",
+    "effect_en": "Luck +3, Night Vision I; Underground: Regeneration I",
     "effects": [
       {
         "type": "LUCK",
@@ -1198,9 +1504,13 @@
       {
         "type": "NIGHT_VISION",
         "value": 1
+      },
+      {
+        "type": "REGENERATION",
+        "value": 1,
+        "when": "underground"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 6,
@@ -1218,10 +1528,9 @@
     "tier": 1,
     "name_zh": "空药瓶",
     "name_en": "Empty Vial",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 8,
     "recipe": {
       "sublimation": 0,
@@ -1235,11 +1544,12 @@
     "id": "amethyst_amulet",
     "texture": "46_amethyst_amulet",
     "category": "amulet",
+    "faction": "amethyst",
     "tier": 3,
     "name_zh": "紫水晶护身符",
     "name_en": "Amethyst Amulet",
-    "effect_zh": "最大生命 +6，生命恢复",
-    "effect_en": "Max Health +6, Regeneration",
+    "effect_zh": "最大生命 +6，再生 I；生命 ≤35%：伤害减免 +12%",
+    "effect_en": "Max Health +6, Regeneration I; HP<=35%: Damage Reduction +12%",
     "effects": [
       {
         "type": "MAX_HEALTH",
@@ -1248,9 +1558,13 @@
       {
         "type": "REGENERATION",
         "value": 1
+      },
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 12,
+        "when": "low_health"
       }
     ],
-    "consume": null,
     "price": 200,
     "recipe": {
       "sublimation": 6,
@@ -1265,11 +1579,12 @@
     "id": "ruby_amulet",
     "texture": "47_ruby_amulet",
     "category": "amulet",
+    "faction": "crimson",
     "tier": 4,
     "name_zh": "红宝石护身符",
     "name_en": "Ruby Amulet",
-    "effect_zh": "攻击伤害 +2，吸血 8%",
-    "effect_en": "Attack Damage +2, Lifesteal 8%",
+    "effect_zh": "攻击伤害 +2，吸血 +8%；击杀充能（最多 6 层）：每层吸血 +1%；主动技【爆发】",
+    "effect_en": "Attack Damage +2, Lifesteal +8%; Kill charge (max 6): each stack: Lifesteal +1%; Active [Burst]",
     "effects": [
       {
         "type": "ATTACK_DAMAGE",
@@ -1280,7 +1595,23 @@
         "value": 8
       }
     ],
-    "consume": null,
+    "charge": {
+      "max": 6,
+      "per_stack": [
+        {
+          "type": "LIFESTEAL_PERCENT",
+          "value": 1
+        }
+      ],
+      "decay_ticks": 1600,
+      "lose_on_hurt": 2
+    },
+    "active": {
+      "kind": "BURST",
+      "value": 2,
+      "duration": 160,
+      "cooldown": 2000
+    },
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1295,11 +1626,12 @@
     "id": "sapphire_amulet",
     "texture": "48_sapphire_amulet",
     "category": "amulet",
+    "faction": "azure",
     "tier": 4,
     "name_zh": "蓝宝石护身符",
     "name_en": "Sapphire Amulet",
-    "effect_zh": "护甲韧性 +4，水下呼吸",
-    "effect_en": "Armor Toughness +4, Water Breathing",
+    "effect_zh": "护甲韧性 +4，水下呼吸 I；水中：伤害减免 +15%；主动技【治疗】",
+    "effect_en": "Armor Toughness +4, Water Breathing I; In water: Damage Reduction +15%; Active [Mend]",
     "effects": [
       {
         "type": "ARMOR_TOUGHNESS",
@@ -1308,9 +1640,19 @@
       {
         "type": "WATER_BREATHING",
         "value": 1
+      },
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 15,
+        "when": "in_water"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "MEND",
+      "value": 10,
+      "duration": 100,
+      "cooldown": 2400
+    },
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1325,22 +1667,28 @@
     "id": "arcane_tome",
     "texture": "49_arcane_tome",
     "category": "charm",
+    "faction": "amethyst",
     "tier": 4,
     "name_zh": "奥秘法典",
     "name_en": "Arcane Tome",
-    "effect_zh": "升华掉落 +20%，幸运 +4",
-    "effect_en": "Sublimation Drops +20%, Luck +4",
+    "effect_zh": "幸运 +4，升华掉落 +20%；主动技【潜行】",
+    "effect_en": "Luck +4, Sublimation Drops +20%; Active [Phase]",
     "effects": [
-      {
-        "type": "SUBLIMATION_PERCENT",
-        "value": 20
-      },
       {
         "type": "LUCK",
         "value": 4
+      },
+      {
+        "type": "SUBLIMATION_PERCENT",
+        "value": 20
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "PHASE",
+      "value": 1,
+      "duration": 140,
+      "cooldown": 2600
+    },
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1358,10 +1706,9 @@
     "tier": 3,
     "name_zh": "绯红行囊",
     "name_en": "Crimson Knapsack",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1379,10 +1726,9 @@
     "tier": 1,
     "name_zh": "白色羽毛",
     "name_en": "White Feather",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 8,
     "recipe": {
       "sublimation": 0,
@@ -1399,10 +1745,9 @@
     "tier": 2,
     "name_zh": "黑色羽毛",
     "name_en": "Black Feather",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 12,
     "recipe": {
       "sublimation": 0,
@@ -1419,10 +1764,9 @@
     "tier": 2,
     "name_zh": "骨牙",
     "name_en": "Bone Fang",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 12,
     "recipe": {
       "sublimation": 0,
@@ -1439,10 +1783,9 @@
     "tier": 3,
     "name_zh": "黑曜石碎片",
     "name_en": "Obsidian Shard",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1459,10 +1802,9 @@
     "tier": 4,
     "name_zh": "血晶簇",
     "name_en": "Blood Crystal Cluster",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 25,
     "recipe": {
       "sublimation": 0,
@@ -1480,10 +1822,9 @@
     "tier": 3,
     "name_zh": "紫晶尖刺球",
     "name_en": "Amethyst Spike Orb",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1501,10 +1842,9 @@
     "tier": 4,
     "name_zh": "符文黑曜石",
     "name_en": "Runed Obsidian Block",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 25,
     "recipe": {
       "sublimation": 0,
@@ -1522,10 +1862,9 @@
     "tier": 3,
     "name_zh": "古老卷轴",
     "name_en": "Ancient Scroll",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1543,10 +1882,9 @@
     "tier": 1,
     "name_zh": "草药叶",
     "name_en": "Herbal Leaf",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 8,
     "recipe": {
       "sublimation": 0,
@@ -1563,10 +1901,9 @@
     "tier": 5,
     "name_zh": "血之星",
     "name_en": "Blood Star",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 35,
     "recipe": {
       "sublimation": 0,
@@ -1584,10 +1921,9 @@
     "tier": 4,
     "name_zh": "蔚蓝十字",
     "name_en": "Azure Cross",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 25,
     "recipe": {
       "sublimation": 0,
@@ -1605,10 +1941,9 @@
     "tier": 2,
     "name_zh": "灰色骷髅头",
     "name_en": "Grey Skull",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 12,
     "recipe": {
       "sublimation": 0,
@@ -1626,10 +1961,9 @@
     "tier": 3,
     "name_zh": "白色骷髅头",
     "name_en": "White Skull",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1647,10 +1981,9 @@
     "tier": 1,
     "name_zh": "蝙蝠之翼",
     "name_en": "Bat Wing",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 8,
     "recipe": {
       "sublimation": 0,
@@ -1664,11 +1997,12 @@
     "id": "sapphire_diadem",
     "texture": "65_sapphire_diadem",
     "category": "crown",
+    "faction": "azure",
     "tier": 5,
     "name_zh": "蓝宝石冠冕",
     "name_en": "Sapphire Diadem",
-    "effect_zh": "护甲韧性 +6，抗性提升 II",
-    "effect_en": "Armor Toughness +6, Resistance II",
+    "effect_zh": "护甲韧性 +6，抗性提升 II；水中：水下呼吸 I，伤害减免 +15%；主动技【护盾】",
+    "effect_en": "Armor Toughness +6, Resistance II; In water: Water Breathing I, Damage Reduction +15%; Active [Ward]",
     "effects": [
       {
         "type": "ARMOR_TOUGHNESS",
@@ -1677,9 +2011,24 @@
       {
         "type": "RESISTANCE",
         "value": 2
+      },
+      {
+        "type": "WATER_BREATHING",
+        "value": 1,
+        "when": "in_water"
+      },
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 15,
+        "when": "in_water"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "WARD",
+      "value": 12,
+      "duration": 240,
+      "cooldown": 2600
+    },
     "price": 500,
     "recipe": {
       "sublimation": 12,
@@ -1697,10 +2046,9 @@
     "tier": 4,
     "name_zh": "紫晶之星",
     "name_en": "Amethyst Star",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 25,
     "recipe": {
       "sublimation": 0,
@@ -1718,10 +2066,9 @@
     "tier": 3,
     "name_zh": "霜雪水晶",
     "name_en": "Snow Crystal",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 18,
     "recipe": {
       "sublimation": 0,
@@ -1736,11 +2083,12 @@
     "id": "violet_eye_amulet",
     "texture": "68_violet_eye_amulet",
     "category": "amulet",
+    "faction": "amethyst",
     "tier": 4,
     "name_zh": "紫罗兰之眼护身符",
     "name_en": "Violet Eye Amulet",
-    "effect_zh": "幸运 +4，夜视",
-    "effect_en": "Luck +4, Night Vision",
+    "effect_zh": "幸运 +4，夜视 I；光照 ≤7：升华掉落 +30%；主动技【标记】",
+    "effect_en": "Luck +4, Night Vision I; Light<=7: Sublimation Drops +30%; Active [Mark]",
     "effects": [
       {
         "type": "LUCK",
@@ -1749,9 +2097,19 @@
       {
         "type": "NIGHT_VISION",
         "value": 1
+      },
+      {
+        "type": "SUBLIMATION_PERCENT",
+        "value": 30,
+        "when": "low_light"
       }
     ],
-    "consume": null,
+    "active": {
+      "kind": "MARK",
+      "value": 2,
+      "duration": 200,
+      "cooldown": 2000
+    },
     "price": 320,
     "recipe": {
       "sublimation": 8,
@@ -1769,10 +2127,9 @@
     "tier": 5,
     "name_zh": "绯红鸟居",
     "name_en": "Crimson Torii",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 35,
     "recipe": {
       "sublimation": 0,
@@ -1790,10 +2147,9 @@
     "tier": 4,
     "name_zh": "白狐面具",
     "name_en": "White Fox Mask",
-    "effect_zh": "合成材料",
-    "effect_en": "Crafting Material",
+    "effect_zh": "",
+    "effect_en": "",
     "effects": [],
-    "consume": null,
     "price": 25,
     "recipe": {
       "sublimation": 0,

@@ -180,6 +180,9 @@ public class Life_contract {
             while (KeyBindings.OPEN_MUTATION_TREE.consumeClick()) {
                 NetworkHandler.sendToServer(new org.alku.life_contract.mutation.MutationPackets.Open());
             }
+            while (KeyBindings.USE_ACCESSORY_ACTIVE.consumeClick()) {
+                NetworkHandler.sendToServer(org.alku.life_contract.accessory.PacketUseAccessoryActive.INSTANCE);
+            }
         }
     }
 
