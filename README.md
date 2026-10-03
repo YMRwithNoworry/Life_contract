@@ -175,7 +175,7 @@ Events run automatically alongside a match and pause together with it. The event
 * `/contract event trigger <event>`: Force-trigger a game event (`spore_surge`, `bounty`, `purification_rift`, `endgame_overload`, `spore_rain`).
 * `/contract event stop <event>`: Stop a running game event.
 * `/contract perf`: Print server TPS, entity spawn/despawn rates, per-dimension entity counts, and the mod's internal index sizes (run twice to get a sample).
-* `/contract perf on|off`: Toggle per-section timing of the mod's hot paths (off by default and zero-cost while off). `/contract perf reset` clears the counters.
+* `/contract perf on|off`: Toggle per-section timing of the mod's hot paths (off by default and zero-cost while off). While on, `/contract perf` also ranks entity types by net growth, which points at whatever is piling up. `/contract perf reset` clears the counters.
 
 ---
 

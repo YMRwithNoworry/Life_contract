@@ -40,20 +40,74 @@ public final class PerfDiagnostics {
     private static long entityJoins;
     private static long entityLeaves;
 
+    /**
+     * 各实体类型的进出计数 {@code {新增, 消失}}，只在分段计时开启时统计，
+     * 用来直接回答"到底是哪类实体在堆积"。关闭时零开销。
+     */
+    private static final Map<String, long[]> ENTITY_TYPE_CHURN = new HashMap<>();
+
     private PerfDiagnostics() {
+    }
+
+    public static void resetEntityTypeChurn() {
+        ENTITY_TYPE_CHURN.clear();
     }
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
-        if (!event.getLevel().isClientSide()) {
-            entityJoins++;
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        entityJoins++;
+        if (PerfProfiler.isEnabled()) {
+            countEntityType(event.getEntity(), true);
         }
     }
 
     @SubscribeEvent
     public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
-        if (!event.getLevel().isClientSide()) {
-            entityLeaves++;
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        entityLeaves++;
+        if (PerfProfiler.isEnabled()) {
+            countEntityType(event.getEntity(), false);
+        }
+    }
+
+    private static void countEntityType(Entity entity, boolean joining) {
+        ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+        if (id == null) {
+            return;
+        }
+        long[] counters = ENTITY_TYPE_CHURN.computeIfAbsent(id.toString(), key -> new long[2]);
+        counters[joining ? 0 : 1]++;
+    }
+
+    /** 净增长最多的几类实体：如果某类只涨不落，就是它把实体数堆上去的。 */
+    private static void reportEntityTypeChurn(CommandSourceStack source, double seconds) {
+        if (!PerfProfiler.isEnabled()) {
+            return;
+        }
+        if (ENTITY_TYPE_CHURN.isEmpty()) {
+            source.sendSuccess(() -> Component.literal("§7实体净增长: §8等待采样"), false);
+            return;
+        }
+
+        List<Map.Entry<String, long[]>> top = ENTITY_TYPE_CHURN.entrySet().stream()
+                .sorted(java.util.Comparator.comparingLong(
+                        (Map.Entry<String, long[]> entry) -> entry.getValue()[0] - entry.getValue()[1]).reversed())
+                .limit(5)
+                .toList();
+
+        source.sendSuccess(() -> Component.literal("§7实体净增长 Top:"), false);
+        for (Map.Entry<String, long[]> entry : top) {
+            long joins = entry.getValue()[0];
+            long leaves = entry.getValue()[1];
+            long net = joins - leaves;
+            String line = String.format("  §f%s§7: +%d / -%d §7(净 %+d, %.2f/s)",
+                    entry.getKey(), joins, leaves, net, net / seconds);
+            source.sendSuccess(() -> Component.literal(line), false);
         }
     }
 
@@ -113,6 +167,7 @@ public final class PerfDiagnostics {
         String churn = String.format("§7实体变化: §a+%d §7/ §c-%d §7(新增 %.1f/s, 消失 %.1f/s)",
                 joinDelta, leaveDelta, joinDelta / seconds, leaveDelta / seconds);
         source.sendSuccess(() -> Component.literal(churn), false);
+        reportEntityTypeChurn(source, seconds);
 
         lastSampleTick = nowTick;
         lastSampleMillis = nowMillis;

@@ -162,6 +162,14 @@ requireText(followers, "public static String debugSummary()", "follower debug su
 requireText(diagnostics, "EntityJoinLevelEvent", "entity join churn counter");
 requireText(diagnostics, "EntityLeaveLevelEvent", "entity leave churn counter");
 requireText(diagnostics, "实体变化", "entity churn report line");
+requireText(diagnostics, "private static final Map<String, long[]> ENTITY_TYPE_CHURN", "per-type churn map");
+requireText(diagnostics, "private static void countEntityType(Entity entity, boolean joining)", "per-type counter");
+requireText(diagnostics, "if (PerfProfiler.isEnabled()) {", "per-type churn gated by profiler");
+requireText(diagnostics, "private static void reportEntityTypeChurn(CommandSourceStack source, double seconds)",
+        "per-type churn report");
+requireText(diagnostics, "实体净增长 Top:", "per-type churn headline");
+requireText(diagnostics, "public static void resetEntityTypeChurn()", "per-type churn reset");
+requireText(followerCommands, "PerfDiagnostics.resetEntityTypeChurn();", "churn reset wiring");
 requireText(diagnostics, "reportProfiler(source)", "profiler report section");
 requireText(followerCommands, 'Commands.literal("on")', "perf on subcommand");
 requireText(followerCommands, "PerfProfiler.setEnabled(true)", "perf enable wiring");

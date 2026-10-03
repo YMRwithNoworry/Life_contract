@@ -548,6 +548,7 @@ public class ContractCommands {
                         .then(Commands.literal("on")
                                 .executes(context -> {
                                         PerfProfiler.reset();
+                                        PerfDiagnostics.resetEntityTypeChurn();
                                         PerfProfiler.setEnabled(true);
                                         context.getSource().sendSuccess(() -> Component.literal(
                                                 "§a[性能] §f分段计时已开启，稍后执行 §e/contract perf §f查看结果。"), true);
@@ -563,6 +564,7 @@ public class ContractCommands {
                         .then(Commands.literal("reset")
                                 .executes(context -> {
                                         PerfProfiler.reset();
+                                        PerfDiagnostics.resetEntityTypeChurn();
                                         context.getSource().sendSuccess(() -> Component.literal(
                                                 "§e[性能] §f分段计时计数已清零。"), true);
                                         return 1;
