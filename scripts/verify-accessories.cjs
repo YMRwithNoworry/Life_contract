@@ -58,6 +58,22 @@ for (const category of CATEGORIES) {
   if (!byCategory[category]) throw new Error("类别 " + category + " 没有任何物品");
 }
 
+// 2.5) 玩家 head 槽位：王冠必须能装进 Curios，靠数据包给玩家开放该槽位
+const entitiesData = "src/main/resources/data/life_contract/curios/entities/player.json";
+if (!exists(entitiesData)) {
+  throw new Error("缺少 " + entitiesData + "（没有它玩家就没有 head 槽位，王冠无法装备）");
+}
+const entitiesJson = JSON.parse(read(entitiesData));
+if (!Array.isArray(entitiesJson.entities) || !entitiesJson.entities.includes("minecraft:player")) {
+  throw new Error("curios entities 数据必须指向 minecraft:player");
+}
+if (!Array.isArray(entitiesJson.slots) || !entitiesJson.slots.includes("head")) {
+  throw new Error("curios entities 数据必须给玩家开放 head 槽位");
+}
+if (entitiesJson.replace !== false) {
+  throw new Error("curios entities 数据必须 replace=false，否则会覆盖 Curios 的默认槽位");
+}
+
 // 3) Curios 槽位标签
 for (const [category, slot] of Object.entries(SLOTS)) {
   const file = "src/main/resources/data/curios/tags/item/" + slot + ".json";
