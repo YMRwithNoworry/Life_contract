@@ -222,10 +222,13 @@ Events run automatically alongside a match and pause together with it. The event
 Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team inventory) declares a compact
 design size and then clamps itself to the actual screen through `UiLayout.fitToScreen`. GUI scale is picked
 automatically from the physical resolution - 1920x1080 lands on scale 4, i.e. a logical 480x270 - so a panel
-larger than that would simply run off the screen. The sublimation shop keeps the product list and the
-accessory detail card in the same slot and swaps between them on left-click, which is what keeps it down to
-320 pixels wide. `scripts/verify-ui-fit.cjs` fails the build if a panel grows past the safe bound or stops
-clamping itself.
+larger than that would simply run off the screen. The two panels that spend Sublimation are deliberately
+small - the shop is 224x152 and the mutation tree 264x160, roughly a third of the screen width - and their
+lists scroll through `UiLayout.verticalScroller()`, which keeps the scrollbar visible at all times instead of
+only while scrolling. Text inside them goes through `UiLayout.wrapText`, so a narrow panel wraps instead of
+clipping. The sublimation shop keeps the product list and the accessory detail card in the same slot and
+swaps between them on left-click, which is what keeps it that narrow. `scripts/verify-ui-fit.cjs` fails the
+build if a panel grows past the safe bound, stops clamping itself, or drops its scrollbar/wrapping.
 
 The HUD displays the current team ID, active contract mod, current profession, and a list of online teammates. During a match it also lists the key waypoints: the End portal coordinates (with live distance and opened/closed state) and the border centre.
 

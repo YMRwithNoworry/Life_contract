@@ -31,11 +31,12 @@ import java.util.Map;
  */
 public final class AccessoryDetailCard {
 
-    private static final int LINE_HEIGHT = 11;
     /** 实时数据的刷新间隔（tick）。 */
     private static final int REFRESH_TICKS = 10;
-    /** 说明文字的行宽：面板按 320 宽设计，这里预留内边距与滚动条。 */
-    private static final int TEXT_WIDTH = 268;
+    private static final int PANEL_PADDING = 6;
+    private static final int PANEL_GAP = 4;
+    private static final int CLOSE_BUTTON_WIDTH = 48;
+    private static final int CLOSE_BUTTON_HEIGHT = 18;
 
     private final UIElement root = new UIElement();
     private final UIElement body = new UIElement();
@@ -49,20 +50,21 @@ public final class AccessoryDetailCard {
     public AccessoryDetailCard(Player viewer, Runnable onClose) {
         this.viewer = viewer;
 
-        root.getLayout().widthPercent(100).flexGrow(1).paddingAll(8).gapAll(4);
+        root.getLayout().widthPercent(100).flexGrow(1).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
         root.addClass("panel_bg");
 
         UIElement header = new UIElement();
-        header.getLayout().widthPercent(100).flexDirection(FlexDirection.ROW).gapAll(6);
+        header.getLayout().widthPercent(100).flexDirection(FlexDirection.ROW).gapAll(PANEL_GAP);
         header.getLayout().alignItems(AlignItems.CENTER);
 
-        title.getLayout().flexGrow(1).height(LINE_HEIGHT * 2);
+        title.getLayout().flexGrow(1);
+        UiLayout.wrapText(title);
         title.setValue(Component.translatable("gui.life_contract.accessory.detail.hint")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         Button close = new Button().setText(Component.translatable("gui.life_contract.accessory.detail.close"));
-        close.getLayout().width(64).height(20);
+        close.getLayout().width(CLOSE_BUTTON_WIDTH).height(CLOSE_BUTTON_HEIGHT);
         close.setOnClick(event -> {
             if (onClose != null) {
                 onClose.run();
@@ -71,9 +73,9 @@ public final class AccessoryDetailCard {
 
         header.addChildren(title, close);
 
-        ScrollerView scroller = new ScrollerView();
+        ScrollerView scroller = UiLayout.verticalScroller();
         scroller.getLayout().widthPercent(100).flexGrow(1);
-        body.getLayout().flexDirection(FlexDirection.COLUMN).gapAll(0);
+        body.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(0);
         scroller.viewContainer(container -> container.addChild(body));
 
         root.addChildren(header, scroller);
@@ -109,7 +111,9 @@ public final class AccessoryDetailCard {
                 current, resonanceTiers(), chargeStacks(current));
         for (Component line : lines) {
             Label label = new Label().setValue(line);
-            label.getLayout().width(TEXT_WIDTH).height(LINE_HEIGHT);
+            label.getLayout().widthPercent(100);
+            // 面板只有 224 宽，说明文字必须自己折行，否则超宽的行会被直接裁掉
+            UiLayout.wrapText(label);
             body.addChild(label);
         }
     }

@@ -9,6 +9,13 @@ const clientDir = path.join(root, "src/main/java/org/alku/life_contract/client")
 const MAX_DESIGN_WIDTH = 460;
 const MAX_DESIGN_HEIGHT = 250;
 
+// 两个消耗升华的界面（升华商店 / 阵营异变树）必须保持"小面板"：
+// 它们是高频打开的操作界面，铺满半个屏幕会挡住游戏画面。
+const SMALL_PANELS = {
+  "SublimationShopUIHolder.java": { width: 224, height: 152 },
+  "MutationUIHolder.java": { width: 264, height: 160 },
+};
+
 const holders = fs.readdirSync(clientDir).filter((name) => name.endsWith("UIHolder.java"));
 if (holders.length === 0) {
   throw new Error("no UI holder found");
@@ -34,14 +41,31 @@ for (const holder of holders) {
   }
 }
 
-// 3) 升华商店与异变树（都用升华）必须是单列布局，不能再左右分栏把界面撑宽。
+// 3) 升华商店与异变树：小面板 + 单列 + 常显滑块。
 const shop = fs.readFileSync(path.join(clientDir, "SublimationShopUIHolder.java"), "utf8");
-if (!shop.includes("PANEL_WIDTH = 320")) {
-  throw new Error("sublimation shop should stay at the 320-wide design");
-}
 for (const needed of ["TaffyDisplay.NONE", "TaffyDisplay.FLEX"]) {
   if (!shop.includes(needed)) {
     throw new Error("sublimation shop should swap views via " + needed);
+  }
+}
+
+for (const [holder, size] of Object.entries(SMALL_PANELS)) {
+  const source = fs.readFileSync(path.join(clientDir, holder), "utf8");
+  if (!source.includes("PANEL_WIDTH = " + size.width) ||
+      !source.includes("PANEL_HEIGHT = " + size.height)) {
+    throw new Error(holder + " should stay at the " + size.width + "x" + size.height + " design");
+  }
+  // 列表必须常显滑块（默认的 AUTO 只在滚动时才画出来，玩家看不出还能往下翻）。
+  if (!source.includes("UiLayout.verticalScroller()")) {
+    throw new Error(holder + " should scroll with UiLayout.verticalScroller()");
+  }
+}
+
+// 4) 窄面板里的文字必须自动折行，否则超宽的行会被直接裁掉。
+for (const file of ["SublimationShopUIHolder.java", "MutationUIHolder.java", "AccessoryDetailCard.java"]) {
+  const source = fs.readFileSync(path.join(clientDir, file), "utf8");
+  if (!source.includes("UiLayout.wrapText(")) {
+    throw new Error(file + " should wrap its text with UiLayout.wrapText");
   }
 }
 

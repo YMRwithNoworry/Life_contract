@@ -23,14 +23,15 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "mutation_tree");
 
     /** 设计尺寸；会被 UiLayout.fitToScreen 夹进屏幕（最小可用逻辑分辨率约 426x240）。 */
-    private static final int PANEL_WIDTH = 420;
-    private static final int PANEL_HEIGHT = 236;
-    /** 一张卡片占一行的比例，两张 + 8px 间距正好铺满。 */
+    private static final int PANEL_WIDTH = 264;
+    private static final int PANEL_HEIGHT = 160;
+    private static final int PANEL_PADDING = 6;
+    private static final int PANEL_GAP = 4;
+    /** 一张卡片占一行的比例，两张 + 6px 间距正好铺满。 */
     private static final float CARD_WIDTH_PERCENT = 49.0F;
-    private static final int CARD_BUTTON_HEIGHT = 34;
-    private static final int CARD_EFFECT_HEIGHT = 54;
-    /** 效果说明的折行宽度（按字符数），要和卡片宽度匹配，否则文字会被裁掉。 */
-    private static final int EFFECT_WRAP_CHARS = 20;
+    private static final int CARD_GAP = 6;
+    /** 按钮要放下「节点名 + Lv.x/y · n 升华」两行。 */
+    private static final int CARD_BUTTON_HEIGHT = 26;
 
     private final Player owner;
 
@@ -48,17 +49,21 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
                 : 0;
         int initialTotalLevels = initialState == null ? 0 : initialState.totalLevels();
         UIElement root = new UIElement();
-        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT).paddingAll(8).gapAll(6);
+        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
         root.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.mutations.title"));
         Label balance = new Label().setValue(Component.translatable("gui.life_contract.mutations.balance",
                 initialMp, initialTotalLevels));
-        ScrollerView scroll = new ScrollerView();
+        for (Label header : List.of(title, balance)) {
+            header.getLayout().widthPercent(100);
+            UiLayout.wrapText(header);
+        }
+        ScrollerView scroll = UiLayout.verticalScroller();
         scroll.getLayout().widthPercent(100).flexGrow(1);
         UIElement rows = new UIElement();
-        rows.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(8);
+        rows.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(CARD_GAP);
         scroll.viewContainer(container -> container.addChild(rows));
 
         UIElement row = null;
@@ -67,7 +72,7 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
         for (MutationNode node : MutationNode.values()) {
             if (row == null) {
                 row = new UIElement();
-                row.getLayout().widthPercent(100).flexDirection(FlexDirection.ROW).gapAll(8);
+                row.getLayout().widthPercent(100).flexDirection(FlexDirection.ROW).gapAll(CARD_GAP);
                 row.getLayout().alignItems(AlignItems.START);
             }
             UIElement card = new UIElement();
@@ -78,7 +83,9 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
             int initialLevel = initialState == null ? 0 : initialState.level(node);
             upgrade.setText(buttonText(node, initialLevel));
             Label effect = new Label().setValue(effectText(node, initialLevel));
-            effect.getLayout().widthPercent(100).height(CARD_EFFECT_HEIGHT);
+            effect.getLayout().widthPercent(100);
+            // 卡片只有 127 宽，效果说明交给折行 + 自适应高度，不再手工数格子
+            UiLayout.wrapText(effect);
             upgrade.setOnServerClick(event -> {
                 if (!(owner instanceof ServerPlayer clicker)) return;
                 String result = MutationService.upgrade(clicker, node);
@@ -113,18 +120,7 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
 
     private static Component effectText(MutationNode node, int level) {
         String text = level >= node.maxLevel() ? "已满级" : node.effectAt(level + 1);
-        StringBuilder wrapped = new StringBuilder();
-        int lineLength = 0;
-        for (int index = 0; index < text.length(); index++) {
-            char character = text.charAt(index);
-            if (lineLength >= EFFECT_WRAP_CHARS && character != ' ' && character != '，' && character != '、') {
-                wrapped.append('\n');
-                lineLength = 0;
-            }
-            wrapped.append(character);
-            lineLength = character == '\n' ? 0 : lineLength + 1;
-        }
-        return Component.literal(wrapped.toString());
+        return Component.literal(text);
     }
 
     @Override
