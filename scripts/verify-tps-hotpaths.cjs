@@ -107,6 +107,11 @@ const eventHud = read("src/main/java/org/alku/life_contract/client/EventHUD.java
 requireText(eventHud, "cachedStatusLines", "event HUD cached lines");
 requireText(eventHud, "buildStatusLines(minecraft)", "event HUD rebuild path");
 forbidText(contractEvents, "onServerTick", "dead per-tick handler");
+// 名牌渲染每帧都会触发 NameFormat，队伍颜色必须按 tick 缓存
+requireText(contractEvents, "private record TeamColorStamp(int tick, int color)", "team colour stamp");
+requireText(contractEvents, "private static int getCachedTeamColor(Player player)", "cached team colour");
+requireText(contractEvents, "int teamColor = getCachedTeamColor(player);", "NameFormat uses cache");
+requireText(contractEvents, "TEAM_COLOR_CACHE.remove(playerId);", "team colour cache pruned");
 requireText(contractEvents, "LAST_ATTACKER_MOD.remove(playerId)", "attack map pruned on logout");
 requireText(contractEvents, "LAST_ATTACK_TIME.remove(playerId)", "attack time map pruned on logout");
 
@@ -137,6 +142,8 @@ for (const [file, section] of [
   ["src/main/java/org/alku/life_contract/events/GameEventManager.java", "GameEventManager"],
   ["src/main/java/org/alku/life_contract/events/WorldEventManager.java", "WorldEventManager"],
   ["src/main/java/org/alku/life_contract/TeamSmelter.java", "TeamSmelter"],
+  ["src/main/java/org/alku/life_contract/airdrop/event/CommonEvents.java", "Airdrop.levelTick"],
+  ["src/main/java/org/alku/life_contract/endgame/StrongholdEndgameManager.java", "EndBoss.levelTick"],
 ]) {
   const source = read(file);
   requireText(source, "long perfStart = PerfProfiler.begin();", section + " timing start");

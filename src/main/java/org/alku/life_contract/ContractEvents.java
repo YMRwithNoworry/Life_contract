@@ -32,6 +32,27 @@ public class ContractEvents {
     private static final Map<UUID, Long> LAST_ATTACK_TIME = new HashMap<>();
     private static final long ATTACK_EXPIRE_TICKS = 100;
 
+    /**
+     * 队伍颜色按 tick 缓存。
+     * NameFormat 在每次 {@code Player#getDisplayName()} 时触发，也就是名牌渲染的每一帧、每个可见玩家都会走一遍，
+     * 而它要读持久化数据并算一次 UUID 哈希；同一 tick 内结果必然相同，缓存即可省掉绝大部分开销。
+     */
+    private record TeamColorStamp(int tick, int color) {
+    }
+
+    private static final Map<UUID, TeamColorStamp> TEAM_COLOR_CACHE = new HashMap<>();
+
+    private static int getCachedTeamColor(Player player) {
+        TeamColorStamp cached = TEAM_COLOR_CACHE.get(player.getUUID());
+        if (cached != null && cached.tick() == player.tickCount) {
+            return cached.color();
+        }
+
+        int color = getTeamColor(player);
+        TEAM_COLOR_CACHE.put(player.getUUID(), new TeamColorStamp(player.tickCount, color));
+        return color;
+    }
+
     @SubscribeEvent
     public static void onPlayerNameFormat(PlayerEvent.NameFormat event) {
         if (event.getDisplayname() == null)
@@ -39,7 +60,7 @@ public class ContractEvents {
 
         Player player = event.getEntity();
         
-        int teamColor = getTeamColor(player);
+        int teamColor = getCachedTeamColor(player);
 
         MutableComponent styledName = Component.literal("").withStyle(style -> style.withColor(teamColor));
         styledName = styledName.append(event.getDisplayname().copy());
@@ -51,7 +72,7 @@ public class ContractEvents {
     public static void onTabListFormat(PlayerEvent.TabListNameFormat event) {
         Player player = event.getEntity();
         
-        int teamColor = getTeamColor(player);
+        int teamColor = getCachedTeamColor(player);
         String effectiveMod = getEffectiveContractMod(player);
 
         MutableComponent result = Component.literal(player.getGameProfile().getName())
@@ -70,6 +91,7 @@ public class ContractEvents {
         UUID playerId = event.getEntity().getUUID();
         LAST_ATTACKER_MOD.remove(playerId);
         LAST_ATTACK_TIME.remove(playerId);
+        TEAM_COLOR_CACHE.remove(playerId);
     }
 
     @SubscribeEvent

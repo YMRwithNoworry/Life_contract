@@ -15,6 +15,7 @@ import org.alku.life_contract.airdrop.command.AirdropCommand;
 import org.alku.life_contract.airdrop.data.AirdropSavedData;
 import org.alku.life_contract.airdrop.entity.AirdropEntity;
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.PerfProfiler;
 
 @EventBusSubscriber(modid = Life_contract.MODID)
 public class CommonEvents {
@@ -70,6 +71,15 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickAirdrops(event);
+        } finally {
+            PerfProfiler.end("Airdrop.levelTick", perfStart);
+        }
+    }
+
+    private static void tickAirdrops(LevelTickEvent.Post event) {
         if (event.getLevel().isClientSide())
             return;
 

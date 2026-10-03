@@ -47,6 +47,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.PerfProfiler;
 import org.alku.life_contract.events.GameEventManager;
 
 import java.util.ArrayList;
@@ -336,6 +337,15 @@ public final class StrongholdEndgameManager {
 
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickEndBoss(event);
+        } finally {
+            PerfProfiler.end("EndBoss.levelTick", perfStart);
+        }
+    }
+
+    private static void tickEndBoss(LevelTickEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel endLevel)
                 || !Level.END.equals(endLevel.dimension())
                 || endBossUuid == null) {
