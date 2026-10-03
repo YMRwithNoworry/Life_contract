@@ -150,7 +150,7 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 
 * **Categories**: pendant (10), ring (10), charm (12), crown (11), amulet (4), consumable (3), material (20).
 * **Rule**: only the highest tier accessory of each category takes effect, so at most five bonuses are active at once.
-* **Where they work**: carrying them in the main inventory is enough; with **Curios** installed they can also be worn in the matching slots (pendant/amulet -> necklace, ring -> ring, charm -> charm, crown -> head). Curios is a soft dependency resolved by reflection, so the mod loads without it.
+* **Equipping**: accessories only work while equipped in an accessory slot; carrying them in the inventory does nothing. The mod ships its own slot UI (`U` -> Accessory Slots, or `/contract accessory gui`, `/contract accessory equip|unequip`), and with **Curios** installed the matching Curios slots work too (pendant/amulet -> necklace, ring -> ring, charm -> charm, crown -> head). Curios stays a soft dependency resolved by reflection, so the mod loads without it. Slots persist through death.
 * **Effects**: attributes (health, armour, toughness, attack damage/speed, movement speed, knockback resistance, luck), combat effects (sublimation drop bonus, lifesteal, damage reduction) and passive potion effects for tier 3 and above.
 * **Obtaining**: buy them with Sublimation in the shop (tier 1-5 = 60/120/200/320/500, consumables 20-90, materials 8-35) or craft them; every item has a crafting recipe under `data/life_contract/recipe/accessory_*.json`, and materials are crafted from vanilla items.
 

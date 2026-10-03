@@ -105,7 +105,8 @@ public final class AccessoryEffects {
      */
     private static Map<AccessoryCategory, AccessoryDefinition> bestPerCategory(Player player) {
         Map<AccessoryCategory, AccessoryDefinition> best = new EnumMap<>(AccessoryCategory.class);
-        for (ItemStack stack : player.getInventory().items) {
+        // 只有"装进饰品栏"的饰品才生效：本模组饰品栏 + Curios 槽位
+        for (ItemStack stack : AccessorySlots.all(player).values()) {
             consider(best, stack);
         }
         for (ItemStack stack : CuriosCompat.equippedStacks(player)) {

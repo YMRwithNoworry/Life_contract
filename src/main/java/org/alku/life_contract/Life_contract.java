@@ -127,6 +127,8 @@ public class Life_contract {
         PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
         PlayerUIMenuType.register(TeamInventoryUIHolder.UI_ID, TeamInventoryUIHolder::new);
         PlayerUIMenuType.register(MutationUIHolder.UI_ID, MutationUIHolder::new);
+        PlayerUIMenuType.register(org.alku.life_contract.client.AccessoryUIHolder.UI_ID,
+                org.alku.life_contract.client.AccessoryUIHolder::new);
         Airdrop.register(modEventBus);
 
         ITEMS.register(modEventBus);
