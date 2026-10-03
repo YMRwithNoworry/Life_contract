@@ -12,8 +12,8 @@ const MAX_DESIGN_HEIGHT = 250;
 // 两个消耗升华的界面（升华商店 / 阵营异变树）必须保持"小面板"：
 // 它们是高频打开的操作界面，铺满半个屏幕会挡住游戏画面。
 const SMALL_PANELS = {
-  "SublimationShopUIHolder.java": { width: 176, height: 112 },
-  "MutationUIHolder.java": { width: 192, height: 116 },
+  "SublimationShopUIHolder.java": { width: 208, height: 136 },
+  "MutationUIHolder.java": { width: 232, height: 144 },
 };
 
 const holders = fs.readdirSync(clientDir).filter((name) => name.endsWith("UIHolder.java"));

@@ -224,7 +224,7 @@ Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team invent
 design size and then clamps itself to the actual screen through `UiLayout.fitToScreen`. GUI scale is picked
 automatically from the physical resolution - 1920x1080 lands on scale 4, i.e. a logical 480x270 - so a panel
 larger than that would simply run off the screen. The two panels that spend Sublimation are deliberately
-small - the shop is 224x152 and the mutation tree 264x160, roughly a third of the screen width - and their
+small - the shop is 208x136 and the mutation tree 232x144, about half the screen width - and their
 lists scroll through `UiLayout.verticalScroller()`, which keeps the scrollbar visible at all times instead of
 only while scrolling. Text inside them goes through `UiLayout.wrapText`, so a narrow panel wraps instead of
 clipping. The sublimation shop keeps the product list and the accessory detail card in the same slot and

@@ -23,17 +23,17 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "mutation_tree");
 
     /** 设计尺寸；会被 UiLayout.fitToScreen 夹进屏幕（最小可用逻辑分辨率约 426x240）。 */
-    private static final int PANEL_WIDTH = 192;
-    private static final int PANEL_HEIGHT = 116;
+    private static final int PANEL_WIDTH = 232;
+    private static final int PANEL_HEIGHT = 144;
     private static final int PANEL_PADDING = 4;
     private static final int PANEL_GAP = 3;
     /** MC 字体一行的高度，用来把列表可视高度算成确定值。 */
     private static final int LABEL_HEIGHT = 9;
     /** 一张卡片占一行的比例：48% × 2 + 间距刚好铺满，并给滚动条留出位置。 */
     private static final float CARD_WIDTH_PERCENT = 48.0F;
-    private static final int CARD_GAP = 5;
-    /** 按钮要放下「节点名 + Lv.x/y · n」两行。 */
-    private static final int CARD_BUTTON_HEIGHT = 24;
+    private static final int CARD_GAP = 6;
+    /** 按钮要放下「节点名 + Lv.x/y · n 升华」两行。 */
+    private static final int CARD_BUTTON_HEIGHT = 26;
     /**
      * 列表可视高度（写死，理由同升华商店：flex 的 min-height 会被内容顶开，
      * 写死 + {@code minHeight(0)} 才能保证滑块一定拖得动）。
@@ -44,7 +44,7 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
      * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
      * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
      */
-    private static final int PANEL_LIFT = 40;
+    private static final int PANEL_LIFT = 44;
 
     private final Player owner;
 
@@ -132,10 +132,9 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
                 UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT + PANEL_LIFT)), player);
     }
 
-    /** 卡片只有 88 像素宽，"升华"两个字省掉（顶部余额行已经写明单位），否则按钮文字会被裁掉。 */
     private static Component buttonText(MutationNode node, int level) {
         int nextCost = node.costForNext(level);
-        String cost = nextCost < 0 ? "MAX" : Integer.toString(nextCost);
+        String cost = nextCost < 0 ? "MAX" : nextCost + " 升华";
         return Component.literal(node.title + "\nLv." + level + "/" + node.maxLevel() + " · " + cost);
     }
 

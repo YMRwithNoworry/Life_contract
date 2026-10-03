@@ -46,17 +46,17 @@ import java.util.List;
 public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "sublimation_shop");
 
-    /** 设计尺寸（会被夹进屏幕）。1920x1080 下逻辑分辨率只有 480x270，所以面板要尽量小。 */
-    private static final int PANEL_WIDTH = 176;
-    private static final int PANEL_HEIGHT = 112;
+    /** 设计尺寸（会被夹进屏幕）。1920x1080 下逻辑分辨率只有 480x270，面板保持小巧但别太小。 */
+    private static final int PANEL_WIDTH = 208;
+    private static final int PANEL_HEIGHT = 136;
     private static final int PANEL_PADDING = 4;
     private static final int PANEL_GAP = 3;
     /** MC 字体一行的高度，用来把列表可视高度算成确定值。 */
     private static final int LABEL_HEIGHT = 9;
     /** 兑换按钮宽度；商品名占满剩下的宽度（flexGrow），窄面板下不会把按钮挤出面板。 */
-    private static final int ROW_BUTTON_WIDTH = 76;
-    private static final int ROW_HEIGHT = 16;
-    private static final int ROW_GAP = 2;
+    private static final int ROW_BUTTON_WIDTH = 84;
+    private static final int ROW_HEIGHT = 18;
+    private static final int ROW_GAP = 3;
     private static final int FOOTER_HEIGHT = 16;
     /**
      * 列表可视高度：面板高 − 内边距 − 标题 − 当前模组 − 返回按钮 − 三条间距。
@@ -71,7 +71,7 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
      * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
      * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
      */
-    private static final int PANEL_LIFT = 40;
+    private static final int PANEL_LIFT = 44;
 
     private final Player owner;
 

@@ -27,12 +27,12 @@ public final class UpgradeHubUIHolder implements PlayerUIMenuType.PlayerUIHolder
     @Override
     public ModularUI createUI(Player player) {
         UIElement root = new UIElement();
-        root.getLayout().width(176).paddingAll(6).gapAll(4);
+        root.getLayout().width(200).paddingAll(8).gapAll(6);
         root.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.upgrade_hub.title"));
         Button shop = new Button().setText(Component.translatable("gui.life_contract.upgrade_hub.shop"));
-        shop.getLayout().width(164).height(22);
+        shop.getLayout().width(184).height(26);
         shop.setOnServerClick(event -> {
             if (owner instanceof ServerPlayer serverPlayer) {
                 PlayerUIMenuType.openUI(serverPlayer, SublimationShopUIHolder.UI_ID);
@@ -40,7 +40,7 @@ public final class UpgradeHubUIHolder implements PlayerUIMenuType.PlayerUIHolder
         });
 
         Button mutation = new Button().setText(Component.translatable("gui.life_contract.upgrade_hub.mutations"));
-        mutation.getLayout().width(164).height(22);
+        mutation.getLayout().width(184).height(26);
         mutation.setOnServerClick(event -> {
             if (owner instanceof ServerPlayer serverPlayer) {
                 MutationPackets.open(serverPlayer);
@@ -50,7 +50,7 @@ public final class UpgradeHubUIHolder implements PlayerUIMenuType.PlayerUIHolder
         root.addChildren(title, shop, mutation);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
-                UiLayout.fitToScreen(176, 74)), player);
+                UiLayout.fitToScreen(200, 90)), player);
     }
 
     @Override
