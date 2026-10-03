@@ -41,8 +41,14 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 ### Lives
 
 * Every participant starts a match with `5` lives (`/contract game start` resets them all).
-* Each death costs one life; the remaining count is shown on the player's nameplate as `LP: N`.
-* Dying on your **last life** puts you straight into Spectator mode, and respawning never brings an eliminated player back.
+* **Lethal damage never kills a player who still has a life.** The hit is cancelled, the player is instantly
+  restored to full health, gains **Resistance IV for 5 seconds**, and loses one life. Any fire on the player is
+  put out at the same time, so nobody is re-killed by the flames that just took them down.
+* Damage that bypasses invulnerability - the void and `/kill` - is not intercepted. It kills normally and still
+  costs a life.
+* At `0` lives the next lethal hit is fatal: the player goes straight into Spectator mode, and respawning never
+  brings an eliminated player back.
+* The remaining count is shown on the nameplate as `LP: N` and in the bottom-left HUD.
 * A teammate revived by the revive system returns in Survival with at least `1` life.
 
 ### Team Structure

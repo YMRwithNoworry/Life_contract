@@ -85,7 +85,9 @@ public final class LifePointsHUD {
         }
 
         Component label = Component.translatable("hud.life_contract.lives");
-        boolean eliminated = lives <= 0;
+        // 命数归零但人还活着（"浴血重生"用完了最后一条命）时仍然显示心格；
+        // 只有真正被判定出局（旁观模式）才显示"已出局"。
+        boolean eliminated = lives <= 0 && minecraft.player.isSpectator();
 
         int slots = eliminated
                 ? DEFAULT_LIFE_SLOTS
