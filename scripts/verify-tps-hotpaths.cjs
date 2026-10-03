@@ -79,7 +79,29 @@ requireText(followers, "INSTALLED_AI_GOALS.remove(mobUUID);", "goal tracking pru
 const golem = read("src/main/java/org/alku/life_contract/TeamIronGolemSystem.java");
 requireText(golem, "removeGolemFromCache(golem.getUUID())", "golem cache prune");
 
-// 8) 高度与深层矿物补丁不应回归
+// 8) 「标记」集火扫描按 tick 节流（枪械高频命中不再每一发都扫 64³ 范围）
+requireText(mutation, "MARK_AGGRO_INTERVAL_TICKS", "mark aggro throttle constant");
+requireText(mutation, "MARK_AGGRO_LAST_TICK.getOrDefault(p.getUUID(), -1000L)", "mark aggro throttle check");
+requireText(mutation, "MARK_AGGRO_LAST_TICK.remove(e.getEntity().getUUID())", "mark aggro state pruned");
+
+// 9) 登录时的全量实体扫描跳过已登记友军
+requireText(followers, "ownerUUID.equals(data.getUUID(TAG_CONTRACT_OWNER_UUID))", "skip already-registered allies");
+
+// 10) 客户端每帧热路径：命数查询走索引、守卫查询降频
+const client = read("src/main/java/org/alku/life_contract/ClientDataStorage.java");
+const nameplate = read("src/main/java/org/alku/life_contract/client/LifePointNameplateRenderer.java");
+const highlight = read("src/main/java/org/alku/life_contract/TeamHighlightRenderer.java");
+requireText(client, "public static int getLifePointsFor(UUID playerId)", "life point index");
+requireText(client, "playerLifePointMap.put(data.uuid(), data.lifePoints())", "life point index build");
+requireText(nameplate, "ClientDataStorage.getLifePointsFor(player.getUUID())", "nameplate uses index");
+forbidText(nameplate, "for (PacketSyncLifePoints.PlayerLifePoints", "nameplate must not scan the list");
+requireText(highlight, "GOLEM_QUERY_INTERVAL_TICKS", "golem query interval");
+requireText(highlight, "cachedTeamGolems", "golem query cache");
+const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
+requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");
+requireText(sublimation, "cachedColorMillis", "name colour cache state");
+
+// 11) 高度与深层矿物补丁不应回归
 forbidText(mixinConfig, "DimensionTypeHeightMixin", "height mixin");
 assertNoFile("src/main/java/org/alku/life_contract/world/DeepOreGenerationHandler.java");
 

@@ -21,6 +21,7 @@ public class ClientDataStorage {
     private static int healerCooldown = 0;
     
     private static List<PacketSyncLifePoints.PlayerLifePoints> playerLifePoints = new ArrayList<>();
+    private static final Map<UUID, Integer> playerLifePointMap = new HashMap<>();
 
     // ===== 游戏事件状态（由 EventSyncPayload 同步）=====
     private static boolean gameActive = false;
@@ -174,9 +175,20 @@ public class ClientDataStorage {
     
     public static void setPlayerLifePoints(List<PacketSyncLifePoints.PlayerLifePoints> playerLifePoints) {
         ClientDataStorage.playerLifePoints = playerLifePoints != null ? playerLifePoints : new ArrayList<>();
+        // 名牌渲染每帧、每个可见玩家都会查询一次，维护索引避免线性扫描
+        playerLifePointMap.clear();
+        for (PacketSyncLifePoints.PlayerLifePoints data : ClientDataStorage.playerLifePoints) {
+            playerLifePointMap.put(data.uuid(), data.lifePoints());
+        }
     }
 
     public static List<PacketSyncLifePoints.PlayerLifePoints> getPlayerLifePoints() { return playerLifePoints; }
+
+    /** 按 UUID 直接取命数，未同步到则返回 -1。 */
+    public static int getLifePointsFor(UUID playerId) {
+        Integer points = playerLifePointMap.get(playerId);
+        return points == null ? -1 : points;
+    }
 
     /**
      * 接收服务端的事件同步包，刷新事件 HUD 与安全气泡渲染所需的数据。

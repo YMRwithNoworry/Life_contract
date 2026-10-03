@@ -34,11 +34,7 @@ public class LifePointNameplateRenderer {
     }
 
     private static int getSyncedLifePoints(Player player) {
-        for (PacketSyncLifePoints.PlayerLifePoints data : ClientDataStorage.getPlayerLifePoints()) {
-            if (player.getUUID().equals(data.uuid())) {
-                return data.lifePoints();
-            }
-        }
-        return -1;
+        // 每帧、每个可见玩家都会调用，走 ClientDataStorage 里的 UUID 索引
+        return ClientDataStorage.getLifePointsFor(player.getUUID());
     }
 }

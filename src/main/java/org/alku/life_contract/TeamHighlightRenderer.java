@@ -19,6 +19,11 @@ import net.neoforged.fml.common.Mod;
 @EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class TeamHighlightRenderer {
     private static final double GOLEM_RENDER_DISTANCE = 20.0D;
+    /** 守卫血条是每帧渲染的，但“附近有哪些守卫”不必每帧查询一次。 */
+    private static final int GOLEM_QUERY_INTERVAL_TICKS = 10;
+
+    private static java.util.List<IronGolem> cachedTeamGolems = java.util.List.of();
+    private static int lastGolemQueryTick = -1000;
 
     public static boolean isHighlightEnabled = true;
 
@@ -45,8 +50,15 @@ public class TeamHighlightRenderer {
             }
         }
 
-        AABB nearby = player.getBoundingBox().inflate(GOLEM_RENDER_DISTANCE);
-        for (IronGolem golem : mc.level.getEntitiesOfClass(IronGolem.class, nearby)) {
+        if (player.tickCount - lastGolemQueryTick >= GOLEM_QUERY_INTERVAL_TICKS) {
+            lastGolemQueryTick = player.tickCount;
+            AABB nearby = player.getBoundingBox().inflate(GOLEM_RENDER_DISTANCE);
+            cachedTeamGolems = mc.level.getEntitiesOfClass(IronGolem.class, nearby);
+        }
+        for (IronGolem golem : cachedTeamGolems) {
+            if (!golem.isAlive()) {
+                continue;
+            }
             if (TeamIronGolemSystem.isTeamGolem(golem)
                     || golem.getCustomName() != null && golem.getCustomName().getString().contains("队伍守卫")) {
                 renderGolemHealth(poseStack, bufferSource, golem, partialTick);

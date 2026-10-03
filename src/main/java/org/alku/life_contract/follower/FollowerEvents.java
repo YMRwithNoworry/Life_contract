@@ -437,13 +437,21 @@ public class FollowerEvents {
 
     public static void registerContractModAllies(Player owner, String modId) {
         if (!(owner.level() instanceof ServerLevel serverLevel)) return;
+        UUID ownerUUID = owner.getUUID();
         for (ServerLevel level : serverLevel.getServer().getAllLevels()) {
             for (Entity entity : level.getAllEntities()) {
-                if (entity instanceof Mob mob) {
-                    ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
-                    if (key != null && modId.equals(key.getNamespace())) {
-                        registerContractModAlly(mob, owner.getUUID(), modId);
-                    }
+                if (!(entity instanceof Mob mob)) continue;
+                // 已经是本队友军的生物直接跳过：省掉注册表查询与重复的 NBT 写入
+                // （每次登录都会全量扫一遍实体，大世界里这一步的开销取决于要跳过多少）
+                CompoundTag data = mob.getPersistentData();
+                if (data.getBoolean(TAG_CONTRACT_ALLY)
+                        && data.hasUUID(TAG_CONTRACT_OWNER_UUID)
+                        && ownerUUID.equals(data.getUUID(TAG_CONTRACT_OWNER_UUID))) {
+                    continue;
+                }
+                ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+                if (key != null && modId.equals(key.getNamespace())) {
+                    registerContractModAlly(mob, ownerUUID, modId);
                 }
             }
         }
