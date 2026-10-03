@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:amethyst_star"
+    },
+    {
+      "item": "life_contract:white_feather"
+    }
+  ],
+  "result": {
+    "id": "life_contract:amethyst_butterfly",
+    "count": 1
+  }
+}

@@ -143,8 +143,18 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Sublimation Shop**: Spend Sublimation on supplies (flare gun, cooked beef), ammunition, and wool. Ammunition covers both the current contract mod's rounds and every ammo type TaCZ exposes (discovered at runtime, so new gun packs show up automatically; the section is hidden when TaCZ is absent). Pistols are the only guns on sale (the `GunTabType.PISTOL` category, every loaded gun pack included) at 150 Sublimation each. TaCZ gun attachments (scopes, grips, muzzles, magazines, stocks) are sold per piece as well. Wool costs 2 Sublimation per 16 and covers the whole `#minecraft:wool` tag, modded wool included.
 * **Team Sentinel**: A stationary 1000 HP Iron Golem that guards the team base.
 
----
+### Accessories
 
+70 accessory / consumable / material items ship with the mod, all driven by
+`data/life_contract/accessory_catalog.json` (item registration, effects, shop prices and recipes read that one file).
+
+* **Categories**: pendant (10), ring (10), charm (12), crown (11), amulet (4), consumable (3), material (20).
+* **Rule**: only the highest tier accessory of each category takes effect, so at most five bonuses are active at once.
+* **Where they work**: carrying them in the main inventory is enough; with **Curios** installed they can also be worn in the matching slots (pendant/amulet -> necklace, ring -> ring, charm -> charm, crown -> head). Curios is a soft dependency resolved by reflection, so the mod loads without it.
+* **Effects**: attributes (health, armour, toughness, attack damage/speed, movement speed, knockback resistance, luck), combat effects (sublimation drop bonus, lifesteal, damage reduction) and passive potion effects for tier 3 and above.
+* **Obtaining**: buy them with Sublimation in the shop (tier 1-5 = 60/120/200/320/500, consumables 20-90, materials 8-35) or craft them; every item has a crafting recipe under `data/life_contract/recipe/accessory_*.json`, and materials are crafted from vanilla items.
+
+---
 ## 🎲 Game Events
 
 Events run automatically alongside a match and pause together with it. The event HUD in the top-right corner lists active events, remaining time, and safe-bubble coordinates.

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:runed_obsidian_block"
+    },
+    {
+      "item": "life_contract:obsidian_shard"
+    },
+    {
+      "item": "life_contract:blood_star"
+    },
+    {
+      "item": "life_contract:bone_fang"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:obsidian_drop_pendant",
+    "count": 1
+  }
+}

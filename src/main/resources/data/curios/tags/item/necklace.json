@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "life_contract:amethyst_amulet",
+    "life_contract:amethyst_star_pendant",
+    "life_contract:azure_shard_pendant",
+    "life_contract:blood_crystal_pendant",
+    "life_contract:bone_fang_pendant",
+    "life_contract:crimson_eye_pendant",
+    "life_contract:golden_gem_pendant",
+    "life_contract:obsidian_drop_pendant",
+    "life_contract:ruby_amulet",
+    "life_contract:ruby_pendant",
+    "life_contract:sapphire_amulet",
+    "life_contract:sapphire_crystal_pendant",
+    "life_contract:violet_cross_pendant",
+    "life_contract:violet_eye_amulet"
+  ]
+}

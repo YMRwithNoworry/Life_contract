@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:blood_crystal_cluster"
+    },
+    {
+      "item": "minecraft:gold_ingot"
+    },
+    {
+      "item": "life_contract:herbal_leaf"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:ruby_amulet",
+    "count": 1
+  }
+}

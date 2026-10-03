@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "life_contract:item/accessory/56_amethyst_spike_orb"
+  }
+}

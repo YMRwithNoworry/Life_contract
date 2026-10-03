@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:obsidian_shard"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:silver_sapphire_ring",
+    "count": 1
+  }
+}

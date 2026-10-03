@@ -1,0 +1,847 @@
+[
+  {
+    "id": "golden_crown",
+    "texture": "36_golden_crown",
+    "category": "crown",
+    "tier": 5,
+    "name_zh": "黄金王冠",
+    "name_en": "Golden Crown",
+    "effect_zh": "幸运 +6，升华掉落 +30%",
+    "effect_en": "Luck +6, Sublimation Drops +30%",
+    "effects": [
+      {
+        "type": "LUCK",
+        "value": 6
+      },
+      {
+        "type": "SUBLIMATION_PERCENT",
+        "value": 30
+      }
+    ],
+    "consume": null,
+    "price": 500,
+    "recipe": {
+      "sublimation": 10,
+      "ingredients": [
+        "minecraft:gold_ingot",
+        "runed_obsidian_block",
+        "amethyst_star"
+      ]
+    }
+  },
+  {
+    "id": "silver_crown",
+    "texture": "37_silver_crown",
+    "category": "crown",
+    "tier": 3,
+    "name_zh": "白银王冠",
+    "name_en": "Silver Crown",
+    "effect_zh": "护甲韧性 +3，幸运 +3",
+    "effect_en": "Armor Toughness +3, Luck +3",
+    "effects": [
+      {
+        "type": "ARMOR_TOUGHNESS",
+        "value": 3
+      },
+      {
+        "type": "LUCK",
+        "value": 3
+      }
+    ],
+    "consume": null,
+    "price": 200,
+    "recipe": {
+      "sublimation": 6,
+      "ingredients": [
+        "minecraft:iron_ingot",
+        "white_feather",
+        "bone_fang"
+      ]
+    }
+  },
+  {
+    "id": "crimson_white_crown",
+    "texture": "38_crimson_white_crown",
+    "category": "crown",
+    "tier": 4,
+    "name_zh": "绯白王冠",
+    "name_en": "Crimson White Crown",
+    "effect_zh": "最大生命 +8，吸血 8%",
+    "effect_en": "Max Health +8, Lifesteal 8%",
+    "effects": [
+      {
+        "type": "MAX_HEALTH",
+        "value": 8
+      },
+      {
+        "type": "LIFESTEAL_PERCENT",
+        "value": 8
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "blood_crystal_cluster",
+        "white_feather",
+        "bone_fang"
+      ]
+    }
+  },
+  {
+    "id": "shadow_crown",
+    "texture": "39_shadow_crown",
+    "category": "crown",
+    "tier": 5,
+    "name_zh": "暗影王冠",
+    "name_en": "Shadow Crown",
+    "effect_zh": "攻击伤害 +3，夜视",
+    "effect_en": "Attack Damage +3, Night Vision",
+    "effects": [
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 3
+      },
+      {
+        "type": "NIGHT_VISION",
+        "value": 1
+      }
+    ],
+    "consume": null,
+    "price": 500,
+    "recipe": {
+      "sublimation": 12,
+      "ingredients": [
+        "runed_obsidian_block",
+        "obsidian_shard",
+        "grey_skull"
+      ]
+    }
+  },
+  {
+    "id": "ice_crown",
+    "texture": "40_ice_crown",
+    "category": "crown",
+    "tier": 4,
+    "name_zh": "寒冰王冠",
+    "name_en": "Ice Crown",
+    "effect_zh": "受到伤害 -12%，抗性提升 II",
+    "effect_en": "Damage Taken -12%, Resistance II",
+    "effects": [
+      {
+        "type": "DAMAGE_REDUCTION_PERCENT",
+        "value": 12
+      },
+      {
+        "type": "RESISTANCE",
+        "value": 2
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "snow_crystal",
+        "obsidian_shard",
+        "azure_cross"
+      ]
+    }
+  },
+  {
+    "id": "red_potion",
+    "texture": "41_red_potion",
+    "category": "consumable",
+    "tier": 3,
+    "name_zh": "红色药水",
+    "name_en": "Red Potion",
+    "effect_zh": "饮用后恢复 14 点生命",
+    "effect_en": "Restores 14 Health when drunk",
+    "effects": [],
+    "consume": {
+      "type": "HEAL",
+      "value": 14
+    },
+    "price": 50,
+    "recipe": {
+      "sublimation": 2,
+      "ingredients": [
+        "herbal_leaf",
+        "blood_crystal_cluster",
+        "minecraft:glass_bottle"
+      ]
+    }
+  },
+  {
+    "id": "blue_potion",
+    "texture": "42_blue_potion",
+    "category": "consumable",
+    "tier": 3,
+    "name_zh": "蓝色药水",
+    "name_en": "Blue Potion",
+    "effect_zh": "饮用后获得 60 秒夜视",
+    "effect_en": "Night Vision for 60s when drunk",
+    "effects": [],
+    "consume": {
+      "type": "NIGHT_VISION",
+      "value": 60
+    },
+    "price": 50,
+    "recipe": {
+      "sublimation": 2,
+      "ingredients": [
+        "herbal_leaf",
+        "minecraft:lapis_lazuli",
+        "minecraft:glass_bottle"
+      ]
+    }
+  },
+  {
+    "id": "purple_potion",
+    "texture": "43_purple_potion",
+    "category": "consumable",
+    "tier": 4,
+    "name_zh": "紫色药水",
+    "name_en": "Purple Potion",
+    "effect_zh": "饮用后获得 10 级经验",
+    "effect_en": "Grants 10 XP Levels when drunk",
+    "effects": [],
+    "consume": {
+      "type": "XP",
+      "value": 10
+    },
+    "price": 70,
+    "recipe": {
+      "sublimation": 4,
+      "ingredients": [
+        "herbal_leaf",
+        "amethyst_star",
+        "minecraft:glass_bottle"
+      ]
+    }
+  },
+  {
+    "id": "emerald_lantern",
+    "texture": "44_emerald_lantern",
+    "category": "charm",
+    "tier": 3,
+    "name_zh": "翠玉灯笼",
+    "name_en": "Emerald Lantern",
+    "effect_zh": "幸运 +3，夜视",
+    "effect_en": "Luck +3, Night Vision",
+    "effects": [
+      {
+        "type": "LUCK",
+        "value": 3
+      },
+      {
+        "type": "NIGHT_VISION",
+        "value": 1
+      }
+    ],
+    "consume": null,
+    "price": 200,
+    "recipe": {
+      "sublimation": 6,
+      "ingredients": [
+        "minecraft:emerald",
+        "minecraft:glowstone_dust",
+        "amethyst_spike_orb"
+      ]
+    }
+  },
+  {
+    "id": "empty_vial",
+    "texture": "45_empty_vial",
+    "category": "material",
+    "tier": 1,
+    "name_zh": "空药瓶",
+    "name_en": "Empty Vial",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 8,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:glass",
+        "minecraft:glass"
+      ]
+    }
+  },
+  {
+    "id": "amethyst_amulet",
+    "texture": "46_amethyst_amulet",
+    "category": "amulet",
+    "tier": 3,
+    "name_zh": "紫水晶护身符",
+    "name_en": "Amethyst Amulet",
+    "effect_zh": "最大生命 +6，生命恢复",
+    "effect_en": "Max Health +6, Regeneration",
+    "effects": [
+      {
+        "type": "MAX_HEALTH",
+        "value": 6
+      },
+      {
+        "type": "REGENERATION",
+        "value": 1
+      }
+    ],
+    "consume": null,
+    "price": 200,
+    "recipe": {
+      "sublimation": 6,
+      "ingredients": [
+        "amethyst_spike_orb",
+        "minecraft:string",
+        "herbal_leaf"
+      ]
+    }
+  },
+  {
+    "id": "ruby_amulet",
+    "texture": "47_ruby_amulet",
+    "category": "amulet",
+    "tier": 4,
+    "name_zh": "红宝石护身符",
+    "name_en": "Ruby Amulet",
+    "effect_zh": "攻击伤害 +2，吸血 8%",
+    "effect_en": "Attack Damage +2, Lifesteal 8%",
+    "effects": [
+      {
+        "type": "ATTACK_DAMAGE",
+        "value": 2
+      },
+      {
+        "type": "LIFESTEAL_PERCENT",
+        "value": 8
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "blood_crystal_cluster",
+        "minecraft:gold_ingot",
+        "herbal_leaf"
+      ]
+    }
+  },
+  {
+    "id": "sapphire_amulet",
+    "texture": "48_sapphire_amulet",
+    "category": "amulet",
+    "tier": 4,
+    "name_zh": "蓝宝石护身符",
+    "name_en": "Sapphire Amulet",
+    "effect_zh": "护甲韧性 +4，水下呼吸",
+    "effect_en": "Armor Toughness +4, Water Breathing",
+    "effects": [
+      {
+        "type": "ARMOR_TOUGHNESS",
+        "value": 4
+      },
+      {
+        "type": "WATER_BREATHING",
+        "value": 1
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "azure_cross",
+        "minecraft:string",
+        "snow_crystal"
+      ]
+    }
+  },
+  {
+    "id": "arcane_tome",
+    "texture": "49_arcane_tome",
+    "category": "charm",
+    "tier": 4,
+    "name_zh": "奥秘法典",
+    "name_en": "Arcane Tome",
+    "effect_zh": "升华掉落 +20%，幸运 +4",
+    "effect_en": "Sublimation Drops +20%, Luck +4",
+    "effects": [
+      {
+        "type": "SUBLIMATION_PERCENT",
+        "value": 20
+      },
+      {
+        "type": "LUCK",
+        "value": 4
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "ancient_scroll",
+        "minecraft:book",
+        "amethyst_star"
+      ]
+    }
+  },
+  {
+    "id": "crimson_knapsack",
+    "texture": "50_crimson_knapsack",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "绯红行囊",
+    "name_en": "Crimson Knapsack",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:leather",
+        "minecraft:string",
+        "minecraft:red_dye"
+      ]
+    }
+  },
+  {
+    "id": "white_feather",
+    "texture": "51_white_feather",
+    "category": "material",
+    "tier": 1,
+    "name_zh": "白色羽毛",
+    "name_en": "White Feather",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 8,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:feather",
+        "minecraft:white_dye"
+      ]
+    }
+  },
+  {
+    "id": "black_feather",
+    "texture": "52_black_feather",
+    "category": "material",
+    "tier": 2,
+    "name_zh": "黑色羽毛",
+    "name_en": "Black Feather",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 12,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:feather",
+        "minecraft:black_dye"
+      ]
+    }
+  },
+  {
+    "id": "bone_fang",
+    "texture": "53_bone_fang",
+    "category": "material",
+    "tier": 2,
+    "name_zh": "骨牙",
+    "name_en": "Bone Fang",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 12,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:bone",
+        "minecraft:flint"
+      ]
+    }
+  },
+  {
+    "id": "obsidian_shard",
+    "texture": "54_obsidian_shard",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "黑曜石碎片",
+    "name_en": "Obsidian Shard",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:obsidian",
+        "minecraft:flint"
+      ]
+    }
+  },
+  {
+    "id": "blood_crystal_cluster",
+    "texture": "55_blood_crystal_cluster",
+    "category": "material",
+    "tier": 4,
+    "name_zh": "血晶簇",
+    "name_en": "Blood Crystal Cluster",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 25,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:redstone",
+        "minecraft:amethyst_shard",
+        "minecraft:glowstone_dust"
+      ]
+    }
+  },
+  {
+    "id": "amethyst_spike_orb",
+    "texture": "56_amethyst_spike_orb",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "紫晶尖刺球",
+    "name_en": "Amethyst Spike Orb",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:amethyst_shard",
+        "minecraft:amethyst_shard",
+        "minecraft:pointed_dripstone"
+      ]
+    }
+  },
+  {
+    "id": "runed_obsidian_block",
+    "texture": "57_runed_obsidian_block",
+    "category": "material",
+    "tier": 4,
+    "name_zh": "符文黑曜石",
+    "name_en": "Runed Obsidian Block",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 25,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:obsidian",
+        "minecraft:glowstone_dust",
+        "minecraft:lapis_lazuli"
+      ]
+    }
+  },
+  {
+    "id": "ancient_scroll",
+    "texture": "58_ancient_scroll",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "古老卷轴",
+    "name_en": "Ancient Scroll",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:paper",
+        "minecraft:paper",
+        "minecraft:ink_sac"
+      ]
+    }
+  },
+  {
+    "id": "herbal_leaf",
+    "texture": "59_herbal_leaf",
+    "category": "material",
+    "tier": 1,
+    "name_zh": "草药叶",
+    "name_en": "Herbal Leaf",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 8,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:oak_leaves",
+        "minecraft:wheat_seeds"
+      ]
+    }
+  },
+  {
+    "id": "blood_star",
+    "texture": "60_blood_star",
+    "category": "material",
+    "tier": 5,
+    "name_zh": "血之星",
+    "name_en": "Blood Star",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 35,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:glowstone_dust",
+        "minecraft:redstone",
+        "minecraft:blaze_powder"
+      ]
+    }
+  },
+  {
+    "id": "azure_cross",
+    "texture": "61_azure_cross",
+    "category": "material",
+    "tier": 4,
+    "name_zh": "蔚蓝十字",
+    "name_en": "Azure Cross",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 25,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:lapis_lazuli",
+        "minecraft:gold_nugget",
+        "minecraft:quartz"
+      ]
+    }
+  },
+  {
+    "id": "grey_skull",
+    "texture": "62_grey_skull",
+    "category": "material",
+    "tier": 2,
+    "name_zh": "灰色骷髅头",
+    "name_en": "Grey Skull",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 12,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:bone",
+        "minecraft:bone",
+        "minecraft:charcoal"
+      ]
+    }
+  },
+  {
+    "id": "white_skull",
+    "texture": "63_white_skull",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "白色骷髅头",
+    "name_en": "White Skull",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:bone",
+        "minecraft:bone",
+        "minecraft:quartz"
+      ]
+    }
+  },
+  {
+    "id": "bat_wing",
+    "texture": "64_bat_wing",
+    "category": "material",
+    "tier": 1,
+    "name_zh": "蝙蝠之翼",
+    "name_en": "Bat Wing",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 8,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:leather",
+        "minecraft:string"
+      ]
+    }
+  },
+  {
+    "id": "sapphire_diadem",
+    "texture": "65_sapphire_diadem",
+    "category": "crown",
+    "tier": 5,
+    "name_zh": "蓝宝石冠冕",
+    "name_en": "Sapphire Diadem",
+    "effect_zh": "护甲韧性 +6，抗性提升 II",
+    "effect_en": "Armor Toughness +6, Resistance II",
+    "effects": [
+      {
+        "type": "ARMOR_TOUGHNESS",
+        "value": 6
+      },
+      {
+        "type": "RESISTANCE",
+        "value": 2
+      }
+    ],
+    "consume": null,
+    "price": 500,
+    "recipe": {
+      "sublimation": 12,
+      "ingredients": [
+        "azure_cross",
+        "snow_crystal",
+        "minecraft:diamond"
+      ]
+    }
+  },
+  {
+    "id": "amethyst_star",
+    "texture": "66_amethyst_star",
+    "category": "material",
+    "tier": 4,
+    "name_zh": "紫晶之星",
+    "name_en": "Amethyst Star",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 25,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:amethyst_shard",
+        "minecraft:glowstone_dust",
+        "minecraft:quartz"
+      ]
+    }
+  },
+  {
+    "id": "snow_crystal",
+    "texture": "67_snow_crystal",
+    "category": "material",
+    "tier": 3,
+    "name_zh": "霜雪水晶",
+    "name_en": "Snow Crystal",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 18,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:snowball",
+        "minecraft:quartz",
+        "minecraft:ice"
+      ]
+    }
+  },
+  {
+    "id": "violet_eye_amulet",
+    "texture": "68_violet_eye_amulet",
+    "category": "amulet",
+    "tier": 4,
+    "name_zh": "紫罗兰之眼护身符",
+    "name_en": "Violet Eye Amulet",
+    "effect_zh": "幸运 +4，夜视",
+    "effect_en": "Luck +4, Night Vision",
+    "effects": [
+      {
+        "type": "LUCK",
+        "value": 4
+      },
+      {
+        "type": "NIGHT_VISION",
+        "value": 1
+      }
+    ],
+    "consume": null,
+    "price": 320,
+    "recipe": {
+      "sublimation": 8,
+      "ingredients": [
+        "grey_skull",
+        "black_feather",
+        "minecraft:ender_pearl"
+      ]
+    }
+  },
+  {
+    "id": "crimson_torii",
+    "texture": "69_crimson_torii",
+    "category": "material",
+    "tier": 5,
+    "name_zh": "绯红鸟居",
+    "name_en": "Crimson Torii",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 35,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:red_dye",
+        "minecraft:oak_log",
+        "minecraft:gold_ingot"
+      ]
+    }
+  },
+  {
+    "id": "white_fox_mask",
+    "texture": "70_white_fox_mask",
+    "category": "material",
+    "tier": 4,
+    "name_zh": "白狐面具",
+    "name_en": "White Fox Mask",
+    "effect_zh": "合成材料",
+    "effect_en": "Crafting Material",
+    "effects": [],
+    "consume": null,
+    "price": 25,
+    "recipe": {
+      "sublimation": 0,
+      "ingredients": [
+        "minecraft:white_wool",
+        "minecraft:leather",
+        "minecraft:bone"
+      ]
+    }
+  }
+]

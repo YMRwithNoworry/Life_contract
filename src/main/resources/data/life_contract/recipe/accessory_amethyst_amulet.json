@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:amethyst_spike_orb"
+    },
+    {
+      "item": "minecraft:string"
+    },
+    {
+      "item": "life_contract:herbal_leaf"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:amethyst_amulet",
+    "count": 1
+  }
+}

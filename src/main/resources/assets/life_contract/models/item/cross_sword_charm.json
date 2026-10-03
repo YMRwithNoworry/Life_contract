@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "life_contract:item/accessory/21_cross_sword_charm"
+  }
+}

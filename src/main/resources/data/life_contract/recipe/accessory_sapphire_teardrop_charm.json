@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:azure_cross"
+    },
+    {
+      "item": "life_contract:snow_crystal"
+    },
+    {
+      "item": "life_contract:bone_fang"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:sapphire_teardrop_charm",
+    "count": 1
+  }
+}

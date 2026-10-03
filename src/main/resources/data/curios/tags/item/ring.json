@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "life_contract:amethyst_ring",
+    "life_contract:black_iron_ring",
+    "life_contract:emerald_ring",
+    "life_contract:golden_pearl_ring",
+    "life_contract:golden_ruby_ring",
+    "life_contract:mithril_sapphire_ring",
+    "life_contract:ruby_ring",
+    "life_contract:silver_ring",
+    "life_contract:silver_sapphire_ring",
+    "life_contract:thorn_amethyst_ring"
+  ]
+}

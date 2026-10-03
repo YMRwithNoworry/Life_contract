@@ -66,6 +66,19 @@ public class Life_contract {
     public static final DeferredHolder<Item, Item> MEAT_PASTE = ITEMS.register("meat_paste", MeatPasteItem::new);
     public static final DeferredHolder<Item, Item> SUBLIMATION = ITEMS.register("sublimation", SublimationItem::new);
 
+    /** 全部饰品 / 材料 / 消耗品，注册顺序与 accessory_catalog.json 一致。 */
+    public static final java.util.Map<String, DeferredHolder<Item, Item>> ACCESSORY_ITEMS = new java.util.LinkedHashMap<>();
+
+    static {
+        // 物品注册由数据文件驱动：调整数值只需要改 JSON
+        org.alku.life_contract.accessory.AccessoryCatalog.load();
+        for (org.alku.life_contract.accessory.AccessoryDefinition definition
+                : org.alku.life_contract.accessory.AccessoryCatalog.all()) {
+            ACCESSORY_ITEMS.put(definition.id(), ITEMS.register(definition.id(),
+                    () -> new org.alku.life_contract.accessory.AccessoryItem(definition)));
+        }
+    }
+
     public static final DeferredHolder<MobEffect, MobEffect> SLOW_INFECTION =
             MOB_EFFECTS.register("slow_infection", SlowInfectionEffect::new);
 
@@ -101,6 +114,9 @@ public class Life_contract {
                         output.accept(SPORE_BOMB.get());
                         output.accept(MEAT_PASTE.get());
                         output.accept(SUBLIMATION.get());
+                        for (DeferredHolder<Item, Item> accessory : ACCESSORY_ITEMS.values()) {
+                            output.accept(accessory.get());
+                        }
                     })
                     .build());
 

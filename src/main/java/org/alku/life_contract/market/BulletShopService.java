@@ -11,6 +11,8 @@ import net.minecraft.world.item.Items;
 import org.alku.life_contract.airdrop.Airdrop;
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.accessory.AccessoryCatalog;
+import org.alku.life_contract.accessory.AccessoryDefinition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -219,6 +221,10 @@ public final class BulletShopService {
         } else if (isTaczAmmo(item)) {
             price = TACZ_AMMO_PRICE;
             quantity = TACZ_AMMO_QUANTITY;
+        } else if (AccessoryCatalog.of(template) != null) {
+            AccessoryDefinition accessory = AccessoryCatalog.of(template);
+            price = accessory.price();
+            quantity = 1;
         } else if (isTaczGun(item)) {
             price = PISTOL_PRICE;
             quantity = PISTOL_QUANTITY;

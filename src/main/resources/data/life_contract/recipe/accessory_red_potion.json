@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "life_contract:herbal_leaf"
+    },
+    {
+      "item": "life_contract:blood_crystal_cluster"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    },
+    {
+      "item": "life_contract:sublimation"
+    },
+    {
+      "item": "life_contract:sublimation"
+    }
+  ],
+  "result": {
+    "id": "life_contract:red_potion",
+    "count": 1
+  }
+}

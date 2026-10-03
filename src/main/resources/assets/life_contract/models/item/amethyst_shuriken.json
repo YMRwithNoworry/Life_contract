@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "life_contract:item/accessory/24_amethyst_shuriken"
+  }
+}

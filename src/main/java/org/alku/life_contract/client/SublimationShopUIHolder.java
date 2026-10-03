@@ -16,7 +16,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 import org.alku.life_contract.ContractEvents;
+import org.alku.life_contract.accessory.AccessoryCatalog;
+import org.alku.life_contract.accessory.AccessoryCategory;
+import org.alku.life_contract.accessory.AccessoryDefinition;
 import org.alku.life_contract.airdrop.Airdrop;
 import org.alku.life_contract.market.BulletShopService;
 
@@ -103,6 +108,29 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
                     BulletShopService.WOOL_QUANTITY, BulletShopService.WOOL_PRICE));
             for (ItemStack color : wool) {
                 addProductRow(productRows, color, BulletShopService.WOOL_PRICE);
+            }
+        }
+
+        // ---- 饰品与材料（数据驱动，来自 accessory_catalog.json）----
+        for (AccessoryCategory category : AccessoryCategory.values()) {
+            List<AccessoryDefinition> definitions = AccessoryCatalog.byCategory(category);
+            if (definitions.isEmpty()) {
+                continue;
+            }
+
+            int cheapest = Integer.MAX_VALUE;
+            for (AccessoryDefinition definition : definitions) {
+                cheapest = Math.min(cheapest, definition.price());
+            }
+            addSection(productRows, Component.translatable(
+                    "gui.life_contract.shop.section." + category.id(), cheapest));
+
+            for (AccessoryDefinition definition : definitions) {
+                Item item = BuiltInRegistries.ITEM.get(definition.itemId());
+                if (item == Items.AIR) {
+                    continue;
+                }
+                addProductRow(productRows, new ItemStack(item), definition.price());
             }
         }
 

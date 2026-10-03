@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "life_contract:amethyst_butterfly",
+    "life_contract:amethyst_shuriken",
+    "life_contract:arcane_tome",
+    "life_contract:bat_charm",
+    "life_contract:black_cat_charm",
+    "life_contract:bone_feather_charm",
+    "life_contract:compass_watch_charm",
+    "life_contract:crimson_lantern_charm",
+    "life_contract:cross_sword_charm",
+    "life_contract:cursed_tome_charm",
+    "life_contract:emerald_lantern",
+    "life_contract:sapphire_teardrop_charm"
+  ]
+}
