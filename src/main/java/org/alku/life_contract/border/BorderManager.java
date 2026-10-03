@@ -29,7 +29,14 @@ public class BorderManager {
             Component.literal("边界收缩倒计时: 3:00"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS);
     private static final int GAME_BORDER_SHRINK_INTERVAL_SECONDS = 3 * 60;
     private static final double GAME_BORDER_SHRINK_PERCENTAGE = 10.0D;
-    private static final long GAME_BORDER_SHRINK_DURATION_TICKS = 30L * 20L;
+    /**
+     * 每次缩圈的过渡时长，单位是<b>毫秒</b>（30 秒）。
+     * <p>
+     * 注意：原版 {@code WorldBorder.lerpSizeBetween(from, to, duration)} 的第三个参数名字虽然叫 ticks，
+     * 但 {@code MovingBorderExtent} 内部是用 {@code Util.getMillis()} 算进度的，实际单位是毫秒。
+     * 之前这里传的是 {@code 30 * 20 = 600}，等于 0.6 秒 —— 看起来就是"瞬间缩圈"。
+     */
+    private static final long GAME_BORDER_SHRINK_DURATION_MILLIS = 30_000L;
     
     public static class BorderData {
         private final ServerLevel level;
@@ -92,11 +99,12 @@ public class BorderManager {
             applyToLevel();
         }
 
-        public void transitionSize(double newSize, long durationTicks) {
+        /** @param durationMillis 过渡时长（毫秒），原版这个参数就是按毫秒算的 */
+        public void transitionSize(double newSize, long durationMillis) {
             double boundedTargetSize = Math.max(10.0D, newSize);
             this.targetSize = boundedTargetSize;
             net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
-            worldBorder.lerpSizeBetween(worldBorder.getSize(), boundedTargetSize, durationTicks);
+            worldBorder.lerpSizeBetween(worldBorder.getSize(), boundedTargetSize, Math.max(1L, durationMillis));
         }
         
         public void applyToLevel() {
@@ -152,7 +160,7 @@ public class BorderManager {
         private void performShrink() {
             double currentSize = border.getCurrentSize();
             double newSize = currentSize * (1 - shrinkPercentage / 100.0);
-            border.transitionSize(newSize, GAME_BORDER_SHRINK_DURATION_TICKS);
+            border.transitionSize(newSize, GAME_BORDER_SHRINK_DURATION_MILLIS);
             shrinkCount++;
             
             broadcastMessage(Component.literal("§c[边界] §f开始收缩，30 秒后缩至: §e" +

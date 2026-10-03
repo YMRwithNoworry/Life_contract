@@ -9,17 +9,28 @@ const borderManager = fs.readFileSync(
 
 function requireText(text, label) {
   if (!borderManager.includes(text)) {
-    throw new Error(`${label}: missing ${text}`);
+    throw new Error(label + ": missing " + text);
   }
 }
 
-requireText("BASE_BORDER_TRANSITION_TICKS = 60L", "original transition duration");
-requireText("BORDER_TRANSITION_DURATION_PERCENT = 130L", "130 percent duration");
-requireText(
-  "BASE_BORDER_TRANSITION_TICKS * BORDER_TRANSITION_DURATION_PERCENT / 100L",
-  "scaled transition duration",
-);
-requireText("border.transitionSize(newSize, BORDER_TRANSITION_TICKS)", "shrink transition usage");
-requireText("durationTicks * 50L", "tick to millisecond conversion");
+// 缩圈节奏：每 3 分钟一次、每次 10%
+requireText("GAME_BORDER_SHRINK_INTERVAL_SECONDS = 3 * 60", "shrink interval");
+requireText("GAME_BORDER_SHRINK_PERCENTAGE = 10.0D", "shrink percentage");
 
-console.log("Border timing verification passed.");
+// 过渡时长必须是 30 秒，而且是毫秒单位。
+// 原版 WorldBorder.lerpSizeBetween(from, to, duration) 的第三个参数虽然叫 ticks，
+// 但 MovingBorderExtent 内部用 Util.getMillis() 算进度，单位其实是毫秒 ——
+// 传 600 就只有 0.6 秒，看起来是"瞬间缩圈"。
+requireText("GAME_BORDER_SHRINK_DURATION_MILLIS = 30_000L", "30 second transition (milliseconds)");
+if (borderManager.includes("GAME_BORDER_SHRINK_DURATION_TICKS")) {
+  throw new Error("transition duration must be expressed in milliseconds, not ticks");
+}
+
+// 必须是平滑过渡（lerpSizeBetween），不能是瞬间 setSize
+requireText(
+  "border.transitionSize(newSize, GAME_BORDER_SHRINK_DURATION_MILLIS)",
+  "shrink transition usage",
+);
+requireText("worldBorder.lerpSizeBetween(worldBorder.getSize(), boundedTargetSize", "smooth lerp");
+
+console.log("Border timing verification passed (30s smooth shrink, 10% per 3 minutes).");
