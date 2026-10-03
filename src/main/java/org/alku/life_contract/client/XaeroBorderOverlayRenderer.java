@@ -18,6 +18,8 @@ import xaero.hud.render.module.ModuleRenderContext;
 
 public final class XaeroBorderOverlayRenderer {
     private static final int COLOR = 0xFFFF3B30;
+    /** 短于该长度的线段不会写入顶点，绘制前必须先排除，否则缓冲区为空会导致提交时抛异常。 */
+    private static final double MIN_SEGMENT_LENGTH = 0.01;
 
     private XaeroBorderOverlayRenderer() {}
 
@@ -53,7 +55,10 @@ public final class XaeroBorderOverlayRenderer {
         boolean anyVisible = false;
         for (int i = 0; i < 4; i++) {
             segments[i] = clip(corners[i], corners[(i + 1) % 4], left, top, right, bottom);
-            if (segments[i] != null) {
+            // 退化的线段在 addSegment 里会被跳过、一个顶点都不会写，
+            // 所以这里必须用同一个判定条件，避免出现“判定可见但缓冲区为空”的情况：
+            // 那会让 BufferBuilder.buildOrThrow() 抛 IllegalStateException 崩掉客户端。
+            if (segments[i] != null && segmentLength(segments[i]) >= MIN_SEGMENT_LENGTH) {
                 anyVisible = true;
             }
         }
@@ -89,7 +94,7 @@ public final class XaeroBorderOverlayRenderer {
         double dx = clipped[1].x - clipped[0].x;
         double dy = clipped[1].y - clipped[0].y;
         double length = Math.hypot(dx, dy);
-        if (length < 0.01) return;
+        if (length < MIN_SEGMENT_LENGTH) return;
         double nx = -dy / length;
         double ny = dx / length;
         vertex(buffer, matrix, clipped[0].x + nx, clipped[0].y + ny);
@@ -100,6 +105,10 @@ public final class XaeroBorderOverlayRenderer {
 
     private static void vertex(BufferBuilder buffer, Matrix4f matrix, double x, double y) {
         buffer.addVertex(matrix, (float) x, (float) y, 200.0F).setColor(COLOR);
+    }
+
+    private static double segmentLength(Point[] clipped) {
+        return Math.hypot(clipped[1].x - clipped[0].x, clipped[1].y - clipped[0].y);
     }
 
     private static Point[] clip(Point a, Point b, double left, double top, double right, double bottom) {

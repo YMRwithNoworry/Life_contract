@@ -19,6 +19,7 @@ import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.Life_contract;
 import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,6 +59,24 @@ public final class SafeBubbleRenderer {
         if (bubbles == null || bubbles.isEmpty()) return;
 
         Vec3 camera = minecraft.gameRenderer.getMainCamera().getPosition();
+
+        // 先把真正要画的气泡挑出来。末地这类开阔维度里气泡经常全部超出视距，
+        // 一个顶点都写不出来，此时如果照样提交批次，BufferBuilder.buildOrThrow()
+        // 会因为 MeshData 为 null 抛 IllegalStateException("BufferBuilder was empty")，
+        // 直接把客户端崩掉；同时也会白开一次 Tessellator 批次污染公共缓冲。
+        List<int[]> visible = new ArrayList<>(bubbles.size());
+        for (int i = 0; i < bubbles.size(); i++) {
+            int[] bubble = bubbles.get(i);
+            if (bubble.length < 4) continue;
+
+            double x = bubble[0] + 0.5D;
+            double y = bubble[1] + 1.0D;
+            double z = bubble[2] + 0.5D;
+            if (player.distanceToSqr(x, y, z) > RENDER_DISTANCE * RENDER_DISTANCE) continue;
+            visible.add(bubble);
+        }
+        if (visible.isEmpty()) return;
+
         PoseStack poseStack = event.getPoseStack();
 
         RenderSystem.enableBlend();
@@ -73,17 +92,13 @@ public final class SafeBubbleRenderer {
         BufferBuilder buffer = Tesselator.getInstance()
                 .begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
 
-        for (int i = 0; i < bubbles.size(); i++) {
-            int[] bubble = bubbles.get(i);
-            if (bubble.length < 4) continue;
-
+        for (int i = 0; i < visible.size(); i++) {
+            int[] bubble = visible.get(i);
             double x = bubble[0] + 0.5D;
             double y = bubble[1] + 1.0D;
             double z = bubble[2] + 0.5D;
             double radius = bubble[3];
             int colorIndex = bubble.length >= 5 ? bubble[4] : i;
-
-            if (player.distanceToSqr(x, y, z) > RENDER_DISTANCE * RENDER_DISTANCE) continue;
 
             float[] color = BUBBLE_COLORS[Math.floorMod(colorIndex, BUBBLE_COLORS.length)];
             appendSphere(buffer, matrix, x, y, z, radius, color[0], color[1], color[2]);
