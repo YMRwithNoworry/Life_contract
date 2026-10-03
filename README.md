@@ -199,6 +199,8 @@ Events run automatically alongside a match and pause together with it. The event
 
 The HUD displays the current team ID, active contract mod, current profession, and a list of online teammates. During a match it also lists the key waypoints: the End portal coordinates (with live distance and opened/closed state) and the border centre.
 
+The bottom-left corner shows the local player's remaining lives: a row of hearts (filled for lives left, dark for lives lost) next to the exact number. The number turns red at one life, and the row reads "Eliminated" once the player is out. It stays hidden while no lives are synced, i.e. outside a match.
+
 When you are outside the predicted safe zone, an arrow appears at the bottom of the screen. It rotates with your view and always points to the direction you should walk, next to the remaining distance and the coarse compass direction.
 
 ---

@@ -230,5 +230,7 @@
   "active.life_contract.MARK": "Mark",
   "active.life_contract.RALLY": "Rally",
   "message.life_contract.accessory.resonance_on": "§d%s Resonance §ftier %s §dactivated",
-  "message.life_contract.accessory.resonance_off": "§7%s Resonance lost"
+  "message.life_contract.accessory.resonance_off": "§7%s Resonance lost",
+  "hud.life_contract.lives": "Lives",
+  "hud.life_contract.lives_out": "Eliminated"
 }

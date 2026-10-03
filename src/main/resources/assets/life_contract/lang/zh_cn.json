@@ -256,5 +256,7 @@
   "active.life_contract.MARK": "标记",
   "active.life_contract.RALLY": "集结",
   "message.life_contract.accessory.resonance_on": "§d%s共鸣 §f%s §d阶已激活",
-  "message.life_contract.accessory.resonance_off": "§7%s共鸣已断开"
+  "message.life_contract.accessory.resonance_off": "§7%s共鸣已断开",
+  "hud.life_contract.lives": "生命",
+  "hud.life_contract.lives_out": "已出局"
 }
