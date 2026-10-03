@@ -43,13 +43,35 @@ public final class XaeroBorderOverlayRenderer {
             project(border.getMinX(), border.getMaxZ(), playerX, playerZ, zoom, sin, cos, centerX, centerY)
         };
 
+        // 先把四条边裁剪出来。世界边界绝大多数时候远在雷达可视范围之外，
+        // 全部被裁掉时就直接返回，连渲染状态切换与顶点缓冲都不必做。
+        double left = context.x;
+        double top = context.y;
+        double right = context.x + context.w;
+        double bottom = context.y + context.h;
+        Point[][] segments = new Point[4][];
+        boolean anyVisible = false;
+        for (int i = 0; i < 4; i++) {
+            segments[i] = clip(corners[i], corners[(i + 1) % 4], left, top, right, bottom);
+            if (segments[i] != null) {
+                anyVisible = true;
+            }
+        }
+        if (!anyVisible) {
+            return;
+        }
+
         graphics.enableScissor(context.x, context.y, context.x + context.w, context.y + context.h);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         Matrix4f matrix = graphics.pose().last().pose();
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        for (int i = 0; i < 4; i++) addClippedLine(buffer, matrix, corners[i], corners[(i + 1) % 4], context);
+        for (Point[] segment : segments) {
+            if (segment != null) {
+                addSegment(buffer, matrix, segment);
+            }
+        }
         BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.disableBlend();
         graphics.disableScissor();
@@ -62,9 +84,8 @@ public final class XaeroBorderOverlayRenderer {
         return new Point(centerX + sin * dx - cos * dz, centerY + cos * dx + sin * dz);
     }
 
-    private static void addClippedLine(BufferBuilder buffer, Matrix4f matrix, Point a, Point b, ModuleRenderContext context) {
-        Point[] clipped = clip(a, b, context.x, context.y, context.x + context.w, context.y + context.h);
-        if (clipped == null) return;
+    /** 把已经裁剪好的线段画成一条带粗细的四边形。 */
+    private static void addSegment(BufferBuilder buffer, Matrix4f matrix, Point[] clipped) {
         double dx = clipped[1].x - clipped[0].x;
         double dy = clipped[1].y - clipped[0].y;
         double length = Math.hypot(dx, dy);

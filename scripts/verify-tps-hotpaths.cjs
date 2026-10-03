@@ -150,7 +150,18 @@ for (const [file, section] of [
   requireText(source, 'PerfProfiler.end("' + section + '"', section + " timing end");
 }
 
-// 16) 性能诊断指令：按需采样，不占每 tick 开销
+// 16) 雷达边界叠加层：四条边全部被裁掉时不得切换任何渲染状态
+const overlay = read("src/main/java/org/alku/life_contract/client/XaeroBorderOverlayRenderer.java");
+requireText(overlay, "boolean anyVisible = false;", "overlay visibility flag");
+requireText(overlay, "if (!anyVisible) {", "overlay early return");
+requireText(overlay, "private static void addSegment(BufferBuilder buffer, Matrix4f matrix, Point[] clipped)",
+        "overlay segment drawing");
+forbidText(overlay, "addClippedLine", "in-loop clip+draw helper");
+if (overlay.indexOf("if (!anyVisible)") > overlay.indexOf("graphics.enableScissor")) {
+    throw new Error("overlay: early return must happen before render state setup");
+}
+
+// 17) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");
