@@ -97,6 +97,16 @@ requireText(nameplate, "ClientDataStorage.getLifePointsFor(player.getUUID())", "
 forbidText(nameplate, "for (PacketSyncLifePoints.PlayerLifePoints", "nameplate must not scan the list");
 requireText(highlight, "GOLEM_QUERY_INTERVAL_TICKS", "golem query interval");
 requireText(highlight, "cachedTeamGolems", "golem query cache");
+requireText(nameplate, "LP_SUFFIX_CACHE", "nameplate suffix cache");
+const contractHud = read("src/main/java/org/alku/life_contract/ContractHUD.java");
+requireText(contractHud, "CONTENT_REFRESH_TICKS", "contract HUD content cache");
+requireText(contractHud, "cachedLines", "contract HUD cached lines");
+requireText(contractHud, "rebuildContent(player)", "contract HUD rebuild path");
+const eventHud = read("src/main/java/org/alku/life_contract/client/EventHUD.java");
+requireText(eventHud, "cachedStatusLines", "event HUD cached lines");
+requireText(eventHud, "buildStatusLines(minecraft)", "event HUD rebuild path");
+forbidText(contractEvents, "onServerTick", "dead per-tick handler");
+
 const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
 requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");
 requireText(sublimation, "cachedColorMillis", "name colour cache state");

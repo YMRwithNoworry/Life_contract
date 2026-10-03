@@ -22,7 +22,18 @@ public final class ContractHUD {
     private static final ResourceLocation HUD_ID =
             ResourceLocation.fromNamespaceAndPath(Life_contract.MODID, "contract_status");
 
+    /** 每帧重建组件没有意义：内容最多每 5 tick（0.25 秒）刷新一次。 */
+    private static final int CONTENT_REFRESH_TICKS = 5;
+
     public static boolean isHudEnabled = true;
+
+    /** 一行 HUD 内容及其到下一行的行距。 */
+    private record HudLine(Component text, int color, int lineAdvance) {
+    }
+
+    private static List<HudLine> cachedLines = List.of();
+    private static int cachedContentHeight;
+    private static int lastRefreshTick = -1000;
 
     private ContractHUD() {
     }
@@ -42,6 +53,23 @@ public final class ContractHUD {
         if (player == null) {
             return;
         }
+
+        if (player.tickCount - lastRefreshTick >= CONTENT_REFRESH_TICKS) {
+            lastRefreshTick = player.tickCount;
+            rebuildContent(player);
+        }
+
+        int x = 10;
+        int y = Math.max(4, (guiGraphics.guiHeight() - cachedContentHeight) / 2);
+        for (HudLine line : cachedLines) {
+            guiGraphics.drawString(mc.font, line.text(), x, y, line.color());
+            y += line.lineAdvance();
+        }
+    }
+
+    /** 组装左侧 HUD 的全部内容（仅在缓存过期时调用）。 */
+    private static void rebuildContent(Player player) {
+        List<HudLine> lines = new ArrayList<>();
 
         UUID myUUID = player.getUUID();
         ClientDataStorage.PlayerData myData = ClientDataStorage.get(myUUID);
@@ -64,49 +92,31 @@ public final class ContractHUD {
             }
         }
 
-        int contentHeight = 12 + (teamNumber != -1 ? 10 : 0) + 15;
-        if (!teamMembers.isEmpty()) {
-            contentHeight += 10 + teamMembers.size() * 10;
-        }
-        boolean showWaypoints = ClientDataStorage.hasWaypoints();
-        if (showWaypoints) {
-            // 标题 + 末地传送门 + 边界中心
-            contentHeight += 12 + 20;
-        }
-        int x = 10;
-        int y = Math.max(4, (guiGraphics.guiHeight() - contentHeight) / 2);
-        int color = 0xFFFFFF;
-
-        guiGraphics.drawString(mc.font,
-                Component.translatable("hud.life_contract.title").withStyle(ChatFormatting.YELLOW), x, y, color);
-        y += 12;
+        lines.add(new HudLine(Component.translatable("hud.life_contract.title").withStyle(ChatFormatting.YELLOW),
+                0xFFFFFF, 12));
         if (teamNumber != -1) {
-            guiGraphics.drawString(mc.font, "§6队伍编号: §b" + teamNumber, x, y, color);
-            y += 10;
+            lines.add(new HudLine(Component.literal("§6队伍编号: §b" + teamNumber), 0xFFFFFF, 10));
         }
+
         Component contractLine = selfMod.isEmpty()
                 ? Component.translatable("hud.life_contract.contract_mod_none").withStyle(ChatFormatting.GRAY)
                 : Component.translatable("hud.life_contract.contract_mod")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal(selfMod).withStyle(ChatFormatting.GREEN));
-        guiGraphics.drawString(mc.font, contractLine, x, y, color);
-        y += 15;
+        lines.add(new HudLine(contractLine, 0xFFFFFF, 15));
 
         if (!teamMembers.isEmpty()) {
-            guiGraphics.drawString(mc.font, "§6队友:", x, y, color);
-            y += 10;
+            lines.add(new HudLine(Component.literal("§6队友:"), 0xFFFFFF, 10));
             for (ClientDataStorage.PlayerData memberData : teamMembers) {
                 String memberName = memberData.playerName;
                 boolean self = memberName.equals(myName);
-                guiGraphics.drawString(mc.font, (self ? "§a● " : "§7- ") + memberName, x, y,
-                        self ? 0x00FF00 : 0xAAAAAA);
-                y += 10;
+                lines.add(new HudLine(Component.literal((self ? "§a● " : "§7- ") + memberName),
+                        self ? 0x00FF00 : 0xAAAAAA, 10));
             }
         }
 
-        if (showWaypoints) {
-            guiGraphics.drawString(mc.font, "§6坐标:", x, y, color);
-            y += 12;
+        if (ClientDataStorage.hasWaypoints()) {
+            lines.add(new HudLine(Component.literal("§6坐标:"), 0xFFFFFF, 12));
 
             int portalX = ClientDataStorage.getPortalX();
             int portalY = ClientDataStorage.getPortalY();
@@ -118,15 +128,20 @@ public final class ContractHUD {
                         player.distanceToSqr(portalX + 0.5D, portalY + 0.5D, portalZ + 0.5D)));
                 distanceText = " §7(" + portalDistance + "格)";
             }
-            guiGraphics.drawString(mc.font, "§7末地传送门: §b" + portalX + " " + portalY + " " + portalZ
+            lines.add(new HudLine(Component.literal("§7末地传送门: §b" + portalX + " " + portalY + " " + portalZ
                     + distanceText + " "
-                    + (ClientDataStorage.isPortalActivated() ? "§a已开启" : "§e未开启"), x, y, color);
-            y += 10;
-
-            guiGraphics.drawString(mc.font, "§7边界中心: §b"
-                    + ClientDataStorage.getBorderCenterX() + " " + ClientDataStorage.getBorderCenterZ(),
-                    x, y, color);
-            y += 10;
+                    + (ClientDataStorage.isPortalActivated() ? "§a已开启" : "§e未开启")), 0xFFFFFF, 10));
+            lines.add(new HudLine(Component.literal("§7边界中心: §b"
+                    + ClientDataStorage.getBorderCenterX() + " " + ClientDataStorage.getBorderCenterZ()),
+                    0xFFFFFF, 10));
         }
+
+        int height = 0;
+        for (HudLine line : lines) {
+            height += line.lineAdvance();
+        }
+
+        cachedLines = lines;
+        cachedContentHeight = height;
     }
 }

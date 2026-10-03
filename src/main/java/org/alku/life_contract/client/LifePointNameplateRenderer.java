@@ -11,10 +11,15 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.util.TriState;
 import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.Life_contract;
-import org.alku.life_contract.PacketSyncLifePoints;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @EventBusSubscriber(modid = Life_contract.MODID, value = Dist.CLIENT)
 public class LifePointNameplateRenderer {
+
+    /** 名牌每帧都会重建后缀，按命数缓存即可（取值集合很小）。 */
+    private static final Map<Integer, Component> LP_SUFFIX_CACHE = new HashMap<>();
 
     @SubscribeEvent
     public static void onRenderNameTag(RenderNameTagEvent event) {
@@ -29,8 +34,13 @@ public class LifePointNameplateRenderer {
 
         event.setContent(Component.empty()
                 .append(event.getContent())
-                .append(Component.literal("  LP: " + lifePoints).withStyle(lifePoints <= 1 ? ChatFormatting.RED : ChatFormatting.AQUA)));
+                .append(lpSuffix(lifePoints)));
         event.setCanRender(TriState.TRUE);
+    }
+
+    private static Component lpSuffix(int lifePoints) {
+        return LP_SUFFIX_CACHE.computeIfAbsent(lifePoints, points -> Component.literal("  LP: " + points)
+                .withStyle(points <= 1 ? ChatFormatting.RED : ChatFormatting.AQUA));
     }
 
     private static int getSyncedLifePoints(Player player) {

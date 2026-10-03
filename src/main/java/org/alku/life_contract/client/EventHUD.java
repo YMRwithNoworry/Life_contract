@@ -3,7 +3,6 @@ package org.alku.life_contract.client;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,6 +13,7 @@ import org.alku.life_contract.ClientDataStorage;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.events.EventSyncPayload;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +31,17 @@ public final class EventHUD {
     private static final float SCALE = 0.8F;
     private static final int RIGHT_MARGIN = 6;
     private static final int LINE_HEIGHT = 10;
+    /** 每帧重建字符串与测量宽度没有意义：内容最多每 5 tick 刷新一次。 */
+    private static final int CONTENT_REFRESH_TICKS = 5;
 
     public static boolean isEnabled = true;
+
+    /** 一行状态文本及其宽度与行距（宽度只在重建时测量一次）。 */
+    private record StatusLine(String text, int width, int lineAdvance) {
+    }
+
+    private static List<StatusLine> cachedStatusLines = List.of();
+    private static int lastStatusRefreshTick = -1000;
 
     private EventHUD() {
     }
@@ -83,40 +92,53 @@ public final class EventHUD {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null || minecraft.options.hideGui) return;
 
-        boolean hasAnyEvent = false;
+        if (minecraft.player.tickCount - lastStatusRefreshTick >= CONTENT_REFRESH_TICKS) {
+            lastStatusRefreshTick = minecraft.player.tickCount;
+            cachedStatusLines = buildStatusLines(minecraft);
+        }
 
         graphics.pose().pushPose();
         graphics.pose().scale(SCALE, SCALE, SCALE);
 
         int scaledWidth = (int) (graphics.guiWidth() / SCALE);
         int y = 8;
+        for (StatusLine line : cachedStatusLines) {
+            graphics.drawString(minecraft.font, line.text(), scaledWidth - line.width() - RIGHT_MARGIN, y, 0xFFFFFF);
+            y += line.lineAdvance();
+        }
 
-        String title = "§6== 游戏事件 ==";
-        graphics.drawString(minecraft.font, title, scaledWidth - minecraft.font.width(title) - RIGHT_MARGIN, y,
-                0xFFFFFF);
-        y += LINE_HEIGHT + 2;
+        graphics.pose().popPose();
+    }
+
+    /** 组装右上角状态文本（仅在缓存过期时调用）。 */
+    private static List<StatusLine> buildStatusLines(Minecraft minecraft) {
+        List<StatusLine> lines = new ArrayList<>();
+        boolean hasAnyEvent = false;
+
+        addLine(lines, minecraft, "§6== 游戏事件 ==", LINE_HEIGHT + 2);
 
         if (ClientDataStorage.isSporeSurgeActive()) {
             hasAnyEvent = true;
-            y = drawEvent(graphics, minecraft, scaledWidth, y, "§c[孢潮推进]",
+            addEvent(lines, minecraft, "§c[孢潮推进]",
                     "  §f剩余: §e" + ClientDataStorage.getSporeSurgeRemaining() + "秒");
         }
 
         if (ClientDataStorage.isPurificationRiftActive()) {
             hasAnyEvent = true;
-            y = drawEvent(graphics, minecraft, scaledWidth, y, "§b[净化裂隙]",
+            addEvent(lines, minecraft, "§b[净化裂隙]",
                     ClientDataStorage.getSafeBubbleRemaining() > 0
                             ? "  §f气泡剩余: §e" + ClientDataStorage.getSafeBubbleRemaining() + "秒"
                             : "  §f气泡正在消散");
 
             List<int[]> bubbles = ClientDataStorage.getBubblePositions();
             if (bubbles != null && !bubbles.isEmpty()) {
-                y = drawLine(graphics, minecraft, scaledWidth, y, "  §f安全气泡:");
+                addLine(lines, minecraft, "  §f安全气泡:", LINE_HEIGHT);
                 int index = 1;
                 for (int[] bubble : bubbles) {
                     if (bubble.length >= 4) {
-                        y = drawLine(graphics, minecraft, scaledWidth, y,
-                                "    §b气泡" + index + "§7: §fX:" + bubble[0] + " Y:" + bubble[1] + " Z:" + bubble[2]);
+                        addLine(lines, minecraft,
+                                "    §b气泡" + index + "§7: §fX:" + bubble[0] + " Y:" + bubble[1] + " Z:" + bubble[2],
+                                LINE_HEIGHT);
                     }
                     index++;
                 }
@@ -125,41 +147,38 @@ public final class EventHUD {
 
         if (ClientDataStorage.isBountyActive()) {
             hasAnyEvent = true;
-            y = drawEvent(graphics, minecraft, scaledWidth, y, "§e[清道夫悬赏]",
+            addEvent(lines, minecraft, "§e[清道夫悬赏]",
                     "  §f目标: §c" + ClientDataStorage.getBountyTargetName());
-            y = drawLine(graphics, minecraft, scaledWidth, y, "  §f目标身上有 §e发光标记");
+            addLine(lines, minecraft, "  §f目标身上有 §e发光标记", LINE_HEIGHT);
         }
 
         if (ClientDataStorage.isEndgameOverloadActive()) {
             hasAnyEvent = true;
-            y = drawEvent(graphics, minecraft, scaledWidth, y, "§4[终局过载]",
-                    "  §f状态: §c永久");
+            addEvent(lines, minecraft, "§4[终局过载]", "  §f状态: §c永久");
         }
 
         if (ClientDataStorage.isSporeRainActive()) {
             hasAnyEvent = true;
-            y = drawEvent(graphics, minecraft, scaledWidth, y, "§2[孢子雨]",
+            addEvent(lines, minecraft, "§2[孢子雨]",
                     "  §f剩余: §e" + ClientDataStorage.getSporeRainRemaining() + "秒");
         }
 
         if (!hasAnyEvent) {
-            String line = ClientDataStorage.isGameActive() ? "§7暂无进行中事件" : "§7游戏未开始";
-            drawLine(graphics, minecraft, scaledWidth, y, line);
+            addLine(lines, minecraft,
+                    ClientDataStorage.isGameActive() ? "§7暂无进行中事件" : "§7游戏未开始", LINE_HEIGHT);
         }
 
-        graphics.pose().popPose();
+        return lines;
     }
 
-    private static int drawEvent(GuiGraphics graphics, Minecraft minecraft, int scaledWidth, int y,
-                                 String headline, String detail) {
-        y = drawLine(graphics, minecraft, scaledWidth, y, headline);
-        return detail == null ? y : drawLine(graphics, minecraft, scaledWidth, y, detail);
+    private static void addEvent(List<StatusLine> lines, Minecraft minecraft, String headline, String detail) {
+        addLine(lines, minecraft, headline, LINE_HEIGHT);
+        if (detail != null) {
+            addLine(lines, minecraft, detail, LINE_HEIGHT);
+        }
     }
 
-    private static int drawLine(GuiGraphics graphics, Minecraft minecraft, int scaledWidth, int y, String text) {
-        Component line = Component.literal(text);
-        graphics.drawString(minecraft.font, line, scaledWidth - minecraft.font.width(line) - RIGHT_MARGIN, y,
-                0xFFFFFF);
-        return y + LINE_HEIGHT;
+    private static void addLine(List<StatusLine> lines, Minecraft minecraft, String text, int lineAdvance) {
+        lines.add(new StatusLine(text, minecraft.font.width(text), lineAdvance));
     }
 }
