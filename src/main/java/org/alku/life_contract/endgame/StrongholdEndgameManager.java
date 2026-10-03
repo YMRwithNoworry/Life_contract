@@ -43,9 +43,11 @@ import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -378,6 +380,25 @@ public final class StrongholdEndgameManager {
             tickEndBoss(event);
         } finally {
             PerfProfiler.end("EndBoss.levelTick", perfStart);
+        }
+    }
+
+    /**
+     * 每 tick 的最后一道保险：把末地边界再钉一次。
+     * <p>
+     * 主世界边界是在 {@code GameEventManager} 的 {@code ServerTickEvent.Post} 里被改成"要塞中心"的，
+     * 原版的 {@code DelegateBorderChangeListener} 会同步那一刻<b>立刻</b>把末地边界也改掉，
+     * 并且把 {@code ClientboundSetBorder*} 包发出去 —— 于是这一 tick 客户端收到的<b>最后一包</b>是错的：
+     * 末地里的玩家会看到自己"在边界外面"（小地图边界线、边界墙、红色暗角全都错位）。
+     * <p>
+     * 这里用 {@link EventPriority#LOWEST} 挂在所有 level tick 与主世界边界更新之后，
+     * 保证纠正用的 {@code ClientboundInitializeBorderPacket} 是本 tick 的最后一包。
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onServerTick(ServerTickEvent.Post event) {
+        ServerLevel endLevel = event.getServer().getLevel(Level.END);
+        if (endLevel != null) {
+            enforceEndBorder(endLevel);
         }
     }
 
