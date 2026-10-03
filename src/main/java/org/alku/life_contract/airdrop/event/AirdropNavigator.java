@@ -146,6 +146,20 @@ public class AirdropNavigator {
         return active;
     }
 
+    /** 供 /contract perf 查看导航状态规模。 */
+    public static String debugSummary() {
+        int tracked = 0;
+        for (Set<UUID> ids : TRACKED_AIRDROPS.values()) {
+            tracked += ids.size();
+        }
+        int decoys = 0;
+        for (Map<String, DecoySignal> perDimension : decoySignals.values()) {
+            decoys += perDimension.size();
+        }
+        return "登记空投 " + tracked + " / 诱饵 " + decoys
+                + " / 导航开启 " + particlesEnabled.size() + " / 追踪中 " + trackingActive.size();
+    }
+
     public static void updateNavigation(ServerLevel level) {
         List<AirdropEntity> activeAirdrops = getActiveAirdrops(level);
 

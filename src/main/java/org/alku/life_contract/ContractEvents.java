@@ -433,6 +433,11 @@ public class ContractEvents {
         }
     }
 
+    /** 供 /contract perf 查看攻击记录表规模。 */
+    public static String debugSummary() {
+        return LAST_ATTACKER_MOD.size() + "/" + LAST_ATTACK_TIME.size();
+    }
+
     private static void recordAttackerMod(Player player, LivingEntity attacker) {
         if (attacker instanceof net.minecraft.world.entity.Mob mob
                 && FollowerEvents.getOwnerUUID(mob) != null

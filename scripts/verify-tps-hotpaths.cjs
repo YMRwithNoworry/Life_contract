@@ -22,6 +22,7 @@ function forbidText(source, text, label) {
 const navigator = read("src/main/java/org/alku/life_contract/airdrop/event/AirdropNavigator.java");
 const airdropEvents = read("src/main/java/org/alku/life_contract/airdrop/event/CommonEvents.java");
 const contractEvents = read("src/main/java/org/alku/life_contract/ContractEvents.java");
+const followerCommands = read("src/main/java/org/alku/life_contract/ContractCommands.java");
 const followers = read("src/main/java/org/alku/life_contract/follower/FollowerEvents.java");
 const mutation = read("src/main/java/org/alku/life_contract/mutation/MutationCombatEvents.java");
 const smelter = read("src/main/java/org/alku/life_contract/TeamSmelter.java");
@@ -108,6 +109,21 @@ requireText(eventHud, "buildStatusLines(minecraft)", "event HUD rebuild path");
 forbidText(contractEvents, "onServerTick", "dead per-tick handler");
 requireText(contractEvents, "LAST_ATTACKER_MOD.remove(playerId)", "attack map pruned on logout");
 requireText(contractEvents, "LAST_ATTACK_TIME.remove(playerId)", "attack time map pruned on logout");
+
+// 12) 伤害热路径不得每次事件都分配数组；等级为 0 时直接跳过
+requireText(mutation, "private static final float[] BLADE_BONUS", "blade bonus constant array");
+forbidText(mutation, "float[] bonus={", "per-event array allocation");
+requireText(mutation, "if (lv <= 0 || lv >= BLADE_BONUS.length) return;", "skip zero-level damage adjust");
+
+// 13) 性能诊断指令：按需采样，不占每 tick 开销
+const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
+requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
+requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");
+requireText(diagnostics, "level.getAllEntities()", "entity census");
+requireText(diagnostics, "FollowerEvents.debugSummary()", "module state report");
+requireText(followerCommands, 'Commands.literal("perf")', "perf command registration");
+requireText(followerCommands, "PerfDiagnostics.report(context.getSource())", "perf command wiring");
+requireText(followers, "public static String debugSummary()", "follower debug summary");
 
 const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
 requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");

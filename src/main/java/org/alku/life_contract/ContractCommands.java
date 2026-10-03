@@ -539,6 +539,13 @@ public class ContractCommands {
         }
 
         private static void registerAdminCommand(LiteralArgumentBuilder<net.minecraft.commands.CommandSourceStack> contract) {
+                contract.then(Commands.literal("perf")
+                        .requires(source -> source.hasPermission(2))
+                        .executes(context -> {
+                                PerfDiagnostics.report(context.getSource());
+                                return 1;
+                        }));
+
                 contract.then(Commands.literal("admin")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("list")

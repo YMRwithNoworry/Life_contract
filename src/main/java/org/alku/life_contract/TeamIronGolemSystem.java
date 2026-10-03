@@ -216,6 +216,11 @@ public class TeamIronGolemSystem {
         return golem.getPersistentData().getBoolean(TAG_IS_TEAM_GOLEM);
     }
 
+    /** 供 /contract perf 查看守卫缓存规模。 */
+    public static String debugSummary() {
+        return "队伍 " + GOLEM_TEAM_MAP.size() + " / 归属 " + GOLEM_OWNER_MAP.size();
+    }
+
     public static void removeGolemFromCache(UUID golemUUID) {
         GOLEM_TEAM_MAP.remove(golemUUID);
         GOLEM_OWNER_MAP.remove(golemUUID);

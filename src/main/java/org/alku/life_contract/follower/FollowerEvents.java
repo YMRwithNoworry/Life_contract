@@ -591,6 +591,14 @@ public class FollowerEvents {
         }
     }
 
+    /** 供 /contract perf 查看内部索引规模，便于发现只增不减的表。 */
+    public static String debugSummary() {
+        return "追随者 " + FOLLOWER_OWNER_MAP.size()
+                + " / 归属玩家 " + OWNER_FOLLOWER_MAP.size()
+                + " / AI目标 " + INSTALLED_AI_GOALS.size()
+                + " / 继承召唤 " + INHERITED_SUMMONS.size();
+    }
+
     public static UUID getOwnerUUID(Mob mob) {
         UUID ownerUUID = FOLLOWER_OWNER_MAP.get(mob.getUUID());
         if (ownerUUID == null && mob.getPersistentData().hasUUID(TAG_FOLLOWER_OWNER_UUID)) {
