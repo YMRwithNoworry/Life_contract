@@ -39,7 +39,7 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
     @Override
     public ModularUI createUI(Player player) {
         UIElement root = new UIElement();
-        root.getLayout().width(330).paddingAll(12).gapAll(8);
+        root.getLayout().width(330 + AccessoryDetailCard.PANEL_WIDTH + 10).paddingAll(12).gapAll(8);
         root.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.shop.title"));
@@ -47,8 +47,11 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
         Label details = new Label().setValue(contractMod == null || contractMod.isBlank()
                 ? Component.translatable("gui.life_contract.shop.no_contract")
                 : Component.translatable("gui.life_contract.shop.price", contractMod));
+        // 右侧详情卡要在列表构建前就绪：饰品行点击时会引用它
+        AccessoryDetailCard detail = new AccessoryDetailCard(player);
+
         ScrollerView products = new ScrollerView();
-        products.getLayout().width(306).height(174);
+        products.getLayout().width(306).height(204);
         UIElement productRows = new UIElement();
         productRows.getLayout().flexDirection(FlexDirection.COLUMN).gapAll(4);
         products.viewContainer(container -> container.addChild(productRows));
@@ -130,7 +133,7 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
                 if (item == Items.AIR) {
                     continue;
                 }
-                addProductRow(productRows, new ItemStack(item), definition.price());
+                addAccessoryRow(productRows, new ItemStack(item), definition, detail);
             }
         }
 
@@ -142,7 +145,16 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
             }
         });
 
-        root.addChildren(title, details, products, back);
+        // ---- 右侧：饰品详情卡（左键点击列表里的饰品时展开它的机制）----
+        UIElement left = new UIElement();
+        left.getLayout().width(330).flexDirection(FlexDirection.COLUMN).gapAll(8);
+        left.addChildren(title, details, products, back);
+
+        UIElement content = new UIElement();
+        content.getLayout().flexDirection(FlexDirection.ROW).gapAll(10);
+        content.addChildren(left, detail.element());
+
+        root.addChild(content);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP))), player);
     }
@@ -179,6 +191,27 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
             }
         });
         row.addChildren(itemName, buy);
+        rows.addChild(row);
+    }
+
+    /**
+     * 饰品行：名称区域<b>左键点击</b>会在右侧详情卡里展开该饰品的完整机制
+     * （常驻 / 情境 / 击杀充能 / 主动技 / 代价 / 派系共鸣进度）。
+     */
+    private void addAccessoryRow(UIElement rows, ItemStack template, AccessoryDefinition definition,
+                                 AccessoryDetailCard detail) {
+        UIElement row = AccessoryDetailCard.buildRow(
+                template.getHoverName(),
+                AccessoryDetailCard.NAME_COLUMN_WIDTH - 15,
+                Component.translatable("gui.life_contract.shop.buy_for", definition.price()),
+                88,
+                definition,
+                detail,
+                buy -> buy.setOnServerClick(event -> {
+                    if (owner instanceof ServerPlayer serverPlayer) {
+                        serverPlayer.sendSystemMessage(BulletShopService.purchase(serverPlayer, template));
+                    }
+                }));
         rows.addChild(row);
     }
 }

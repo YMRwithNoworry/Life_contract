@@ -42,66 +42,34 @@ public class AccessoryItem extends Item {
         return super.getName(stack).copy().withStyle(tierColor(definition.tier()));
     }
 
+    /**
+     * 物品 tooltip 与商店里的详情卡共用 {@link AccessoryTooltip} 的组装逻辑，
+     * 因此背包里看到的机制说明和在商店详情卡里看到的一致。
+     */
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("tooltip.life_contract.accessory.tier", definition.tier())
-                .withStyle(ChatFormatting.DARK_GRAY));
-
-        if (definition.hasFaction()) {
-            tooltip.add(Component.translatable("tooltip.life_contract.accessory.faction",
-                            Component.translatable("faction.life_contract." + definition.faction().id()))
-                    .withStyle(definition.faction().color()));
-        }
-
-        if (!definition.effects().isEmpty() || !definition.consume().isEmpty()) {
-            tooltip.add(Component.translatable(definition.effectKey()).withStyle(ChatFormatting.GRAY));
-        }
-
-        AccessoryCharge charge = definition.charge();
-        if (!charge.isEmpty()) {
-            if (charge.decayTicks() > 0) {
-                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge",
-                                charge.max(), String.format("%.0f", charge.decayTicks() / 20.0D))
-                        .withStyle(ChatFormatting.YELLOW));
-            } else {
-                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge_no_decay", charge.max())
-                        .withStyle(ChatFormatting.YELLOW));
-            }
-            if (charge.loseOnHurt() > 0) {
-                tooltip.add(Component.translatable("tooltip.life_contract.accessory.charge_hurt", charge.loseOnHurt())
-                        .withStyle(ChatFormatting.DARK_RED));
-            }
-        }
-
-        AccessoryActive active = definition.active();
-        if (!active.isEmpty()) {
-            tooltip.add(Component.translatable("tooltip.life_contract.accessory.active",
-                            Component.translatable("active.life_contract." + active.kind().name()),
-                            String.format("%.0f", active.cooldownTicks() / 20.0D))
-                    .withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
-        if (definition.hasDrawback()) {
-            tooltip.add(Component.translatable("tooltip.life_contract.accessory.drawback")
-                    .withStyle(ChatFormatting.DARK_RED));
-        }
+        tooltip.addAll(AccessoryTooltip.describe(definition));
 
         if (definition.isEquippable()) {
+            tooltip.add(Component.translatable("gui.life_contract.accessory.slot." + slotFor(definition))
+                    .withStyle(ChatFormatting.DARK_GRAY));
             tooltip.add(Component.translatable("tooltip.life_contract.accessory.equip_rule")
                     .withStyle(ChatFormatting.DARK_GRAY));
-            if (definition.hasFaction()) {
-                tooltip.add(Component.translatable("tooltip.life_contract.accessory.resonance_hint")
-                        .withStyle(ChatFormatting.DARK_GRAY));
-            }
         } else if (definition.isConsumable()) {
             tooltip.add(Component.translatable("tooltip.life_contract.accessory.use_hint")
                     .withStyle(ChatFormatting.DARK_GRAY));
         }
+    }
 
-        if (definition.price() > 0) {
-            tooltip.add(Component.translatable("tooltip.life_contract.accessory.price", definition.price())
-                    .withStyle(ChatFormatting.GOLD));
-        }
+    /** 该饰品对应的 Curios 槽位 id。 */
+    public static String slotFor(AccessoryDefinition definition) {
+        return switch (definition.category()) {
+            case PENDANT, AMULET -> "necklace";
+            case RING -> "ring";
+            case CHARM -> "charm";
+            case CROWN -> "head";
+            default -> "none";
+        };
     }
 
     /** 消耗品：右键使用。 */

@@ -16,6 +16,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.NetworkHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +75,25 @@ public final class AccessoryEffects {
         }
         for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
             refresh(player);
+            syncClientState(player);
         }
+    }
+
+    /** 把"生效的各派系件数 + 各饰品充能层数"同步给玩家客户端，供详情卡显示实时状态。 */
+    private static void syncClientState(ServerPlayer player) {
+        Map<String, Integer> factionCounts = new LinkedHashMap<>();
+        for (Map.Entry<AccessoryFaction, Integer> entry : factionCounts(player).entrySet()) {
+            factionCounts.put(entry.getKey().id(), entry.getValue());
+        }
+
+        Map<String, Integer> chargeStacks = new LinkedHashMap<>();
+        for (AccessoryDefinition definition : activeDefinitions(player)) {
+            if (!definition.charge().isEmpty()) {
+                chargeStacks.put(definition.id(), AccessoryState.charge(player, definition.id()));
+            }
+        }
+
+        NetworkHandler.sendToPlayer(player, new AccessoryStatePayload(factionCounts, chargeStacks));
     }
 
     @SubscribeEvent

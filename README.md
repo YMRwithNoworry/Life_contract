@@ -162,6 +162,11 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Kill charge**: four items build a stack on killing a hostile mob or player (one per kill, capped), each stack adding a bonus. Stacks are lost when hurt, decay over time and reset on death, and every change is announced on the action bar.
 * **Active skills**: eleven tier 4-5 items carry an active skill fired with **G**. The highest-tier equipped skill that is off cooldown fires; cooldowns are tracked per item and survive re-equipping. Kinds: Burst, Ward, Mend, Dash, Phase, Purge, Mark, Rally.
 * **Drawbacks**: tier 5 items pair their payoff with a real penalty (negative armour, max health or movement speed) shown in red on the tooltip.
+* **Inspecting**: hovering an accessory name in the shop shows the full mechanics in a tooltip; **left-clicking**
+  it pins the same breakdown into a panel on the right so several pieces can be compared. The pinned card
+  refreshes twice a second, so your current faction resonance tier and the item's live kill-charge stacks are
+  shown as they change. Both views are built by the same `AccessoryTooltip` code that renders the inventory
+  item tooltip, so the three never drift apart.
 * **Obtaining**: buy them with Sublimation in the shop (tier 1-5 = 60/120/200/320/500, consumables 20-90, materials 8-35) or craft them; every item has a crafting recipe under `data/life_contract/recipe/accessory_*.json`, and materials are crafted from vanilla items.
 
 ---
