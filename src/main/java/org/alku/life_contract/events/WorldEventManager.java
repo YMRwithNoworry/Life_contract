@@ -77,6 +77,8 @@ public final class WorldEventManager {
     private static final int SPORE_RAIN_MAX_STAGE = 2;
     private static final int SPORE_RAIN_EFFECT_REFRESH_TICKS = 100;
     private static final int SPORE_RAIN_RECOVERY_TICKS = 200;
+    /** 暴露计时结算间隔：一次结算补上这么多 tick，等价于逐 tick 结算。 */
+    private static final int SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS = 5;
 
     private static final int RANDOM_EVENT_CHECK_INTERVAL = 300;
     private static final int RANDOM_EVENT_MIN_INTERVAL = 300;
@@ -807,28 +809,34 @@ public final class WorldEventManager {
     }
 
     private static void tickSporeRain(long currentTick) {
-        for (ServerPlayer player : level.getPlayers(p -> true)) {
-            if (player.isCreative() || player.isSpectator()) continue;
+        // 暴露结算每 5 tick 做一次、一次补 5，与逐 tick 结算完全等价（效果刷新点仍是 100 的倍数），
+        // 但省掉 4/5 的高度图查询：孢子雨期间每个在线玩家每 tick 都要查一次。
+        if (currentTick % SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS == 0L) {
+            for (ServerPlayer player : level.getPlayers(p -> true)) {
+                if (player.isCreative() || player.isSpectator()) continue;
 
-            UUID playerId = player.getUUID();
-            if (isExposedToRain(player)) {
-                int exposure = sporeRainExposureTicks.merge(playerId, 1, Integer::sum);
-                int stage = Math.min(SPORE_RAIN_MAX_STAGE, exposure / SPORE_RAIN_EXPOSURE_TICKS_PER_STAGE);
-                if (stage > 0 && exposure % SPORE_RAIN_EFFECT_REFRESH_TICKS == 0) {
-                    player.addEffect(new MobEffectInstance(Life_contract.SLOW_INFECTION,
-                        SPORE_RAIN_EFFECT_REFRESH_TICKS + 40, stage - 1, false, true));
-                }
-                if (currentTick % 200L == 0L) {
-                    player.sendSystemMessage(Component.literal("§2[孢子雨] §f你正暴露在孢子雨中，感染正在加深！"));
-                }
-            } else {
-                int exposure = sporeRainExposureTicks.getOrDefault(playerId, 0);
-                if (exposure > 0) {
-                    int reduced = Math.max(0, exposure - SPORE_RAIN_RECOVERY_TICKS / 4);
-                    if (reduced == 0) {
-                        sporeRainExposureTicks.remove(playerId);
-                    } else {
-                        sporeRainExposureTicks.put(playerId, reduced);
+                UUID playerId = player.getUUID();
+                if (isExposedToRain(player)) {
+                    int exposure = sporeRainExposureTicks.merge(playerId,
+                            SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS, Integer::sum);
+                    int stage = Math.min(SPORE_RAIN_MAX_STAGE, exposure / SPORE_RAIN_EXPOSURE_TICKS_PER_STAGE);
+                    if (stage > 0 && exposure % SPORE_RAIN_EFFECT_REFRESH_TICKS == 0) {
+                        player.addEffect(new MobEffectInstance(Life_contract.SLOW_INFECTION,
+                            SPORE_RAIN_EFFECT_REFRESH_TICKS + 40, stage - 1, false, true));
+                    }
+                    if (currentTick % 200L == 0L) {
+                        player.sendSystemMessage(Component.literal("§2[孢子雨] §f你正暴露在孢子雨中，感染正在加深！"));
+                    }
+                } else {
+                    int exposure = sporeRainExposureTicks.getOrDefault(playerId, 0);
+                    if (exposure > 0) {
+                        int reduced = Math.max(0,
+                                exposure - (SPORE_RAIN_RECOVERY_TICKS / 4) * SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS);
+                        if (reduced == 0) {
+                            sporeRainExposureTicks.remove(playerId);
+                        } else {
+                            sporeRainExposureTicks.put(playerId, reduced);
+                        }
                     }
                 }
             }
@@ -847,6 +855,9 @@ public final class WorldEventManager {
     private static void spawnSporeRainParticles() {
         for (ServerPlayer player : level.getPlayers(p -> true)) {
             if (player.isCreative() || player.isSpectator()) continue;
+            // 躲在遮蔽物下的玩家看不到头顶的雨粒子（粒子生成在玩家上方 8~13 格，会被屋顶挡住），
+            // 而孢子雨的提示恰恰是让玩家进屋躲雨，所以这类玩家直接跳过，省下整包粒子。
+            if (!isExposedToRain(player)) continue;
             for (int i = 0; i < 5; i++) {
                 double x = player.getX() + (RANDOM.nextDouble() - 0.5D) * 20.0D;
                 double z = player.getZ() + (RANDOM.nextDouble() - 0.5D) * 20.0D;

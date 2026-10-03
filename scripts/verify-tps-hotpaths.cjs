@@ -161,7 +161,19 @@ if (overlay.indexOf("if (!anyVisible)") > overlay.indexOf("graphics.enableScisso
     throw new Error("overlay: early return must happen before render state setup");
 }
 
-// 17) 性能诊断指令：按需采样，不占每 tick 开销
+// 17) 孢子雨：暴露计时按 5 tick 结算（等价），粒子跳过已躲雨的玩家
+const worldEvents = read("src/main/java/org/alku/life_contract/events/WorldEventManager.java");
+requireText(worldEvents, "SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS = 5", "spore rain accounting interval");
+requireText(worldEvents, "if (currentTick % SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS == 0L) {", "spore rain tick gate");
+requireText(worldEvents, "SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS, Integer::sum", "spore rain exposure step");
+requireText(worldEvents,
+        "(SPORE_RAIN_RECOVERY_TICKS / 4) * SPORE_RAIN_ACCOUNTING_INTERVAL_TICKS", "spore rain recovery step");
+const particleSection = worldEvents.slice(worldEvents.indexOf("spawnSporeRainParticles() {"));
+if (!particleSection.includes("if (!isExposedToRain(player)) continue;")) {
+    throw new Error("spore rain particles: sheltered players must be skipped");
+}
+
+// 18) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");
