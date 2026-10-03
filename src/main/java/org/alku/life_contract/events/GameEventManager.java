@@ -23,6 +23,7 @@ import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.NetworkHandler;
 import org.alku.life_contract.ModPoolConfig;
+import org.alku.life_contract.PerfProfiler;
 import org.alku.life_contract.SoulContractItem;
 import org.alku.life_contract.TeamOrganizerItem;
 import org.alku.life_contract.border.BorderManager;
@@ -438,6 +439,15 @@ public final class GameEventManager {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickGame();
+        } finally {
+            PerfProfiler.end("GameEventManager", perfStart);
+        }
+    }
+
+    private static void tickGame() {
         if (!gameActive || currentLevel == null) {
             return;
         }

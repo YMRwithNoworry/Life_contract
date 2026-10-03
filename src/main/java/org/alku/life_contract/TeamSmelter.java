@@ -90,6 +90,15 @@ public class TeamSmelter {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickSmelter();
+        } finally {
+            PerfProfiler.end("TeamSmelter", perfStart);
+        }
+    }
+
+    private static void tickSmelter() {
         net.minecraft.server.MinecraftServer server = net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         if (server == null) {
             return;

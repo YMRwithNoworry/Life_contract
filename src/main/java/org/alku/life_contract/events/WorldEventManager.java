@@ -33,6 +33,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.PerfProfiler;
 import org.alku.life_contract.NetworkHandler;
 
 import java.util.ArrayList;
@@ -382,6 +383,15 @@ public final class WorldEventManager {
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickEvents(event);
+        } finally {
+            PerfProfiler.end("WorldEventManager", perfStart);
+        }
+    }
+
+    private static void tickEvents(ServerTickEvent.Post event) {
         if (level == null || event.getServer().overworld() != level) return;
 
         long currentTick = level.getGameTime();

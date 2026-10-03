@@ -544,7 +544,29 @@ public class ContractCommands {
                         .executes(context -> {
                                 PerfDiagnostics.report(context.getSource());
                                 return 1;
-                        }));
+                        })
+                        .then(Commands.literal("on")
+                                .executes(context -> {
+                                        PerfProfiler.reset();
+                                        PerfProfiler.setEnabled(true);
+                                        context.getSource().sendSuccess(() -> Component.literal(
+                                                "§a[性能] §f分段计时已开启，稍后执行 §e/contract perf §f查看结果。"), true);
+                                        return 1;
+                                }))
+                        .then(Commands.literal("off")
+                                .executes(context -> {
+                                        PerfProfiler.setEnabled(false);
+                                        context.getSource().sendSuccess(() -> Component.literal(
+                                                "§c[性能] §f分段计时已关闭。"), true);
+                                        return 1;
+                                }))
+                        .then(Commands.literal("reset")
+                                .executes(context -> {
+                                        PerfProfiler.reset();
+                                        context.getSource().sendSuccess(() -> Component.literal(
+                                                "§e[性能] §f分段计时计数已清零。"), true);
+                                        return 1;
+                                })));
 
                 contract.then(Commands.literal("admin")
                         .requires(source -> source.hasPermission(2))

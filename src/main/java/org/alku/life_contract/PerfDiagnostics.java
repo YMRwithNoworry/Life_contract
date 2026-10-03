@@ -18,6 +18,7 @@ import org.alku.life_contract.follower.FollowerEvents;
 import org.alku.life_contract.mutation.MutationCombatEvents;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,26 @@ public final class PerfDiagnostics {
         reportTickRate(server, source);
         reportLevelEntities(server, source);
         reportModuleState(server, source);
+        reportProfiler(source);
+    }
+
+    /** 打开计时后才有内容：各热路径的调用次数与耗时。 */
+    private static void reportProfiler(CommandSourceStack source) {
+        if (!PerfProfiler.isEnabled()) {
+            source.sendSuccess(() -> Component.literal(
+                    "§7分段计时: §8未开启 §7(执行 §f/contract perf on §7开始统计)"), false);
+            return;
+        }
+
+        List<String> lines = PerfProfiler.report();
+        if (lines.isEmpty()) {
+            source.sendSuccess(() -> Component.literal("§7分段计时: §e已开启，等待下一次采样"), false);
+            return;
+        }
+        source.sendSuccess(() -> Component.literal("§7分段计时 (自开启或上次重置以来):"), false);
+        for (String line : lines) {
+            source.sendSuccess(() -> Component.literal("  " + line), false);
+        }
     }
 
     /** TPS：用两次执行之间的 tick 增量 / 时间增量计算，不做任何后台采样。 */

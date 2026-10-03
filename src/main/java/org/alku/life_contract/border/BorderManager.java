@@ -16,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.PerfProfiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -305,6 +306,15 @@ public class BorderManager {
     
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
+        long perfStart = PerfProfiler.begin();
+        try {
+            tickShrinkTask();
+        } finally {
+            PerfProfiler.end("BorderManager", perfStart);
+        }
+    }
+
+    private static void tickShrinkTask() {
         if (shrinkTask == null || !shrinkTask.isRunning()) return;
 
         long currentTick = currentBorder.getLevel().getGameTime();

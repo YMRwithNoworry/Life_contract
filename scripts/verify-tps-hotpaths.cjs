@@ -125,7 +125,25 @@ requireText(radarMixin, "localPlayer.tickCount != lifeContract$localTeamTick", "
 requireText(navigator, "activeAirdrops.isEmpty() && activeDecoys.isEmpty() && trackingActive.isEmpty()",
         "navigator no-op early return");
 
-// 15) 性能诊断指令：按需采样，不占每 tick 开销
+// 15) 分段计时：默认关闭、关闭时零开销，且四个每 tick 处理器都已接入
+const profiler = read("src/main/java/org/alku/life_contract/PerfProfiler.java");
+requireText(profiler, "public static long begin()", "profiler begin");
+requireText(profiler, "public static void end(String name, long startNanos)", "profiler end");
+requireText(profiler, "return enabled ? System.nanoTime() : 0L;", "profiler disabled fast path");
+requireText(profiler, "if (startNanos == 0L)", "profiler end fast path");
+requireText(profiler, "public static List<String> report()", "profiler report");
+for (const [file, section] of [
+  ["src/main/java/org/alku/life_contract/border/BorderManager.java", "BorderManager"],
+  ["src/main/java/org/alku/life_contract/events/GameEventManager.java", "GameEventManager"],
+  ["src/main/java/org/alku/life_contract/events/WorldEventManager.java", "WorldEventManager"],
+  ["src/main/java/org/alku/life_contract/TeamSmelter.java", "TeamSmelter"],
+]) {
+  const source = read(file);
+  requireText(source, "long perfStart = PerfProfiler.begin();", section + " timing start");
+  requireText(source, 'PerfProfiler.end("' + section + '"', section + " timing end");
+}
+
+// 16) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");
@@ -137,6 +155,10 @@ requireText(followers, "public static String debugSummary()", "follower debug su
 requireText(diagnostics, "EntityJoinLevelEvent", "entity join churn counter");
 requireText(diagnostics, "EntityLeaveLevelEvent", "entity leave churn counter");
 requireText(diagnostics, "实体变化", "entity churn report line");
+requireText(diagnostics, "reportProfiler(source)", "profiler report section");
+requireText(followerCommands, 'Commands.literal("on")', "perf on subcommand");
+requireText(followerCommands, "PerfProfiler.setEnabled(true)", "perf enable wiring");
+requireText(followerCommands, "PerfProfiler.setEnabled(false)", "perf disable wiring");
 
 const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
 requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");
