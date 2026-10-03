@@ -193,6 +193,15 @@ public class Life_contract {
     public static class ModEvents {
         /** 玩家最大生命上限：原版 20 -> 40。 */
         public static final double PLAYER_MAX_HEALTH = 40.0D;
+        /**
+         * 玩家挖掘速度倍率：原版 1.0 -> 2.5。
+         * <p>
+         * 原版 {@code Player#getDigSpeed} 最后一步就是
+         * {@code f *= getAttributeValue(Attributes.BLOCK_BREAK_SPEED)}，
+         * 所以把该属性设成 2.5 就是"所有人的挖掘速度 ×2.5"，
+         * 并且和效率附魔、急迫效果按原版规则叠乘。
+         */
+        public static final double PLAYER_BLOCK_BREAK_SPEED = 2.5D;
 
         public static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
             event.put(TEAM_SENTINEL.get(), TeamSentinel.createAttributes().build());
@@ -203,6 +212,9 @@ public class Life_contract {
             event.add(EntityType.PLAYER,
                     net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH,
                     PLAYER_MAX_HEALTH);
+            event.add(EntityType.PLAYER,
+                    net.minecraft.world.entity.ai.attributes.Attributes.BLOCK_BREAK_SPEED,
+                    PLAYER_BLOCK_BREAK_SPEED);
         }
     }
 }

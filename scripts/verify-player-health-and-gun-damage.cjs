@@ -21,6 +21,12 @@ requireText(modClass, "public static final double PLAYER_MAX_HEALTH = 40.0D;", "
 requireText(modClass, "EntityAttributeModificationEvent event", "attribute modification listener");
 requireText(modClass, "event.add(EntityType.PLAYER,", "player attribute override");
 requireText(modClass, "Attributes.MAX_HEALTH,", "max health attribute target");
+
+// 玩家挖掘速度 2.5 倍（原版 Player#getDigSpeed 末尾乘 BLOCK_BREAK_SPEED）
+requireText(modClass, "public static final double PLAYER_BLOCK_BREAK_SPEED = 2.5D;",
+  "player block break speed constant");
+requireText(modClass, "Attributes.BLOCK_BREAK_SPEED,", "block break speed attribute target");
+requireText(modClass, "PLAYER_BLOCK_BREAK_SPEED);", "block break speed attribute value");
 requireText(modClass, "modEventBus.addListener(ModEvents::onEntityAttributeModification)",
   "attribute modification listener registration");
 
