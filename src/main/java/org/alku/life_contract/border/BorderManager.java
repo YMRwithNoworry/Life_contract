@@ -193,8 +193,11 @@ public class BorderManager {
         return true;
     }
 
+    /** 开局边界：中心为末地要塞传送门，边长 {@value #GAME_BORDER_INITIAL_SIZE} 格。 */
+    public static final double GAME_BORDER_INITIAL_SIZE = 600.0D;
+
     public static boolean startGameBorder(ServerLevel level, double centerX, double centerZ) {
-        if (!createBorder(level, centerX, centerZ, 1000.0D)) {
+        if (!createBorder(level, centerX, centerZ, GAME_BORDER_INITIAL_SIZE)) {
             return false;
         }
         return startShrink(GAME_BORDER_SHRINK_INTERVAL_SECONDS, GAME_BORDER_SHRINK_PERCENTAGE, 0);

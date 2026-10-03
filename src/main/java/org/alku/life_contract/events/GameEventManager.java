@@ -45,6 +45,8 @@ import java.util.stream.Collectors;
 public final class GameEventManager {
     private static final long INITIAL_DEBUFF_PROTECTION_SECONDS = 120L;
     private static final long GAME_START_DAMAGE_PROTECTION_SECONDS = 10L;
+    /** 开局迁移时参赛玩家相对边界中心的最大偏移，必须小于边界半边长（600/2=300）。 */
+    private static final double GAME_START_RELOCATION_RADIUS = 240.0D;
     private static boolean gameActive;
     private static boolean gamePaused;
     private static long gameStartTick;
@@ -103,9 +105,14 @@ public final class GameEventManager {
         }
         initialTeamCount = new HashSet<>(gamePlayerTeams.values()).size();
 
-        BlockPos playerCenter = BlockPos.containing(centerX, 0.0D, centerZ);
-        BorderManager.startGameBorder(gameLevel, centerX, centerZ);
-        relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, playerCenter);
+        // 边界中心必须与末地要塞传送门一致：终局要求传送门始终留在缩圈范围内，
+        // 否则缩圈一开始传送门就落到圈外，玩家永远打不到终局。
+        BlockPos portalCenter = portal.portalCenter();
+        double borderCenterX = portalCenter != null ? portalCenter.getX() + 0.5D : centerX;
+        double borderCenterZ = portalCenter != null ? portalCenter.getZ() + 0.5D : centerZ;
+        BlockPos borderCenter = BlockPos.containing(borderCenterX, 0.0D, borderCenterZ);
+        BorderManager.startGameBorder(gameLevel, borderCenterX, borderCenterZ);
+        relocateParticipantsInsideBorder(gameLevel, centerX, centerZ, borderCenter);
         WorldEventManager.startGame(gameLevel, gameStartPlayerIds.size());
         org.alku.life_contract.WaypointSync.broadcast();
         syncToAllClients();
@@ -113,7 +120,8 @@ public final class GameEventManager {
                 true,
                 allocation.players(),
                 allocation.teams(),
-                allocation.message() + "；" + portal.message() + "；边界已以发起玩家为中心设置为半径500，参赛玩家已迁入边界内");
+                allocation.message() + "；" + portal.message()
+                        + "；边界已以末地要塞传送门为中心设置为 600×600，参赛玩家已迁入边界内");
     }
 
     private static void relocateParticipantsInsideBorder(ServerLevel level, double previousCenterX,
@@ -123,8 +131,10 @@ public final class GameEventManager {
                 continue;
             }
 
-            double offsetX = Math.max(-240.0D, Math.min(240.0D, player.getX() - previousCenterX));
-            double offsetZ = Math.max(-240.0D, Math.min(240.0D, player.getZ() - previousCenterZ));
+            double offsetX = Math.max(-GAME_START_RELOCATION_RADIUS,
+                    Math.min(GAME_START_RELOCATION_RADIUS, player.getX() - previousCenterX));
+            double offsetZ = Math.max(-GAME_START_RELOCATION_RADIUS,
+                    Math.min(GAME_START_RELOCATION_RADIUS, player.getZ() - previousCenterZ));
             int targetX = (int) Math.floor(borderCenter.getX() + offsetX);
             int targetZ = (int) Math.floor(borderCenter.getZ() + offsetZ);
             // 地表必须用 SurfaceFinder：它会先加载区块、再用真实方块校验高度图，
