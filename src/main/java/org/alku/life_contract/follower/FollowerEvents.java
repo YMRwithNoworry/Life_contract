@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
@@ -67,6 +68,14 @@ public class FollowerEvents {
     private static final String TAG_CONTRACT_MOD_ID = "LifeContractModAllyModId";
     private static final double SUMMON_INHERIT_RADIUS = 12.0D;
     private static final Set<UUID> INHERITED_SUMMONS = new HashSet<>();
+    /**
+     * 本模组为某个生物安装的 AI 目标（精确实例）。
+     * <p>
+     * 实体每次区块重新加载都会走一遍注册流程，而 goalSelector.addGoal 是“追加”语义：
+     * 原实现会不断叠加重复目标，使每 tick 的 AI 评估次数随加载次数无限增长。
+     * 记录实例后可以在重新安装前精确移除，保证幂等。
+     */
+    private static final Map<UUID, List<Goal>> INSTALLED_AI_GOALS = new HashMap<>();
     private static final String[] OWNER_METHOD_NAMES = {
         "getOwner",
         "getOwnerUUID",
@@ -159,13 +168,40 @@ public class FollowerEvents {
     }
 
     private static void setupFollowerAI(Mob mob, UUID ownerUUID) {
+        // 先精确移除上一次安装的目标，重复调用不会叠加
+        removeInstalledGoals(mob);
+
         mob.targetSelector.removeAllGoals(goal -> true);
-        
-        mob.targetSelector.addGoal(1, new FollowerAttackGoal(mob, ownerUUID));
+
+        List<Goal> installed = new ArrayList<>(3);
+
+        Goal attackGoal = new FollowerAttackGoal(mob, ownerUUID);
+        mob.targetSelector.addGoal(1, attackGoal);
+        installed.add(attackGoal);
+
         if (isContractAlly(mob) && mob instanceof PathfinderMob pathfinderMob) {
-            pathfinderMob.goalSelector.addGoal(3, new MeleeAttackGoal(pathfinderMob, 1.2D, true));
+            Goal meleeGoal = new MeleeAttackGoal(pathfinderMob, 1.2D, true);
+            pathfinderMob.goalSelector.addGoal(3, meleeGoal);
+            installed.add(meleeGoal);
         }
-        mob.goalSelector.addGoal(4, new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F));
+
+        Goal followGoal = new FollowOwnerGoal(mob, ownerUUID, 1.0D, 10.0F, 2.0F);
+        mob.goalSelector.addGoal(4, followGoal);
+        installed.add(followGoal);
+
+        INSTALLED_AI_GOALS.put(mob.getUUID(), installed);
+    }
+
+    /** 移除本模组为该生物安装过的 AI 目标。 */
+    private static void removeInstalledGoals(Mob mob) {
+        List<Goal> installed = INSTALLED_AI_GOALS.remove(mob.getUUID());
+        if (installed == null) {
+            return;
+        }
+        for (Goal goal : installed) {
+            mob.targetSelector.removeGoal(goal);
+            mob.goalSelector.removeGoal(goal);
+        }
     }
 
     private static UUID findSummonedFollowerOwner(Mob mob) {
@@ -418,12 +454,17 @@ public class FollowerEvents {
         data.putBoolean(TAG_CONTRACT_ALLY, true);
         data.putUUID(TAG_CONTRACT_OWNER_UUID, ownerUUID);
         data.putString(TAG_CONTRACT_MOD_ID, modId);
-        mob.setPersistenceRequired();
+        // 注意：这里刻意不调用 setPersistenceRequired()。
+        // 阵营免疫只依赖上面的持久化标签，而把“该模组的每一只自然刷怪”都设成永不消失，
+        // 会让生物只增不减地堆积（感染生物刷得很快），是服务端 TPS 的主要泄漏点。
+        // 真正需要常驻的只有玩家用契约/怪物蛋获得的追随者，那几个路径各自会设置持久性。
         if (mob.getTarget() instanceof Player target && isAlliedWithPlayer(target, mob)) {
             mob.setTarget(null);
         }
         if (!data.getBoolean(WandFollowerSystem.TAG_WAND_TAMED)
                 && !data.hasUUID(WandFollowerSystem.TAG_WAND_OWNER_UUID)) {
+            // 转为阵营友军后不再需要追随者 AI，顺手把之前装上的目标摘掉
+            removeInstalledGoals(mob);
             clearFollower(mob.getUUID());
             data.remove(TAG_FOLLOWER_OWNER_UUID);
             data.remove(TAG_INHERIT_FOLLOWER_OWNER_UUID);
@@ -516,6 +557,8 @@ public class FollowerEvents {
     }
 
     public static void unregisterFollower(Mob mob) {
+        // 解绑时同时摘掉本模组安装的 AI 目标，避免残留目标继续每 tick 评估
+        removeInstalledGoals(mob);
         UUID ownerUUID = getOwnerUUID(mob);
         FOLLOWER_OWNER_MAP.remove(mob.getUUID());
         unindexFollower(mob.getUUID(), ownerUUID);
@@ -569,6 +612,7 @@ public class FollowerEvents {
         UUID ownerUUID = FOLLOWER_OWNER_MAP.remove(mobUUID);
         unindexFollower(mobUUID, ownerUUID);
         INHERITED_SUMMONS.remove(mobUUID);
+        INSTALLED_AI_GOALS.remove(mobUUID);
     }
 
     @SubscribeEvent

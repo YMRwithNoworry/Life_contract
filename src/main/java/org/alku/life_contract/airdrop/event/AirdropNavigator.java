@@ -20,6 +20,9 @@ public class AirdropNavigator {
 
     private static final Set<UUID> particlesEnabled = new HashSet<>();
 
+    /** 当前正在被追踪线指向的玩家：只有它们需要在丢失目标时收一次清除包。 */
+    private static final Set<UUID> trackingActive = new HashSet<>();
+
     /** 诱饵信号按维度隔离，修复跨维度串扰 bug */
     private static final Map<ResourceLocation, Map<String, DecoySignal>> decoySignals = new ConcurrentHashMap<>();
     private static final long DECOY_DURATION_MS = 120 * 1000;
@@ -73,7 +76,14 @@ public class AirdropNavigator {
             particlesEnabled.add(player.getUUID());
         } else {
             particlesEnabled.remove(player.getUUID());
+            trackingActive.remove(player.getUUID());
         }
+    }
+
+    /** 玩家离线时清理状态，避免长期运行后集合只增不减。 */
+    public static void forgetPlayer(UUID playerId) {
+        particlesEnabled.remove(playerId);
+        trackingActive.remove(playerId);
     }
 
     public static boolean isParticlesEnabled(Player player) {
@@ -142,12 +152,16 @@ public class AirdropNavigator {
         List<DecoySignal> activeDecoys = getActiveDecoySignals(level);
 
         if (activeAirdrops.isEmpty() && activeDecoys.isEmpty()) {
-            // 没有空投时，清除所有玩家的追踪线
-            for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
-                if (player.level() != level) continue;
-                if (isParticlesEnabled(player)) {
-                    NetworkHandler.sendToPlayer(player, AirdropPayload.clear());
+            // 没有空投时只给“当前确实有追踪线”的玩家发一次清除包，
+            // 否则每 5 tick 都会给每个开启导航的玩家重复发送空包。
+            if (!trackingActive.isEmpty()) {
+                for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
+                    if (player.level() != level) continue;
+                    if (trackingActive.remove(player.getUUID())) {
+                        NetworkHandler.sendToPlayer(player, AirdropPayload.clear());
+                    }
                 }
+                trackingActive.clear();
             }
             return;
         }
@@ -176,6 +190,7 @@ public class AirdropNavigator {
                     Vec3 targetPos = nearestAirdrop.position();
                     NetworkHandler.sendToPlayer(player,
                             new AirdropPayload(true, targetPos.x, targetPos.y, targetPos.z));
+                    trackingActive.add(player.getUUID());
                 }
             } else if (nearestDecoy != null && isParticlesEnabled(player)) {
                 Vec3 decoyPos = nearestDecoy.getPosition();
@@ -183,12 +198,13 @@ public class AirdropNavigator {
 
                 NetworkHandler.sendToPlayer(player,
                         new AirdropPayload(true, decoyPos.x, decoyPos.y, decoyPos.z));
+                trackingActive.add(player.getUUID());
 
                 Component actionBarMsg = Component.literal(
                         String.format("§d§l[伪装信号] §e%.0fm", distance));
                 player.sendSystemMessage(actionBarMsg, true);
-            } else if (isParticlesEnabled(player)) {
-                // 该玩家没有目标，清除追踪线
+            } else if (isParticlesEnabled(player) && trackingActive.remove(player.getUUID())) {
+                // 该玩家刚刚失去目标，清除追踪线
                 NetworkHandler.sendToPlayer(player, AirdropPayload.clear());
             }
         }

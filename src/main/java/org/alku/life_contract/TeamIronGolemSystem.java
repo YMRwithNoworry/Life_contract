@@ -40,6 +40,14 @@ public class TeamIronGolemSystem {
         }
     }
 
+    /** 守卫离开世界（区块卸载/死亡）时清掉缓存条目，避免长期运行后缓存只增不减。 */
+    @SubscribeEvent
+    public static void onEntityLeaveLevel(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
+        if (!event.getLevel().isClientSide() && event.getEntity() instanceof IronGolem golem) {
+            removeGolemFromCache(golem.getUUID());
+        }
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide()) return;

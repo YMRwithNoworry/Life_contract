@@ -57,7 +57,29 @@ requireText(events, "if (currentTick % 10L == 0L) {\n            syncToClients()
 requireText(events, "if (currentTick % 10L == 0L) {\n                AABB bounds = bubble.getBounds();", "bubble query cadence");
 requireText(events, "if (currentTick % 10L == 0L) {\n            spawnSporeRainParticles();", "particle cadence");
 
-// 5) 高度与深层矿物补丁不应回归
+// 5) 契约阵营的“自然刷怪”不再被设为永不消失（否则生物只增不减）
+const allyBlock = followers.slice(followers.indexOf("private static void registerContractModAlly"),
+        followers.indexOf("public static boolean isContractAlly"));
+forbidText(allyBlock, "mob.setPersistenceRequired();", "contract ally must despawn naturally");
+requireText(followers, "public static void registerFollower(Mob mob, UUID ownerUUID)", "manual follower path");
+
+// 6) 空投追踪线：没有目标时不再每 5 tick 重复发空包
+requireText(navigator, "trackingActive", "tracking state set");
+requireText(navigator, "trackingActive.remove(player.getUUID())", "clear only when tracked");
+requireText(navigator, "public static void forgetPlayer(UUID playerId)", "logout prune");
+requireText(airdropEvents, "AirdropNavigator.forgetPlayer(event.getEntity().getUUID())", "logout hook");
+
+// 7) 追随者 AI 目标安装必须幂等，否则区块反复加载会让每 tick AI 评估次数无限增长
+requireText(followers, "private static final Map<UUID, List<Goal>> INSTALLED_AI_GOALS", "goal tracking map");
+requireText(followers, "removeInstalledGoals(mob);", "idempotent install");
+requireText(followers, "private static void removeInstalledGoals(Mob mob)", "goal removal helper");
+requireText(followers, "INSTALLED_AI_GOALS.remove(mobUUID);", "goal tracking pruned with follower");
+
+// 8) 守卫缓存要在实体离开世界时清理
+const golem = read("src/main/java/org/alku/life_contract/TeamIronGolemSystem.java");
+requireText(golem, "removeGolemFromCache(golem.getUUID())", "golem cache prune");
+
+// 8) 高度与深层矿物补丁不应回归
 forbidText(mixinConfig, "DimensionTypeHeightMixin", "height mixin");
 assertNoFile("src/main/java/org/alku/life_contract/world/DeepOreGenerationHandler.java");
 

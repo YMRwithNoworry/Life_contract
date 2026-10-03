@@ -47,6 +47,12 @@ public class CommonEvents {
         }
     }
 
+    /** 玩家离线时清掉导航状态，避免粒子开关集合只增不减。 */
+    @SubscribeEvent
+    public static void onPlayerLogout(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
+        AirdropNavigator.forgetPlayer(event.getEntity().getUUID());
+    }
+
     /** 登记/注销已加载的空投，导航时无需再扫描整个世界边界。 */
     @SubscribeEvent
     public static void onEntityJoinLevel(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
