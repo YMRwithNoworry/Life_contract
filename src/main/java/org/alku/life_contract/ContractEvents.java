@@ -64,6 +64,14 @@ public class ContractEvents {
         event.setDisplayName(result);
     }
 
+    /** 玩家离线时清掉攻击记录，避免这两个按 UUID 索引的表长期只增不减。 */
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        UUID playerId = event.getEntity().getUUID();
+        LAST_ATTACKER_MOD.remove(playerId);
+        LAST_ATTACK_TIME.remove(playerId);
+    }
+
     @SubscribeEvent
     public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.getEntity().level().isClientSide) {

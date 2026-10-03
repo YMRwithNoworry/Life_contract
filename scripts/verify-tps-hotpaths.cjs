@@ -106,6 +106,8 @@ const eventHud = read("src/main/java/org/alku/life_contract/client/EventHUD.java
 requireText(eventHud, "cachedStatusLines", "event HUD cached lines");
 requireText(eventHud, "buildStatusLines(minecraft)", "event HUD rebuild path");
 forbidText(contractEvents, "onServerTick", "dead per-tick handler");
+requireText(contractEvents, "LAST_ATTACKER_MOD.remove(playerId)", "attack map pruned on logout");
+requireText(contractEvents, "LAST_ATTACK_TIME.remove(playerId)", "attack time map pruned on logout");
 
 const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
 requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");
