@@ -11,10 +11,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,9 +67,15 @@ public final class StrongholdEndgameManager {
     private static final double END_BOSS_RESET_Y = 103.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "distorted_enderman");
-    /** 末地终局 Boss：真菌感染：孢子 的朽翼魔（Verfalldrache）。 */
-    private static final ResourceLocation END_BOSS_ID =
-            ResourceLocation.fromNamespaceAndPath("spore", "verfalldrache");
+    /**
+     * 末地终局 Boss：真菌感染：孢子 的朽翼魔（Verfalldrache）。
+     * <p>
+     * 注意注册名是 {@code spore:verfall}（游戏内 {@code /summon spore:verfall}），
+     * 不是 {@code spore:verfalldrache}；两种写法都列上以兼容不同版本。
+     */
+    private static final List<ResourceLocation> END_BOSS_IDS = List.of(
+            ResourceLocation.fromNamespaceAndPath("spore", "verfall"),
+            ResourceLocation.fromNamespaceAndPath("spore", "verfalldrache"));
     /** 未加载 spore 时退回的旧版终局 Boss，保证终局始终有可击杀的目标。 */
     private static final ResourceLocation LEGACY_END_BOSS_ID =
             ResourceLocation.fromNamespaceAndPath("phayriosis", "converted_dragon");
@@ -97,6 +106,8 @@ public final class StrongholdEndgameManager {
     private static UUID endBossUuid;
     /** 本次对局实际生成的 Boss 实体 ID，用于提示文案。 */
     private static ResourceLocation activeEndBossId;
+    /** 终局 Boss 的血条（服务端 BossEvent，会显示在屏幕正上方）。 */
+    private static ServerBossEvent endBossBar;
 
     private StrongholdEndgameManager() {
     }
@@ -282,16 +293,38 @@ public final class StrongholdEndgameManager {
             return;
         }
         ServerLevel endLevel = player.serverLevel();
-        configureEndBorder(endLevel, player);
+        enforceEndBorder(endLevel);
         suppressVanillaDragonFight(endLevel);
         initializeEndEncounter(endLevel);
+        if (endBossBar != null) {
+            endBossBar.addPlayer(player);
+        }
     }
 
-    private static void configureEndBorder(ServerLevel endLevel, ServerPlayer player) {
-        WorldBorder endBorder = endLevel.getWorldBorder();
-        endBorder.setCenter(0.0D, 0.0D);
-        endBorder.setSize(END_BORDER_SIZE);
-        player.connection.send(new ClientboundInitializeBorderPacket(endBorder));
+    /**
+     * 末地边界必须单独钉在原点。
+     * <p>
+     * 主世界边界是以开局玩家为中心的，而原版在建维度时给主世界边界挂了一个
+     * {@code BorderChangeListener.DelegateBorderChangeListener}，会把主世界边界的
+     * <b>中心与尺寸同步到其它维度</b>。于是主世界每次缩圈都会把末地边界重新拽回主世界中心，
+     * 玩家一进末地（末地主岛在 0,0）就落在边界外。
+     * <p>
+     * 这里在末地每个 tick 检查一次，一旦被改回去就立刻纠正并重发边界包。
+     */
+    private static void enforceEndBorder(ServerLevel endLevel) {
+        WorldBorder border = endLevel.getWorldBorder();
+        boolean centered = Math.abs(border.getCenterX()) < 1.0E-4D
+                && Math.abs(border.getCenterZ()) < 1.0E-4D;
+        boolean sized = Math.abs(border.getSize() - END_BORDER_SIZE) < 1.0E-4D;
+        if (centered && sized) {
+            return;
+        }
+
+        border.setCenter(0.0D, 0.0D);
+        border.setSize(END_BORDER_SIZE);
+        for (ServerPlayer player : endLevel.players()) {
+            player.connection.send(new ClientboundInitializeBorderPacket(border));
+        }
     }
 
     private static void suppressVanillaDragonFight(ServerLevel endLevel) {
@@ -339,6 +372,9 @@ public final class StrongholdEndgameManager {
     public static void onLevelTick(LevelTickEvent.Post event) {
         long perfStart = PerfProfiler.begin();
         try {
+            if (event.getLevel() instanceof ServerLevel level && Level.END.equals(level.dimension())) {
+                enforceEndBorder(level);
+            }
             tickEndBoss(event);
         } finally {
             PerfProfiler.end("EndBoss.levelTick", perfStart);
@@ -358,6 +394,53 @@ public final class StrongholdEndgameManager {
             return;
         }
         capEndBossFlight(dragon);
+        updateEndBossBar(dragon);
+    }
+
+    // ==================== 终局 Boss 血条 ====================
+
+    /** 起一条紫色 Boss 血条；已经在末地的玩家直接加入。 */
+    private static void startEndBossBar(LivingEntity boss, ResourceLocation bossId) {
+        stopEndBossBar();
+
+        endBossBar = new ServerBossEvent(
+                Component.literal(bossDisplayName(bossId)),
+                BossEvent.BossBarColor.PURPLE,
+                BossEvent.BossBarOverlay.PROGRESS);
+        endBossBar.setProgress(1.0F);
+        endBossBar.setCreateWorldFog(false);
+
+        if (boss.level().getServer() != null) {
+            for (ServerPlayer player : boss.level().getServer().getPlayerList().getPlayers()) {
+                if (Level.END.equals(player.level().dimension())) {
+                    endBossBar.addPlayer(player);
+                }
+            }
+        }
+    }
+
+    /** 血条进度跟随 Boss 血量；顺便把后来进末地的玩家补进来。 */
+    private static void updateEndBossBar(LivingEntity boss) {
+        if (endBossBar == null) {
+            return;
+        }
+        float maxHealth = Math.max(1.0F, boss.getMaxHealth());
+        endBossBar.setProgress(Mth.clamp(boss.getHealth() / maxHealth, 0.0F, 1.0F));
+
+        if (boss.level().getServer() != null) {
+            for (ServerPlayer player : boss.level().getServer().getPlayerList().getPlayers()) {
+                if (Level.END.equals(player.level().dimension())) {
+                    endBossBar.addPlayer(player);
+                }
+            }
+        }
+    }
+
+    private static void stopEndBossBar() {
+        if (endBossBar != null) {
+            endBossBar.removeAllPlayers();
+            endBossBar = null;
+        }
     }
 
     /** 只按生成时打上的标记识别终局 Boss，spore 与旧版回退生物都适用。 */
@@ -394,8 +477,8 @@ public final class StrongholdEndgameManager {
         ResourceLocation bossId = resolveEndBossId();
         if (bossId == null) {
             Life_contract.LOGGER.error(
-                    "Unable to spawn any End boss: neither {} nor {} is available",
-                    END_BOSS_ID, LEGACY_END_BOSS_ID);
+                    "Unable to spawn any End boss: none of {} and {} is available",
+                    END_BOSS_IDS, LEGACY_END_BOSS_ID);
             return;
         }
 
@@ -409,6 +492,7 @@ public final class StrongholdEndgameManager {
         }
         endBossUuid = dragon.getUUID();
         activeEndBossId = bossId;
+        startEndBossBar(dragon, bossId);
 
         List<BlockPos> endermanColumns = List.of(
                 new BlockPos(-5, 0, 0),
@@ -432,27 +516,42 @@ public final class StrongholdEndgameManager {
 
     /** 优先使用 spore 的朽翼魔，缺失时退回旧版 Phayriosis 龙。 */
     private static ResourceLocation resolveEndBossId() {
-        if (hasEntityType(END_BOSS_ID)) {
-            return END_BOSS_ID;
+        for (ResourceLocation candidate : END_BOSS_IDS) {
+            if (hasEntityType(candidate)) {
+                return candidate;
+            }
         }
         Life_contract.LOGGER.warn("End boss {} is unavailable, falling back to {}",
-                END_BOSS_ID, LEGACY_END_BOSS_ID);
+                END_BOSS_IDS, LEGACY_END_BOSS_ID);
         return hasEntityType(LEGACY_END_BOSS_ID) ? LEGACY_END_BOSS_ID : null;
     }
 
+    /**
+     * 判断实体类型是否真的注册过。
+     * <p>
+     * 不能用 {@code BuiltInRegistries.ENTITY_TYPE.get(id) != null}：ENTITY_TYPE 是
+     * {@code DefaultedRegistry}，默认值是 {@code minecraft:pig}，未注册的 id 会返回<b>猪</b>
+     * 而不是 null。那样「不存在」会被误判成「存在」，既不会回退到备用 Boss，
+     * 还会真的在末地生成一只猪当终局 Boss。
+     */
     private static boolean hasEntityType(ResourceLocation entityId) {
-        return BuiltInRegistries.ENTITY_TYPE.get(entityId) != null;
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityId);
+        return entityId.equals(BuiltInRegistries.ENTITY_TYPE.getKey(type));
     }
 
     private static String bossDisplayName(ResourceLocation entityId) {
-        return END_BOSS_ID.equals(entityId) ? "朽翼魔 Verfalldrache" : "诡异末影龙";
+        return entityId != null && "spore".equals(entityId.getNamespace())
+                ? "朽翼魔 Verfalldrache"
+                : "诡异末影龙";
     }
 
     /** 生成终局生物：spore 的 Boss 不一定是原版 Mob，这里只要求是 LivingEntity。 */
     private static LivingEntity spawnEncounterMob(ServerLevel level, ResourceLocation entityId,
                                                   BlockPos spawnPos, boolean boss) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(entityId);
-        if (entityType == null) {
+        if (entityType == null || !entityId.equals(BuiltInRegistries.ENTITY_TYPE.getKey(entityType))) {
+            // 注意：ENTITY_TYPE 是 DefaultedRegistry，未注册的 id 会返回默认的猪，
+            // 所以必须比对注册名，否则会"成功地"生成一只猪。
             Life_contract.LOGGER.error("Missing end encounter entity type {}", entityId);
             return null;
         }
@@ -468,6 +567,8 @@ public final class StrongholdEndgameManager {
         if (living instanceof Mob mob) {
             mob.finalizeSpawn(level, level.getCurrentDifficultyAt(spawnPos),
                     MobSpawnType.EVENT, null);
+            // 终局 Boss 不能被距离剔除掉，否则玩家一转头它就"没生成"了
+            mob.setPersistenceRequired();
         }
         living.getPersistentData().putBoolean(END_ENCOUNTER_ENTITY_TAG, true);
         if (boss) {
@@ -487,6 +588,8 @@ public final class StrongholdEndgameManager {
                 || !GameEventManager.isGameActive()) {
             return;
         }
+
+        stopEndBossBar();
 
         // 击杀归属：最后一下的玩家，或最后一击来源的玩家（环境伤害不计）
         ServerPlayer killer = resolvePlayerKiller(event, event.getEntity());
@@ -531,6 +634,7 @@ public final class StrongholdEndgameManager {
         endEncounterInitialized = false;
         endBossUuid = null;
         activeEndBossId = null;
+        stopEndBossBar();
     }
 
     public record PreparationResult(boolean success, BlockPos portalCenter, String message) {

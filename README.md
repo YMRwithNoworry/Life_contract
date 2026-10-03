@@ -62,7 +62,7 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Effect Immunity**: Negative potion effects from contracted mobs are negated.
 * **Teammate Protection**: Players cannot damage their own teammates.
 * **Player Health**: Player max health is raised to `40` (vanilla `20`).
-* **Endgame Boss**: The End dragon is replaced with Spore's **Verfalldrache** (`spore:verfalldrache`, falling back to the legacy `phayriosis:converted_dragon` when Spore is absent). The team that kills it wins the match, and so does the last team with a surviving player.
+* **Endgame Boss**: The End dragon is replaced with Spore's **Verfalldrache** (`spore:verfall` - the registry name, not `spore:verfalldrache`; falling back to the legacy `phayriosis:converted_dragon` when Spore is absent). It gets a purple vanilla boss bar that tracks its health, and is spawned with persistence so it cannot despawn out from under the fight. The team that kills it wins the match, and so does the last team with a surviving player.
 * **Gun Damage**: Bullets from TaCZ-style gun mods deal only `20%` of their damage to players; other non-player damage is reduced to `40%`.
 * **Aggro Transfer**: Contracted mobs automatically target hostile factions.
 

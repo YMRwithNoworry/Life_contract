@@ -273,9 +273,8 @@ public final class GameEventManager {
             return false;
         }
 
-        String bossName = bossId != null
-                && "spore".equals(bossId.getNamespace())
-                && "verfalldrache".equals(bossId.getPath())
+        // spore 的朽翼魔注册名是 spore:verfall（不是 spore:verfalldrache），按命名空间判断更稳
+        String bossName = bossId != null && "spore".equals(bossId.getNamespace())
                 ? "朽翼魔 Verfalldrache"
                 : "诡异末影龙";
         UUID teamId = gamePlayerTeams.get(winner.getUUID());
