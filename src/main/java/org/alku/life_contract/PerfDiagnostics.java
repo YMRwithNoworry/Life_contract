@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -92,29 +93,78 @@ public final class PerfDiagnostics {
     private record LevelCensus(String dimension, int total, List<String> topTypes) {
     }
 
+    /** 某类实体现存构成：总数 / 永不消失 / 本模组标记。 */
+    private record TypeStats(int loaded, int persistent, int modTagged) {
+    }
+
+    /** 一次普查的完整结果。 */
+    private record EntityCensus(List<LevelCensus> levels, Map<String, TypeStats> byType,
+                                int totalLoaded, int totalPersistent, int totalModTagged) {
+    }
+
     /** 一类实体的进出统计。 */
     private record TypeChurn(String type, long joins, long leaves, long net) {
     }
 
-    private static List<LevelCensus> census(MinecraftServer server) {
-        List<LevelCensus> result = new ArrayList<>();
+    /**
+     * 一次遍历同时统计：各维度实体数与占比最高的类型、每类实体的"永不消失/本模组标记"数量。
+     * 后者能直接回答"实体堆积到底是本模组标记造成的，还是别的模组在刷怪"。
+     */
+    private static EntityCensus census(MinecraftServer server) {
+        Map<String, int[]> perType = new HashMap<>();
+        List<LevelCensus> levels = new ArrayList<>();
+        int totalLoaded = 0;
+
         for (ServerLevel level : server.getAllLevels()) {
             Map<String, Integer> byType = new HashMap<>();
             int total = 0;
             for (Entity entity : level.getAllEntities()) {
                 total++;
                 ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-                byType.merge(id == null ? "unknown" : id.toString(), 1, Integer::sum);
+                String key = id == null ? "unknown" : id.toString();
+                byType.merge(key, 1, Integer::sum);
+
+                int[] stats = perType.computeIfAbsent(key, ignored -> new int[3]);
+                stats[0]++;
+                if (entity instanceof Mob mob) {
+                    if (mob.isPersistenceRequired()) {
+                        stats[1]++;
+                    }
+                    if (FollowerEvents.isModTagged(mob)) {
+                        stats[2]++;
+                    }
+                }
             }
 
+            totalLoaded += total;
             List<String> topTypes = byType.entrySet().stream()
                     .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                     .limit(4)
                     .map(entry -> entry.getKey() + "×" + entry.getValue())
                     .collect(Collectors.toList());
-            result.add(new LevelCensus(level.dimension().location().getPath(), total, topTypes));
+            levels.add(new LevelCensus(level.dimension().location().getPath(), total, topTypes));
         }
-        return result;
+
+        Map<String, TypeStats> byType = new HashMap<>(perType.size());
+        int totalPersistent = 0;
+        int totalModTagged = 0;
+        for (Map.Entry<String, int[]> entry : perType.entrySet()) {
+            int[] stats = entry.getValue();
+            totalPersistent += stats[1];
+            totalModTagged += stats[2];
+            byType.put(entry.getKey(), new TypeStats(stats[0], stats[1], stats[2]));
+        }
+        return new EntityCensus(levels, byType, totalLoaded, totalPersistent, totalModTagged);
+    }
+
+    /** 某类实体现存构成的一句话描述；类型不在普查结果里时返回空串。 */
+    private static String describeLoaded(String type, EntityCensus census) {
+        TypeStats stats = census.byType().get(type);
+        if (stats == null) {
+            return "";
+        }
+        return " | 现存 " + stats.loaded() + "（永不消失 " + stats.persistent()
+                + "，本模组标记 " + stats.modTagged() + "）";
     }
 
     /** 净增长最多的几类实体：如果某类只涨不落，就是它把实体数堆上去的。 */
@@ -156,14 +206,17 @@ public final class PerfDiagnostics {
 
     /** 供 {@link PerfWatchdog} 写日志的纯文本报告。 */
     public static List<String> collectPlainReport(MinecraftServer server) {
+        EntityCensus census = census(server);
         List<String> lines = new ArrayList<>();
-        for (LevelCensus level : census(server)) {
+        for (LevelCensus level : census.levels()) {
             lines.add(level.dimension() + ": 实体 " + level.total()
                     + (level.topTypes().isEmpty() ? "" : " [" + String.join(", ", level.topTypes()) + "]"));
         }
+        lines.add("实体总计: " + census.totalLoaded() + "，其中永不消失 " + census.totalPersistent()
+                + "，本模组标记 " + census.totalModTagged());
         for (TypeChurn churn : topNetGrowth(5)) {
-            lines.add(String.format("净增长 %s: +%d / -%d (净 %+d)",
-                    churn.type(), churn.joins(), churn.leaves(), churn.net()));
+            lines.add(String.format("净增长 %s: +%d / -%d (净 %+d)%s",
+                    churn.type(), churn.joins(), churn.leaves(), churn.net(), describeLoaded(churn.type(), census)));
         }
         lines.addAll(moduleStateLines(server));
         if (PerfProfiler.isEnabled()) {
@@ -249,21 +302,27 @@ public final class PerfDiagnostics {
             return;
         }
 
+        EntityCensus census = census(source.getServer());
         source.sendSuccess(() -> Component.literal("§7实体净增长 Top:"), false);
         for (TypeChurn churn : topNetGrowth(5)) {
-            String line = String.format("  §f%s§7: +%d / -%d §7(净 %+d, %.2f/s)",
-                    churn.type(), churn.joins(), churn.leaves(), churn.net(), churn.net() / seconds);
+            String line = String.format("  §f%s§7: +%d / -%d §7(净 %+d, %.2f/s)§8%s",
+                    churn.type(), churn.joins(), churn.leaves(), churn.net(), churn.net() / seconds,
+                    describeLoaded(churn.type(), census));
             source.sendSuccess(() -> Component.literal(line), false);
         }
     }
 
     /** 每个维度的实体总数与占比最高的几类：实体爆炸是 TPS 下降最常见的原因。 */
     private static void reportLevelEntities(MinecraftServer server, CommandSourceStack source) {
-        for (LevelCensus level : census(server)) {
+        EntityCensus census = census(server);
+        for (LevelCensus level : census.levels()) {
             final String topTypes = level.topTypes().stream().collect(Collectors.joining("§7, §f"));
             source.sendSuccess(() -> Component.literal("§7" + level.dimension() + "§f: 实体 §b" + level.total()
                     + (topTypes.isEmpty() ? "" : " §7[" + topTypes + "§7]")), false);
         }
+        source.sendSuccess(() -> Component.literal("§7实体总计: §b" + census.totalLoaded()
+                + " §7其中永不消失 §c" + census.totalPersistent()
+                + " §7本模组标记 §b" + census.totalModTagged()), false);
     }
 
     private static void reportModuleState(MinecraftServer server, CommandSourceStack source) {

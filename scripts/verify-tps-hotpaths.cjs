@@ -190,7 +190,18 @@ requireText(followerCommands, 'Commands.literal("watchdog")', "watchdog subcomma
 requireText(followerCommands, "PerfWatchdog.setEnabled(true)", "watchdog enable wiring");
 requireText(followerCommands, "PerfWatchdog.setEnabled(false)", "watchdog disable wiring");
 
-// 19) 性能诊断指令：按需采样，不占每 tick 开销
+// 19) 实体构成拆解：区分"本模组标记"与"别的模组在刷怪"，并暴露"永不消失"数量
+requireText(diagnosticsForWatchdog, "private record TypeStats(int loaded, int persistent, int modTagged)",
+        "per-type composition record");
+requireText(diagnosticsForWatchdog, "private static String describeLoaded(String type, EntityCensus census)",
+        "composition describer");
+requireText(diagnosticsForWatchdog, "mob.isPersistenceRequired()", "persistent mob counting");
+requireText(diagnosticsForWatchdog, "永不消失", "persistent share in output");
+requireText(diagnosticsForWatchdog, "本模组标记", "mod-tag share in output");
+requireText(followers, "public static boolean isModTagged(Mob mob)", "mod tag helper");
+requireText(followers, "data.hasUUID(TAG_INHERIT_FOLLOWER_OWNER_UUID)", "inherited summon tag checked");
+
+// 20) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");

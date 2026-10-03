@@ -591,6 +591,15 @@ public class FollowerEvents {
         }
     }
 
+    /** 本模组是否给该生物打了"友军 / 追随者 / 继承召唤"标签（性能诊断用）。 */
+    public static boolean isModTagged(Mob mob) {
+        CompoundTag data = mob.getPersistentData();
+        return data.getBoolean(TAG_CONTRACT_ALLY)
+                || data.hasUUID(TAG_CONTRACT_OWNER_UUID)
+                || data.hasUUID(TAG_FOLLOWER_OWNER_UUID)
+                || data.hasUUID(TAG_INHERIT_FOLLOWER_OWNER_UUID);
+    }
+
     /** 供 /contract perf 查看内部索引规模，便于发现只增不减的表。 */
     public static String debugSummary() {
         return "追随者 " + FOLLOWER_OWNER_MAP.size()
