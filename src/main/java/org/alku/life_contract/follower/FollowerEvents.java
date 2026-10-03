@@ -339,7 +339,10 @@ public class FollowerEvents {
         
         if (event.getSource().getEntity() instanceof Player player) {
             LivingEntity target = event.getEntity();
-            if (target instanceof Mob mob && isAlliedWithPlayer(player, mob)) {
+            // 只有"自己/队友的召唤物"和"队伍守卫"还保护。
+            // 同盟阵营生物（契约模组生物、同阵营生物）现在允许被玩家击杀 —— 它们依旧不会主动攻击你，
+            // 但你可以清掉挡路的、或者刷它们的掉落物。
+            if (target instanceof Mob mob && isProtectedSummon(player, mob)) {
                 event.setCanceled(true);
                 if (player instanceof ServerPlayer serverPlayer) {
                     showFollowerProtectionFeedback(serverPlayer, mob);
@@ -369,7 +372,7 @@ public class FollowerEvents {
         Long lastMessageTime = PROTECTION_MESSAGE_COOLDOWN.get(player.getUUID());
         
         if (lastMessageTime == null || currentTime - lastMessageTime >= MESSAGE_COOLDOWN_TICKS) {
-            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[生灵契约] §c无法攻击己方生物！"));
+            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[生灵契约] §c无法攻击自己的召唤物！"));
             PROTECTION_MESSAGE_COOLDOWN.put(player.getUUID(), currentTime);
         }
         
@@ -481,6 +484,31 @@ public class FollowerEvents {
 
     public static boolean isContractAlly(Mob mob) {
         return mob.getPersistentData().getBoolean(TAG_CONTRACT_ALLY);
+    }
+
+    /**
+     * 玩家攻击时仍要拦下的"自己人"。
+     * <p>
+     * 只包含：自己/队友的召唤物（{@code getOwnerUUID} 有主）、以及同队伍守卫铁傀儡。
+     * 同盟阵营生物（契约模组生物、同阵营生物）<b>不再</b>拦 —— 见
+     * {@link #isAlliedWithPlayer} 里剩下的分支：它们不会主动攻击玩家，但玩家可以击杀它们。
+     */
+    public static boolean isProtectedSummon(Player player, Mob mob) {
+        UUID ownerUUID = getOwnerUUID(mob);
+        if (ownerUUID != null) {
+            if (ownerUUID.equals(player.getUUID())) {
+                return true;
+            }
+            Player owner = player.level().getPlayerByUUID(ownerUUID);
+            if (owner != null) {
+                return ContractEvents.isSameTeam(player, owner);
+            }
+            // 主人不在线：带阵营标记的按阵营判定，其余放行
+            return mob.getPersistentData().hasUUID(TAG_FACTION_UUID)
+                    && mob.getPersistentData().getUUID(TAG_FACTION_UUID).equals(getFactionId(player));
+        }
+
+        return mob instanceof IronGolem ironGolem && TeamIronGolemSystem.isSameTeam(ironGolem, player);
     }
 
     public static boolean isAlliedWithPlayer(Player player, Mob mob) {
