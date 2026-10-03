@@ -83,9 +83,16 @@ for (const lang of ["zh_cn", "en_us"]) {
   }
   for (const key of ["tooltip.life_contract.accessory.tier", "tooltip.life_contract.accessory.equip_rule",
       "tooltip.life_contract.accessory.use_hint", "tooltip.life_contract.accessory.price",
-      "gui.life_contract.accessory.title", "gui.life_contract.accessory.equip", "gui.life_contract.accessory.unequip",
-      "gui.life_contract.upgrade_hub.accessories"]) {
+      "gui.life_contract.shop.section.pendant"]) {
     if (typeof json[key] !== "string") throw new Error(lang + " 缺少 " + key);
+  }
+  if (!json["tooltip.life_contract.accessory.equip_rule"].includes("Curios")) {
+    throw new Error(lang + ": 装备规则文案必须说明需要 Curios 饰品栏");
+  }
+  for (const stale of Object.keys(json)) {
+    if (stale.startsWith("gui.life_contract.accessory.") || stale === "gui.life_contract.upgrade_hub.accessories") {
+      throw new Error(lang + ": 残留了已废弃的自建饰品栏文案 " + stale);
+    }
   }
   for (const category of CATEGORIES) {
     const key = "gui.life_contract.shop.section." + category;
@@ -102,28 +109,30 @@ requireText(lifeContract, "for (DeferredHolder<Item, Item> accessory : ACCESSORY
 
 const effects = read("src/main/java/org/alku/life_contract/accessory/AccessoryEffects.java");
 requireText(effects, "definition.tier() > current.tier()", "同类取最高品阶");
-requireText(effects, "CuriosCompat.equippedStacks(player)", "读取 Curios 槽位");
-requireText(effects, "AccessorySlots.all(player).values()", "读取本模组饰品栏");
-// 规则：必须装进饰品栏才生效，因此不得再扫描主物品栏
+// 规则：只有 Curios 饰品栏里的饰品才生效
+requireText(effects, "CuriosCompat.equippedStacks(player)", "只读取 Curios 饰品栏");
 if (effects.includes("player.getInventory().items")) {
-  throw new Error("AccessoryEffects: 不得按背包内容生效，必须只认饰品栏");
+  throw new Error("AccessoryEffects: 不得按背包内容生效，必须只认 Curios 饰品栏");
 }
-const slots = read("src/main/java/org/alku/life_contract/accessory/AccessorySlots.java");
-requireText(slots, 'TAG_SLOTS = "LifeContractAccessorySlots"', "饰品栏存档键");
-requireText(slots, "public static ItemStack equip(Player player, ItemStack stack)", "装备接口");
-requireText(slots, "public static ItemStack unequip(Player player, AccessoryCategory category)", "卸下接口");
-requireText(slots, "public static void onPlayerClone(PlayerEvent.Clone event)", "死亡后保留饰品栏");
-const ui = read("src/main/java/org/alku/life_contract/client/AccessoryUIHolder.java");
-requireText(ui, "AccessorySlots.get(owner, category)", "界面显示已装备");
-requireText(ui, "AccessorySlots.equip(player, best)", "界面装备逻辑");
-const commands = read("src/main/java/org/alku/life_contract/ContractCommands.java");
-requireText(commands, 'Commands.literal("accessory")', "饰品栏指令");
-requireText(commands, ".equip(player, held)", "指令装备");
-requireText(commands, ".unequip(player,", "指令卸下");
-const hub = read("src/main/java/org/alku/life_contract/client/UpgradeHubUIHolder.java");
-requireText(hub, "AccessoryUIHolder.UI_ID", "升级中枢入口");
+if (effects.includes("AccessorySlots")) {
+  throw new Error("AccessoryEffects: 自建饰品栏已移除，不应再引用");
+}
+// 自建饰品栏相关文件必须已被删除
+for (const gone of ["src/main/java/org/alku/life_contract/accessory/AccessorySlots.java",
+    "src/main/java/org/alku/life_contract/client/AccessoryUIHolder.java"]) {
+  if (exists(gone)) throw new Error("自建饰品栏文件仍然存在: " + gone);
+}
 const lifeContractUi = read("src/main/java/org/alku/life_contract/Life_contract.java");
-requireText(lifeContractUi, "AccessoryUIHolder::new", "饰品栏界面注册");
+requireText(lifeContractUi, "CuriosCompat.isAvailable()", "启动时检查 Curios");
+requireText(lifeContractUi, "未检测到 Curios", "缺少 Curios 时的警告");
+const commands = read("src/main/java/org/alku/life_contract/ContractCommands.java");
+if (commands.includes('Commands.literal("accessory")')) {
+  throw new Error("ContractCommands: 自建饰品栏指令已移除，不应再出现");
+}
+const hub = read("src/main/java/org/alku/life_contract/client/UpgradeHubUIHolder.java");
+if (hub.includes("AccessoryUIHolder")) {
+  throw new Error("UpgradeHubUIHolder: 不应再引用自建饰品栏界面");
+}
 requireText(effects, "addOrUpdateTransientModifier", "属性加成");
 requireText(effects, "instance.removeModifier(modifierId(definition.category()))", "换装时移除旧加成");
 requireText(effects, "public static double damageReduction(Player player)", "受伤减免查询");

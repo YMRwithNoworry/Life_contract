@@ -100,15 +100,12 @@ public final class AccessoryEffects {
     /**
      * 每个佩戴类别取品阶最高的一件（同阶取先遇到的）。
      * <p>
-     * 生效范围同时包括主物品栏与 Curios 饰品栏：装了 Curios 就能把饰品戴在对应槽位里，
-     * 没装（或该槽位为 0）时放在背包里同样生效，两种情况下都只取每类最高品阶的一件。
+     * 生效范围只有 Curios 饰品栏：放在背包里不生效，必须戴进对应槽位。
+     * 同类里只取品阶最高的一件。
      */
     private static Map<AccessoryCategory, AccessoryDefinition> bestPerCategory(Player player) {
         Map<AccessoryCategory, AccessoryDefinition> best = new EnumMap<>(AccessoryCategory.class);
-        // 只有"装进饰品栏"的饰品才生效：本模组饰品栏 + Curios 槽位
-        for (ItemStack stack : AccessorySlots.all(player).values()) {
-            consider(best, stack);
-        }
+        // 只有装进 Curios 饰品栏的饰品才生效
         for (ItemStack stack : CuriosCompat.equippedStacks(player)) {
             consider(best, stack);
         }

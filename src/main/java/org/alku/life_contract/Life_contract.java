@@ -127,8 +127,10 @@ public class Life_contract {
         PlayerUIMenuType.register(SublimationShopUIHolder.UI_ID, SublimationShopUIHolder::new);
         PlayerUIMenuType.register(TeamInventoryUIHolder.UI_ID, TeamInventoryUIHolder::new);
         PlayerUIMenuType.register(MutationUIHolder.UI_ID, MutationUIHolder::new);
-        PlayerUIMenuType.register(org.alku.life_contract.client.AccessoryUIHolder.UI_ID,
-                org.alku.life_contract.client.AccessoryUIHolder::new);
+        if (!org.alku.life_contract.accessory.CuriosCompat.isAvailable()) {
+            LOGGER.warn("[饰品] 未检测到 Curios：饰品无法装备，因此不会提供任何加成。"
+                    + "请安装 Curios，并把饰品放进对应的饰品栏槽位。");
+        }
         Airdrop.register(modEventBus);
 
         ITEMS.register(modEventBus);

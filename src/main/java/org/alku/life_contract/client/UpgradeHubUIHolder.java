@@ -47,16 +47,7 @@ public final class UpgradeHubUIHolder implements PlayerUIMenuType.PlayerUIHolder
             }
         });
 
-        Button accessories = new Button().setText(
-                Component.translatable("gui.life_contract.upgrade_hub.accessories"));
-        accessories.getLayout().width(216).height(34);
-        accessories.setOnServerClick(event -> {
-            if (owner instanceof ServerPlayer serverPlayer) {
-                PlayerUIMenuType.openUI(serverPlayer, AccessoryUIHolder.UI_ID);
-            }
-        });
-
-        root.addChildren(title, shop, mutation, accessories);
+        root.addChildren(title, shop, mutation);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP))), player);
     }

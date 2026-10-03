@@ -163,6 +163,9 @@ function dominantEol(text) {
 }
 
 /** 幂等地把生成出来的语言条目插进现有 lang 文件（保留原有格式与换行风格）。 */
+const OBSOLETE_KEY_PREFIXES = ["gui.life_contract.accessory."];
+const OBSOLETE_KEYS = ["gui.life_contract.upgrade_hub.accessories"];
+
 function mergeLang(file, entries) {
   const raw = fs.readFileSync(file, "utf8");
   const eol = dominantEol(raw);
@@ -170,7 +173,12 @@ function mergeLang(file, entries) {
   const lines = raw.split(/\r?\n/);
   const kept = lines.filter((line) => {
     const match = /^\s*"([^"]+)"\s*:/.exec(line);
-    return !(match && keys.has(match[1]));
+    if (!match) return true;
+    const key = match[1];
+    if (keys.has(key)) return false;
+    // 已经废弃的键（例如自建饰品栏界面的文案）一并清掉，避免语言文件残留
+    if (OBSOLETE_KEY_PREFIXES.some((prefix) => key.startsWith(prefix))) return false;
+    return !OBSOLETE_KEYS.includes(key);
   });
 
   let closing = kept.length - 1;
@@ -192,27 +200,8 @@ function mergeLang(file, entries) {
 
 const GENERIC_LANG = {
   "tooltip.life_contract.accessory.tier": ["品阶 %s", "Tier %s"],
-  "tooltip.life_contract.accessory.equip_rule": ["必须装备到饰品栏才生效（Curios 饰品栏或本模组饰品栏）",
-    "Must be equipped in an accessory slot to take effect (Curios slot or this mod's accessory slot)"],
-  "gui.life_contract.upgrade_hub.accessories": ["饰品栏", "Accessory Slots"],
-  "gui.life_contract.accessory.title": ["饰品栏", "Accessory Slots"],
-  "gui.life_contract.accessory.hint": ["只有装进饰品栏的饰品才会生效；每类只生效一件，取品阶最高者",
-    "Only equipped accessories take effect; one per category, highest tier wins"],
-  "gui.life_contract.accessory.slot": ["%s：%s", "%s: %s"],
-  "gui.life_contract.accessory.equip": ["装备", "Equip"],
-  "gui.life_contract.accessory.unequip": ["卸下", "Unequip"],
-  "gui.life_contract.accessory.back": ["返回", "Back"],
-  "gui.life_contract.accessory.empty_slot": ["空", "empty"],
-  "gui.life_contract.accessory.equipped": ["已装备 %s", "Equipped %s"],
-  "gui.life_contract.accessory.unequipped": ["已卸下 %s", "Unequipped %s"],
-  "gui.life_contract.accessory.none_available": ["背包里没有可装备的 %s", "No %s in your inventory to equip"],
-  "gui.life_contract.accessory.not_equippable": ["这不是可装备的饰品", "That is not an equippable accessory"],
-  "gui.life_contract.accessory.slot_empty": ["该槽位是空的", "That slot is empty"],
-  "gui.life_contract.accessory.category.pendant": ["吊坠", "Pendant"],
-  "gui.life_contract.accessory.category.ring": ["戒指", "Ring"],
-  "gui.life_contract.accessory.category.charm": ["护符", "Charm"],
-  "gui.life_contract.accessory.category.crown": ["王冠", "Crown"],
-  "gui.life_contract.accessory.category.amulet": ["护身符", "Amulet"],
+  "tooltip.life_contract.accessory.equip_rule": ["必须装备到 Curios 饰品栏才生效",
+    "Must be equipped in a Curios slot to take effect"],
   "tooltip.life_contract.accessory.use_hint": ["右键使用", "Right-click to use"],
   "tooltip.life_contract.accessory.price": ["商店价格：%s 升华", "Shop price: %s Sublimation"],
   "gui.life_contract.shop.section.pendant": ["吊坠（%s 升华起）", "Pendants (from %s Sublimation)"],
