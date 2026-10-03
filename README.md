@@ -65,6 +65,7 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Mining Speed**: Every player mines at `2.5x` the vanilla speed (`player.block_break_speed = 2.5`); Efficiency and Haste still stack on top exactly as in vanilla.
 * **Endgame Boss**: The End dragon is replaced with Spore's **Verfalldrache** (`spore:verfall` - the registry name, not `spore:verfalldrache`; falling back to the legacy `phayriosis:converted_dragon` when Spore is absent). It gets a purple vanilla boss bar that tracks its health, and is spawned with persistence so it cannot despawn out from under the fight. The team that kills it wins the match, and so does the last team with a surviving player.
 * **Gun Damage**: Bullets from TaCZ-style gun mods deal only `20%` of their damage to players; other non-player damage is reduced to `40%`.
+* **No Border in the End**: The End has no world border at all. Vanilla keeps syncing the overworld border into other dimensions, so the End border is reset to the vanilla maximum every tick - shrinking circles never constrain the End fight.
 * **Aggro Transfer**: Contracted mobs automatically target hostile factions.
 
 ---

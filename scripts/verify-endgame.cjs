@@ -31,9 +31,12 @@ require_("startEndBossBar", "boss bar start");
 require_("updateEndBossBar", "boss bar update");
 require_("setPersistenceRequired", "boss persistence");
 
-// 4) 原版会把主世界边界的中心与尺寸同步到其它维度，末地边界必须每个 tick 纠正回来。
-require_("enforceEndBorder", "end border enforcement");
+// 4) 末地不允许存在世界边界：原版会把主世界边界的中心与尺寸同步到其它维度，
+//    所以必须每个 tick 把末地边界清回"无边界"（原版上限尺寸）。
+require_("clearEndBorder", "end border removal");
+require_("WorldBorder.MAX_SIZE", "end border restored to the vanilla maximum");
 require_("DelegateBorderChangeListener", "end border rationale");
+forbid("END_BORDER_SIZE", "the End must not get its own 500x500 border back");
 
 // 5) 胜利文案不能再按旧的 path 判断。
 const events = fs.readFileSync(path.join(root, "src/main/java/org/alku/life_contract/events/GameEventManager.java"), "utf8");

@@ -64,7 +64,6 @@ public final class StrongholdEndgameManager {
     private static final int STRONGHOLD_SEARCH_RADIUS_CHUNKS = 256;
     private static final double PORTAL_ACTIVATION_BORDER_SIZE = 50.0D;
     private static final double MINIMUM_BORDER_SIZE = 10.0D;
-    private static final double END_BORDER_SIZE = 500.0D;
     private static final double END_BOSS_MAX_Y = 105.0D;
     private static final double END_BOSS_RESET_Y = 103.0D;
     private static final ResourceLocation DISTORTED_ENDERMAN_ID =
@@ -295,7 +294,7 @@ public final class StrongholdEndgameManager {
             return;
         }
         ServerLevel endLevel = player.serverLevel();
-        enforceEndBorder(endLevel);
+        clearEndBorder(endLevel);
         suppressVanillaDragonFight(endLevel);
         initializeEndEncounter(endLevel);
         if (endBossBar != null) {
@@ -304,26 +303,28 @@ public final class StrongholdEndgameManager {
     }
 
     /**
-     * 末地边界必须单独钉在原点。
+     * 末地不使用世界边界：尺寸还原为原版上限，玩家在末地永远不会被判出圈。
      * <p>
      * 主世界边界是以开局玩家为中心的，而原版在建维度时给主世界边界挂了一个
      * {@code BorderChangeListener.DelegateBorderChangeListener}，会把主世界边界的
-     * <b>中心与尺寸同步到其它维度</b>。于是主世界每次缩圈都会把末地边界重新拽回主世界中心，
+     * <b>中心与尺寸同步到其它维度</b>：主世界每缩一次圈，末地就会被套上同一个圈，
      * 玩家一进末地（末地主岛在 0,0）就落在边界外。
      * <p>
-     * 这里在末地每个 tick 检查一次，一旦被改回去就立刻纠正并重发边界包。
+     * 所以这里在末地每个 tick 检查一次，一旦被同步过来就立刻还原成"无边界"
+     * （中心 0,0、尺寸取原版上限 {@link WorldBorder#MAX_SIZE}）并重发边界包，
+     * 让末地里的战斗完全不受缩圈影响。
      */
-    private static void enforceEndBorder(ServerLevel endLevel) {
+    private static void clearEndBorder(ServerLevel endLevel) {
         WorldBorder border = endLevel.getWorldBorder();
         boolean centered = Math.abs(border.getCenterX()) < 1.0E-4D
                 && Math.abs(border.getCenterZ()) < 1.0E-4D;
-        boolean sized = Math.abs(border.getSize() - END_BORDER_SIZE) < 1.0E-4D;
-        if (centered && sized) {
+        boolean unbounded = Math.abs(border.getSize() - WorldBorder.MAX_SIZE) < 1.0D;
+        if (centered && unbounded) {
             return;
         }
 
         border.setCenter(0.0D, 0.0D);
-        border.setSize(END_BORDER_SIZE);
+        border.setSize(WorldBorder.MAX_SIZE);
         for (ServerPlayer player : endLevel.players()) {
             player.connection.send(new ClientboundInitializeBorderPacket(border));
         }
@@ -375,7 +376,7 @@ public final class StrongholdEndgameManager {
         long perfStart = PerfProfiler.begin();
         try {
             if (event.getLevel() instanceof ServerLevel level && Level.END.equals(level.dimension())) {
-                enforceEndBorder(level);
+                clearEndBorder(level);
             }
             tickEndBoss(event);
         } finally {
@@ -384,21 +385,21 @@ public final class StrongholdEndgameManager {
     }
 
     /**
-     * 每 tick 的最后一道保险：把末地边界再钉一次。
+     * 每 tick 的最后一道保险：把末地边界再清一次。
      * <p>
      * 主世界边界是在 {@code GameEventManager} 的 {@code ServerTickEvent.Post} 里被改成"要塞中心"的，
      * 原版的 {@code DelegateBorderChangeListener} 会同步那一刻<b>立刻</b>把末地边界也改掉，
      * 并且把 {@code ClientboundSetBorder*} 包发出去 —— 于是这一 tick 客户端收到的<b>最后一包</b>是错的：
-     * 末地里的玩家会看到自己"在边界外面"（小地图边界线、边界墙、红色暗角全都错位）。
+     * 末地里的玩家会看到自己被套上了主世界的圈。
      * <p>
      * 这里用 {@link EventPriority#LOWEST} 挂在所有 level tick 与主世界边界更新之后，
-     * 保证纠正用的 {@code ClientboundInitializeBorderPacket} 是本 tick 的最后一包。
+     * 保证"末地无边界"的 {@code ClientboundInitializeBorderPacket} 是本 tick 的最后一包。
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onServerTick(ServerTickEvent.Post event) {
         ServerLevel endLevel = event.getServer().getLevel(Level.END);
         if (endLevel != null) {
-            enforceEndBorder(endLevel);
+            clearEndBorder(endLevel);
         }
     }
 
