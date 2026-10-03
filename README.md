@@ -216,6 +216,14 @@ Events run automatically alongside a match and pause together with it. The event
 
 ## 🖥️ HUD & Interface
 
+Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team inventory) declares a compact
+design size and then clamps itself to the actual screen through `UiLayout.fitToScreen`. GUI scale is picked
+automatically from the physical resolution - 1920x1080 lands on scale 4, i.e. a logical 480x270 - so a panel
+larger than that would simply run off the screen. The sublimation shop keeps the product list and the
+accessory detail card in the same slot and swaps between them on left-click, which is what keeps it down to
+320 pixels wide. `scripts/verify-ui-fit.cjs` fails the build if a panel grows past the safe bound or stops
+clamping itself.
+
 The HUD displays the current team ID, active contract mod, current profession, and a list of online teammates. During a match it also lists the key waypoints: the End portal coordinates (with live distance and opened/closed state) and the border centre.
 
 The bottom-left corner shows the local player's remaining lives: a row of hearts (filled for lives left, dark for lives lost) next to the exact number. The number turns red at one life, and the row reads "Eliminated" once the player is out. It stays hidden while no lives are synced, i.e. outside a match.

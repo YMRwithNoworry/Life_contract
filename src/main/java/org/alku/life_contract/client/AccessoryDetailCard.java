@@ -15,31 +15,27 @@ import org.alku.life_contract.accessory.AccessoryClientState;
 import org.alku.life_contract.accessory.AccessoryDefinition;
 import org.alku.life_contract.accessory.AccessoryEffects;
 import org.alku.life_contract.accessory.AccessoryFaction;
+import org.alku.life_contract.accessory.AccessoryItem;
 import org.alku.life_contract.accessory.AccessoryState;
 import org.alku.life_contract.accessory.AccessoryTooltip;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * 饰品详情卡：把一件饰品的全部机制（常驻 / 情境 / 充能 / 主动技 / 代价 / 共鸣进度）
- * 逐条展开，显示在商店面板右侧。
+ * 逐条展开。
  * <p>
- * 列表里的饰品行支持<b>左键点击</b>打开它；打开后每 10 tick 重刷一次，
- * 因此充能层数、共鸣进度这类实时数据也会跟着变。
+ * 尺寸完全跟随父容器（宽高用百分比 + {@code flexGrow}），所以它既能塞进 320 宽的小面板，
+ * 也能在大屏上自动铺满，不会把界面撑出屏幕。
  */
 public final class AccessoryDetailCard {
 
-    /** 详情卡固定宽度，父面板按它预留右侧空间。 */
-    public static final int PANEL_WIDTH = 256;
-    /** 详情卡高度，与商品列表对齐（一屏刚好放得下最长的条目，更长的可滚动）。 */
-    public static final int PANEL_HEIGHT = 288;
-    /** 列表里"物品名称"一列的宽度（可点击区域）。 */
-    public static final int NAME_COLUMN_WIDTH = 190;
-
     private static final int LINE_HEIGHT = 11;
+    /** 实时数据的刷新间隔（tick）。 */
     private static final int REFRESH_TICKS = 10;
+    /** 说明文字的行宽：面板按 320 宽设计，这里预留内边距与滚动条。 */
+    private static final int TEXT_WIDTH = 268;
 
     private final UIElement root = new UIElement();
     private final UIElement body = new UIElement();
@@ -49,25 +45,40 @@ public final class AccessoryDetailCard {
     private AccessoryDefinition current;
     private int lastRefreshTick = -1000;
 
-    public AccessoryDetailCard(Player viewer) {
+    /** @param onClose 关闭按钮的回调（由商店用来切回商品列表） */
+    public AccessoryDetailCard(Player viewer, Runnable onClose) {
         this.viewer = viewer;
 
-        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT).paddingAll(8).gapAll(4);
+        root.getLayout().widthPercent(100).flexGrow(1).paddingAll(8).gapAll(4);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
         root.addClass("panel_bg");
 
-        title.getLayout().width(PANEL_WIDTH - 16).height(LINE_HEIGHT * 2);
+        UIElement header = new UIElement();
+        header.getLayout().widthPercent(100).flexDirection(FlexDirection.ROW).gapAll(6);
+        header.getLayout().alignItems(AlignItems.CENTER);
+
+        title.getLayout().flexGrow(1).height(LINE_HEIGHT * 2);
         title.setValue(Component.translatable("gui.life_contract.accessory.detail.hint")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
+        Button close = new Button().setText(Component.translatable("gui.life_contract.accessory.detail.close"));
+        close.getLayout().width(64).height(20);
+        close.setOnClick(event -> {
+            if (onClose != null) {
+                onClose.run();
+            }
+        });
+
+        header.addChildren(title, close);
+
         ScrollerView scroller = new ScrollerView();
-        scroller.getLayout().width(PANEL_WIDTH - 16).height(PANEL_HEIGHT - 16 - LINE_HEIGHT * 2 - 10);
+        scroller.getLayout().widthPercent(100).flexGrow(1);
         body.getLayout().flexDirection(FlexDirection.COLUMN).gapAll(0);
         scroller.viewContainer(container -> container.addChild(body));
 
-        root.addChildren(title, scroller);
+        root.addChildren(header, scroller);
 
-        // 实时数据：充能层数随击杀变化，共鸣进度随换装变化
+        // 充能层数随击杀变化、共鸣进度随换装变化，所以定时重刷
         root.addEventListener(UIEvents.TICK, event -> refreshLive());
     }
 
@@ -92,20 +103,20 @@ public final class AccessoryDetailCard {
         body.clearAllChildren();
 
         title.setValue(Component.translatable(current.nameKey())
-                .withStyle(org.alku.life_contract.accessory.AccessoryItem.tierColor(current.tier())));
+                .withStyle(AccessoryItem.tierColor(current.tier())));
 
         List<Component> lines = AccessoryTooltip.describeForDisplay(
                 current, resonanceTiers(), chargeStacks(current));
         for (Component line : lines) {
             Label label = new Label().setValue(line);
-            label.getLayout().width(PANEL_WIDTH - 26).height(LINE_HEIGHT);
+            label.getLayout().width(TEXT_WIDTH).height(LINE_HEIGHT);
             body.addChild(label);
         }
     }
 
     /** 每 10 tick 重刷一次，实时数据（充能层数 / 共鸣进度）才会跟着变。 */
     private void refreshLive() {
-        if (current == null || viewer == null) {
+        if (current == null || viewer == null || !root.isVisible()) {
             return;
         }
         if (viewer.tickCount - lastRefreshTick < REFRESH_TICKS) {
@@ -115,10 +126,7 @@ public final class AccessoryDetailCard {
         rebuild();
     }
 
-    /**
-     * 共鸣进度来自服务端同步的 {@link AccessoryClientState}。
-     * 单人游戏里集成服与客户端同进程，直接现算也能拿到同样的结果。
-     */
+    /** 共鸣进度优先用服务端同步值；单人游戏里集成服与客户端同进程，现算也能拿到同样结果。 */
     private Map<AccessoryFaction, Integer> resonanceTiers() {
         Map<AccessoryFaction, Integer> synced = AccessoryClientState.resonanceTiers();
         if (!synced.isEmpty()) {
@@ -140,50 +148,5 @@ public final class AccessoryDetailCard {
             return AccessoryState.charge(serverPlayer, definition.id());
         }
         return -1;
-    }
-
-    // ==================== 供商店列表复用的行工厂 ====================
-
-    /**
-     * 生成一行商品；给 {@code definition} 时这一行的名称区域<b>左键可点</b>，
-     * 点击后在 {@code detail} 里展开该饰品的完整机制。
-     */
-    public static UIElement buildRow(Component name, int nameWidth, Component buyText, int buyWidth,
-                                     AccessoryDefinition definition, AccessoryDetailCard detail,
-                                     Consumer<Button> buySetup) {
-        UIElement row = new UIElement();
-        row.getLayout().flexDirection(FlexDirection.ROW).gapAll(6).alignItems(AlignItems.CENTER);
-
-        Label itemName = new Label().setValue(name);
-        itemName.getLayout().width(nameWidth).height(24);
-
-        Button buy = new Button().setText(buyText);
-        buy.getLayout().width(buyWidth).height(24);
-        if (buySetup != null) {
-            buySetup.accept(buy);
-        }
-
-        row.addChildren(itemName, buy);
-
-        if (definition != null) {
-            // 悬停：直接在光标旁弹出完整机制说明（沿用物品 tooltip 的组装逻辑）
-            itemName.addEventListener(UIEvents.HOVER_TOOLTIPS, event -> {
-                if (event.hoverTooltips == null) {
-                    return;
-                }
-                List<Component> lines = AccessoryTooltip.describe(definition);
-                event.hoverTooltips = event.hoverTooltips.append(lines.toArray(new Component[0]));
-            });
-
-            // 左键：在右侧详情卡里展开，方便对照比较几件饰品
-            if (detail != null) {
-                itemName.addEventListener(UIEvents.CLICK, event -> {
-                    if (event.button == 0) {
-                        detail.show(definition);
-                    }
-                });
-            }
-        }
-        return row;
     }
 }

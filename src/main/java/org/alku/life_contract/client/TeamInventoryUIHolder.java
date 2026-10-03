@@ -38,7 +38,7 @@ public final class TeamInventoryUIHolder implements PlayerUIMenuType.PlayerUIHol
         Label smeltingHint = new Label().setValue(Component.translatable("gui.life_contract.team_inventory.smelting_hint"));
 
         ScrollerView teamSlots = new ScrollerView();
-        teamSlots.getLayout().width(174).height(108);
+        teamSlots.getLayout().width(174).height(96);
         UIElement grid = new UIElement();
         grid.getLayout().flexDirection(FlexDirection.COLUMN).gapAll(0);
         for (int rowIndex = 0; rowIndex < TeamInventory.ROWS; rowIndex++) {
@@ -61,7 +61,8 @@ public final class TeamInventoryUIHolder implements PlayerUIMenuType.PlayerUIHol
 
         root.addChildren(title, smeltingHint, teamSlots, playerInventoryTitle, playerSlots);
         return new ModularUI(UI.of(root,
-                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP))), player);
+                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
+                UiLayout.fitToScreen(190, 240)), player);
     }
 
     @Override

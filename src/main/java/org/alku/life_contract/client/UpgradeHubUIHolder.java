@@ -49,7 +49,8 @@ public final class UpgradeHubUIHolder implements PlayerUIMenuType.PlayerUIHolder
 
         root.addChildren(title, shop, mutation);
         return new ModularUI(UI.of(root,
-                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP))), player);
+                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
+                UiLayout.fitToScreen(240, 130)), player);
     }
 
     @Override

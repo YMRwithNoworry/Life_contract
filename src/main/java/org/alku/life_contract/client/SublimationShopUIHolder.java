@@ -7,8 +7,11 @@ import com.lowdragmc.lowdraglib2.gui.ui.UIElement;
 import com.lowdragmc.lowdraglib2.gui.ui.elements.Button;
 import com.lowdragmc.lowdraglib2.gui.ui.elements.Label;
 import com.lowdragmc.lowdraglib2.gui.ui.elements.ScrollerView;
+import com.lowdragmc.lowdraglib2.gui.ui.event.UIEvents;
 import com.lowdragmc.lowdraglib2.gui.ui.style.StylesheetManager;
+import dev.vfyjxf.taffy.style.AlignItems;
 import dev.vfyjxf.taffy.style.FlexDirection;
+import dev.vfyjxf.taffy.style.TaffyDisplay;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,8 +30,28 @@ import org.alku.life_contract.market.BulletShopService;
 
 import java.util.List;
 
+/**
+ * 升华商店。
+ * <p>
+ * 界面按 <b>320x240</b> 设计，并用 {@link UiLayout#fitToScreen} 夹进屏幕内：
+ * GUI 缩放是自动按物理分辨率选的（1920x1080 下逻辑分辨率只有 480x270），
+ * 界面比它大就会跑到屏幕外。
+ * <p>
+ * 商品列表与饰品详情卡<b>共用同一块区域</b>：左键点击饰品时把列表换成详情卡，
+ * 点详情卡上的关闭按钮再换回来 —— 这样面板不需要左右分栏，宽度就能压到 320。
+ */
 public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "sublimation_shop");
+
+    /** 设计尺寸（会被夹进屏幕）。 */
+    private static final int PANEL_WIDTH = 320;
+    private static final int PANEL_HEIGHT = 240;
+    private static final int CONTENT_WIDTH = PANEL_WIDTH - 16;
+    private static final int ROW_NAME_WIDTH = 190;
+    private static final int ROW_BUTTON_WIDTH = 88;
+    private static final int ROW_HEIGHT = 24;
+    private static final int SECTION_HEIGHT = 18;
+    private static final int FOOTER_HEIGHT = 24;
 
     private final Player owner;
 
@@ -39,7 +62,8 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
     @Override
     public ModularUI createUI(Player player) {
         UIElement root = new UIElement();
-        root.getLayout().width(330 + AccessoryDetailCard.PANEL_WIDTH + 10).paddingAll(12).gapAll(8);
+        root.getLayout().width(PANEL_WIDTH).paddingAll(8).gapAll(6);
+        root.getLayout().flexDirection(FlexDirection.COLUMN);
         root.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.shop.title"));
@@ -47,14 +71,27 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
         Label details = new Label().setValue(contractMod == null || contractMod.isBlank()
                 ? Component.translatable("gui.life_contract.shop.no_contract")
                 : Component.translatable("gui.life_contract.shop.price", contractMod));
-        // 右侧详情卡要在列表构建前就绪：饰品行点击时会引用它
-        AccessoryDetailCard detail = new AccessoryDetailCard(player);
 
         ScrollerView products = new ScrollerView();
-        products.getLayout().width(306).height(204);
+        products.getLayout().widthPercent(100).flexGrow(1);
         UIElement productRows = new UIElement();
         productRows.getLayout().flexDirection(FlexDirection.COLUMN).gapAll(4);
         products.viewContainer(container -> container.addChild(productRows));
+
+        // ---- 详情卡与商品列表共用同一块区域，左键点击饰品时互换显示 ----
+        Runnable[] showList = new Runnable[1];
+        AccessoryDetailCard detail = new AccessoryDetailCard(player, () -> showList[0].run());
+        UIElement detailRoot = detail.element();
+        hide(detailRoot);
+
+        showList[0] = () -> {
+            hide(detailRoot);
+            show(products);
+        };
+        Runnable showDetail = () -> {
+            hide(products);
+            show(detailRoot);
+        };
 
         // ---- 补给 ----
         addSection(productRows, Component.translatable("gui.life_contract.shop.section.supply"));
@@ -133,30 +170,22 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
                 if (item == Items.AIR) {
                     continue;
                 }
-                addAccessoryRow(productRows, new ItemStack(item), definition, detail);
+                addAccessoryRow(productRows, new ItemStack(item), definition, detail, showDetail);
             }
         }
 
         Button back = new Button().setText(Component.translatable("gui.life_contract.shop.back"));
-        back.getLayout().width(306).height(30);
+        back.getLayout().widthPercent(100).height(FOOTER_HEIGHT);
         back.setOnServerClick(event -> {
             if (owner instanceof ServerPlayer serverPlayer) {
                 PlayerUIMenuType.openUI(serverPlayer, UpgradeHubUIHolder.UI_ID);
             }
         });
 
-        // ---- 右侧：饰品详情卡（左键点击列表里的饰品时展开它的机制）----
-        UIElement left = new UIElement();
-        left.getLayout().width(330).flexDirection(FlexDirection.COLUMN).gapAll(8);
-        left.addChildren(title, details, products, back);
-
-        UIElement content = new UIElement();
-        content.getLayout().flexDirection(FlexDirection.ROW).gapAll(10);
-        content.addChildren(left, detail.element());
-
-        root.addChild(content);
+        root.addChildren(title, details, products, detailRoot, back);
         return new ModularUI(UI.of(root,
-                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP))), player);
+                List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
+                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT)), player);
     }
 
     @Override
@@ -164,10 +193,21 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
         return player == owner && player.isAlive();
     }
 
+    /** 从布局与渲染里同时摘掉（{@code setVisible} 只影响绘制，布局要靠 display）。 */
+    private static void hide(UIElement element) {
+        element.setVisible(false);
+        element.setDisplay(TaffyDisplay.NONE);
+    }
+
+    private static void show(UIElement element) {
+        element.setVisible(true);
+        element.setDisplay(TaffyDisplay.FLEX);
+    }
+
     /** 分区标题（金色）。 */
     private void addSection(UIElement rows, Component text) {
         Label label = new Label().setValue(text.copy().withStyle(ChatFormatting.GOLD));
-        label.getLayout().width(205).height(18);
+        label.getLayout().width(CONTENT_WIDTH).height(SECTION_HEIGHT);
         rows.addChild(label);
     }
 
@@ -179,12 +219,11 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
      */
     private void addProductRow(UIElement rows, ItemStack template, int price) {
         UIElement row = new UIElement();
-        row.getLayout().flexDirection(FlexDirection.ROW).gapAll(6)
-                .alignItems(dev.vfyjxf.taffy.style.AlignItems.CENTER);
+        row.getLayout().flexDirection(FlexDirection.ROW).gapAll(6).alignItems(AlignItems.CENTER);
         Label itemName = new Label().setValue(template.getHoverName());
-        itemName.getLayout().width(205).height(24);
+        itemName.getLayout().width(ROW_NAME_WIDTH).height(ROW_HEIGHT);
         Button buy = new Button().setText(Component.translatable("gui.life_contract.shop.buy_for", price));
-        buy.getLayout().width(88).height(24);
+        buy.getLayout().width(ROW_BUTTON_WIDTH).height(ROW_HEIGHT);
         buy.setOnServerClick(event -> {
             if (owner instanceof ServerPlayer serverPlayer) {
                 serverPlayer.sendSystemMessage(BulletShopService.purchase(serverPlayer, template));
@@ -195,23 +234,43 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
     }
 
     /**
-     * 饰品行：名称区域<b>左键点击</b>会在右侧详情卡里展开该饰品的完整机制
+     * 饰品行：名称区域<b>悬停</b>弹出完整机制说明，<b>左键点击</b>把列表换成右侧详情卡
      * （常驻 / 情境 / 击杀充能 / 主动技 / 代价 / 派系共鸣进度）。
      */
     private void addAccessoryRow(UIElement rows, ItemStack template, AccessoryDefinition definition,
-                                 AccessoryDetailCard detail) {
-        UIElement row = AccessoryDetailCard.buildRow(
-                template.getHoverName(),
-                AccessoryDetailCard.NAME_COLUMN_WIDTH - 15,
-                Component.translatable("gui.life_contract.shop.buy_for", definition.price()),
-                88,
-                definition,
-                detail,
-                buy -> buy.setOnServerClick(event -> {
-                    if (owner instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.sendSystemMessage(BulletShopService.purchase(serverPlayer, template));
-                    }
-                }));
+                                 AccessoryDetailCard detail, Runnable showDetail) {
+        UIElement row = new UIElement();
+        row.getLayout().flexDirection(FlexDirection.ROW).gapAll(6).alignItems(AlignItems.CENTER);
+
+        Label itemName = new Label().setValue(template.getHoverName());
+        itemName.getLayout().width(ROW_NAME_WIDTH).height(ROW_HEIGHT);
+
+        Button buy = new Button().setText(Component.translatable("gui.life_contract.shop.buy_for", definition.price()));
+        buy.getLayout().width(ROW_BUTTON_WIDTH).height(ROW_HEIGHT);
+        buy.setOnServerClick(event -> {
+            if (owner instanceof ServerPlayer serverPlayer) {
+                serverPlayer.sendSystemMessage(BulletShopService.purchase(serverPlayer, template));
+            }
+        });
+
+        // 悬停：直接在光标旁弹出完整机制说明（沿用物品 tooltip 的组装逻辑）
+        itemName.addEventListener(UIEvents.HOVER_TOOLTIPS, event -> {
+            if (event.hoverTooltips == null) {
+                return;
+            }
+            List<Component> lines = org.alku.life_contract.accessory.AccessoryTooltip.describe(definition);
+            event.hoverTooltips = event.hoverTooltips.append(lines.toArray(new Component[0]));
+        });
+
+        // 左键：把商品列表换成详情卡
+        itemName.addEventListener(UIEvents.CLICK, event -> {
+            if (event.button == 0) {
+                detail.show(definition);
+                showDetail.run();
+            }
+        });
+
+        row.addChildren(itemName, buy);
         rows.addChild(row);
     }
 }
