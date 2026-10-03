@@ -173,7 +173,24 @@ if (!particleSection.includes("if (!isExposedToRain(player)) continue;")) {
     throw new Error("spore rain particles: sheltered players must be skipped");
 }
 
-// 18) 性能诊断指令：按需采样，不占每 tick 开销
+// 18) 卡顿看门狗：TPS 持续偏低时自动写日志，平时只做一次取模判断
+const watchdog = read("src/main/java/org/alku/life_contract/PerfWatchdog.java");
+requireText(watchdog, "SAMPLE_INTERVAL_TICKS = 20", "watchdog sample interval");
+requireText(watchdog, "LOW_TPS_STREAK_REQUIRED", "watchdog sustained-low requirement");
+requireText(watchdog, "REPORT_COOLDOWN_MILLIS", "watchdog report cooldown");
+requireText(watchdog, "if (nowTick % SAMPLE_INTERVAL_TICKS != 0L) {", "watchdog cheap gate");
+requireText(watchdog, "PerfDiagnostics.collectPlainReport(server)", "watchdog shared report");
+requireText(watchdog, "Life_contract.LOGGER.warn", "watchdog logging");
+requireText(watchdog, "PerfProfiler.setEnabled(true);", "watchdog enables profiling for later reports");
+const diagnosticsForWatchdog = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
+requireText(diagnosticsForWatchdog, "public static List<String> collectPlainReport(MinecraftServer server)",
+        "plain report entry point");
+requireText(diagnosticsForWatchdog, "private static String stripColors(String text)", "log colour stripping");
+requireText(followerCommands, 'Commands.literal("watchdog")', "watchdog subcommand");
+requireText(followerCommands, "PerfWatchdog.setEnabled(true)", "watchdog enable wiring");
+requireText(followerCommands, "PerfWatchdog.setEnabled(false)", "watchdog disable wiring");
+
+// 19) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");

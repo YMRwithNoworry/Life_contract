@@ -176,6 +176,7 @@ Events run automatically alongside a match and pause together with it. The event
 * `/contract event stop <event>`: Stop a running game event.
 * `/contract perf`: Print server TPS, entity spawn/despawn rates, per-dimension entity counts, and the mod's internal index sizes (run twice to get a sample).
 * `/contract perf on|off`: Toggle per-section timing of the mod's hot paths (off by default and zero-cost while off). While on, `/contract perf` also ranks entity types by net growth, which points at whatever is piling up. `/contract perf reset` clears the counters.
+* `/contract perf watchdog on|off`: The lag watchdog (on by default) writes the same diagnosis into the server log when TPS stays under 15 for three seconds, at most once every five minutes, and switches section timing on so later reports include per-section cost.
 
 ---
 

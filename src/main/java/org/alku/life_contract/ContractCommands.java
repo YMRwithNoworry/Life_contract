@@ -568,7 +568,22 @@ public class ContractCommands {
                                         context.getSource().sendSuccess(() -> Component.literal(
                                                 "§e[性能] §f分段计时计数已清零。"), true);
                                         return 1;
-                                })));
+                                }))
+                        .then(Commands.literal("watchdog")
+                                .then(Commands.literal("on")
+                                        .executes(context -> {
+                                                PerfWatchdog.setEnabled(true);
+                                                context.getSource().sendSuccess(() -> Component.literal(
+                                                        "§a[性能] §f卡顿看门狗已开启：TPS 持续偏低时会自动把诊断写进日志。"), true);
+                                                return 1;
+                                        }))
+                                .then(Commands.literal("off")
+                                        .executes(context -> {
+                                                PerfWatchdog.setEnabled(false);
+                                                context.getSource().sendSuccess(() -> Component.literal(
+                                                        "§c[性能] §f卡顿看门狗已关闭。"), true);
+                                                return 1;
+                                        }))));
 
                 contract.then(Commands.literal("admin")
                         .requires(source -> source.hasPermission(2))

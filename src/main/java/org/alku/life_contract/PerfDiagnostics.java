@@ -17,6 +17,8 @@ import org.alku.life_contract.events.WorldEventManager;
 import org.alku.life_contract.follower.FollowerEvents;
 import org.alku.life_contract.mutation.MutationCombatEvents;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +27,8 @@ import java.util.stream.Collectors;
 /**
  * 性能诊断：把「服务端实际 TPS」和「本模组可能无限增长的状态」一次性打出来。
  * <p>
- * 采样只在执行指令时发生（TPS 用两次执行之间的 tick 数 / 时间差计算），
- * 因此不占用任何每 tick 开销，可以常驻。
+ * 指令里的采样只在执行时发生（TPS 用两次执行之间的 tick 数 / 时间差计算），
+ * 因此不占用任何每 tick 开销；看门狗（{@link PerfWatchdog}）复用同一套数据生成日志报告。
  */
 @EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public final class PerfDiagnostics {
@@ -84,32 +86,95 @@ public final class PerfDiagnostics {
         counters[joining ? 0 : 1]++;
     }
 
-    /** 净增长最多的几类实体：如果某类只涨不落，就是它把实体数堆上去的。 */
-    private static void reportEntityTypeChurn(CommandSourceStack source, double seconds) {
-        if (!PerfProfiler.isEnabled()) {
-            return;
-        }
-        if (ENTITY_TYPE_CHURN.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("§7实体净增长: §8等待采样"), false);
-            return;
-        }
+    // ==================== 数据（指令与看门狗共用） ====================
 
-        List<Map.Entry<String, long[]>> top = ENTITY_TYPE_CHURN.entrySet().stream()
-                .sorted(java.util.Comparator.comparingLong(
-                        (Map.Entry<String, long[]> entry) -> entry.getValue()[0] - entry.getValue()[1]).reversed())
-                .limit(5)
-                .toList();
-
-        source.sendSuccess(() -> Component.literal("§7实体净增长 Top:"), false);
-        for (Map.Entry<String, long[]> entry : top) {
-            long joins = entry.getValue()[0];
-            long leaves = entry.getValue()[1];
-            long net = joins - leaves;
-            String line = String.format("  §f%s§7: +%d / -%d §7(净 %+d, %.2f/s)",
-                    entry.getKey(), joins, leaves, net, net / seconds);
-            source.sendSuccess(() -> Component.literal(line), false);
-        }
+    /** 单个维度的实体普查结果。 */
+    private record LevelCensus(String dimension, int total, List<String> topTypes) {
     }
+
+    /** 一类实体的进出统计。 */
+    private record TypeChurn(String type, long joins, long leaves, long net) {
+    }
+
+    private static List<LevelCensus> census(MinecraftServer server) {
+        List<LevelCensus> result = new ArrayList<>();
+        for (ServerLevel level : server.getAllLevels()) {
+            Map<String, Integer> byType = new HashMap<>();
+            int total = 0;
+            for (Entity entity : level.getAllEntities()) {
+                total++;
+                ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
+                byType.merge(id == null ? "unknown" : id.toString(), 1, Integer::sum);
+            }
+
+            List<String> topTypes = byType.entrySet().stream()
+                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                    .limit(4)
+                    .map(entry -> entry.getKey() + "×" + entry.getValue())
+                    .collect(Collectors.toList());
+            result.add(new LevelCensus(level.dimension().location().getPath(), total, topTypes));
+        }
+        return result;
+    }
+
+    /** 净增长最多的几类实体：如果某类只涨不落，就是它把实体数堆上去的。 */
+    private static List<TypeChurn> topNetGrowth(int limit) {
+        return ENTITY_TYPE_CHURN.entrySet().stream()
+                .map(entry -> new TypeChurn(entry.getKey(), entry.getValue()[0], entry.getValue()[1],
+                        entry.getValue()[0] - entry.getValue()[1]))
+                .sorted(Comparator.comparingLong(TypeChurn::net).reversed())
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    /** 本模组自己维护的索引与状态（纯文本），重点看有没有只增不减的表。 */
+    private static List<String> moduleStateLines(MinecraftServer server) {
+        int trackedLives = 0;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (PlayerLivesSystem.isTracked(player)) {
+                trackedLives++;
+            }
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("跟随/友军: " + FollowerEvents.debugSummary());
+        lines.add("空投导航: " + AirdropNavigator.debugSummary());
+        lines.add("守卫: " + TeamIronGolemSystem.debugSummary()
+                + " | 攻击记录: " + ContractEvents.debugSummary()
+                + " | 标记: " + MutationCombatEvents.debugSummary());
+        lines.add("命数: " + trackedLives + " 名在线玩家"
+                + " | 安全气泡: " + WorldEventManager.getSafeBubbles().size()
+                + " | 悬赏: " + (WorldEventManager.isBountyActive() ? "有" : "无")
+                + " | 孢子雨: " + (WorldEventManager.isSporeRainActive() ? "开" : "关"));
+        return lines;
+    }
+
+    /** 去掉颜色代码，供日志使用。 */
+    private static String stripColors(String text) {
+        return text.replaceAll("§.", "");
+    }
+
+    /** 供 {@link PerfWatchdog} 写日志的纯文本报告。 */
+    public static List<String> collectPlainReport(MinecraftServer server) {
+        List<String> lines = new ArrayList<>();
+        for (LevelCensus level : census(server)) {
+            lines.add(level.dimension() + ": 实体 " + level.total()
+                    + (level.topTypes().isEmpty() ? "" : " [" + String.join(", ", level.topTypes()) + "]"));
+        }
+        for (TypeChurn churn : topNetGrowth(5)) {
+            lines.add(String.format("净增长 %s: +%d / -%d (净 %+d)",
+                    churn.type(), churn.joins(), churn.leaves(), churn.net()));
+        }
+        lines.addAll(moduleStateLines(server));
+        if (PerfProfiler.isEnabled()) {
+            for (String line : PerfProfiler.report()) {
+                lines.add(stripColors(line));
+            }
+        }
+        return lines;
+    }
+
+    // ==================== 指令输出 ====================
 
     public static void report(CommandSourceStack source) {
         MinecraftServer server = source.getServer();
@@ -175,47 +240,35 @@ public final class PerfDiagnostics {
         lastSampleLeaves = entityLeaves;
     }
 
+    private static void reportEntityTypeChurn(CommandSourceStack source, double seconds) {
+        if (!PerfProfiler.isEnabled()) {
+            return;
+        }
+        if (ENTITY_TYPE_CHURN.isEmpty()) {
+            source.sendSuccess(() -> Component.literal("§7实体净增长: §8等待采样"), false);
+            return;
+        }
+
+        source.sendSuccess(() -> Component.literal("§7实体净增长 Top:"), false);
+        for (TypeChurn churn : topNetGrowth(5)) {
+            String line = String.format("  §f%s§7: +%d / -%d §7(净 %+d, %.2f/s)",
+                    churn.type(), churn.joins(), churn.leaves(), churn.net(), churn.net() / seconds);
+            source.sendSuccess(() -> Component.literal(line), false);
+        }
+    }
+
     /** 每个维度的实体总数与占比最高的几类：实体爆炸是 TPS 下降最常见的原因。 */
     private static void reportLevelEntities(MinecraftServer server, CommandSourceStack source) {
-        for (ServerLevel level : server.getAllLevels()) {
-            Map<String, Integer> byType = new HashMap<>();
-            int total = 0;
-            for (Entity entity : level.getAllEntities()) {
-                total++;
-                ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-                byType.merge(id == null ? "unknown" : id.toString(), 1, Integer::sum);
-            }
-
-            final int entityTotal = total;
-            final String topTypes = byType.entrySet().stream()
-                    .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                    .limit(4)
-                    .map(entry -> entry.getKey() + "×" + entry.getValue())
-                    .collect(Collectors.joining("§7, §f"));
-            String dimension = level.dimension().location().getPath();
-            source.sendSuccess(() -> Component.literal("§7" + dimension + "§f: 实体 §b" + entityTotal
+        for (LevelCensus level : census(server)) {
+            final String topTypes = level.topTypes().stream().collect(Collectors.joining("§7, §f"));
+            source.sendSuccess(() -> Component.literal("§7" + level.dimension() + "§f: 实体 §b" + level.total()
                     + (topTypes.isEmpty() ? "" : " §7[" + topTypes + "§7]")), false);
         }
     }
 
-    /** 本模组自己维护的索引与状态，重点看有没有只增不减的表。 */
     private static void reportModuleState(MinecraftServer server, CommandSourceStack source) {
-        source.sendSuccess(() -> Component.literal("§7跟随/友军: §f" + FollowerEvents.debugSummary()), false);
-        source.sendSuccess(() -> Component.literal("§7空投导航: §f" + AirdropNavigator.debugSummary()), false);
-        source.sendSuccess(() -> Component.literal("§7守卫: §f" + TeamIronGolemSystem.debugSummary()
-                + " §7| 攻击记录: §f" + ContractEvents.debugSummary()
-                + " §7| 标记: §f" + MutationCombatEvents.debugSummary()), false);
-
-        int trackedLives = 0;
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            if (PlayerLivesSystem.isTracked(player)) {
-                trackedLives++;
-            }
+        for (String line : moduleStateLines(server)) {
+            source.sendSuccess(() -> Component.literal("§7" + line), false);
         }
-        final int livesCount = trackedLives;
-        source.sendSuccess(() -> Component.literal("§7命数: §b" + livesCount + " §7名在线玩家"
-                + " §7| 安全气泡: §b" + WorldEventManager.getSafeBubbles().size()
-                + " §7| 悬赏: §b" + (WorldEventManager.isBountyActive() ? "有" : "无")
-                + " §7| 孢子雨: §b" + (WorldEventManager.isSporeRainActive() ? "开" : "关")), false);
     }
 }
