@@ -165,6 +165,11 @@ public class AirdropNavigator {
 
         List<DecoySignal> activeDecoys = getActiveDecoySignals(level);
 
+        // 既没有目标也没有追踪线时直接返回，连玩家列表都不必遍历
+        if (activeAirdrops.isEmpty() && activeDecoys.isEmpty() && trackingActive.isEmpty()) {
+            return;
+        }
+
         if (activeAirdrops.isEmpty() && activeDecoys.isEmpty()) {
             // 没有空投时只给“当前确实有追踪线”的玩家发一次清除包，
             // 否则每 5 tick 都会给每个开启导航的玩家重复发送空包。

@@ -8,6 +8,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import org.alku.life_contract.airdrop.event.AirdropNavigator;
 import org.alku.life_contract.events.WorldEventManager;
 import org.alku.life_contract.follower.FollowerEvents;
@@ -23,12 +27,33 @@ import java.util.stream.Collectors;
  * 采样只在执行指令时发生（TPS 用两次执行之间的 tick 数 / 时间差计算），
  * 因此不占用任何每 tick 开销，可以常驻。
  */
+@EventBusSubscriber(modid = Life_contract.MODID, bus = EventBusSubscriber.Bus.GAME)
 public final class PerfDiagnostics {
 
     private static long lastSampleTick = -1L;
     private static long lastSampleMillis;
+    private static long lastSampleJoins;
+    private static long lastSampleLeaves;
+
+    /** 实体进出世界的累计计数：用来判断实体是不是"只增不减"。 */
+    private static long entityJoins;
+    private static long entityLeaves;
 
     private PerfDiagnostics() {
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
+            entityJoins++;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityLeaveLevel(EntityLeaveLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
+            entityLeaves++;
+        }
     }
 
     public static void report(CommandSourceStack source) {
@@ -47,6 +72,8 @@ public final class PerfDiagnostics {
         if (lastSampleTick < 0L) {
             lastSampleTick = nowTick;
             lastSampleMillis = nowMillis;
+            lastSampleJoins = entityJoins;
+            lastSampleLeaves = entityLeaves;
             source.sendSuccess(() -> Component.literal("§7TPS: §e首次采样，请再次执行该指令"), false);
             return;
         }
@@ -59,8 +86,17 @@ public final class PerfDiagnostics {
                 elapsedMillis / 1000.0D, elapsedTicks);
         source.sendSuccess(() -> Component.literal(line), false);
 
+        long joinDelta = entityJoins - lastSampleJoins;
+        long leaveDelta = entityLeaves - lastSampleLeaves;
+        double seconds = Math.max(0.001D, elapsedMillis / 1000.0D);
+        String churn = String.format("§7实体变化: §a+%d §7/ §c-%d §7(新增 %.1f/s, 消失 %.1f/s)",
+                joinDelta, leaveDelta, joinDelta / seconds, leaveDelta / seconds);
+        source.sendSuccess(() -> Component.literal(churn), false);
+
         lastSampleTick = nowTick;
         lastSampleMillis = nowMillis;
+        lastSampleJoins = entityJoins;
+        lastSampleLeaves = entityLeaves;
     }
 
     /** 每个维度的实体总数与占比最高的几类：实体爆炸是 TPS 下降最常见的原因。 */

@@ -174,7 +174,7 @@ Events run automatically alongside a match and pause together with it. The event
 * `/contract toggle_mineral <on|off>`: Global switch for all mineral generators.
 * `/contract event trigger <event>`: Force-trigger a game event (`spore_surge`, `bounty`, `purification_rift`, `endgame_overload`, `spore_rain`).
 * `/contract event stop <event>`: Stop a running game event.
-* `/contract perf`: Print server TPS, per-dimension entity counts, and the mod's internal index sizes (run twice to get a TPS sample).
+* `/contract perf`: Print server TPS, entity spawn/despawn rates, per-dimension entity counts, and the mod's internal index sizes (run twice to get a sample).
 
 ---
 

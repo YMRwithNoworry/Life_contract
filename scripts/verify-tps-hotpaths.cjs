@@ -115,7 +115,17 @@ requireText(mutation, "private static final float[] BLADE_BONUS", "blade bonus c
 forbidText(mutation, "float[] bonus={", "per-event array allocation");
 requireText(mutation, "if (lv <= 0 || lv >= BLADE_BONUS.length) return;", "skip zero-level damage adjust");
 
-// 13) 性能诊断指令：按需采样，不占每 tick 开销
+// 13) 雷达屏蔽敌方玩家时，本地队伍 ID 按 tick 缓存
+const radarMixin = read("src/main/java/org/alku/life_contract/mixin/XaeroRadarStateUpdaterMixin.java");
+requireText(radarMixin, "lifeContract$localTeamTick", "radar local team cache tick");
+requireText(radarMixin, "lifeContract$localTeamId", "radar local team cache value");
+requireText(radarMixin, "localPlayer.tickCount != lifeContract$localTeamTick", "radar cache refresh check");
+
+// 14) 导航在“没有目标也没有追踪线”时直接返回，不遍历玩家
+requireText(navigator, "activeAirdrops.isEmpty() && activeDecoys.isEmpty() && trackingActive.isEmpty()",
+        "navigator no-op early return");
+
+// 15) 性能诊断指令：按需采样，不占每 tick 开销
 const diagnostics = read("src/main/java/org/alku/life_contract/PerfDiagnostics.java");
 requireText(diagnostics, "public static void report(CommandSourceStack source)", "diagnostics entry point");
 requireText(diagnostics, "server.getTickCount()", "tick sampling on demand");
@@ -124,6 +134,9 @@ requireText(diagnostics, "FollowerEvents.debugSummary()", "module state report")
 requireText(followerCommands, 'Commands.literal("perf")', "perf command registration");
 requireText(followerCommands, "PerfDiagnostics.report(context.getSource())", "perf command wiring");
 requireText(followers, "public static String debugSummary()", "follower debug summary");
+requireText(diagnostics, "EntityJoinLevelEvent", "entity join churn counter");
+requireText(diagnostics, "EntityLeaveLevelEvent", "entity leave churn counter");
+requireText(diagnostics, "实体变化", "entity churn report line");
 
 const sublimation = read("src/main/java/org/alku/life_contract/items/SublimationItem.java");
 requireText(sublimation, "COLOR_REFRESH_MILLIS", "name colour cache");
