@@ -184,6 +184,18 @@ public class Life_contract {
                 NetworkHandler.sendToServer(org.alku.life_contract.accessory.PacketUseAccessoryActive.INSTANCE);
             }
         }
+
+        /**
+         * 退出服务器/换世界时清掉客户端缓存。
+         * <p>
+         * 左侧 HUD 的队友列表来自 {@link ClientDataStorage#PLAYER_DATA_CACHE}，而它是静态的：
+         * 不清的话，上一局的队友会一直挂在 HUD 上（看起来就是"更新不及时"）。
+         */
+        @SubscribeEvent
+        public static void onLoggingOut(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) {
+            ClientDataStorage.clearPlayerData();
+            ContractHUD.invalidateCache();
+        }
     }
 
     public static class ModEvents {

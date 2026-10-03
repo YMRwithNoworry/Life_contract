@@ -38,6 +38,15 @@ public final class ContractHUD {
     private ContractHUD() {
     }
 
+    /**
+     * 让 HUD 下一帧就重建内容。
+     * <p>
+     * 收到同步包（契约模组/队伍变更）时调用，玩家改完契约不用等下一个 5 tick 刷新点。
+     */
+    public static void invalidateCache() {
+        lastRefreshTick = -1000;
+    }
+
     @SubscribeEvent
     public static void registerLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, HUD_ID, ContractHUD::renderHud);
@@ -85,12 +94,25 @@ public final class ContractHUD {
 
         List<ClientDataStorage.PlayerData> teamMembers = new ArrayList<>();
         String myName = player.getName().getString();
+        net.minecraft.client.multiplayer.ClientPacketListener connection = Minecraft.getInstance().getConnection();
+        // Tab 列表里连自己都没有（还没同步完 / 被服务端插件隐藏）时就不过滤，免得队友全被藏掉
+        boolean tabListUsable = connection != null && connection.getPlayerInfo(myUUID) != null;
         for (ClientDataStorage.PlayerData data : ClientDataStorage.PLAYER_DATA_CACHE.values()) {
+            // 只列在线玩家：客户端缓存是静态的，换服/换世界后不会自动清，
+            // 不按 Tab 列表过滤就会把早就不在的玩家一直挂在 HUD 上（"更新不及时"的来源之一）。
+            if (tabListUsable && data.playerUUID != null && connection.getPlayerInfo(data.playerUUID) == null) {
+                continue;
+            }
             UUID theirTeamUUID = data.leaderUUID != null ? data.leaderUUID : data.playerUUID;
             if (myTeamUUID.equals(theirTeamUUID)) {
                 teamMembers.add(data);
             }
         }
+        // 固定顺序：自己排最前，其余按名字排序。
+        // 缓存是 HashMap，顺序每次都可能不同，HUD 会看起来"一会儿一个样"。
+        teamMembers.sort(java.util.Comparator
+                .comparing((ClientDataStorage.PlayerData data) -> !myName.equals(data.playerName))
+                .thenComparing(data -> data.playerName));
 
         lines.add(new HudLine(Component.translatable("hud.life_contract.title").withStyle(ChatFormatting.YELLOW),
                 0xFFFFFF, 12));
@@ -110,7 +132,11 @@ public final class ContractHUD {
             for (ClientDataStorage.PlayerData memberData : teamMembers) {
                 String memberName = memberData.playerName;
                 boolean self = memberName.equals(myName);
-                lines.add(new HudLine(Component.literal((self ? "§a● " : "§7- ") + memberName),
+                // 队友的契约模组直接跟在名字后面，一眼能看出同盟阵营
+                String memberMod = memberData.contractMod == null || memberData.contractMod.isBlank()
+                        ? "无" : memberData.contractMod;
+                lines.add(new HudLine(Component.literal((self ? "§a● " : "§7- ") + memberName
+                        + " §8[§f" + memberMod + "§8]"),
                         self ? 0x00FF00 : 0xAAAAAA, 10));
             }
         }

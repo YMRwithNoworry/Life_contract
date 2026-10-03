@@ -17,6 +17,8 @@ public class ClientProxy {
     public static void syncContractData(java.util.UUID playerUUID, String playerName, String contractMod, 
             String leaderName, java.util.UUID leaderUUID, int teamNumber, String profession) {
         ClientDataStorage.update(playerUUID, playerName, contractMod, leaderName, leaderUUID, teamNumber, profession);
+        // 队伍/契约一变就立刻重画左侧 HUD，不用等下一个刷新点
+        ContractHUD.invalidateCache();
 
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null) {

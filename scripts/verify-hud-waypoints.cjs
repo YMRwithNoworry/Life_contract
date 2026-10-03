@@ -49,4 +49,21 @@ requireText(hud, "边界中心: ", "border centre line");
 requireText(hud, "已开启", "portal opened state");
 requireText(hud, "Level.OVERWORLD.equals(player.level().dimension())", "cross-dimension distance guard");
 
+// 队友列表：显示各自契约模组、只列在线玩家、顺序固定、收到同步包立刻重画、退服清缓存
+requireText(hud, "memberMod", "teammate contract mod label");
+requireText(hud, "connection.getPlayerInfo(", "online teammate filter");
+requireText(hud, "teamMembers.sort(", "stable teammate order");
+requireText(hud, "public static void invalidateCache()", "HUD cache invalidation");
+requireText(client, "public static void clearPlayerData()", "client cache reset");
+requireText(
+  read("src/main/java/org/alku/life_contract/ClientProxy.java"),
+  "ContractHUD.invalidateCache();",
+  "refresh HUD as soon as a sync packet arrives",
+);
+requireText(
+  read("src/main/java/org/alku/life_contract/Life_contract.java"),
+  "ClientPlayerNetworkEvent.LoggingOut",
+  "clear cache when leaving the server",
+);
+
 console.log("Left HUD waypoints verification passed.");

@@ -90,6 +90,16 @@ public class ClientDataStorage {
         return PLAYER_DATA_CACHE.get(uuid);
     }
 
+    /**
+     * 清空玩家缓存。
+     * <p>
+     * 客户端缓存是静态的，退出服务器/换世界时不清就会把上一局的队友一直挂在左侧 HUD 上，
+     * 表现为"HUD 更新不及时、队友列表里全是早就不在的人"。
+     */
+    public static void clearPlayerData() {
+        PLAYER_DATA_CACHE.clear();
+    }
+
     public static void setMineralGeneratorData(BlockPos pos, String mineralType, int interval, boolean enabled, long lastTick, long serverTick) {
         MINERAL_GENERATOR_CACHE.put(pos, new MineralGeneratorData(mineralType, interval, enabled, lastTick, serverTick));
     }
