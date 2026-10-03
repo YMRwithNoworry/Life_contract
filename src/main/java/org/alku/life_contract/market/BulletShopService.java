@@ -42,11 +42,20 @@ public final class BulletShopService {
     public static final int ATTACHMENT_PRICE = 50;
     public static final int ATTACHMENT_QUANTITY = 1;
 
+    /** TaCZ 手枪：商店只上架手枪这一类枪械，避免开局就人手一把步枪。 */
+    public static final int PISTOL_PRICE = 150;
+    public static final int PISTOL_QUANTITY = 1;
+
     private static final String TACZ_AMMO_ITEM_CLASS = "com.tacz.guns.item.AmmoItem";
     private static final String TACZ_AMMO_INTERFACE = "com.tacz.guns.api.item.IAmmo";
     private static final String TACZ_ATTACHMENT_ITEM_CLASS = "com.tacz.guns.item.AttachmentItem";
     private static final String TACZ_ATTACHMENT_INTERFACE = "com.tacz.guns.api.item.IAttachment";
     private static final String TACZ_ATTACHMENT_TYPE_CLASS = "com.tacz.guns.api.item.attachment.AttachmentType";
+    private static final String TACZ_GUN_ITEM_CLASS = "com.tacz.guns.item.ModernKineticGunItem";
+    private static final String TACZ_GUN_TAB_TYPE_CLASS = "com.tacz.guns.api.item.GunTabType";
+    private static final String TACZ_GUN_INTERFACE = "com.tacz.guns.api.item.IGun";
+    /** TaCZ 创造模式物品栏里的手枪分类名。 */
+    private static final String TACZ_PISTOL_TAB = "PISTOL";
 
     private BulletShopService() {
     }
@@ -93,6 +102,52 @@ public final class BulletShopService {
             return stacks;
         } catch (Throwable throwable) {
             // 未安装 TaCZ、版本不兼容或枪包尚未加载时，商店里就不显示这一分区
+            return List.of();
+        }
+    }
+
+    /**
+     * TaCZ 的手枪（只取 {@code GunTabType.PISTOL} 这一类）。
+     * <p>
+     * 枪和弹药一样是数据驱动的（物品只有 {@code tacz:modern_kinetic_gun}，具体枪械写在组件里），
+     * 因此这里反射取出手枪分类常量，再调用 TaCZ 自己的
+     * {@code AbstractGunItem.fillItemCategory(GunTabType)} 列出该类全部枪械，
+     * 所有已加载枪包的手枪都会包含进来。
+     */
+    public static List<ItemStack> findTaczPistolStacks() {
+        try {
+            Class<?> gunItemClass = Class.forName(TACZ_GUN_ITEM_CLASS);
+            Class<?> gunTabTypeClass = Class.forName(TACZ_GUN_TAB_TYPE_CLASS);
+
+            Object pistolTab = null;
+            Object[] tabTypes = gunTabTypeClass.getEnumConstants();
+            if (tabTypes != null) {
+                for (Object tabType : tabTypes) {
+                    if (tabType instanceof Enum<?> value && TACZ_PISTOL_TAB.equals(value.name())) {
+                        pistolTab = tabType;
+                        break;
+                    }
+                }
+            }
+            if (pistolTab == null) {
+                return List.of();
+            }
+
+            Object result = gunItemClass.getMethod("fillItemCategory", gunTabTypeClass).invoke(null, pistolTab);
+            if (!(result instanceof List<?> list)) {
+                return List.of();
+            }
+
+            List<ItemStack> stacks = new ArrayList<>(list.size());
+            for (Object entry : list) {
+                if (entry instanceof ItemStack stack && !stack.isEmpty()) {
+                    stacks.add(stack);
+                }
+            }
+            stacks.sort(Comparator.comparing(stack -> stack.getHoverName().getString()));
+            return stacks;
+        } catch (Throwable throwable) {
+            // 未安装 TaCZ 或版本不兼容时不显示该分区
             return List.of();
         }
     }
@@ -164,6 +219,9 @@ public final class BulletShopService {
         } else if (isTaczAmmo(item)) {
             price = TACZ_AMMO_PRICE;
             quantity = TACZ_AMMO_QUANTITY;
+        } else if (isTaczGun(item)) {
+            price = PISTOL_PRICE;
+            quantity = PISTOL_QUANTITY;
         } else if (isTaczAttachment(item)) {
             price = ATTACHMENT_PRICE;
             quantity = ATTACHMENT_QUANTITY;
@@ -210,6 +268,12 @@ public final class BulletShopService {
     private static boolean isTaczAmmo(Item item) {
         return item.getClass().getName().equals(TACZ_AMMO_ITEM_CLASS)
                 || implementsInterface(item.getClass(), TACZ_AMMO_INTERFACE);
+    }
+
+    /** TaCZ 枪械判定：同样只比较类名。 */
+    private static boolean isTaczGun(Item item) {
+        return item.getClass().getName().equals(TACZ_GUN_ITEM_CLASS)
+                || implementsInterface(item.getClass(), TACZ_GUN_INTERFACE);
     }
 
     /** TaCZ 配件判定：同样只比较类名。 */

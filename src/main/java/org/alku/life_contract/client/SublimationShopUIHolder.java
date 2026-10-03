@@ -54,6 +54,16 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
                 BulletShopService.SIGNAL_GUN_PRICE);
         addProductRow(productRows, new ItemStack(Items.COOKED_BEEF), BulletShopService.COOKED_BEEF_PRICE);
 
+        // ---- 手枪（TaCZ；未安装时列表为空，整个分区不显示）----
+        List<ItemStack> pistols = BulletShopService.findTaczPistolStacks();
+        if (!pistols.isEmpty()) {
+            addSection(productRows, Component.translatable("gui.life_contract.shop.section.pistol",
+                    BulletShopService.PISTOL_PRICE));
+            for (ItemStack pistol : pistols) {
+                addProductRow(productRows, pistol, BulletShopService.PISTOL_PRICE);
+            }
+        }
+
         // ---- TaCZ 弹药（未安装 TaCZ 时列表为空，整个分区不显示）----
         List<ItemStack> taczAmmo = BulletShopService.findTaczAmmoStacks();
         if (!taczAmmo.isEmpty()) {

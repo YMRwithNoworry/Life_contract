@@ -28,6 +28,7 @@
   "gui.life_contract.shop.title": "Sublimation Shop",
   "gui.life_contract.shop.price": "Contract mod: %s",
   "gui.life_contract.shop.section.supply": "Supplies",
+  "gui.life_contract.shop.section.pistol": "Pistols (%s Sublimation each)",
   "gui.life_contract.shop.section.tacz_ammo": "TaCZ Ammunition (%s rounds / %s Sublimation)",
   "gui.life_contract.shop.section.attachment": "Gun Attachments (%s Sublimation each)",
   "gui.life_contract.shop.section.contract_ammo": "Contract Mod Ammunition (%s rounds / %s Sublimation)",

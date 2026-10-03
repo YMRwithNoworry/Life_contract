@@ -26,6 +26,9 @@ requireText(service, "WOOL_QUANTITY = 16", "wool quantity");
 requireText(service, "ATTACHMENT_PRICE = 50", "attachment price");
 requireText(service, "ATTACHMENT_QUANTITY = 1", "attachment quantity");
 requireText(service, "public static List<ItemStack> findTaczAttachmentStacks()", "tacz attachment listing");
+requireText(service, "PISTOL_PRICE = 150", "pistol price");
+requireText(service, "PISTOL_QUANTITY = 1", "pistol quantity");
+requireText(service, "public static List<ItemStack> findTaczPistolStacks()", "pistol listing");
 requireText(service, "public static List<ItemStack> findTaczAmmoStacks()", "tacz ammo listing");
 requireText(service, "public static List<ItemStack> findWoolStacks()", "wool listing");
 requireText(service, "public static Component purchase(ServerPlayer player, ItemStack template)",
@@ -40,6 +43,11 @@ requireText(service, 'getMethod("fillItemCategory", attachmentTypeClass)', "type
 requireText(service, "isTaczAttachment(item)", "attachment purchase branch");
 requireText(service, 'TACZ_ATTACHMENT_INTERFACE = "com.tacz.guns.api.item.IAttachment"',
         "attachment interface name constant");
+requireText(service, 'TACZ_PISTOL_TAB = "PISTOL"', "pistol tab constant");
+requireText(service, 'getMethod("fillItemCategory", gunTabTypeClass)', "typed pistol listing");
+requireText(service, "TACZ_PISTOL_TAB.equals(value.name())", "pistol enum match");
+requireText(service, "isTaczGun(item)", "gun purchase branch");
+requireText(service, 'TACZ_GUN_INTERFACE = "com.tacz.guns.api.item.IGun"', "gun interface name constant");
 requireText(service, 'private static final String TACZ_AMMO_ITEM_CLASS = "com.tacz.guns.item.AmmoItem"',
         "tacz ammo class name constant");
 
@@ -74,6 +82,8 @@ requireText(ui, "gui.life_contract.shop.section.tacz_ammo", "ui tacz section tit
 requireText(ui, "gui.life_contract.shop.section.wool", "ui wool section title");
 requireText(ui, "gui.life_contract.shop.section.contract_ammo", "ui contract section title");
 requireText(ui, "BulletShopService.findTaczAttachmentStacks()", "ui attachment section");
+requireText(ui, "BulletShopService.findTaczPistolStacks()", "ui pistol section");
+requireText(ui, "gui.life_contract.shop.section.pistol", "ui pistol section title");
 requireText(ui, "gui.life_contract.shop.section.attachment", "ui attachment section title");
 requireText(ui, "addProductRow(UIElement rows, ItemStack template, int price)", "ui template row");
 requireText(ui, "BulletShopService.purchase(serverPlayer, template)", "ui purchase call");
@@ -93,6 +103,7 @@ for (const lang of ["zh_cn", "en_us"]) {
         "gui.life_contract.shop.section.tacz_ammo",
         "gui.life_contract.shop.section.contract_ammo",
         "gui.life_contract.shop.section.attachment",
+        "gui.life_contract.shop.section.pistol",
         "gui.life_contract.shop.section.wool",
     ]) {
         if (typeof parsed[key] !== "string" || parsed[key].length === 0) {

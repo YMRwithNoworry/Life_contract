@@ -29,6 +29,7 @@
   "gui.life_contract.shop.title": "升华商店",
   "gui.life_contract.shop.price": "当前契约模组：%s",
   "gui.life_contract.shop.section.supply": "补给",
+  "gui.life_contract.shop.section.pistol": "手枪（%s 升华 / 把）",
   "gui.life_contract.shop.section.tacz_ammo": "TaCZ 弹药（%s 发 / %s 升华）",
   "gui.life_contract.shop.section.attachment": "枪械配件（%s 升华 / 件）",
   "gui.life_contract.shop.section.contract_ammo": "契约模组弹药（%s 发 / %s 升华）",
