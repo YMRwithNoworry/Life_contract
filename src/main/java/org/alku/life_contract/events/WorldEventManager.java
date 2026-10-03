@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -35,6 +34,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.alku.life_contract.Life_contract;
 import org.alku.life_contract.PerfProfiler;
 import org.alku.life_contract.NetworkHandler;
+import org.alku.life_contract.world.SurfaceFinder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -530,10 +530,7 @@ public final class WorldEventManager {
         double halfSize = border.getSize() / 2.0D;
         double x = border.getCenterX() + (RANDOM.nextDouble() * 2.0D - 1.0D) * halfSize;
         double z = border.getCenterZ() + (RANDOM.nextDouble() * 2.0D - 1.0D) * halfSize;
-        BlockPos surface = level.getHeightmapPos(
-            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-            new BlockPos((int) x, 0, (int) z));
-        double y = surface.getY();
+        double y = SurfaceFinder.findSurfaceY(level, (int) x, (int) z);
 
         Entity entity = null;
         if (sporeLoaded) {
@@ -683,10 +680,8 @@ public final class WorldEventManager {
         for (int i = 0; i < SAFE_BUBBLE_COUNT; i++) {
             double x = border.getCenterX() + (RANDOM.nextDouble() - 0.5D) * halfSize * 0.8D;
             double z = border.getCenterZ() + (RANDOM.nextDouble() - 0.5D) * halfSize * 0.8D;
-            BlockPos surface = level.getHeightmapPos(
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                new BlockPos((int) x, 0, (int) z));
-            double y = surface.getY();
+            // 安全气泡同样要用 SurfaceFinder：高度图偏高时泡泡会飘到天上
+            double y = SurfaceFinder.findSurfaceY(level, (int) x, (int) z);
 
             safeBubbles.add(new SafeBubble(new Vec3(x, y, z), SAFE_BUBBLE_RADIUS,
                 SAFE_BUBBLE_DURATION_SECONDS * 20, i));

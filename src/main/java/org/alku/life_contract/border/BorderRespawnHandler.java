@@ -5,8 +5,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
+import org.alku.life_contract.world.SurfaceFinder;
 
 import java.util.Collections;
 
@@ -45,10 +45,7 @@ public final class BorderRespawnHandler {
 
     private static int findSafeY(ServerLevel level, int x, int z) {
         int maximumY = level.getMaxBuildHeight() - 2;
-        int y = Mth.clamp(
-                level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z),
-                level.getMinBuildHeight() + 1,
-                maximumY);
+        int y = Math.min(maximumY, SurfaceFinder.findSurfaceY(level, x, z));
         BlockPos.MutableBlockPos feet = new BlockPos.MutableBlockPos(x, y, z);
         while (y < maximumY && (!hasNoCollision(level, feet) || !hasNoCollision(level, feet.above()))) {
             feet.setY(++y);

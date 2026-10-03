@@ -11,6 +11,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import org.alku.life_contract.Life_contract;
+import org.alku.life_contract.world.SurfaceFinder;
 
 import java.util.Random;
 
@@ -41,10 +42,7 @@ public class EliminationHandler {
             WorldBorder worldBorder = level.getWorldBorder();
             double centerX = worldBorder.getCenterX();
             double centerZ = worldBorder.getCenterZ();
-            BlockPos spawnPos = level.getHeightmapPos(
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                new BlockPos((int)centerX, 0, (int)centerZ)
-            );
+            BlockPos spawnPos = SurfaceFinder.findSurfacePos(level, (int) centerX, (int) centerZ);
             
             Entity entity = entityType.create(level);
             if (entity == null) {
@@ -75,10 +73,7 @@ public class EliminationHandler {
                 return;
             }
             
-            BlockPos spawnPos = level.getHeightmapPos(
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                player.blockPosition()
-            );
+            BlockPos spawnPos = SurfaceFinder.findSurfacePos(level, player.getBlockX(), player.getBlockZ());
             
             Entity entity = entityType.create(level);
             if (entity == null) {

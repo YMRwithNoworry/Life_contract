@@ -144,6 +144,14 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 * **Types**: Iron, Gold, Diamond, Emerald.
 * **Control**: Admins can set the generation interval and toggle them globally.
 
+### Surface Placement
+
+Anything that has to be put on the ground - the game-start spawn platforms, the safe bubbles, elite and
+elimination spawns, border respawns - is placed through a single `SurfaceFinder` helper instead of trusting
+the chunk heightmap. It force-loads the chunk and then validates the result against real block states, so a
+stale or unavailable heightmap can no longer drop a platform into the void or leave it floating in the sky.
+`scripts/verify-surface-lookup.cjs` fails the build if a raw heightmap lookup is reintroduced.
+
 ### Shop System
 * **Usage**: Trade gold ingots for gear (Diamond swords, Golden Apples, etc.).
 * **Sublimation Shop**: Spend Sublimation on supplies (flare gun, cooked beef), ammunition, and wool. Ammunition covers both the current contract mod's rounds and every ammo type TaCZ exposes (discovered at runtime, so new gun packs show up automatically; the section is hidden when TaCZ is absent). Pistols are the only guns on sale (the `GunTabType.PISTOL` category, every loaded gun pack included) at 150 Sublimation each. TaCZ gun attachments (scopes, grips, muzzles, magazines, stocks) are sold per piece as well. Wool costs 2 Sublimation per 16 and covers the whole `#minecraft:wool` tag, modded wool included.

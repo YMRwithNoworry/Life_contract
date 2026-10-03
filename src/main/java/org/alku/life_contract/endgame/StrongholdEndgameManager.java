@@ -35,7 +35,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.structures.StrongholdPieces;
-import net.minecraft.world.level.levelgen.Heightmap;
+import org.alku.life_contract.world.SurfaceFinder;
 import net.minecraft.world.level.dimension.end.EndDragonFight;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -399,8 +399,7 @@ public final class StrongholdEndgameManager {
             return;
         }
 
-        BlockPos islandCenter = endLevel.getHeightmapPos(
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.ZERO).above();
+        BlockPos islandCenter = SurfaceFinder.findSurfacePos(endLevel, 0, 0).above();
         int dragonY = (int) Math.min(END_BOSS_MAX_Y, Math.max(80, islandCenter.getY() + 30));
         BlockPos dragonPos = new BlockPos(0, dragonY, 0);
         LivingEntity dragon = spawnEncounterMob(endLevel, bossId, dragonPos, true);
@@ -417,8 +416,7 @@ public final class StrongholdEndgameManager {
                 new BlockPos(0, 0, 5));
         int spawnedEndermen = 0;
         for (BlockPos column : endermanColumns) {
-            BlockPos spawnPos = endLevel.getHeightmapPos(
-                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column).above();
+            BlockPos spawnPos = SurfaceFinder.findSurfacePos(endLevel, column.getX(), column.getZ()).above();
             if (spawnEncounterMob(endLevel, DISTORTED_ENDERMAN_ID, spawnPos, false) != null) {
                 spawnedEndermen++;
             }

@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -28,6 +27,7 @@ import org.alku.life_contract.SoulContractItem;
 import org.alku.life_contract.TeamOrganizerItem;
 import org.alku.life_contract.border.BorderManager;
 import org.alku.life_contract.endgame.StrongholdEndgameManager;
+import org.alku.life_contract.world.SurfaceFinder;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -127,11 +127,10 @@ public final class GameEventManager {
             double offsetZ = Math.max(-240.0D, Math.min(240.0D, player.getZ() - previousCenterZ));
             int targetX = (int) Math.floor(borderCenter.getX() + offsetX);
             int targetZ = (int) Math.floor(borderCenter.getZ() + offsetZ);
-            BlockPos surface = level.getHeightmapPos(
-                    Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    new BlockPos(targetX, 0, targetZ)).above();
-            int targetY = Math.max(level.getMinBuildHeight() + 2,
-                    Math.min(level.getMaxBuildHeight() - 2, surface.getY()));
+            // 地表必须用 SurfaceFinder：它会先加载区块、再用真实方块校验高度图，
+            // 否则区块未加载或旧存档高度基准变化时，平台会被建到地底或天上
+            int targetY = Math.min(level.getMaxBuildHeight() - 2,
+                    SurfaceFinder.findSurfaceY(level, targetX, targetZ) + 1);
             buildSpawnPlatform(level, targetX, targetY - 1, targetZ);
             clearSpawnSpace(level, targetX, targetY, targetZ);
             player.teleportTo(level,
