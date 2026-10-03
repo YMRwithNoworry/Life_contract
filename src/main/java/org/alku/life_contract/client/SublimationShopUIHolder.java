@@ -46,21 +46,32 @@ import java.util.List;
 public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "sublimation_shop");
 
-    /** 设计尺寸（会被夹进屏幕）。 */
-    private static final int PANEL_WIDTH = 224;
-    private static final int PANEL_HEIGHT = 152;
-    private static final int PANEL_PADDING = 6;
-    private static final int PANEL_GAP = 4;
+    /** 设计尺寸（会被夹进屏幕）。1920x1080 下逻辑分辨率只有 480x270，所以面板要尽量小。 */
+    private static final int PANEL_WIDTH = 176;
+    private static final int PANEL_HEIGHT = 112;
+    private static final int PANEL_PADDING = 4;
+    private static final int PANEL_GAP = 3;
+    /** MC 字体一行的高度，用来把列表可视高度算成确定值。 */
+    private static final int LABEL_HEIGHT = 9;
     /** 兑换按钮宽度；商品名占满剩下的宽度（flexGrow），窄面板下不会把按钮挤出面板。 */
-    private static final int ROW_BUTTON_WIDTH = 80;
-    private static final int ROW_HEIGHT = 18;
-    private static final int ROW_GAP = 3;
-    private static final int FOOTER_HEIGHT = 18;
+    private static final int ROW_BUTTON_WIDTH = 76;
+    private static final int ROW_HEIGHT = 16;
+    private static final int ROW_GAP = 2;
+    private static final int FOOTER_HEIGHT = 16;
+    /**
+     * 列表可视高度：面板高 − 内边距 − 标题 − 当前模组 − 返回按钮 − 三条间距。
+     * <p>
+     * 这里<b>写死像素值</b>而不是靠 {@code flexGrow} 分剩余空间：flex 项的 min-height 默认会被内容顶开，
+     * 一旦算错就变成"面板被撑破、滑块拖不动"。写死 + {@code minHeight(0)} 之后可视区高度是确定的，
+     * 列表必然溢出，滑块必然能拖。
+     */
+    private static final int SCROLL_HEIGHT = PANEL_HEIGHT - PANEL_PADDING * 2
+            - LABEL_HEIGHT * 2 - FOOTER_HEIGHT - PANEL_GAP * 3;
     /**
      * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
      * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
      */
-    private static final int PANEL_LIFT = 48;
+    private static final int PANEL_LIFT = 40;
 
     private final Player owner;
 
@@ -92,7 +103,7 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
         }
 
         ScrollerView products = UiLayout.verticalScroller();
-        products.getLayout().widthPercent(100).flexGrow(1);
+        products.getLayout().widthPercent(100).height(SCROLL_HEIGHT).flexGrow(1);
         UIElement productRows = new UIElement();
         productRows.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(ROW_GAP);
         products.viewContainer(container -> container.addChild(productRows));

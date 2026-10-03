@@ -12,8 +12,8 @@ const MAX_DESIGN_HEIGHT = 250;
 // 两个消耗升华的界面（升华商店 / 阵营异变树）必须保持"小面板"：
 // 它们是高频打开的操作界面，铺满半个屏幕会挡住游戏画面。
 const SMALL_PANELS = {
-  "SublimationShopUIHolder.java": { width: 224, height: 152 },
-  "MutationUIHolder.java": { width: 264, height: 160 },
+  "SublimationShopUIHolder.java": { width: 176, height: 112 },
+  "MutationUIHolder.java": { width: 192, height: 116 },
 };
 
 const holders = fs.readdirSync(clientDir).filter((name) => name.endsWith("UIHolder.java"));
@@ -74,6 +74,10 @@ for (const [holder, size] of Object.entries(SMALL_PANELS)) {
   // 列表必须常显滑块（默认的 AUTO 只在滚动时才画出来，玩家看不出还能往下翻）。
   if (!source.includes("UiLayout.verticalScroller()")) {
     throw new Error(holder + " should scroll with UiLayout.verticalScroller()");
+  }
+  // 可视高度必须写死：只靠 flexGrow 会被内容顶开，表现为"面板被撑破 + 滑块拖不动"。
+  if (!source.includes(".height(SCROLL_HEIGHT)")) {
+    throw new Error(holder + " should pin its scroll view height with SCROLL_HEIGHT");
   }
 }
 
