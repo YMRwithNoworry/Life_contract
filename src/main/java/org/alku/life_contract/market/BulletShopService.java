@@ -35,11 +35,18 @@ public final class BulletShopService {
     public static final int TACZ_AMMO_QUANTITY = 5;
 
     /** 羊毛：方便搭掩体/铺路，价格刻意压低。 */
-    public static final int WOOL_PRICE = 5;
+    public static final int WOOL_PRICE = 2;
     public static final int WOOL_QUANTITY = 16;
+
+    /** TaCZ 枪械配件：永久强化，按件计价。 */
+    public static final int ATTACHMENT_PRICE = 50;
+    public static final int ATTACHMENT_QUANTITY = 1;
 
     private static final String TACZ_AMMO_ITEM_CLASS = "com.tacz.guns.item.AmmoItem";
     private static final String TACZ_AMMO_INTERFACE = "com.tacz.guns.api.item.IAmmo";
+    private static final String TACZ_ATTACHMENT_ITEM_CLASS = "com.tacz.guns.item.AttachmentItem";
+    private static final String TACZ_ATTACHMENT_INTERFACE = "com.tacz.guns.api.item.IAttachment";
+    private static final String TACZ_ATTACHMENT_TYPE_CLASS = "com.tacz.guns.api.item.attachment.AttachmentType";
 
     private BulletShopService() {
     }
@@ -90,6 +97,44 @@ public final class BulletShopService {
         }
     }
 
+    /**
+     * TaCZ 的全部枪械配件（瞄具、握把、枪口、弹匣、枪托等）。
+     * <p>
+     * TaCZ 的 {@code AttachmentItem.fillItemCategory(AttachmentType)} 需要传入配件类别，
+     * 因此先反射取出 {@code AttachmentType} 枚举的全部常量，逐类调用后合并；
+     * 该方法内部已过滤隐藏配件，商店不会出现调试用配件。
+     */
+    public static List<ItemStack> findTaczAttachmentStacks() {
+        try {
+            Class<?> attachmentItemClass = Class.forName(TACZ_ATTACHMENT_ITEM_CLASS);
+            Class<?> attachmentTypeClass = Class.forName(TACZ_ATTACHMENT_TYPE_CLASS);
+            Object[] types = attachmentTypeClass.getEnumConstants();
+            if (types == null || types.length == 0) {
+                return List.of();
+            }
+
+            java.lang.reflect.Method fillItemCategory =
+                    attachmentItemClass.getMethod("fillItemCategory", attachmentTypeClass);
+            List<ItemStack> stacks = new ArrayList<>();
+            for (Object type : types) {
+                Object result = fillItemCategory.invoke(null, type);
+                if (!(result instanceof List<?> list)) {
+                    continue;
+                }
+                for (Object entry : list) {
+                    if (entry instanceof ItemStack stack && !stack.isEmpty()) {
+                        stacks.add(stack);
+                    }
+                }
+            }
+            stacks.sort(Comparator.comparing(stack -> stack.getHoverName().getString()));
+            return stacks;
+        } catch (Throwable throwable) {
+            // 未安装 TaCZ 或版本不兼容时不显示该分区
+            return List.of();
+        }
+    }
+
     /** 羊毛：走原版 {@code #minecraft:wool} 标签，模组新增的羊毛也会一并出现在商店里。 */
     public static List<ItemStack> findWoolStacks() {
         List<ItemStack> stacks = new ArrayList<>();
@@ -119,6 +164,9 @@ public final class BulletShopService {
         } else if (isTaczAmmo(item)) {
             price = TACZ_AMMO_PRICE;
             quantity = TACZ_AMMO_QUANTITY;
+        } else if (isTaczAttachment(item)) {
+            price = ATTACHMENT_PRICE;
+            quantity = ATTACHMENT_QUANTITY;
         } else if (template.is(ItemTags.WOOL)) {
             price = WOOL_PRICE;
             quantity = WOOL_QUANTITY;
@@ -162,6 +210,12 @@ public final class BulletShopService {
     private static boolean isTaczAmmo(Item item) {
         return item.getClass().getName().equals(TACZ_AMMO_ITEM_CLASS)
                 || implementsInterface(item.getClass(), TACZ_AMMO_INTERFACE);
+    }
+
+    /** TaCZ 配件判定：同样只比较类名。 */
+    private static boolean isTaczAttachment(Item item) {
+        return item.getClass().getName().equals(TACZ_ATTACHMENT_ITEM_CLASS)
+                || implementsInterface(item.getClass(), TACZ_ATTACHMENT_INTERFACE);
     }
 
     private static boolean implementsInterface(Class<?> type, String interfaceName) {

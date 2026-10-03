@@ -64,6 +64,16 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
             }
         }
 
+        // ---- 枪械配件（未安装 TaCZ 时列表为空，整个分区不显示）----
+        List<ItemStack> attachments = BulletShopService.findTaczAttachmentStacks();
+        if (!attachments.isEmpty()) {
+            addSection(productRows, Component.translatable("gui.life_contract.shop.section.attachment",
+                    BulletShopService.ATTACHMENT_PRICE));
+            for (ItemStack attachment : attachments) {
+                addProductRow(productRows, attachment, BulletShopService.ATTACHMENT_PRICE);
+            }
+        }
+
         // ---- 契约模组弹药 ----
         addSection(productRows, Component.translatable("gui.life_contract.shop.section.contract_ammo",
                 BulletShopService.getAmmoQuantity(), BulletShopService.getAmmoPrice()));

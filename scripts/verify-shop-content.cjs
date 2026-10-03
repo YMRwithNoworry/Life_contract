@@ -21,8 +21,11 @@ function forbidText(haystack, needle, label) {
 const service = read("src/main/java/org/alku/life_contract/market/BulletShopService.java");
 requireText(service, "TACZ_AMMO_PRICE", "tacz ammo price");
 requireText(service, "TACZ_AMMO_QUANTITY", "tacz ammo quantity");
-requireText(service, "WOOL_PRICE", "wool price");
-requireText(service, "WOOL_QUANTITY", "wool quantity");
+requireText(service, "WOOL_PRICE = 2", "wool price");
+requireText(service, "WOOL_QUANTITY = 16", "wool quantity");
+requireText(service, "ATTACHMENT_PRICE = 50", "attachment price");
+requireText(service, "ATTACHMENT_QUANTITY = 1", "attachment quantity");
+requireText(service, "public static List<ItemStack> findTaczAttachmentStacks()", "tacz attachment listing");
 requireText(service, "public static List<ItemStack> findTaczAmmoStacks()", "tacz ammo listing");
 requireText(service, "public static List<ItemStack> findWoolStacks()", "wool listing");
 requireText(service, "public static Component purchase(ServerPlayer player, ItemStack template)",
@@ -32,6 +35,11 @@ requireText(service, "public static Component purchase(ServerPlayer player, Item
 requireText(service, 'Class.forName(TACZ_AMMO_ITEM_CLASS)', "reflective tacz lookup");
 requireText(service, 'getMethod("fillItemCategory").invoke(null)', "reflective creative tab fill");
 requireText(service, "catch (Throwable", "reflection failure fallback");
+requireText(service, "attachmentTypeClass.getEnumConstants()", "attachment type enum walk");
+requireText(service, 'getMethod("fillItemCategory", attachmentTypeClass)', "typed attachment listing");
+requireText(service, "isTaczAttachment(item)", "attachment purchase branch");
+requireText(service, 'TACZ_ATTACHMENT_INTERFACE = "com.tacz.guns.api.item.IAttachment"',
+        "attachment interface name constant");
 requireText(service, 'private static final String TACZ_AMMO_ITEM_CLASS = "com.tacz.guns.item.AmmoItem"',
         "tacz ammo class name constant");
 
@@ -65,6 +73,8 @@ requireText(ui, "BulletShopService.findWoolStacks()", "ui wool section");
 requireText(ui, "gui.life_contract.shop.section.tacz_ammo", "ui tacz section title");
 requireText(ui, "gui.life_contract.shop.section.wool", "ui wool section title");
 requireText(ui, "gui.life_contract.shop.section.contract_ammo", "ui contract section title");
+requireText(ui, "BulletShopService.findTaczAttachmentStacks()", "ui attachment section");
+requireText(ui, "gui.life_contract.shop.section.attachment", "ui attachment section title");
 requireText(ui, "addProductRow(UIElement rows, ItemStack template, int price)", "ui template row");
 requireText(ui, "BulletShopService.purchase(serverPlayer, template)", "ui purchase call");
 
@@ -82,6 +92,7 @@ for (const lang of ["zh_cn", "en_us"]) {
         "gui.life_contract.shop.section.supply",
         "gui.life_contract.shop.section.tacz_ammo",
         "gui.life_contract.shop.section.contract_ammo",
+        "gui.life_contract.shop.section.attachment",
         "gui.life_contract.shop.section.wool",
     ]) {
         if (typeof parsed[key] !== "string" || parsed[key].length === 0) {

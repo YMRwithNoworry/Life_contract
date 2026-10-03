@@ -140,7 +140,7 @@ The core gameplay of the Life Contract mod revolves around **Contracts** and **F
 
 ### Shop System
 * **Usage**: Trade gold ingots for gear (Diamond swords, Golden Apples, etc.).
-* **Sublimation Shop**: Spend Sublimation on supplies (flare gun, cooked beef), ammunition, and wool. Ammunition covers both the current contract mod's rounds and every ammo type TaCZ exposes (discovered at runtime, so new gun packs show up automatically; the section is hidden when TaCZ is absent). Wool covers the whole `#minecraft:wool` tag, modded wool included.
+* **Sublimation Shop**: Spend Sublimation on supplies (flare gun, cooked beef), ammunition, and wool. Ammunition covers both the current contract mod's rounds and every ammo type TaCZ exposes (discovered at runtime, so new gun packs show up automatically; the section is hidden when TaCZ is absent). TaCZ gun attachments (scopes, grips, muzzles, magazines, stocks) are sold per piece as well. Wool costs 2 Sublimation per 16 and covers the whole `#minecraft:wool` tag, modded wool included.
 * **Team Sentinel**: A stationary 1000 HP Iron Golem that guards the team base.
 
 ---
