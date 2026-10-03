@@ -23,6 +23,9 @@ build_errors4.txt
 .DS_Store
 Thumbs.db
 
+# 第三方工具 / 临时工作区
+temp/
+
 gradle/wrapper/gradle-wrapper.jar
 gradlew
 gradlew.bat

@@ -1,0 +1,632 @@
+[
+ {
+  "index": 1,
+  "row": 0,
+  "col": 0,
+  "name": "ruby_pendant",
+  "file": "01_ruby_pendant.png",
+  "width": 18,
+  "height": 32
+ },
+ {
+  "index": 2,
+  "row": 0,
+  "col": 1,
+  "name": "sapphire_crystal_pendant",
+  "file": "02_sapphire_crystal_pendant.png",
+  "width": 19,
+  "height": 32
+ },
+ {
+  "index": 3,
+  "row": 0,
+  "col": 2,
+  "name": "amethyst_star_pendant",
+  "file": "03_amethyst_star_pendant.png",
+  "width": 22,
+  "height": 32
+ },
+ {
+  "index": 4,
+  "row": 0,
+  "col": 3,
+  "name": "bone_fang_pendant",
+  "file": "04_bone_fang_pendant.png",
+  "width": 23,
+  "height": 32
+ },
+ {
+  "index": 5,
+  "row": 0,
+  "col": 4,
+  "name": "crimson_eye_pendant",
+  "file": "05_crimson_eye_pendant.png",
+  "width": 20,
+  "height": 31
+ },
+ {
+  "index": 6,
+  "row": 0,
+  "col": 5,
+  "name": "azure_shard_pendant",
+  "file": "06_azure_shard_pendant.png",
+  "width": 18,
+  "height": 32
+ },
+ {
+  "index": 7,
+  "row": 0,
+  "col": 6,
+  "name": "violet_cross_pendant",
+  "file": "07_violet_cross_pendant.png",
+  "width": 20,
+  "height": 32
+ },
+ {
+  "index": 8,
+  "row": 0,
+  "col": 7,
+  "name": "golden_gem_pendant",
+  "file": "08_golden_gem_pendant.png",
+  "width": 21,
+  "height": 31
+ },
+ {
+  "index": 9,
+  "row": 0,
+  "col": 8,
+  "name": "blood_crystal_pendant",
+  "file": "09_blood_crystal_pendant.png",
+  "width": 21,
+  "height": 31
+ },
+ {
+  "index": 10,
+  "row": 0,
+  "col": 9,
+  "name": "obsidian_drop_pendant",
+  "file": "10_obsidian_drop_pendant.png",
+  "width": 20,
+  "height": 33
+ },
+ {
+  "index": 11,
+  "row": 1,
+  "col": 0,
+  "name": "ruby_ring",
+  "file": "11_ruby_ring.png",
+  "width": 22,
+  "height": 21
+ },
+ {
+  "index": 12,
+  "row": 1,
+  "col": 1,
+  "name": "silver_sapphire_ring",
+  "file": "12_silver_sapphire_ring.png",
+  "width": 22,
+  "height": 22
+ },
+ {
+  "index": 13,
+  "row": 1,
+  "col": 2,
+  "name": "thorn_amethyst_ring",
+  "file": "13_thorn_amethyst_ring.png",
+  "width": 25,
+  "height": 21
+ },
+ {
+  "index": 14,
+  "row": 1,
+  "col": 3,
+  "name": "golden_ruby_ring",
+  "file": "14_golden_ruby_ring.png",
+  "width": 22,
+  "height": 21
+ },
+ {
+  "index": 15,
+  "row": 1,
+  "col": 4,
+  "name": "emerald_ring",
+  "file": "15_emerald_ring.png",
+  "width": 20,
+  "height": 20
+ },
+ {
+  "index": 16,
+  "row": 1,
+  "col": 5,
+  "name": "mithril_sapphire_ring",
+  "file": "16_mithril_sapphire_ring.png",
+  "width": 20,
+  "height": 20
+ },
+ {
+  "index": 17,
+  "row": 1,
+  "col": 6,
+  "name": "amethyst_ring",
+  "file": "17_amethyst_ring.png",
+  "width": 21,
+  "height": 21
+ },
+ {
+  "index": 18,
+  "row": 1,
+  "col": 7,
+  "name": "silver_ring",
+  "file": "18_silver_ring.png",
+  "width": 21,
+  "height": 21
+ },
+ {
+  "index": 19,
+  "row": 1,
+  "col": 8,
+  "name": "black_iron_ring",
+  "file": "19_black_iron_ring.png",
+  "width": 23,
+  "height": 21
+ },
+ {
+  "index": 20,
+  "row": 1,
+  "col": 9,
+  "name": "golden_pearl_ring",
+  "file": "20_golden_pearl_ring.png",
+  "width": 20,
+  "height": 19
+ },
+ {
+  "index": 21,
+  "row": 2,
+  "col": 0,
+  "name": "cross_sword_charm",
+  "file": "21_cross_sword_charm.png",
+  "width": 16,
+  "height": 23
+ },
+ {
+  "index": 22,
+  "row": 2,
+  "col": 1,
+  "name": "crimson_lantern_charm",
+  "file": "22_crimson_lantern_charm.png",
+  "width": 14,
+  "height": 22
+ },
+ {
+  "index": 23,
+  "row": 2,
+  "col": 2,
+  "name": "sapphire_teardrop_charm",
+  "file": "23_sapphire_teardrop_charm.png",
+  "width": 12,
+  "height": 23
+ },
+ {
+  "index": 24,
+  "row": 2,
+  "col": 3,
+  "name": "amethyst_shuriken",
+  "file": "24_amethyst_shuriken.png",
+  "width": 17,
+  "height": 24
+ },
+ {
+  "index": 25,
+  "row": 2,
+  "col": 4,
+  "name": "bat_charm",
+  "file": "25_bat_charm.png",
+  "width": 27,
+  "height": 21
+ },
+ {
+  "index": 26,
+  "row": 2,
+  "col": 5,
+  "name": "bone_feather_charm",
+  "file": "26_bone_feather_charm.png",
+  "width": 14,
+  "height": 25
+ },
+ {
+  "index": 27,
+  "row": 2,
+  "col": 6,
+  "name": "amethyst_butterfly",
+  "file": "27_amethyst_butterfly.png",
+  "width": 21,
+  "height": 19
+ },
+ {
+  "index": 28,
+  "row": 2,
+  "col": 7,
+  "name": "black_cat_charm",
+  "file": "28_black_cat_charm.png",
+  "width": 20,
+  "height": 23
+ },
+ {
+  "index": 29,
+  "row": 2,
+  "col": 8,
+  "name": "cursed_tome_charm",
+  "file": "29_cursed_tome_charm.png",
+  "width": 21,
+  "height": 22
+ },
+ {
+  "index": 30,
+  "row": 2,
+  "col": 9,
+  "name": "compass_watch_charm",
+  "file": "30_compass_watch_charm.png",
+  "width": 19,
+  "height": 24
+ },
+ {
+  "index": 31,
+  "row": 3,
+  "col": 0,
+  "name": "blood_crown",
+  "file": "31_blood_crown.png",
+  "width": 23,
+  "height": 21
+ },
+ {
+  "index": 32,
+  "row": 3,
+  "col": 1,
+  "name": "frost_crown",
+  "file": "32_frost_crown.png",
+  "width": 22,
+  "height": 19
+ },
+ {
+  "index": 33,
+  "row": 3,
+  "col": 2,
+  "name": "amethyst_crown",
+  "file": "33_amethyst_crown.png",
+  "width": 22,
+  "height": 18
+ },
+ {
+  "index": 34,
+  "row": 3,
+  "col": 3,
+  "name": "bone_crown",
+  "file": "34_bone_crown.png",
+  "width": 23,
+  "height": 18
+ },
+ {
+  "index": 35,
+  "row": 3,
+  "col": 4,
+  "name": "obsidian_gold_crown",
+  "file": "35_obsidian_gold_crown.png",
+  "width": 25,
+  "height": 23
+ },
+ {
+  "index": 36,
+  "row": 3,
+  "col": 5,
+  "name": "golden_crown",
+  "file": "36_golden_crown.png",
+  "width": 22,
+  "height": 22
+ },
+ {
+  "index": 37,
+  "row": 3,
+  "col": 6,
+  "name": "silver_crown",
+  "file": "37_silver_crown.png",
+  "width": 19,
+  "height": 21
+ },
+ {
+  "index": 38,
+  "row": 3,
+  "col": 7,
+  "name": "crimson_white_crown",
+  "file": "38_crimson_white_crown.png",
+  "width": 22,
+  "height": 23
+ },
+ {
+  "index": 39,
+  "row": 3,
+  "col": 8,
+  "name": "shadow_crown",
+  "file": "39_shadow_crown.png",
+  "width": 21,
+  "height": 22
+ },
+ {
+  "index": 40,
+  "row": 3,
+  "col": 9,
+  "name": "ice_crown",
+  "file": "40_ice_crown.png",
+  "width": 21,
+  "height": 21
+ },
+ {
+  "index": 41,
+  "row": 4,
+  "col": 0,
+  "name": "red_potion",
+  "file": "41_red_potion.png",
+  "width": 15,
+  "height": 21
+ },
+ {
+  "index": 42,
+  "row": 4,
+  "col": 1,
+  "name": "blue_potion",
+  "file": "42_blue_potion.png",
+  "width": 16,
+  "height": 21
+ },
+ {
+  "index": 43,
+  "row": 4,
+  "col": 2,
+  "name": "purple_potion",
+  "file": "43_purple_potion.png",
+  "width": 15,
+  "height": 21
+ },
+ {
+  "index": 44,
+  "row": 4,
+  "col": 3,
+  "name": "emerald_lantern",
+  "file": "44_emerald_lantern.png",
+  "width": 15,
+  "height": 22
+ },
+ {
+  "index": 45,
+  "row": 4,
+  "col": 4,
+  "name": "empty_vial",
+  "file": "45_empty_vial.png",
+  "width": 12,
+  "height": 20
+ },
+ {
+  "index": 46,
+  "row": 4,
+  "col": 5,
+  "name": "amethyst_amulet",
+  "file": "46_amethyst_amulet.png",
+  "width": 20,
+  "height": 20
+ },
+ {
+  "index": 47,
+  "row": 4,
+  "col": 6,
+  "name": "ruby_amulet",
+  "file": "47_ruby_amulet.png",
+  "width": 20,
+  "height": 21
+ },
+ {
+  "index": 48,
+  "row": 4,
+  "col": 7,
+  "name": "sapphire_amulet",
+  "file": "48_sapphire_amulet.png",
+  "width": 21,
+  "height": 20
+ },
+ {
+  "index": 49,
+  "row": 4,
+  "col": 8,
+  "name": "arcane_tome",
+  "file": "49_arcane_tome.png",
+  "width": 25,
+  "height": 20
+ },
+ {
+  "index": 50,
+  "row": 4,
+  "col": 9,
+  "name": "crimson_knapsack",
+  "file": "50_crimson_knapsack.png",
+  "width": 24,
+  "height": 23
+ },
+ {
+  "index": 51,
+  "row": 5,
+  "col": 0,
+  "name": "white_feather",
+  "file": "51_white_feather.png",
+  "width": 17,
+  "height": 20
+ },
+ {
+  "index": 52,
+  "row": 5,
+  "col": 1,
+  "name": "black_feather",
+  "file": "52_black_feather.png",
+  "width": 18,
+  "height": 20
+ },
+ {
+  "index": 53,
+  "row": 5,
+  "col": 2,
+  "name": "bone_fang",
+  "file": "53_bone_fang.png",
+  "width": 20,
+  "height": 20
+ },
+ {
+  "index": 54,
+  "row": 5,
+  "col": 3,
+  "name": "obsidian_shard",
+  "file": "54_obsidian_shard.png",
+  "width": 18,
+  "height": 21
+ },
+ {
+  "index": 55,
+  "row": 5,
+  "col": 4,
+  "name": "blood_crystal_cluster",
+  "file": "55_blood_crystal_cluster.png",
+  "width": 18,
+  "height": 23
+ },
+ {
+  "index": 56,
+  "row": 5,
+  "col": 5,
+  "name": "amethyst_spike_orb",
+  "file": "56_amethyst_spike_orb.png",
+  "width": 21,
+  "height": 21
+ },
+ {
+  "index": 57,
+  "row": 5,
+  "col": 6,
+  "name": "runed_obsidian_block",
+  "file": "57_runed_obsidian_block.png",
+  "width": 19,
+  "height": 20
+ },
+ {
+  "index": 58,
+  "row": 5,
+  "col": 7,
+  "name": "ancient_scroll",
+  "file": "58_ancient_scroll.png",
+  "width": 23,
+  "height": 23
+ },
+ {
+  "index": 59,
+  "row": 5,
+  "col": 8,
+  "name": "herbal_leaf",
+  "file": "59_herbal_leaf.png",
+  "width": 19,
+  "height": 21
+ },
+ {
+  "index": 60,
+  "row": 5,
+  "col": 9,
+  "name": "blood_star",
+  "file": "60_blood_star.png",
+  "width": 21,
+  "height": 18
+ },
+ {
+  "index": 61,
+  "row": 6,
+  "col": 0,
+  "name": "azure_cross",
+  "file": "61_azure_cross.png",
+  "width": 17,
+  "height": 20
+ },
+ {
+  "index": 62,
+  "row": 6,
+  "col": 1,
+  "name": "grey_skull",
+  "file": "62_grey_skull.png",
+  "width": 16,
+  "height": 20
+ },
+ {
+  "index": 63,
+  "row": 6,
+  "col": 2,
+  "name": "white_skull",
+  "file": "63_white_skull.png",
+  "width": 16,
+  "height": 20
+ },
+ {
+  "index": 64,
+  "row": 6,
+  "col": 3,
+  "name": "bat_wing",
+  "file": "64_bat_wing.png",
+  "width": 21,
+  "height": 18
+ },
+ {
+  "index": 65,
+  "row": 6,
+  "col": 4,
+  "name": "sapphire_diadem",
+  "file": "65_sapphire_diadem.png",
+  "width": 17,
+  "height": 19
+ },
+ {
+  "index": 66,
+  "row": 6,
+  "col": 5,
+  "name": "amethyst_star",
+  "file": "66_amethyst_star.png",
+  "width": 21,
+  "height": 21
+ },
+ {
+  "index": 67,
+  "row": 6,
+  "col": 6,
+  "name": "snow_crystal",
+  "file": "67_snow_crystal.png",
+  "width": 21,
+  "height": 20
+ },
+ {
+  "index": 68,
+  "row": 6,
+  "col": 7,
+  "name": "violet_eye_amulet",
+  "file": "68_violet_eye_amulet.png",
+  "width": 19,
+  "height": 19
+ },
+ {
+  "index": 69,
+  "row": 6,
+  "col": 8,
+  "name": "crimson_torii",
+  "file": "69_crimson_torii.png",
+  "width": 23,
+  "height": 19
+ },
+ {
+  "index": 70,
+  "row": 6,
+  "col": 9,
+  "name": "white_fox_mask",
+  "file": "70_white_fox_mask.png",
+  "width": 19,
+  "height": 21
+ }
+]
