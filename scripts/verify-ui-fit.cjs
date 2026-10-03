@@ -21,6 +21,11 @@ if (holders.length === 0) {
   throw new Error("no UI holder found");
 }
 
+const constant = (source, name) => {
+  const match = source.match(new RegExp("int " + name + "\\s*=\\s*(\\d+)"));
+  return match ? Number(match[1]) : null;
+};
+
 for (const holder of holders) {
   const source = fs.readFileSync(path.join(clientDir, holder), "utf8");
 
@@ -29,13 +34,24 @@ for (const holder of holders) {
     throw new Error(holder + " must clamp its size with UiLayout.fitToScreen");
   }
 
-  // 2) 设计尺寸本身也不能过大。
+  // 2) 设计尺寸本身也不能过大。尺寸可以是字面量，也可以是 PANEL_WIDTH/PANEL_HEIGHT
+  //    （PANEL_LIFT 是"把面板整体抬高"的外层余量，同样要算进去）。
+  const declared = [];
+  const width = constant(source, "PANEL_WIDTH");
+  const height = constant(source, "PANEL_HEIGHT");
+  if (width !== null && height !== null) {
+    declared.push([width, height + (constant(source, "PANEL_LIFT") || 0)]);
+  }
   for (const match of source.matchAll(/fitToScreen\((\d+),\s*(\d+)\)/g)) {
-    const width = Number(match[1]);
-    const height = Number(match[2]);
-    if (width > MAX_DESIGN_WIDTH || height > MAX_DESIGN_HEIGHT) {
+    declared.push([Number(match[1]), Number(match[2])]);
+  }
+  if (declared.length === 0) {
+    throw new Error(holder + " declares no parsable design size");
+  }
+  for (const [w, h] of declared) {
+    if (w > MAX_DESIGN_WIDTH || h > MAX_DESIGN_HEIGHT) {
       throw new Error(
-        holder + " design size " + width + "x" + height +
+        holder + " design size " + w + "x" + h +
         " exceeds the safe bound " + MAX_DESIGN_WIDTH + "x" + MAX_DESIGN_HEIGHT);
     }
   }
@@ -67,6 +83,12 @@ for (const file of ["SublimationShopUIHolder.java", "MutationUIHolder.java", "Ac
   if (!source.includes("UiLayout.wrapText(")) {
     throw new Error(file + " should wrap its text with UiLayout.wrapText");
   }
+}
+
+// 5) 滚动区必须压住 flex 的最小高度，否则会被内容撑高：表现为"滚不动 + 内容溢出面板"。
+const uiLayout = fs.readFileSync(path.join(clientDir, "UiLayout.java"), "utf8");
+if (!uiLayout.includes("minHeight(0)")) {
+  throw new Error("UiLayout.verticalScroller must set minHeight(0) or the list overflows the panel");
 }
 
 console.log("UI fit verification passed (" + holders.length + " holders checked).");

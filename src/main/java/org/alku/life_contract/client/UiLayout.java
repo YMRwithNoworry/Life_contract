@@ -42,6 +42,9 @@ public final class UiLayout {
      */
     public static ScrollerView verticalScroller() {
         ScrollerView view = new ScrollerView();
+        // flex 项默认 min-height:auto —— 不给 0 的话，列表会被内容撑到比面板还高，
+        // 结果就是"滚不动 + 内容溢出面板画到屏幕外"。这一步是滚动能生效的前提。
+        view.getLayout().minHeight(0);
         view.scrollerStyle(style -> style
                 .mode(ScrollerMode.VERTICAL)
                 .verticalScrollDisplay(ScrollDisplay.ALWAYS));

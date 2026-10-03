@@ -32,6 +32,11 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     private static final int CARD_GAP = 6;
     /** 按钮要放下「节点名 + Lv.x/y · n 升华」两行。 */
     private static final int CARD_BUTTON_HEIGHT = 26;
+    /**
+     * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
+     * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
+     */
+    private static final int PANEL_LIFT = 48;
 
     private final Player owner;
 
@@ -48,10 +53,16 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
                 ? MutationService.availableMp(serverPlayer)
                 : 0;
         int initialTotalLevels = initialState == null ? 0 : initialState.totalLevels();
+        // 外层透明容器只负责把面板抬高（见 PANEL_LIFT），面板本体才是带背景的那块
         UIElement root = new UIElement();
-        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
+        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT + PANEL_LIFT);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
-        root.addClass("panel_bg");
+
+        UIElement panel = new UIElement();
+        panel.getLayout().widthPercent(100).height(PANEL_HEIGHT);
+        panel.getLayout().paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
+        panel.getLayout().flexDirection(FlexDirection.COLUMN);
+        panel.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.mutations.title"));
         Label balance = new Label().setValue(Component.translatable("gui.life_contract.mutations.balance",
@@ -106,10 +117,11 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
         }
         if (row != null) rows.addChild(row);
 
-        root.addChildren(title, balance, scroll);
+        panel.addChildren(title, balance, scroll);
+        root.addChild(panel);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
-                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT)), player);
+                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT + PANEL_LIFT)), player);
     }
 
     private static Component buttonText(MutationNode node, int level) {

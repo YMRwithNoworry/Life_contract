@@ -56,6 +56,11 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
     private static final int ROW_HEIGHT = 18;
     private static final int ROW_GAP = 3;
     private static final int FOOTER_HEIGHT = 18;
+    /**
+     * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
+     * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
+     */
+    private static final int PANEL_LIFT = 48;
 
     private final Player owner;
 
@@ -65,10 +70,16 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
 
     @Override
     public ModularUI createUI(Player player) {
+        // 外层透明容器只负责把面板抬高（见 PANEL_LIFT），面板本体才是带背景的那块
         UIElement root = new UIElement();
-        root.getLayout().width(PANEL_WIDTH).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
+        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT + PANEL_LIFT);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
-        root.addClass("panel_bg");
+
+        UIElement panel = new UIElement();
+        panel.getLayout().widthPercent(100).height(PANEL_HEIGHT);
+        panel.getLayout().paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
+        panel.getLayout().flexDirection(FlexDirection.COLUMN);
+        panel.addClass("panel_bg");
 
         Label title = new Label().setValue(Component.translatable("gui.life_contract.shop.title"));
         String contractMod = ContractEvents.getEffectiveContractMod(player);
@@ -190,10 +201,11 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
             }
         });
 
-        root.addChildren(title, details, products, detailRoot, back);
+        panel.addChildren(title, details, products, detailRoot, back);
+        root.addChild(panel);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
-                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT)), player);
+                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT + PANEL_LIFT)), player);
     }
 
     @Override

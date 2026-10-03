@@ -50,7 +50,8 @@ public final class AccessoryDetailCard {
     public AccessoryDetailCard(Player viewer, Runnable onClose) {
         this.viewer = viewer;
 
-        root.getLayout().widthPercent(100).flexGrow(1).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
+        // minHeight(0)：详情卡自己也是 flex 项，不压住最小高度就会被内容撑出面板
+        root.getLayout().widthPercent(100).flexGrow(1).minHeight(0).paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
         root.addClass("panel_bg");
 
