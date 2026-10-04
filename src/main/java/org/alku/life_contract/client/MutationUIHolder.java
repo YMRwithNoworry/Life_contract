@@ -22,11 +22,12 @@ import java.util.List;
 public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "mutation_tree");
 
-    /** 设计尺寸；会被 UiLayout.fitToScreen 夹进屏幕（最小可用逻辑分辨率约 426x240）。 */
-    private static final int PANEL_WIDTH = 232;
-    private static final int PANEL_HEIGHT = 144;
-    private static final int PANEL_PADDING = 4;
-    private static final int PANEL_GAP = 3;
+    /**
+     * 界面铺满整个屏幕：标题与余额两行是固定高度，卡片列表用 flexGrow 吃掉剩余高度，
+     * 所以屏幕越高能看到的词条越多，超出的部分靠滚动条到达，不会被下边缘裁掉。
+     */
+    private static final int PANEL_PADDING = 6;
+    private static final int PANEL_GAP = 4;
     /** MC 字体一行的高度，用来把列表可视高度算成确定值。 */
     private static final int LABEL_HEIGHT = 9;
     /** 一张卡片占一行的比例：48% × 2 + 间距刚好铺满，并给滚动条留出位置。 */
@@ -34,17 +35,6 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     private static final int CARD_GAP = 6;
     /** 按钮要放下「节点名 + Lv.x/y · n 升华」两行。 */
     private static final int CARD_BUTTON_HEIGHT = 26;
-    /**
-     * 列表可视高度（写死，理由同升华商店：flex 的 min-height 会被内容顶开，
-     * 写死 + {@code minHeight(0)} 才能保证滑块一定拖得动）。
-     */
-    private static final int SCROLL_HEIGHT = PANEL_HEIGHT - PANEL_PADDING * 2
-            - LABEL_HEIGHT * 2 - PANEL_GAP * 2;
-    /**
-     * 面板整体往上抬的余量：外层容器比面板高这么多，界面仍然居中，
-     * 面板就自然落在屏幕中心上方（抬升量 = 该值的一半）。
-     */
-    private static final int PANEL_LIFT = 44;
 
     private final Player owner;
 
@@ -61,13 +51,13 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
                 ? MutationService.availableMp(serverPlayer)
                 : 0;
         int initialTotalLevels = initialState == null ? 0 : initialState.totalLevels();
-        // 外层透明容器只负责把面板抬高（见 PANEL_LIFT），面板本体才是带背景的那块
+        // 铺满整个屏幕：根元素与面板按百分比伸展，列表区吃 flexGrow
         UIElement root = new UIElement();
-        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT + PANEL_LIFT);
+        root.getLayout().widthPercent(100).heightPercent(100);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
 
         UIElement panel = new UIElement();
-        panel.getLayout().widthPercent(100).height(PANEL_HEIGHT);
+        panel.getLayout().widthPercent(100).heightPercent(100);
         panel.getLayout().paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
         panel.getLayout().flexDirection(FlexDirection.COLUMN);
         panel.addClass("panel_bg");
@@ -80,7 +70,8 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
             UiLayout.wrapText(header);
         }
         ScrollerView scroll = UiLayout.verticalScroller();
-        scroll.getLayout().widthPercent(100).height(SCROLL_HEIGHT).flexGrow(1);
+        // minHeight(0) 由 UiLayout.verticalScroller() 负责，配合 flexGrow 就是"列表占满剩余高度"
+        scroll.getLayout().widthPercent(100).flexGrow(1);
         UIElement rows = new UIElement();
         rows.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(CARD_GAP);
         scroll.viewContainer(container -> container.addChild(rows));
@@ -129,7 +120,7 @@ public final class MutationUIHolder implements PlayerUIMenuType.PlayerUIHolder {
         root.addChild(panel);
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
-                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT + PANEL_LIFT)), player);
+                UiLayout.fillScreen()), player);
     }
 
     private static Component buttonText(MutationNode node, int level) {

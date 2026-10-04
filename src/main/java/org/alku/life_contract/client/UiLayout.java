@@ -34,6 +34,19 @@ public final class UiLayout {
     }
 
     /**
+     * 铺满整个屏幕可用区域（最大化）。
+     * <p>
+     * 与 {@link #fitToScreen} 相反：不做任何收缩，界面就等于屏幕的逻辑尺寸，
+     * 内部再靠百分比 + {@code flexGrow} 分区伸展。列表类界面用它最合适——
+     * 屏幕有多高就显示多少行，超出的部分交给滚动条，不会有内容被窗口下边缘裁掉。
+     */
+    public static UI.DynamicSizeProvider fillScreen() {
+        return available -> Size.of(
+                Math.max(1, available.getWidth()),
+                Math.max(1, available.getHeight()));
+    }
+
+    /**
      * 纵向滚动视图，并<b>常显滑块</b>。
      * <p>
      * lowdraglib2 的默认值是 {@link ScrollDisplay#AUTO}：只有正在滚动的那几帧才画出滑块，

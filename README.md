@@ -223,16 +223,18 @@ Events run automatically alongside a match and pause together with it. The event
 
 ## 🖥️ HUD & Interface
 
-Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team inventory) declares a compact
-design size and then clamps itself to the actual screen through `UiLayout.fitToScreen`. GUI scale is picked
-automatically from the physical resolution - 1920x1080 lands on scale 4, i.e. a logical 480x270 - so a panel
-larger than that would simply run off the screen. The two panels that spend Sublimation are deliberately
-small - the shop is 240x152 and the mutation tree 232x144, about half the screen width - and their
-lists scroll through `UiLayout.verticalScroller()`, which keeps the scrollbar visible at all times instead of
-only while scrolling. Text inside them goes through `UiLayout.wrapText`, so a narrow panel wraps instead of
-clipping. The sublimation shop keeps the product list and the accessory detail card in the same slot and
-swaps between them on left-click, which is what keeps it that narrow. `scripts/verify-ui-fit.cjs` fails the
-build if a panel grows past the safe bound, stops clamping itself, or drops its scrollbar/wrapping.
+Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team inventory) sizes itself against the
+actual screen through `UiLayout`. GUI scale is picked automatically from the physical resolution - 1920x1080 lands
+on scale 4, i.e. a logical 480x270 - so a panel larger than that would run off the screen. The upgrade hub clamps a
+small design size with `UiLayout.fitToScreen`; the two panels that spend Sublimation (shop and mutation tree) instead
+**fill the entire screen** through `UiLayout.fillScreen()`, keeping only the header, category tabs, status line and
+back button at fixed heights and handing every remaining pixel to the list via `flexGrow`. A taller window therefore
+shows more products rather than clipping them, and anything past the visible area is reachable through
+`UiLayout.verticalScroller()`, which keeps the scrollbar visible at all times instead of only while scrolling. Text
+goes through `UiLayout.wrapText` so it wraps instead of clipping, and every block stretches with the window - there
+are no fixed widths left to squeeze content against one edge. The sublimation shop keeps the product list and the
+accessory detail card in the same slot and swaps between them on left-click. `scripts/verify-ui-fit.cjs` fails the
+build if a maximized panel reintroduces a fixed design size, pins its scroll height, or drops its scrollbar/wrapping.
 
 The HUD displays the current team ID, active contract mod, current profession, and a list of online teammates. During a match it also lists the key waypoints: the End portal coordinates (with live distance and opened/closed state) and the border centre.
 

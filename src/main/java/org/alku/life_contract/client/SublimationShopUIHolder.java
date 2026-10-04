@@ -55,30 +55,30 @@ import java.util.Map;
 public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIHolder {
     public static final ResourceLocation UI_ID = ResourceLocation.fromNamespaceAndPath("life_contract", "sublimation_shop");
 
-    /** 设计尺寸（会被夹进屏幕）。1920x1080 下逻辑分辨率只有 480x270。 */
-    private static final int PANEL_WIDTH = 240;
-    private static final int PANEL_HEIGHT = 152;
-    private static final int PANEL_PADDING = 4;
-    private static final int PANEL_GAP = 3;
+    /**
+     * 界面铺满整个屏幕，所以这里只定义"固定高度的几条"，其余全部按百分比 / flexGrow 伸展：
+     * <pre>
+     * 标题(9) → 分类标签(16) → 商品列表(flexGrow，吃掉剩余高度，可滚动) → 状态行(9) → 返回(18)
+     * </pre>
+     * 列表区高度不再写死：屏幕有多高就显示多少行，超出的部分交给滚动条，不会被下边缘裁掉。
+     */
+    private static final int PANEL_PADDING = 6;
+    private static final int PANEL_GAP = 4;
     /** MC 字体一行的高度。 */
     private static final int LABEL_HEIGHT = 9;
-    private static final int TAB_HEIGHT = 14;
-    private static final int TAB_GAP = 1;
-    private static final int ROW_HEIGHT = 20;
-    private static final int ROW_GAP = 2;
+    private static final int TAB_HEIGHT = 16;
+    private static final int TAB_GAP = 2;
+    private static final int ROW_HEIGHT = 22;
+    private static final int ROW_GAP = 3;
     private static final int ICON_SIZE = 18;
-    private static final int BUY_BUTTON_WIDTH = 86;
-    private static final int FOOTER_HEIGHT = 16;
+    private static final int BUY_BUTTON_WIDTH = 90;
+    private static final int FOOTER_HEIGHT = 18;
     /**
-     * 列表可视高度：面板高 − 内边距 − 标题 − 状态行 − 分类标签 − 返回按钮 − 五条间距。
+     * 标题右侧余额区的固定宽度。
      * <p>
-     * 写死像素值而不是靠 flexGrow 分剩余空间：flex 项的 min-height 会被内容顶开，
-     * 一旦算错就变成"面板被撑破、滑块拖不动"。写死 + {@code minHeight(0)} 之后可视区高度是确定的。
+     * 必须给宽度：flex 行里没设宽度的文本元素会被压成极窄的一条，文字会竖着折行画到面板外面去。
      */
-    private static final int SCROLL_HEIGHT = PANEL_HEIGHT - PANEL_PADDING * 2 - LABEL_HEIGHT * 2
-            - TAB_HEIGHT - FOOTER_HEIGHT - PANEL_GAP * 5;
-    /** 面板整体往上抬的余量（抬升量 = 该值的一半）。 */
-    private static final int PANEL_LIFT = 44;
+    private static final int BALANCE_WIDTH = 110;
     /** 余额与可购买状态的刷新间隔（tick）。 */
     private static final int REFRESH_TICKS = 5;
     /** 右键一次买几份。 */
@@ -121,13 +121,14 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
 
     @Override
     public ModularUI createUI(Player player) {
-        // 外层透明容器只负责把面板抬高（见 PANEL_LIFT），面板本体才是带背景的那块
+        // 铺满整个屏幕：根元素与面板都按百分比伸展，只有列表区吃 flexGrow，
+        // 于是"屏幕有多大，列表就有多高"，任何内容都不会被窗口下边缘裁掉。
         UIElement root = new UIElement();
-        root.getLayout().width(PANEL_WIDTH).height(PANEL_HEIGHT + PANEL_LIFT);
+        root.getLayout().widthPercent(100).heightPercent(100);
         root.getLayout().flexDirection(FlexDirection.COLUMN);
 
         UIElement panel = new UIElement();
-        panel.getLayout().widthPercent(100).height(PANEL_HEIGHT);
+        panel.getLayout().widthPercent(100).heightPercent(100);
         panel.getLayout().paddingAll(PANEL_PADDING).gapAll(PANEL_GAP);
         panel.getLayout().flexDirection(FlexDirection.COLUMN);
         panel.addClass("panel_bg");
@@ -141,7 +142,7 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
         root.addEventListener(UIEvents.TICK, event -> refresh());
         return new ModularUI(UI.of(root,
                 List.of(StylesheetManager.INSTANCE.getStylesheetSafe(StylesheetManager.GDP)),
-                UiLayout.fitToScreen(PANEL_WIDTH, PANEL_HEIGHT + PANEL_LIFT)), player);
+                UiLayout.fillScreen()), player);
     }
 
     @Override
@@ -159,11 +160,13 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
 
         Label title = new Label().setValue(
                 Component.translatable("gui.life_contract.shop.title").withStyle(ChatFormatting.GOLD));
-        title.getLayout().flexGrow(1);
+        // minWidth(0)：标题允许被压缩，避免它把右边的余额挤出面板
+        title.getLayout().flexGrow(1).minWidth(0);
         UiLayout.wrapText(title);
 
+        // 余额给固定宽度且不折行：flex 行里"没宽度"的文本会被压成一条竖线
         balanceLabel = new Label().setValue(balanceText(countSublimation(player)));
-        UiLayout.wrapText(balanceLabel);
+        balanceLabel.getLayout().width(BALANCE_WIDTH);
 
         header.addChildren(title, balanceLabel);
         return header;
@@ -188,10 +191,12 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
     /** 列表区：商品列表与饰品详情卡共用同一块空间，点详情卡的"关闭"再换回来。 */
     private UIElement buildListArea() {
         UIElement listArea = new UIElement();
-        listArea.getLayout().widthPercent(100).height(SCROLL_HEIGHT).flexDirection(FlexDirection.COLUMN);
+        // 列表区是面板里唯一"会伸展"的一块：吃掉标题/标签/状态行/返回按钮之外的全部高度
+        listArea.getLayout().widthPercent(100).flexGrow(1).minHeight(0);
+        listArea.getLayout().flexDirection(FlexDirection.COLUMN);
 
         listScroller = UiLayout.verticalScroller();
-        listScroller.getLayout().widthPercent(100).height(SCROLL_HEIGHT).flexGrow(1);
+        listScroller.getLayout().widthPercent(100).flexGrow(1);
         rowContainer = new UIElement();
         rowContainer.getLayout().widthPercent(100).flexDirection(FlexDirection.COLUMN).gapAll(ROW_GAP);
         listScroller.viewContainer(container -> container.addChild(rowContainer));
@@ -206,8 +211,10 @@ public final class SublimationShopUIHolder implements PlayerUIMenuType.PlayerUIH
 
     private UIElement buildStatusLine() {
         statusLabel = new Label().setValue(Component.translatable("gui.life_contract.shop.hint")
-                .withStyle(ChatFormatting.DARK_GRAY));
-        statusLabel.getLayout().widthPercent(100).height(LABEL_HEIGHT);
+                .withStyle(ChatFormatting.GRAY));
+        // 不写死高度：长消息（商品名 + 数量 + 花费）要能折到第二行，而不是被裁掉；
+        // 高度自适应后，少占的那几像素会自动还给下面的商品列表。
+        statusLabel.getLayout().widthPercent(100);
         UiLayout.wrapText(statusLabel);
         return statusLabel;
     }
