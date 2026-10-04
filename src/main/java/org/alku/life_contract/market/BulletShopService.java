@@ -5,14 +5,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import org.alku.life_contract.airdrop.Airdrop;
 import org.alku.life_contract.ContractEvents;
 import org.alku.life_contract.Life_contract;
-import org.alku.life_contract.accessory.AccessoryCatalog;
-import org.alku.life_contract.accessory.AccessoryDefinition;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -49,13 +45,10 @@ public final class BulletShopService {
     public static final int PISTOL_QUANTITY = 1;
 
     private static final String TACZ_AMMO_ITEM_CLASS = "com.tacz.guns.item.AmmoItem";
-    private static final String TACZ_AMMO_INTERFACE = "com.tacz.guns.api.item.IAmmo";
     private static final String TACZ_ATTACHMENT_ITEM_CLASS = "com.tacz.guns.item.AttachmentItem";
-    private static final String TACZ_ATTACHMENT_INTERFACE = "com.tacz.guns.api.item.IAttachment";
     private static final String TACZ_ATTACHMENT_TYPE_CLASS = "com.tacz.guns.api.item.attachment.AttachmentType";
     private static final String TACZ_GUN_ITEM_CLASS = "com.tacz.guns.item.ModernKineticGunItem";
     private static final String TACZ_GUN_TAB_TYPE_CLASS = "com.tacz.guns.api.item.GunTabType";
-    private static final String TACZ_GUN_INTERFACE = "com.tacz.guns.api.item.IGun";
     /** TaCZ 创造模式物品栏里的手枪分类名。 */
     private static final String TACZ_PISTOL_TAB = "PISTOL";
 
@@ -204,60 +197,47 @@ public final class BulletShopService {
 
     // ==================== 兑换 ====================
 
-    public static Component purchase(ServerPlayer player, ItemStack template) {
-        if (template == null || template.isEmpty()) {
-            return Component.translatable("gui.life_contract.shop.invalid_item");
+    /** 单次最多买几份：防手滑，也避免一次把队伍经济清空。 */
+    public static final int MAX_BUNDLES = 8;
+
+    /** 兑换结果：{@code success} 决定界面反馈的颜色，{@code message} 直接显示给玩家。 */
+    public record PurchaseResult(boolean success, Component message) {
+    }
+
+    /**
+     * 按商品 id 兑换。
+     * <p>
+     * 只信 id：价格、数量、发放内容全部由 {@link ShopCatalog} 查表得到，
+     * 客户端既改不了价格，也不会因为界面与服务端不同步而发错东西。
+     *
+     * @param bundles 买几份（1 ~ {@link #MAX_BUNDLES}）；右键快速购买就是传 5
+     */
+    public static PurchaseResult purchase(ServerPlayer player, String productId, int bundles) {
+        ShopProduct product = ShopCatalog.byId(player, productId);
+        if (product == null) {
+            return new PurchaseResult(false, Component.translatable("gui.life_contract.shop.invalid_item"));
         }
 
-        Item item = template.getItem();
-        int price;
-        int quantity;
-        if (item == Airdrop.DISPOSABLE_FLARE_GUN.get()) {
-            price = SIGNAL_GUN_PRICE;
-            quantity = 1;
-        } else if (item == Items.COOKED_BEEF) {
-            price = COOKED_BEEF_PRICE;
-            quantity = 1;
-        } else if (isTaczAmmo(item)) {
-            price = TACZ_AMMO_PRICE;
-            quantity = TACZ_AMMO_QUANTITY;
-        } else if (AccessoryCatalog.of(template) != null) {
-            AccessoryDefinition accessory = AccessoryCatalog.of(template);
-            price = accessory.price();
-            quantity = 1;
-        } else if (isTaczGun(item)) {
-            price = PISTOL_PRICE;
-            quantity = PISTOL_QUANTITY;
-        } else if (isTaczAttachment(item)) {
-            price = ATTACHMENT_PRICE;
-            quantity = ATTACHMENT_QUANTITY;
-        } else if (template.is(ItemTags.WOOL)) {
-            price = WOOL_PRICE;
-            quantity = WOOL_QUANTITY;
-        } else {
-            String contractMod = ContractEvents.getEffectiveContractMod(player);
-            ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
-            if (contractMod == null || id == null || !contractMod.equals(id.getNamespace()) || !isAmmoPath(id)) {
-                return Component.translatable("gui.life_contract.shop.invalid_item");
-            }
-            price = PRICE;
-            quantity = QUANTITY;
+        int count = Mth.clamp(bundles, 1, MAX_BUNDLES);
+        ItemStack template = product.template();
+        int totalPrice = product.price() * count;
+        int totalQuantity = product.quantity() * count;
+
+        // 先算背包空间，再看钱：两边都不够时优先提示"背包满"，那是玩家能立刻解决的问题
+        if (freeSpaceFor(player, template) < totalQuantity) {
+            return new PurchaseResult(false, Component.translatable("gui.life_contract.shop.inventory_full"));
         }
 
-        // 保留模板上的物品组件（TaCZ 的弹种信息就存在组件里）
-        ItemStack reward = template.copyWithCount(Math.min(quantity, Math.max(1, template.getMaxStackSize())));
-        if (!canFit(player, reward)) {
-            return Component.translatable("gui.life_contract.shop.inventory_full");
+        int balance = countSublimation(player);
+        if (balance < totalPrice) {
+            return new PurchaseResult(false, Component.translatable(
+                    "gui.life_contract.shop.not_enough_detail", totalPrice, balance));
         }
 
-        if (countSublimation(player) < price) {
-            return Component.translatable("gui.life_contract.shop.not_enough", price);
-        }
-
-        consumeSublimation(player, price);
-        player.getInventory().add(reward);
-        player.getInventory().setChanged();
-        return Component.translatable("gui.life_contract.shop.purchased", reward.getHoverName(), quantity, price);
+        consumeSublimation(player, totalPrice);
+        give(player, template, totalQuantity);
+        return new PurchaseResult(true, Component.translatable("gui.life_contract.shop.purchased",
+                template.getHoverName(), totalQuantity, totalPrice));
     }
 
     public static int getAmmoPrice() {
@@ -270,45 +250,21 @@ public final class BulletShopService {
 
     // ==================== 工具方法 ====================
 
-    /** TaCZ 弹药判定：只比较类名，避免产生编译期依赖。 */
-    private static boolean isTaczAmmo(Item item) {
-        return item.getClass().getName().equals(TACZ_AMMO_ITEM_CLASS)
-                || implementsInterface(item.getClass(), TACZ_AMMO_INTERFACE);
-    }
-
-    /** TaCZ 枪械判定：同样只比较类名。 */
-    private static boolean isTaczGun(Item item) {
-        return item.getClass().getName().equals(TACZ_GUN_ITEM_CLASS)
-                || implementsInterface(item.getClass(), TACZ_GUN_INTERFACE);
-    }
-
-    /** TaCZ 配件判定：同样只比较类名。 */
-    private static boolean isTaczAttachment(Item item) {
-        return item.getClass().getName().equals(TACZ_ATTACHMENT_ITEM_CLASS)
-                || implementsInterface(item.getClass(), TACZ_ATTACHMENT_INTERFACE);
-    }
-
-    private static boolean implementsInterface(Class<?> type, String interfaceName) {
-        if (type == null) {
-            return false;
-        }
-        for (Class<?> implemented : type.getInterfaces()) {
-            if (implemented.getName().equals(interfaceName) || implementsInterface(implemented, interfaceName)) {
-                return true;
-            }
-        }
-        return implementsInterface(type.getSuperclass(), interfaceName);
-    }
-
     private static boolean isAmmoPath(ResourceLocation id) {
         String path = id.getPath().toLowerCase(Locale.ROOT);
         return path.contains("bullet") || path.contains("ammo") || path.contains("round")
                 || path.contains("cartridge") || path.contains("shell") || path.contains("shot");
     }
 
-    private static int countSublimation(ServerPlayer player) {
+    /** 玩家背包里的升华总数（界面与兑换共用同一套口径）。 */
+    public static int countSublimation(ServerPlayer player) {
+        return countSublimation(player.getInventory().items);
+    }
+
+    /** 任意物品栏里的升华总数（队伍背包也用它）。 */
+    public static int countSublimation(Iterable<ItemStack> stacks) {
         int count = 0;
-        for (ItemStack stack : player.getInventory().items) {
+        for (ItemStack stack : stacks) {
             if (stack.is(Life_contract.SUBLIMATION.get())) count += stack.getCount();
         }
         return count;
@@ -323,18 +279,38 @@ public final class BulletShopService {
             remaining -= consumed;
             if (remaining == 0) break;
         }
+        player.getInventory().setChanged();
+        // 立刻把背包同步给客户端，界面上的"升华余额"才能马上变
+        player.containerMenu.broadcastChanges();
     }
 
-    private static boolean canFit(ServerPlayer player, ItemStack reward) {
-        int remaining = reward.getCount();
+    /** 背包还能装下多少个该物品（空槽按整组算，已有同类堆叠按剩余空间算）。 */
+    private static int freeSpaceFor(ServerPlayer player, ItemStack template) {
+        int max = Math.max(1, template.getMaxStackSize());
+        int free = 0;
         for (ItemStack slot : player.getInventory().items) {
             if (slot.isEmpty()) {
-                remaining -= reward.getMaxStackSize();
-            } else if (ItemStack.isSameItemSameComponents(slot, reward)) {
-                remaining -= Math.max(0, Math.min(slot.getMaxStackSize(), reward.getMaxStackSize()) - slot.getCount());
+                free += max;
+            } else if (ItemStack.isSameItemSameComponents(slot, template)) {
+                free += Math.max(0, Math.min(slot.getMaxStackSize(), max) - slot.getCount());
             }
-            if (remaining <= 0) return true;
         }
-        return false;
+        return free;
+    }
+
+    /** 发放奖励：超出单组上限就拆成多组；背包塞不下时掉在脚下，绝不凭空吞掉。 */
+    private static void give(ServerPlayer player, ItemStack template, int total) {
+        int remaining = total;
+        int max = Math.max(1, template.getMaxStackSize());
+        while (remaining > 0) {
+            int chunk = Math.min(remaining, max);
+            ItemStack stack = template.copyWithCount(chunk);
+            if (!player.getInventory().add(stack)) {
+                player.drop(stack, false);
+            }
+            remaining -= chunk;
+        }
+        player.getInventory().setChanged();
+        player.containerMenu.broadcastChanges();
     }
 }

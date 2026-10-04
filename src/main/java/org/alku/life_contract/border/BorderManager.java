@@ -165,6 +165,17 @@ public class BorderManager {
             
             broadcastMessage(Component.literal("§c[边界] §f开始收缩，30 秒后缩至: §e" +
                 String.format("%.1f", newSize) + " §f格"));
+
+            // 每次缩圈给还在圈内的玩家发一点升华：把"经济收入"绑在缩圈节奏上，
+            // 玩家每经历一次缩圈就多一笔可以立刻花掉的钱。
+            for (net.minecraft.server.level.ServerPlayer player : border.getLevel().getPlayers(p -> true)) {
+                if (player.isSpectator() || player.isCreative()) {
+                    continue;
+                }
+                org.alku.life_contract.market.SublimationRewards.award(player,
+                        org.alku.life_contract.market.SublimationRewards.SHRINK_REWARD,
+                        "gui.life_contract.shop.reason.shrink");
+            }
         }
         
         public void stop() {

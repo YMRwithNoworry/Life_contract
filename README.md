@@ -156,7 +156,10 @@ stale or unavailable heightmap can no longer drop a platform into the void or le
 
 ### Shop System
 * **Usage**: Trade gold ingots for gear (Diamond swords, Golden Apples, etc.).
-* **Sublimation Shop**: Spend Sublimation on supplies (flare gun, cooked beef), ammunition, and wool. Ammunition covers both the current contract mod's rounds and every ammo type TaCZ exposes (discovered at runtime, so new gun packs show up automatically; the section is hidden when TaCZ is absent). Pistols are the only guns on sale (the `GunTabType.PISTOL` category, every loaded gun pack included) at 150 Sublimation each. TaCZ gun attachments (scopes, grips, muzzles, magazines, stocks) are sold per piece as well. Wool costs 2 Sublimation per 16 and covers the whole `#minecraft:wool` tag, modded wool included.
+* **Sublimation Shop**: Spend Sublimation on supplies, gear, combat aids, ammunition, firearms, accessories and rare materials. The panel is built around the order players actually think in: **balance on the header** (refreshed live), **category tabs** (Supply / Gear / Combat / Ammo / Firearms / Accessories / Special), then one row per product with an **item icon, name ×quantity, price and a buy button**. Hovering a row explains what the item is for, and rows you cannot afford are greyed out with a dimmed button instead of failing silently.
+* **Buying**: Left click buys 1 bundle, right click buys 5 (capped at 8 per click and clamped by balance and inventory space). Results show up both in the panel's status line and in chat. The client only ever sends a **product id plus a bundle count** - prices, quantities and the granted stacks all come from the server-side `ShopCatalog`, so the shop cannot be cheated and the UI cannot desync into granting the wrong item. Rewards keep their item components (TaCZ calibres, potion effects).
+* **Stock**: Supply (torches, bread, cooked beef, cobblestone, planks, ladders, buckets, all 16 wool colours), Gear (iron pickaxe/axe/sword/shield/helmet/chestplate), Combat (arrows, golden apple, healing/regeneration/strength/swiftness/fire-resistance potions, ender pearls), Ammo (the contract mod's rounds plus every ammo type TaCZ exposes, discovered at runtime so new gun packs appear automatically), Firearms (TaCZ pistols, 150 each, plus attachments), Accessories (the whole catalogue, 60-500) and Special (flare gun, iron/gold ingots, redstone, glowstone, gunpowder).
+* **Sublimation income**: mob kills (1 each, plus accessory bonuses), player kills (+15), first blood of the match (+20), a survival milestone every 3 minutes (+6), every border shrink (+8) and the Spore Surge opener (+10). All of it is funnelled through `SublimationRewards`, which drops overflow at the player's feet instead of deleting it. A 30-minute match yields roughly 250-450 Sublimation per player, which is deliberately on the same order as accessory prices - buying power versus mutation upgrades is the intended trade-off.
 * **Team Sentinel**: A stationary 1000 HP Iron Golem that guards the team base.
 
 ### Accessories
@@ -224,7 +227,7 @@ Every ModularUI panel (sublimation shop, mutation tree, upgrade hub, team invent
 design size and then clamps itself to the actual screen through `UiLayout.fitToScreen`. GUI scale is picked
 automatically from the physical resolution - 1920x1080 lands on scale 4, i.e. a logical 480x270 - so a panel
 larger than that would simply run off the screen. The two panels that spend Sublimation are deliberately
-small - the shop is 208x136 and the mutation tree 232x144, about half the screen width - and their
+small - the shop is 240x152 and the mutation tree 232x144, about half the screen width - and their
 lists scroll through `UiLayout.verticalScroller()`, which keeps the scrollbar visible at all times instead of
 only while scrolling. Text inside them goes through `UiLayout.wrapText`, so a narrow panel wraps instead of
 clipping. The sublimation shop keeps the product list and the accessory detail card in the same slot and

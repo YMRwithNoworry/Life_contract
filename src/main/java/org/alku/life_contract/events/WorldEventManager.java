@@ -451,6 +451,13 @@ public final class WorldEventManager {
         for (int i = 0; i < spawnCount; i++) {
             spawnElite(border, sporeLoaded);
         }
+
+        // 事件开场补给：精英怪要来了，先给场上玩家一笔升华去买弹药和补给
+        for (ServerPlayer player : getSurvivalPlayers()) {
+            org.alku.life_contract.market.SublimationRewards.award(player,
+                    org.alku.life_contract.market.SublimationRewards.SPORE_SURGE_REWARD,
+                    "gui.life_contract.shop.reason.spore_surge");
+        }
     }
 
     private static void spawnElite(WorldBorder border, boolean sporeLoaded) {

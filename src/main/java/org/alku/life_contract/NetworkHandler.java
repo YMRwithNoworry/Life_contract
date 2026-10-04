@@ -59,6 +59,15 @@ public final class NetworkHandler {
                 org.alku.life_contract.events.EventSyncPayload.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(
                         () -> org.alku.life_contract.client.EventHUD.update(payload)));
+        payloads.playToServer(
+                org.alku.life_contract.market.ShopPurchasePayload.TYPE,
+                org.alku.life_contract.market.ShopPurchasePayload.STREAM_CODEC,
+                org.alku.life_contract.market.ShopPurchasePayload::handle);
+        payloads.playToClient(
+                org.alku.life_contract.market.ShopFeedbackPayload.TYPE,
+                org.alku.life_contract.market.ShopFeedbackPayload.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(
+                        () -> org.alku.life_contract.client.SublimationShopUIHolder.showFeedback(payload)));
         payloads.playToClient(
                 org.alku.life_contract.accessory.AccessoryStatePayload.TYPE,
                 org.alku.life_contract.accessory.AccessoryStatePayload.STREAM_CODEC,

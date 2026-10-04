@@ -59,6 +59,8 @@ public final class GameEventManager {
     private static final Map<UUID, Integer> gameTeamNumbers = new LinkedHashMap<>();
     private static final Map<UUID, Integer> lastSyncedLifePoints = new LinkedHashMap<>();
     private static int initialTeamCount;
+    /** 已经发放过的存活里程碑次数（每局重置）。 */
+    private static int survivalMilestonesAwarded;
 
     private GameEventManager() {
     }
@@ -96,6 +98,8 @@ public final class GameEventManager {
         gamePlayerActive.clear();
         gameTeamNumbers.clear();
         lastSyncedLifePoints.clear();
+        survivalMilestonesAwarded = 0;
+        org.alku.life_contract.items.SublimationDropHandler.resetFirstBlood();
 
         for (ServerPlayer player : gameLevel.getServer().getPlayerList().getPlayers()) {
             if (player.gameMode.getGameModeForPlayer() == GameType.SURVIVAL
@@ -342,6 +346,38 @@ public final class GameEventManager {
                 .forEach(player::removeEffect);
     }
 
+    /**
+     * 存活里程碑：每 {@link org.alku.life_contract.market.SublimationRewards#SURVIVAL_INTERVAL_SECONDS} 秒
+     * 给还在场上的参赛玩家发一次升华，作为稳定的基础收入。
+     * <p>
+     * 有了它，就算一局里没怎么打架，玩家也能攒到买得起补给与弹药的钱，
+     * 商店不会因为"没钱"而变成摆设。
+     */
+    private static void awardSurvivalMilestone() {
+        int reached = (int) (getElapsedSeconds()
+                / org.alku.life_contract.market.SublimationRewards.SURVIVAL_INTERVAL_SECONDS);
+        if (reached <= survivalMilestonesAwarded) {
+            return;
+        }
+        survivalMilestonesAwarded = reached;
+        awardParticipants(org.alku.life_contract.market.SublimationRewards.SURVIVAL_REWARD,
+                "gui.life_contract.shop.reason.survival");
+    }
+
+    /** 给所有"还在场上"的参赛玩家发升华。 */
+    private static void awardParticipants(int amount, String reasonKey) {
+        if (currentLevel == null) {
+            return;
+        }
+        for (UUID id : gameStartPlayerIds) {
+            ServerPlayer player = currentLevel.getServer().getPlayerList().getPlayer(id);
+            if (player == null || player.isSpectator() || player.isCreative()) {
+                continue;
+            }
+            org.alku.life_contract.market.SublimationRewards.award(player, amount, reasonKey);
+        }
+    }
+
     private static void checkLastTeamStanding() {
         if (initialTeamCount < 2 || currentLevel == null
                 || currentLevel.getGameTime() - gameStartTick < 100L) {
@@ -466,6 +502,7 @@ public final class GameEventManager {
             if (!gameActive) {
                 return;
             }
+            awardSurvivalMilestone();
             syncToAllClients(false);
         }
     }
